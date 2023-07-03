@@ -341,6 +341,9 @@ Enact a temp Basal or a temp target */
 /* Max setting */
 "Max Bolus" = "Max bolus";
 
+/* Max setting */
+"Max Carbs" = "Max kolhydrater";
+
 /* */
 "Pump Settings" = "Pumpinställningar";
 
@@ -492,10 +495,10 @@ Enact a temp Basal or a temp target */
 "Temp Targets" = "Målvärden";
 
 /* Delete carbs from data table and Nightscout */
-"Delete carbs?" = "Ta bort kolhydrater?";
+"Delete carbs?" = "Radera kolhydrater?";
 
 /* Delete insulin from pump history and Nightscout */
-"Delete insulin?" = "Ta bort insulin?";
+"Delete insulin?" = "Radera insulin?";
 
 /* Treatments list */
 "Treatments" = "Behandlingar";
@@ -985,13 +988,13 @@ Enact a temp Basal or a temp target */
 
 
 /* Headers for settings ----------------------- */
-"OpenAPS main settings" = "OpenAPS huvudsakliga inställningar";
+"OpenAPS main settings" = "iAPS huvudsakliga inställningar";
 
-"OpenAPS SMB settings" = "OpenAPS SMB-inställningar";
+"OpenAPS SMB settings" = "iAPS SMB-inställningar";
 
-"OpenAPS targets settings" = "OpenAPS målvärdesinställningar";
+"OpenAPS targets settings" = "iAPS målvärdesinställningar";
 
-"OpenAPS other settings" = "OpenAPS andra inställningar";
+"OpenAPS other settings" = "iAPS andra inställningar";
 
 /* Glucose Simulator CGM */
 "Glucose Simulator" = "Glukossimulator";
@@ -1419,7 +1422,7 @@ Enact a temp Basal or a temp target */
 /* Description text on manual temp basal action sheet */
 "Loop will not automatically adjust your insulin delivery until the temporary basal rate finishes or is canceled." = "iAPS kommer inte automatiskt att justera dina insulindoser förrän den temporära basalen är färdig eller har avbrytits.";
 /* Button text for setting manual temporary basal rate*/
-"Set Temporary Basal" = "Ställ in temporaär basal";
+"Set Temporary Basal" = "Ställ in temporär basal";
 
 /* Navigation Title for ManualTempBasalEntryView */
 "Temporary Basal" = "Temporär basal";
@@ -1629,7 +1632,7 @@ Enact a temp Basal or a temp target */
 /* New Experimental feature */
 "Experimental" = "Experimentell";
 /* Smoothing of CGM readings */
-"Smooth Glucose Value" = "Utjämna blodsocker från sensor";
+"Smooth Glucose Value" = "Utjämna blodsockervärden från sensor";
 
 /* -----------------------------------------------------------------------------------------------------------
 
@@ -1770,7 +1773,7 @@ Enact a temp Basal or a temp target */
 "Autosens Max" = "Autosens maxinställning";
 
 /* "Autosens Max" */
-"This is a multiplier cap for autosens (and autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target." = "Standardvärde: 1.2. Denna multipel begränsar hur mycket autosens (och autotune) automatiskt kan justera upp basaler, sänka insulinkänslighet och/eller målvärde. Med standardvärde upp till 20%.";
+"This is a multiplier cap for autosens (and autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target." = "Standardvärde: 1.2. Denna multipel begränsar hur mycket autosens (och autotune) automatiskt kan justera upp basaler, sänka insulinkänslighet och/eller målvärde. Med standardvärde upp till +20%.";
 
 /* Headline "Autosens Min" */
 "Autosens Min" = "Autosens minimuminställning";
@@ -1797,7 +1800,7 @@ Enact a temp Basal or a temp target */
 "Bolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2)." = "Denna är aktiv efter att du har gett en måltidsbolus, för att motverka en låg temporär basal när du just ätit. I detta exempel med standardvärdet 2 och med DIA-inställning på 3 h kommer 'Bolus Snooze' att fasas ut över 1,5 h (3 DIA / 2).";
 
 /* Headline "Min 5m Carbimpact" */
-"Min 5m Carbimpact" = "Lägsta absorptionshastighet";
+"Min 5m Carbimpact" = "Lägsta Kh absorptionshastighet";
 
 /* "Min 5m Carbimpact" */
 "This is a setting for default carb absorption impact per 5 minutes. The default is an expected 8 mg/dL/5min. This affects how fast COB is decayed in situations when carb absorption is not visible in BG deviations. The default of 8 mg/dL/5min corresponds to a minimum carb absorption rate of 24g/hr at a CSF of 4 mg/dL/g." = "Standardvärde är 8 mg/dl per 5 min (0,4 mmol/l per 5 min). Detta är en inställning för kolhydratsabsorptionseffekt per 5 minuter, som påverkar hur snabbt aktiva kolhydrater klingar av i situationer när kolhydratsabsorption inte syns i blodsockeravvikelser. Standarden på 0,4 mmol/l per 5 min motsvarar en minsta absorptionshastighet på 24 g/h vid en CSF ('Carb Sensitivity Factor', hur mycket ditt blodsockervärde stiger per gram kolhydrat) på 0,2 mmol/l/g.";
@@ -1821,13 +1824,13 @@ Enact a temp Basal or a temp target */
 "This is the amount of the maximum number of carbs we’ll assume will absorb over 4h if we don’t yet see carb absorption." = "Mängd av maximala antal kolhydrater som vi antar kommer att absorberas över 4h om vi ännu inte ser 'carb absorption'.";
 
 /* Headline ”Max SMB Basal Minutes" */
-"Max SMB Basal Minutes" = "Basalminuter för automatiska bolusar (SMB)";
+"Max SMB Basal Minutes" = "Max basalminuter automatiska bolusar (SMB)";
 
 /* ”Max SMB Basal Minutes" */
 "Defaults to start at 30. This is the maximum minutes of basal that can be delivered as a single SMB with uncovered COB. This gives the ability to make SMB more aggressive if you choose. It is recommended that the value is set to start at 30, in line with the default, and if you choose to increase this value, do so in no more than 15 minute increments, keeping a close eye on the effects of the changes. It is not recommended to set this value higher than 90 mins, as this may affect the ability for the algorithm to safely zero temp. It is also recommended that pushover is used when setting the value to be greater than default, so that alerts are generated for any predicted lows or highs." = "Standardvärde 30. Detta är det maximala antal minuter av din ordinarie basal som kommer att ges som en SMB. Denna inställning ger möjlighet att göra SMB större och behandlingen med SMB mer aggressiv. Det rekommenderas att börja med 30 minuter, och om du väljer att öka detta värde, göra det stegvis i högst 15 minuters steg, samtidigt som du noga följer effekterna av de nya inställningarna. Det rekommenderas inte att ställa in detta värde högre än 90 minuter, eftersom detta påverkar algoritmens förmåga att säkert kunna balansera med temporära basaler på 0 IE/h. Det rekommenderas också att tjänsten Pushover används när värdet sätts till att vara större än standard, så att varningar och notiser kan genereras för alla förväntade blodsockerdalar och toppar.";
 
 /* Headline "Max UAM SMB Basal Minutes" */
-"Max UAM SMB Basal Minutes" = "Basalminuter för autobolusar vid oannonserade måltider (UAM SMBs)";
+"Max UAM SMB Basal Minutes" = "Max basalminuter autobolusar vid oannonserade måltider (UAM SMB)";
 
 /* "Max UAM SMB Basal Minutes" */
 "Defaults to start at 30. This is the maximum minutes of basal that can be delivered by UAM as a single SMB when IOB exceeds COB. This gives the ability to make UAM more or less aggressive if you choose. It is recommended that the value is set to start at 30, in line with the default, and if you choose to increase this value, do so in no more than 15 minute increments, keeping a close eye on the effects of the changes. Reducing the value will cause UAM to dose less insulin for each SMB. It is not recommended to set this value higher than 60 mins, as this may affect the ability for the algorithm to safely zero temp. It is also recommended that pushover is used when setting the value to be greater than default, so that alerts are generated for any predicted lows or highs." = "Standardvärde 30. Detta är det maximala antal minuter av din ordinarie basal som kommer att användas för UAM för att ges som en SMB. Denna inställning ger möjlighet att göra behandlingen med UAM mer aggressiv, om du väljer att öka detta värde. Det rekommenderas att börja med 30 minuter, och om du väljer att öka detta värde, görs det stegvis i högst 15 minuters steg, samtidigt som du noga följer effekterna av nya inställningarna. En reducering av värdet leder till att UAM doserar mindre insulin med varje SMB. Det rekommenderas inte att ställa in detta värde högre än 60 minuter, eftersom detta påverkar algoritmens förmåga att säkert kunna balansera med temporära basaler på 0 IE/h. Det rekommenderas också att pushover används när värdet sätts till att vara större än standard, så att varningar och notiser kan genereras för alla förväntade blodsockerdalar eller toppar.";
@@ -1839,7 +1842,7 @@ Enact a temp Basal or a temp target */
 "Minimum duration in minutes for new SMB since last SMB or manual bolus" = "Minsta tid i minuter för ny automatisk bolus sedan senaste bolus eller automatisk bolus";
 
 /* Headline "Bolus Increment" */
-"Bolus Increment" = "Minsta bolusmångd";
+"Bolus Increment" = "Minsta bolusmängd";
 
 /* "Bolus Increment" */
 "Smallest enacted SMB amount. Minimum amount for Omnipod pumps is 0.05 U, whereas for Medtronic pumps it differs for various models, from 0.025 U to 0.10 U. Please check the minimum bolus amount which can be delivered by your pump. The default value is 0.1." = "Minsta mängd för Omnipod-poddar är 0,05 enheter, medan det för Medtronic-pumpar skiljer sig åt för olika modeller, från 0.25 IE till 0,10 IE. Kontrollera den minsta bolusmängd som kan ges av din pump för denna inställning. Standardvärdet är 0,1 enheter.";
@@ -1871,10 +1874,10 @@ Enact a temp Basal or a temp target */
 // Dynamic ISF + CR Settings:
 /* Headline "Adjust Dynamic ISF constant" */
 
-"Adjust Dynamic ISF constant" = "Ändra AF-konstant";
+"Adjust Dynamic ISF constant" = "Justera Dynamisk ISF-konstant";
 
 /* Adjust Dynamic ISF constant */
-"Adjust Dynamic ISF constant" = "Ändra AF-konstant";
+"Adjust Dynamic ISF constant" = "Justera Dynamisk ISF-konstant";
 
 /* Enable Dynamic ISF, Headline */
 "Enable Dynamic ISF" = "Aktivera dynamisk insulinkänslighet (ISF)";
@@ -1892,7 +1895,7 @@ Enact a temp Basal or a temp target */
 "Use Dynamic CR. The dynamic ratio will be used for CR as follows:\n\n When ratio > 1:  dynCR = (newRatio - 1) / 2 + 1.\nWhen ratio < 1: dynCR = CR/dynCR.\n\nDon't use toghether with a high Insulin Fraction (> 2)" = "Använd dynamisk kolhydratkvot. Den dynamiska kvoten kommer att beräknas som flöjer::\n\n när kvot  > 1:  dynamisk kolhydratkvot = (dynamiskISFkvot - 1) / 2 + 1.\nNär kvot < 1: dynamisk kolhydratkvot = inställd kolhydratkvot/dynamisk kolhydratkvot.\n\nUndvik att använda tillsamans med en inställning för \"Kvot av rekommenderad mängd insulin\" över 2";
 
 /* Headline "Adjust Dynamic ISF constant" */
-"Adjust Dynamic ISF constant" = "Ändra AF-konstant";
+"Adjust Dynamic ISF constant" = "Ändra dynamisk ISF-konstant";
 
 /* Adjust Dynamic ISF constant */
 "Adjust Dynamic ratios by a constant. Default is 0.5. The higher the value, the larger the correction of your ISF will be for a high or a low BG. Maximum correction is determined by the Autosens min/max settings. For Sigmoid function an adjustment factor of 0.4 - 0.5 is recommended to begin with. For the logaritmic formula there is less consensus, but starting with 0.5 - 0.8 is more appropiate for most users" = "Individuell justering (en multipel) av hur din insulinkänslighet räknas ut. Stnadarvärde är 0.5. Ett högre värde betyder mer aggressiv justering. Maximal insulinkänslighet och minimal insulinkänslighet bestäms av Autosens min/max inställningar och av din schemalagda inställning för insulinkänslighet.\n\nFör S-formad dynamisk inställning rekommendaras att börja med 0.3-0-4. För logaritmisk inställning rekommenderas att börja med 0.5-0.8";
@@ -1948,4 +1951,4 @@ Enact a temp Basal or a temp target */
 "Insulin curve" = "Insulintyp";
 
 /* Headline "Adjustment Factor" */
-"Adjustment Factor" = "Justeringskonstant";
+"Adjustment Factor" = "Justeringsfaktor";
