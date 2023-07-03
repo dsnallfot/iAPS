@@ -3,10 +3,10 @@ import Foundation
 
 @available(iOS 16.0, *) struct ApplyTempPresetIntent: AppIntent {
     // Title of the action in the Shortcuts app
-    static var title: LocalizedStringResource = "Apply a temporary Preset"
+    static var title: LocalizedStringResource = "Aktivera ett tillfälligt mål"
 
     // Description of the action in the Shortcuts app
-    static var description = IntentDescription("Allow to apply a specific temporary preset.")
+    static var description = IntentDescription("Tillåt att ett specifikt tillfälligt mål aktiveras.")
 
     internal var intentRequest: TempPresetsIntentRequest
 
@@ -14,21 +14,21 @@ import Foundation
         intentRequest = TempPresetsIntentRequest()
     }
 
-    @Parameter(title: "Preset") var preset: tempPreset?
+    @Parameter(title: "Förval") var preset: tempPreset?
 
     @Parameter(
-        title: "Confirm Before applying",
+        title: "Konfirmera före aktivering",
         description: "If toggled, you will need to confirm before applying",
         default: true
     ) var confirmBeforeApplying: Bool
 
     static var parameterSummary: some ParameterSummary {
         When(\ApplyTempPresetIntent.$confirmBeforeApplying, .equalTo, true, {
-            Summary("Applying \(\.$preset)") {
+            Summary("Aktiverar \(\.$preset)") {
                 \.$confirmBeforeApplying
             }
         }, otherwise: {
-            Summary("Immediately applying \(\.$preset)") {
+            Summary("Omedelbar aktivering av \(\.$preset)") {
                 \.$confirmBeforeApplying
             }
         })
@@ -42,14 +42,14 @@ import Foundation
             } else {
                 presetToApply = try await $preset.requestDisambiguation(
                     among: intentRequest.fetchAll(),
-                    dialog: "What temp preset would you like ?"
+                    dialog: "Vilket tillfälligt mål vill du välja?"
                 )
             }
 
             let displayName: String = presetToApply.name
             if confirmBeforeApplying {
                 try await requestConfirmation(
-                    result: .result(dialog: "Are you sure to applying the temp target \(displayName) ?")
+                    result: .result(dialog: "Är du säker att du vill aktivera det tillfälliga målet \(displayName) ?")
                 )
             }
 
@@ -57,7 +57,7 @@ import Foundation
             let tempTarget = try intentRequest.findTempTarget(presetToApply)
             let finalTempTargetApply = try intentRequest.enactTempTarget(tempTarget)
             let displayDetail: String =
-                "the target \(finalTempTargetApply.displayName) is applying during \(finalTempTargetApply.duration) mn"
+                "Det tillfälliga målet \(finalTempTargetApply.displayName) aktiveras i \(finalTempTargetApply.duration) minuter"
             return .result(
                 dialog: IntentDialog(stringLiteral: displayDetail)
             )
