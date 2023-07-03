@@ -3,18 +3,18 @@ import Foundation
 
 @available(iOS 16.0, *) struct ListTempPresetsIntent: AppIntent {
     // Title of the action in the Shortcuts app
-    static var title: LocalizedStringResource = "Choose Temporary Presets"
+    static var title: LocalizedStringResource = "Välj tillfälligt mål"
 
     // Description of the action in the Shortcuts app
     static var description = IntentDescription(
-        "Allow to list and choose a specific temporary Preset.",
-        categoryName: "Navigation"
+        "Tillåt att lista och välja ett specifikt tillfälligt mål.",
+        categoryName: "Navigering"
     )
 
-    @Parameter(title: "Preset") var preset: tempPreset?
+    @Parameter(title: "Förval") var preset: tempPreset?
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Choose the temp preset  \(\.$preset)")
+        Summary("Välj det tillfälliga målet  \(\.$preset)")
     }
 
     @MainActor func perform() async throws -> some ReturnsValue<tempPreset> {
@@ -41,3 +41,4 @@ import Foundation
         return tempTargets
     }
 }
+
