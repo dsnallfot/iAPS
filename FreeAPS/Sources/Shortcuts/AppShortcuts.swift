@@ -6,15 +6,15 @@ import Foundation
         AppShortcut(
             intent: ApplyTempPresetIntent(),
             phrases: [
-                "Activate \(.applicationName) temporary target ?",
-                "\(.applicationName) apply a temporary target"
+                "Aktivera \(.applicationName) tillfälligt mål?",
+                "\(.applicationName) aktivera ett tillfälligt mål"
             ]
         )
         AppShortcut(
             intent: ListStateIntent(),
             phrases: [
-                "List \(.applicationName) state",
-                "\(.applicationName) state"
+                "Lista \(.applicationName) status",
+                "\(.applicationName) status"
             ]
         )
     }
