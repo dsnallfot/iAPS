@@ -240,8 +240,6 @@ final class BaseAPSManager: APSManager, Injectable {
                     return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }
 
-                self.nightscout.uploadStatus()
-
                 // Closed loop - enact suggested
                 return self.enactSuggested()
             }
