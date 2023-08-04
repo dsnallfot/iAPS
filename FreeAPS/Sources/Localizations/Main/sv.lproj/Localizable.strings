@@ -1311,7 +1311,7 @@ Enact a temp Basal or a temp target */
 "Hide" = "Göm";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"Eventual Glucose > Target Glucose, but glucose is predicted to drop down to " = "Blodsockerprognos är över målvärde, men ditt blodsocker väntas först sjunka ner till ";
+"Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to " = "Blodsockerprognos är över målvärde, men ditt blodsocker väntas först sjunka ner till ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
 "which is below your Threshold (" = "vilket är lägre än ditt tröskelvärde (";
@@ -1713,7 +1713,7 @@ Enact a temp Basal or a temp target */
 "This enables supermicrobolus (SMB) while carbs on board (COB) are positive." = "Detta tillåter supermikrobolusar (SMB) medan det finns aktiva kolhydrater (COB).";
 
 /* Headline "Enable SMB With Temptarget” */
-"Enable SMB With Temptarget" = "Använd SMB vid ett temporärt målvärde";
+"Enable SMB With Temptarget" = "Använd SMB vid ett lågt temporärt målvärde";
 
 /* "Enable SMB With Temptarget” */
 "This enables supermicrobolus (SMB) with eating soon / low temp targets. With this feature enabled, any temporary target below 100mg/dL, such as a temp target of 99 (or 80, the typical eating soon target) will enable SMB." = "Detta tillåter supermikrobolusar (SMB) vid låga tillfälliga målvärden (tex 'Äter snart'). Med denna funktion aktiverad, kommer SMB:ar vara aktiva även vid tillfälliga målvärden under 100mg/dL (5,6 mmol/l).";
@@ -1933,7 +1933,7 @@ Enact a temp Basal or a temp target */
 "Defaults to 0.2 (20%). Maximum positive percentual change of BG level to use SMB, above that will disable SMB. Hardcoded cap of 40%. For UAM fully-closed-loop 30% is advisable. Observe in log and popup (maxDelta 27 > 20% of BG 100 - disabling SMB!)." = "Standardvärde 0,2 (20%). Maximal blodsockerförändring (ökning) som tillåter användning av SMB (autobolus). Över detta värde kommer SMB tillfälligt att avaktiveras. Högsta tillåtna värde är 0,4 (40%). Om du loopar utan att ange kolhydrater (UAM fully-closed-loop) rekommederas 30%. I loggar kommer detta registreras likt exempel: '(maxDelta 27 > 20% of BG 100 - disabling SMB!'.";
 
 /* Headline "... When Blood Glucose Is Over (mg/dl):" */
-"... When Blood Glucose Is Over (mg/dl):" = "... när blodsocker är över (mg/dl):";
+"... When Blood Glucose Is Over (mg/dl):" = "Aktivera SMB när blodsocker är över (mg/dl):";
 
 /* ... When Blood Glucose Is Over (mg/dl): */
 "Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange blodsockervärdet vid vilket SMB kommer att aktiveras. När blodsocker är högre än detta värde bör SMB aktiveras, även om andra inställningar för SMB är av.";
