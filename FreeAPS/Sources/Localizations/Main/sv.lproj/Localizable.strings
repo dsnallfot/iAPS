@@ -456,7 +456,7 @@ Enact a temp Basal or a temp target */
 "Low target" = "Undre målvärde";
 
 /*  */
-"Target Ranges" = "Målområden";
+"Target Glucose" = "BG Målvärde";
 
 /* When bolusing */
 "Bolusing" = "Ger bolus";
