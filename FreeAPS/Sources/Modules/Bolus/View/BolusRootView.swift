@@ -37,7 +37,7 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            Text("Rekommenderad dos")
+                            Text("Insulin recommended")
                             Spacer()
                             Text(
                                 formatter
@@ -62,7 +62,7 @@ extension Bolus {
                 if !state.waitForSuggestion {
                     Section {
                         HStack {
-                            Text("Bolus dos")
+                            Text("Bolus amount")
                             Spacer()
                             DecimalTextField(
                                 "0",
