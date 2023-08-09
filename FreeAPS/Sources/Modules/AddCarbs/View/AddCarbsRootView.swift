@@ -30,16 +30,16 @@ extension AddCarbs {
                 if let carbsReq = state.carbsRequired {
                     Section {
                         HStack {
-                            Text("Carbs required").italic()
+                            Text("Carbs required").foregroundColor(.secondary)
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram")
+                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.secondary)
                         }
                     }
                 }
                 Section {
                     DatePicker("Date", selection: $state.date)
                     HStack {
-                        Text("Carbs").fontWeight(.semibold).padding(.top, 2).padding(.bottom, 2)
+                        Text("Carbs").padding(.top, 2).padding(.bottom, 2)
                         Spacer()
                         DecimalTextField(
                             "0",
