@@ -74,17 +74,20 @@ extension Bolus {
                 if !state.waitForSuggestion {
                     Section {
                         Button { state.add() }
-                        label: { Text("Enact bolus").fontWeight(.semibold) }
+                        label: { Text("Enact bolus").font(.title3) }
                             .disabled(state.amount <= 0)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                     Section {
                         if waitForSuggestion {
                             Button { state.showModal(for: nil) }
-                            label: { Text("Continue without bolus") }
+                            label: { Text("Continue without bolus").font(.title3) }
+                                .frame(maxWidth: .infinity, alignment: .center)
                         } else {
                             Button { isAddInsulinAlertPresented = true }
-                            label: { Text("Add insulin without actually bolusing") }
+                            label: { Text("Add insulin without actually bolusing").font(.title3) }
                                 .disabled(state.amount <= 0)
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                     }
                     .alert(isPresented: $isAddInsulinAlertPresented) {
