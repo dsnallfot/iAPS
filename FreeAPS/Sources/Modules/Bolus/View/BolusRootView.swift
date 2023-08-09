@@ -37,7 +37,7 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            Text("Insulin recommended").italic()
+                            Text("Insulin recommended").foregroundColor(.secondary)
                             Spacer()
                             Text(
                                 formatter
@@ -58,7 +58,7 @@ extension Bolus {
                         }
                     }
                     HStack {
-                        Text("Bolus Amount").fontWeight(.semibold)
+                        Text("Bolus Amount")
                         Spacer()
                         DecimalTextField(
                             "0",
