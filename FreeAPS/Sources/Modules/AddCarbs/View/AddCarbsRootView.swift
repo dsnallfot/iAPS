@@ -96,7 +96,7 @@ extension AddCarbs {
                         presetPopover
                     }
                 }
-
+                header: { Text(" ") }
                 if state.useFPUconversion {
                     Section {
                         mealPresets
