@@ -4,10 +4,10 @@
 */
 /* -------------------------------- */
 /* Bolus screen when adding insulin */
-"Add insulin without actually bolusing" = "Lägg till insulin utan att ge bolus";
+"Add insulin without actually bolusing" = "Reg insulin UTAN att ge bolus";
 
 /* Add insulin from source outside of pump */
-"Add %@ without bolusing" = "Lägg till %@ utan att ge bolus";
+"Add %@ without bolusing" = "Reg %@ utan att ge bolus";
 
 "Bolus" = "Bolus";
 
@@ -23,7 +23,7 @@
 "Enact bolus" = "Ge bolus";
 
 /*  */
-"Insulin recommended" = "Rekommenderad insulindos";
+"Insulin recommended" = "Rekommenderad dos";
 
 /*  */
 "Insulin required" = "Insulin som krävs";
@@ -455,8 +455,8 @@ Enact a temp Basal or a temp target */
 /* Lower target */
 "Low target" = "Undre målvärde";
 
-/*  */
-"Target Glucose" = "BG Målvärde";
+/* Daniel adderat */
+"Bolus Amount" = "Bolus dos";
 
 /* When bolusing */
 "Bolusing" = "Ger bolus";
@@ -1029,7 +1029,7 @@ Enact a temp Basal or a temp target */
 /* -------------- Developer settings ---------------------- */
 /* Debug options */
 
-"Developer" = "Utvecklare";
+"Developer" = "Avancerat";
 
 /* Debug option view NS Upload Profile */
 "NS Upload Profile" = "Ladda upp profil till NS";
@@ -1144,7 +1144,7 @@ Enact a temp Basal or a temp target */
 "Fat and Protein" = "Omvandling";
 
 /* Display fat and protein entities */
-"Fat & Protein" = "Fett & protein";
+"Fat & Protein" = "Visa fett & protein";
 
 /* */
 "Hide Fat & Protein" = "Dölj fett & protein";
@@ -1270,7 +1270,7 @@ Enact a temp Basal or a temp target */
 "Enter Meal Preset Name" = "Ange namn på måltid";
 
 /* */
-"Name Of Dish" = "Namn på rätt";
+"Name Of Dish" = "Namn på måltid";
 
 /* Save Carbs and continue to bolus recommendation */
 "Save and continue" = "Spara och fortsätt";
@@ -1290,7 +1290,7 @@ Enact a temp Basal or a temp target */
 "Eventual Glucose" = "Blodsockerprognos";
 
 /* */
-"Target Glucose" = "Målvärde";
+"Target Glucose" = "Målvärde glukos";
 
 /* */
 "Percentage setting" = "Bolusprocentinställning";
@@ -1952,3 +1952,6 @@ Enact a temp Basal or a temp target */
 
 /* Headline "Adjustment Factor" */
 "Adjustment Factor" = "Justeringsfaktor";
+
+/* Daniel adderat */
+"Save as preset" = "Spara som förval";
