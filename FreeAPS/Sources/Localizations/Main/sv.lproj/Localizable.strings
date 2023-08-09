@@ -4,10 +4,10 @@
 */
 /* -------------------------------- */
 /* Bolus screen when adding insulin */
-"Add insulin without actually bolusing" = "Registrera insulin UTAN att ge bolus";
+"Add insulin without actually bolusing" = "Reg insulin UTAN att ge bolus";
 
 /* Add insulin from source outside of pump */
-"Add %@ without bolusing" = "Registrera %@ utan att ge bolus";
+"Add %@ without bolusing" = "Reg %@ utan att ge bolus";
 
 "Bolus" = "Bolus";
 
@@ -255,7 +255,7 @@
 
 /* Enact
 Enact a temp Basal or a temp target */
-"Enact" = "Utför";
+"Enact" = "Aktivera";
 
 /* */
 "Manual Temp Basal" = "Manuell temp basal";
@@ -1955,3 +1955,6 @@ Enact a temp Basal or a temp target */
 
 /* Daniel adderat */
 "Save as preset" = "Spara som förval";
+
+/* Daniel adderat */
+"Enact Temporary Target" = "Aktivera tillfälligt målvärde";
