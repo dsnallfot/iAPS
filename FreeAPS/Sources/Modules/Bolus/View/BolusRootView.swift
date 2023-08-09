@@ -58,7 +58,8 @@ extension Bolus {
                         }
                     }
                 }
-
+                header: { Text(" ") }
+                
                 if !state.waitForSuggestion {
                     Section {
                         HStack {
