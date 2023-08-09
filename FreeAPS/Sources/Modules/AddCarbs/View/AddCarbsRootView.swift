@@ -37,6 +37,7 @@ extension AddCarbs {
                     }
                 }
                 Section {
+                    DatePicker("Date", selection: $state.date)
                     HStack {
                         Text("Carbs").fontWeight(.semibold)
                         Spacer()
@@ -100,10 +101,6 @@ extension AddCarbs {
                     Section {
                         mealPresets
                     }
-                }
-
-                Section {
-                    DatePicker("Date", selection: $state.date)
                 }
 
                 Section(footer: Text(state.waitersNotepad().description)) {
