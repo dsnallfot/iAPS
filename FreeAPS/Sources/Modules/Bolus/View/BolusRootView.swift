@@ -74,7 +74,7 @@ extension Bolus {
                 if !state.waitForSuggestion {
                     Section {
                         Button { state.add() }
-                        label: { Text("Enact bolus") }
+                        label: { Text("Enact bolus").fontWeight(.semibold) }
                             .disabled(state.amount <= 0)
                     }
                     Section {
