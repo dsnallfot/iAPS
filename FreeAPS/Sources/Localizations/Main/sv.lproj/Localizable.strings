@@ -258,7 +258,7 @@ Enact a temp Basal or a temp target */
 "Enact" = "Utför";
 
 /* */
-"Manual Temp Basal" = "Manuell temporär basal";
+"Manual Temp Basal" = "Manuell temp basal";
 
 /* Allow uploads to different services */
 "Allow uploads" = "Tillåt uppladdning";
@@ -1106,7 +1106,7 @@ Enact a temp Basal or a temp target */
 "Manual" = "Manuellt";
 
 /* Status highlight when manual temp basal is running. */
-"Manual Basal" = "Manuell temporär basal";
+"Manual Basal" = "Manuell basal";
 
 /* Current Manual Temp basal */
 " -  Manual Basal ⚠️" = " -  Manuell basal ⚠️";
