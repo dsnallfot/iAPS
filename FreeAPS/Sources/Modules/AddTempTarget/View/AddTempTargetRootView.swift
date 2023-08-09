@@ -120,9 +120,13 @@ extension AddTempTarget {
 
                 Section {
                     Button { state.enact() }
-                    label: { Text("Enact") }
+                    label: { Text("Enact Temporary Target").font(.title3) }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                Section {
                     Button { state.cancel() }
-                    label: { Text("Cancel Temp Target") }
+                    label: { Text("Cancel Temp Target").font(.title3) }
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .popover(isPresented: $isPromtPresented) {
