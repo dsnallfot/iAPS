@@ -30,7 +30,7 @@ extension AddCarbs {
                 if let carbsReq = state.carbsRequired {
                     Section {
                         HStack {
-                            Text("Carbs required")
+                            Text("Carbs required").italic()
                             Spacer()
                             Text(formatter.string(from: carbsReq as NSNumber)! + " g")
                         }
