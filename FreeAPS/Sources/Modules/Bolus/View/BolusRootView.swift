@@ -62,7 +62,7 @@ extension Bolus {
                 if !state.waitForSuggestion {
                     Section {
                         HStack {
-                            Text("Bolus amount")
+                            Text("Bolus Amount")
                             Spacer()
                             DecimalTextField(
                                 "0",
