@@ -39,7 +39,7 @@ extension AddCarbs {
                 Section {
                     DatePicker("Date", selection: $state.date)
                     HStack {
-                        Text("Carbs").fontWeight(.semibold)
+                        Text("Carbs").fontWeight(.semibold).padding(.top, 2).padding(.bottom, 2)
                         Spacer()
                         DecimalTextField(
                             "0",
