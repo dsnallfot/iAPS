@@ -32,7 +32,7 @@ extension AddCarbs {
                         HStack {
                             Text("Carbs required").italic()
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " g")
+                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram")
                         }
                     }
                 }
