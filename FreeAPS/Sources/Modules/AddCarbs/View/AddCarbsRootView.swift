@@ -48,7 +48,7 @@ extension AddCarbs {
                             cleanInput: true
                         )
                         Text("grams").foregroundColor(.secondary)
-                    }.padding(.vertical)
+                    }
 
                     if state.useFPUconversion {
                         proteinAndFat()
