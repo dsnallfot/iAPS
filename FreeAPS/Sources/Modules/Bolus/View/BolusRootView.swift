@@ -57,23 +57,21 @@ extension Bolus {
                             presentInfo.toggle()
                         }
                     }
-                }
-                
-                if !state.waitForSuggestion {
-                    Section {
-                        HStack {
-                            Text("Bolus Amount").fontWeight(.semibold)
-                            Spacer()
-                            DecimalTextField(
-                                "0",
-                                value: $state.amount,
-                                formatter: formatter,
-                                autofocus: true,
-                                cleanInput: true
-                            )
-                            Text("U").foregroundColor(.secondary)
-                        }
+                    HStack {
+                        Text("Bolus Amount").fontWeight(.semibold)
+                        Spacer()
+                        DecimalTextField(
+                            "0",
+                            value: $state.amount,
+                            formatter: formatter,
+                            autofocus: true,
+                            cleanInput: true
+                        )
+                        Text("U").foregroundColor(.secondary)
                     }
+                }
+
+                if !state.waitForSuggestion {
                     Section {
                         Button { state.add() }
                         label: { Text("Enact bolus") }
