@@ -121,6 +121,7 @@ extension AddCarbs {
                 }
             }
             .onAppear(perform: configureView)
+            .navigationTitle("Registrera Måltid")
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
         }
 
