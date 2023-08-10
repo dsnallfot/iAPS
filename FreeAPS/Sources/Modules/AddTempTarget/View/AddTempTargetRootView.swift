@@ -90,13 +90,13 @@ extension AddTempTarget {
                             Text("Target")
                             Spacer()
                             DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
-                            Text(state.units.rawValue).foregroundColor(.secondary)
+                            Text(state.units.rawValue)
                         }
                         HStack {
                             Text("Duration")
                             Spacer()
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
                         Button { isPromtPresented = true }
@@ -109,7 +109,7 @@ extension AddTempTarget {
                             Text("Duration")
                             Spacer()
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
                         Button { isPromtPresented = true }
@@ -120,12 +120,12 @@ extension AddTempTarget {
 
                 Section {
                     Button { state.enact() }
-                    label: { Text("Enact Temporary Target").font(.title3) }
+                    label: { Text("Enact Temporary Target").font(.title3.weight(.semibold)) }
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 Section {
                     Button { state.cancel() }
-                    label: { Text("Cancel Temp Target").font(.title3) }
+                    label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }

@@ -4,7 +4,7 @@
 */
 /* -------------------------------- */
 /* Bolus screen when adding insulin */
-"Add insulin without actually bolusing" = "Reg insulin UTAN att ge bolus";
+"Add insulin without actually bolusing" = "Logga insulin utan att ge bolus";
 
 /* Add insulin from source outside of pump */
 "Add %@ without bolusing" = "Reg %@ utan att ge bolus";
@@ -80,7 +80,7 @@
 "grams" = "gram";
 
 /*  */
-"Carbs required" = "Kolhydrater som krävs";
+"Carbs required" = "Kolhydrater som krävs!";
 
 /* */
 "Are you sure?" = "Är du säker?";

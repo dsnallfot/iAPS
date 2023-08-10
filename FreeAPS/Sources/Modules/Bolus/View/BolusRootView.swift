@@ -67,14 +67,14 @@ extension Bolus {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("U").foregroundColor(.secondary)
+                        Text("U")
                     }
                 }
 
                 if !state.waitForSuggestion {
                     Section {
                         Button { state.add() }
-                        label: { Text("Enact bolus").font(.title3) }
+                        label: { Text("Enact bolus").font(.title3.weight(.semibold)) }
                             .disabled(state.amount <= 0)
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
@@ -205,7 +205,7 @@ extension Bolus {
                 if state.error, state.insulinRecommended > 0 {
                     VStack(spacing: 5) {
                         Divider()
-                        Text("Warning!").font(.callout).bold().foregroundColor(.orange)
+                        Text("Warning!").font(.callout).bold().foregroundColor(.red)
                         Text(alertString()).font(.footnote)
                         Divider()
                     }.padding(.horizontal, 10)

@@ -30,14 +30,13 @@ extension AddCarbs {
                 if let carbsReq = state.carbsRequired {
                     Section {
                         HStack {
-                            Text("Carbs required").foregroundColor(.secondary)
+                            Text("Carbs required").foregroundColor(.orange)
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.secondary)
+                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.orange)
                         }
                     }
                 }
                 Section {
-                    DatePicker("Date", selection: $state.date)
                     HStack {
                         Text("Carbs").padding(.top, 2).padding(.bottom, 2)
                         Spacer()
@@ -48,7 +47,7 @@ extension AddCarbs {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("grams").foregroundColor(.secondary)
+                        Text("grams")
                     }
 
                     if state.useFPUconversion {
@@ -81,7 +80,7 @@ extension AddCarbs {
                                             .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
                                             state
                                             .protein
-                                    ) ? .secondary : .orange
+                                    ) ? .secondary : .primary
                             )
                             .disabled(
                                 (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
@@ -96,6 +95,7 @@ extension AddCarbs {
                     .popover(isPresented: $isPromtPresented) {
                         presetPopover
                     }
+                    DatePicker("Date", selection: $state.date)
                 }
                 if state.useFPUconversion {
                     Section {
@@ -105,7 +105,7 @@ extension AddCarbs {
 
                 Section(footer: Text(state.waitersNotepad().description)) {
                     Button { state.add() }
-                    label: { Text("Save and continue").font(.title3) }
+                    label: { Text("Save and continue").font(.title3.weight(.semibold)) }
                         .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -248,7 +248,7 @@ extension AddCarbs {
                     autofocus: false,
                     cleanInput: true
                 )
-                Text("grams").foregroundColor(.secondary)
+                Text("grams")
             }
             HStack {
                 Text("Protein").foregroundColor(.red) // .fontWeight(.thin)
@@ -261,7 +261,7 @@ extension AddCarbs {
                     cleanInput: true
                 ).foregroundColor(.loopRed)
 
-                Text("grams").foregroundColor(.secondary)
+                Text("grams")
             }
         }
     }
