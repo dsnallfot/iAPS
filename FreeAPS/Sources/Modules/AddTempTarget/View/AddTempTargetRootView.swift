@@ -26,7 +26,12 @@ extension AddTempTarget {
         var body: some View {
             Form {
                 if !state.presets.isEmpty {
-                    Section(header: Text("Presets")) {
+                    Section {
+                        Button { state.cancel() }
+                        label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    Section(header: Text("Aktivera favorit")) {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
                         }
@@ -85,7 +90,7 @@ extension AddTempTarget {
                         }
                     }
                 } else {
-                    Section(header: Text("Custom")) {
+                    Section(header: Text("Ställ in ett anpassat målvärde")) {
                         HStack {
                             Text("Target")
                             Spacer()
@@ -100,7 +105,7 @@ extension AddTempTarget {
                         }
                         DatePicker("Date", selection: $state.date)
                         Button { isPromtPresented = true }
-                        label: { Text("Save as preset") }
+                        label: { Text("Spara som favorit") }
                     }
                 }
                 if state.viewPercantage {
@@ -113,25 +118,20 @@ extension AddTempTarget {
                         }
                         DatePicker("Date", selection: $state.date)
                         Button { isPromtPresented = true }
-                        label: { Text("Save as preset") }
+                        label: { Text("Spara som favorit") }
                             .disabled(state.duration == 0)
                     }
                 }
 
                 Section {
                     Button { state.enact() }
-                    label: { Text("Enact Temporary Target").font(.title3.weight(.semibold)) }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-                Section {
-                    Button { state.cancel() }
-                    label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
+                    label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .popover(isPresented: $isPromtPresented) {
                 Form {
-                    Section(header: Text("Enter preset name")) {
+                    Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
                         Button {
                             state.save()
