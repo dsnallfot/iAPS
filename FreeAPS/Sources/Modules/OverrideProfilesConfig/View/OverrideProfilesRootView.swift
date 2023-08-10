@@ -96,7 +96,7 @@ extension OverrideProfilesConfig {
                         HStack {
                             Text("Duration")
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: false)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                     }
 
@@ -109,7 +109,7 @@ extension OverrideProfilesConfig {
                         HStack {
                             Text("Target Glucose")
                             DecimalTextField("0", value: $state.target, formatter: glucoseFormatter, cleanInput: false)
-                            Text(state.units.rawValue).foregroundColor(.secondary)
+                            Text(state.units.rawValue)
                         }
                     }
                     HStack {
@@ -132,12 +132,12 @@ extension OverrideProfilesConfig {
                             HStack {
                                 Text("First Hour SMBs are Off (24 hours)")
                                 DecimalTextField("0", value: $state.start, formatter: formatter, cleanInput: false)
-                                Text("hour").foregroundColor(.secondary)
+                                Text("hour")
                             }
                             HStack {
                                 Text("Last Hour SMBs are Off (24 hours)")
                                 DecimalTextField("0", value: $state.end, formatter: formatter, cleanInput: false)
-                                Text("hour").foregroundColor(.secondary)
+                                Text("hour")
                             }
                         }
                         HStack {
@@ -166,7 +166,7 @@ extension OverrideProfilesConfig {
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         HStack {
                             Text("UAM SMB Minutes")
@@ -177,7 +177,7 @@ extension OverrideProfilesConfig {
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                     }
 
@@ -244,7 +244,7 @@ extension OverrideProfilesConfig {
                             isSheetPresented = true
                         }
                         label: { Text("Save as Profile") }
-                            .tint(.orange)
+                            .tint(.primary)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
                             .controlSize(.mini)
@@ -270,6 +270,7 @@ extension OverrideProfilesConfig {
                     state.cancelProfile()
                     dismiss()
                 }
+                .font(.title3.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .center)
                 .buttonStyle(BorderlessButtonStyle())
                 .disabled(!state.isEnabled)

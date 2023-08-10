@@ -107,7 +107,7 @@
 "Delete preset \"%@\"" = "Ta bort förval \"%@\"";
 
 /* Duration of target temp or temp basal */
-"Duration" = "Duration";
+"Duration" = "Varaktighet";
 
 /*  */
 "Enact Temp Target" = "Tillfälliga målvärden";
@@ -1129,7 +1129,7 @@ Enact a temp Basal or a temp target */
 "Delay In Minutes" = "Fördröjning";
 
 /* Duration */
-"Maximum Duration In Hours" = "Max tid i timmar";
+"Maximum Duration In Hours" = "Max varaktighet i timmar";
 
 /* Interval */
 "Interval In Minutes" = "Tidsintervall i minuter";
@@ -1576,7 +1576,7 @@ Enact a temp Basal or a temp target */
 "Interval" = "Intervall";
 
 /* Median loop interval */
-"Duration" = "Duration";
+"Duration" = "Varaktighet";
 
 /* "Display SD */
 "Display SD instead of CV" = "Visa SD istället för CV";
