@@ -64,6 +64,16 @@ extension OverrideProfilesConfig {
         var body: some View {
             Form {
                 if state.presets.isNotEmpty {
+                    Button("Återgå till normal profil") {
+                        state.cancelProfile()
+                        dismiss()
+                    }
+                    .font(.title3.weight(.semibold))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .buttonStyle(BorderlessButtonStyle())
+                    .disabled(!state.isEnabled)
+                    .tint(.red)
+
                     Section {
                         ForEach(fetchedProfiles) { preset in
                             profilesView(for: preset)
@@ -265,16 +275,6 @@ extension OverrideProfilesConfig {
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
                     )
                 }
-
-                Button("Return to Normal") {
-                    state.cancelProfile()
-                    dismiss()
-                }
-                .font(.title3.weight(.semibold))
-                .frame(maxWidth: .infinity, alignment: .center)
-                .buttonStyle(BorderlessButtonStyle())
-                .disabled(!state.isEnabled)
-                .tint(.red)
             }
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
