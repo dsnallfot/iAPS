@@ -37,7 +37,6 @@ extension AddTempTarget {
                         }
                     }
                 }
-
                 HStack {
                     Text("Experimental")
                     Toggle(isOn: $state.viewPercantage) {}.controlSize(.mini)
@@ -46,9 +45,7 @@ extension AddTempTarget {
                 }
 
                 if state.viewPercantage {
-                    Section(
-                        header: Text("")
-                    ) {
+                    Section(header: Text("Ställ in en procentuell override")) {
                         VStack {
                             Slider(
                                 value: $state.percentage,
@@ -82,7 +79,7 @@ extension AddTempTarget {
                                                 "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
                                                 "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
                                         )
-                                            + NSLocalizedString("  Target Glucose", comment: "")
+                                            + NSLocalizedString("  Målvärde", comment: "")
                                     )
                                     .foregroundColor(.green)
                                 }
