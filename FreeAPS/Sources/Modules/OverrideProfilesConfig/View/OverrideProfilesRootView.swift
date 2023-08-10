@@ -253,7 +253,7 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Save as Profile") }
+                        label: { Text("Spara profil") }
                             .tint(.primary)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -269,7 +269,7 @@ extension OverrideProfilesConfig {
                     }
                 }
 
-                header: { Text("Insulin") }
+                header: { Text("Ställ in ny profil") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
