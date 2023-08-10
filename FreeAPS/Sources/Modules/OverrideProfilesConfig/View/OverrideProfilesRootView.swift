@@ -79,6 +79,7 @@ extension OverrideProfilesConfig {
                             profilesView(for: preset)
                         }.onDelete(perform: removeProfile)
                     }
+                    header: { Text("Aktivera sparad profil") }
                 }
                 Section {
                     VStack {
@@ -254,7 +255,7 @@ extension OverrideProfilesConfig {
                             isSheetPresented = true
                         }
                         label: { Text("Spara profil") }
-                            .tint(.primary)
+                            .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
                             .controlSize(.mini)
