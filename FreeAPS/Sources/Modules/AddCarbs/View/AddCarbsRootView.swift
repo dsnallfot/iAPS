@@ -38,7 +38,7 @@ extension AddCarbs {
                 }
                 Section {
                     HStack {
-                        Text("Carbs").padding(.top, 2).padding(.bottom, 2)
+                        Text("Carbs").fontWeight(.semibold).padding(.top, 2).padding(.bottom, 2)
                         Spacer()
                         DecimalTextField(
                             "0",
@@ -47,7 +47,7 @@ extension AddCarbs {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("grams")
+                        Text("grams").fontWeight(.semibold)
                     }
 
                     if state.useFPUconversion {
