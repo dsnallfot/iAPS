@@ -44,7 +44,13 @@ extension NightscoutConfig {
                 }
 
                 Section {
-                    Toggle("Allow uploads", isOn: $state.isUploadEnabled)
+                    Toggle("Ladda upp till Nightscout", isOn: $state.isUploadEnabled)
+                    if state.isUploadEnabled {
+                        Toggle("Statistics", isOn: $state.uploadStats)
+                        Toggle("Glucose", isOn: $state.uploadGlucose)
+                    }
+                } header: {
+                    Text("Ladda upp till Nightscout")
                 }
 
                 Section(header: Text("Local glucose source")) {
