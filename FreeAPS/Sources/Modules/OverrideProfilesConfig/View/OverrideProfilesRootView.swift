@@ -44,8 +44,8 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Name Of Profile", text: $state.profileName)
-                } header: { Text("Enter Name of Profile") }
+                    TextField("Namn på profil", text: $state.profileName)
+                } header: { Text("Ange namn på profil") }
 
                 Section {
                     Button("Save") {
