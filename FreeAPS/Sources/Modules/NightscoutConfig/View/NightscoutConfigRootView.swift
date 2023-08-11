@@ -44,13 +44,13 @@ extension NightscoutConfig {
                 }
 
                 Section {
-                    Toggle("Ladda upp till Nightscout", isOn: $state.isUploadEnabled)
+                    Toggle("Ladda upp behandlingar", isOn: $state.isUploadEnabled)
                     if state.isUploadEnabled {
-                        Toggle("Statistics", isOn: $state.uploadStats)
-                        Toggle("Glucose", isOn: $state.uploadGlucose)
+                        Toggle("Ladda även upp statistik", isOn: $state.uploadStats)
+                        Toggle("Ladda även upp glukosvärden", isOn: $state.uploadGlucose)
                     }
                 } header: {
-                    Text("Ladda upp till Nightscout")
+                    Text("Tillåt uppladdning")
                 }
 
                 Section(header: Text("Local glucose source")) {
