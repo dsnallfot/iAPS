@@ -58,7 +58,7 @@ extension Bolus {
                         }
                     }
                     HStack {
-                        Text("Bolus Amount")
+                        Text("Bolus Amount").fontWeight(.semibold)
                         Spacer()
                         DecimalTextField(
                             "0",
@@ -67,7 +67,7 @@ extension Bolus {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("U")
+                        Text("U").fontWeight(.semibold)
                     }
                 }
 
