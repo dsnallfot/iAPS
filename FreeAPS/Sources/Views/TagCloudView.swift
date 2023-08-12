@@ -58,6 +58,7 @@ struct TagCloudView: View {
             case textTag where textTag.contains("SMB Delivery Ratio:"):
                 return .uam
             case textTag where textTag.contains("Bolus"),
+                 textTag where textTag.contains("TDD"),
                  textTag where textTag.contains("Tot 24h insulin:"):
                 return .green
             case textTag where textTag.contains("Total insulin:"),

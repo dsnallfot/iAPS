@@ -25,12 +25,12 @@ extension AddTempTarget {
 
         var body: some View {
             Form {
+                Section {
+                    Button { state.cancel() }
+                    label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
                 if !state.presets.isEmpty {
-                    Section {
-                        Button { state.cancel() }
-                        label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
                     Section(header: Text("Aktivera favorit")) {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
