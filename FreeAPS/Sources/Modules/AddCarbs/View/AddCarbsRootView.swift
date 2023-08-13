@@ -10,6 +10,9 @@ extension AddCarbs {
         @State var isPromtPresented = false
         @State var saved = false
         @State private var showAlert = false
+        @State var displayNote = false
+
+        @Environment(\.colorScheme) var colorScheme
 
         @FetchRequest(
             entity: Presets.entity(),
@@ -38,7 +41,7 @@ extension AddCarbs {
                 }
                 Section {
                     HStack {
-                        Text("Carbs").fontWeight(.semibold).padding(.top, 2).padding(.bottom, 2)
+                        Text("Carbs").fontWeight(.semibold)
                         Spacer()
                         DecimalTextField(
                             "0",
@@ -53,6 +56,9 @@ extension AddCarbs {
                     if state.useFPUconversion {
                         proteinAndFat()
                     }
+
+                    DatePicker("Date", selection: $state.date)
+
                     HStack {
                         Button {
                             state.useFPUconversion.toggle()
@@ -60,8 +66,8 @@ extension AddCarbs {
                         label: {
                             Text(
                                 state
-                                    .useFPUconversion ? NSLocalizedString("Hide Fat & Protein", comment: "") :
-                                    NSLocalizedString("Fat & Protein", comment: "")
+                                    .useFPUconversion ? NSLocalizedString("Dölj detaljerad vy", comment: "") :
+                                    NSLocalizedString("Visa detaljerad vy", comment: "")
                             ) }
                             .controlSize(.mini)
                             .buttonStyle(BorderlessButtonStyle())
@@ -95,25 +101,18 @@ extension AddCarbs {
                     .popover(isPresented: $isPromtPresented) {
                         presetPopover
                     }
-                    DatePicker("Date", selection: $state.date)
-                }
-                if state.useFPUconversion {
-                    Section {
-                        mealPresets
-                    }
                 }
 
-                Section(footer: Text(state.waitersNotepad().description)) {
+                Section {
                     Button { state.add() }
                     label: { Text("Save and continue").font(.title3.weight(.semibold)) }
                         .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0)
                         .frame(maxWidth: .infinity, alignment: .center)
-                }
 
-                if !state.useFPUconversion {
-                    Section {
-                        mealPresets
-                    }
+                } footer: { Text(state.waitersNotepad().description) }
+
+                Section {
+                    mealPresets
                 }
             }
             .onAppear(perform: configureView)
@@ -123,7 +122,7 @@ extension AddCarbs {
 
         var presetPopover: some View {
             Form {
-                Section(header: Text("Enter Meal Preset Name")) {
+                Section {
                     TextField("Name Of Dish", text: $dish)
                     Button {
                         saved = true
@@ -145,7 +144,7 @@ extension AddCarbs {
                         saved = false
                         isPromtPresented = false }
                     label: { Text("Cancel") }
-                }
+                } header: { Text("Enter Meal Preset Name") }
             }
         }
 
@@ -262,6 +261,11 @@ extension AddCarbs {
                 ).foregroundColor(.loopRed)
 
                 Text("grams")
+            }
+            HStack {
+                Text("Noteringar  ").foregroundColor(.primary)
+                TextField("", text: $state.note)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }
