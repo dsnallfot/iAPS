@@ -263,8 +263,9 @@ extension AddCarbs {
                 Text("grams")
             }
             HStack {
-                Text("Kort notering  ").foregroundColor(.primary)
+                Text("Kort notering").foregroundColor(.primary)
                 TextField("", text: $state.note)
+                    .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
