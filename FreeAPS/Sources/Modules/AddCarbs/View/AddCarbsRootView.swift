@@ -110,10 +110,6 @@ extension AddCarbs {
                         .frame(maxWidth: .infinity, alignment: .center)
 
                 } footer: { Text(state.waitersNotepad().description) }
-
-                Section {
-                    mealPresets
-                }
             }
             .onAppear(perform: configureView)
             .navigationTitle("Registrera måltid")
@@ -267,6 +263,9 @@ extension AddCarbs {
                 TextField("", text: $state.note)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            Section {
+                mealPresets
             }
         }
     }
