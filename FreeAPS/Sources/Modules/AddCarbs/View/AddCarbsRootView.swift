@@ -10,7 +10,7 @@ extension AddCarbs {
         @State var isPromtPresented = false
         @State var saved = false
         @State private var showAlert = false
-        @State var displayNote = false
+        @FocusState private var isFocused: Bool
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -168,6 +168,7 @@ extension AddCarbs {
                     .disabled(state.selection == nil)
                     .accentColor(.orange)
                     .buttonStyle(BorderlessButtonStyle())
+                    .controlSize(.mini)
                     .alert(
                         "Delete preset '\(state.selection?.dish ?? "")'?",
                         isPresented: $showAlert,
@@ -215,6 +216,7 @@ extension AddCarbs {
                                 )
                         )
                         .buttonStyle(BorderlessButtonStyle())
+                        .controlSize(.mini)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .accentColor(.minus)
                     Button {
@@ -227,6 +229,7 @@ extension AddCarbs {
                     label: { Text("[ +1 ]") }
                         .disabled(state.selection == nil)
                         .buttonStyle(BorderlessButtonStyle())
+                        .controlSize(.mini)
                         .accentColor(.blue)
                 }
             }
@@ -260,10 +263,13 @@ extension AddCarbs {
             }
             HStack {
                 Text("Kort notering").foregroundColor(.primary)
-                TextField("", text: $state.note)
-                    .multilineTextAlignment(.trailing)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-            }
+                TextField("", text: $state.note).multilineTextAlignment(.trailing)
+                if state.note != "", isFocused {
+                    Button { isFocused = false } label: {
+                        Image(systemName: "keyboard.chevron.compact.down") }
+                        .controlSize(.mini)
+                }
+            }.focused($isFocused)
             Section {
                 mealPresets
             }
