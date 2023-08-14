@@ -262,8 +262,8 @@ extension AddCarbs {
                 Text("grams")
             }
             HStack {
-                Text("Kort notering").foregroundColor(.primary)
-                TextField("", text: $state.note).multilineTextAlignment(.trailing)
+                Text("Notering").foregroundColor(.primary)
+                TextField("Emoji eller kort text", text: $state.note).multilineTextAlignment(.trailing)
                 if state.note != "", isFocused {
                     Button { isFocused = false } label: {
                         Image(systemName: "keyboard.chevron.compact.down") }
