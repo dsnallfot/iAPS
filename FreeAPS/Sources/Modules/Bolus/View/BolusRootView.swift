@@ -37,7 +37,8 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            Text("Insulin recommended").foregroundColor(.secondary)
+                            Text("Insulin recommended")
+                                .foregroundColor((state.error && state.insulinRecommended > 0) ? .red : .secondary)
                             Spacer()
                             Text(
                                 formatter
