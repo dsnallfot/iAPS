@@ -72,7 +72,7 @@ struct CarbsView: View {
             Text("🥨")
             Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
-                .font(selection == .carbs ? .title : .title3)
+                .font(selection == .carbs ? .title2 : .headline)
                 .focusable(selection == .carbs)
                 .digitalCrownRotation(
                     $carbAmount,
@@ -116,7 +116,7 @@ struct CarbsView: View {
             Text("🍗")
             Spacer()
             Text(numberFormatter.string(from: proteinAmount as NSNumber)! + " g")
-                .font(selection == .protein ? .title : .title3)
+                .font(selection == .protein ? .title2 : .headline)
                 .foregroundStyle(.red)
                 .focusable(selection == .protein)
                 .digitalCrownRotation(
@@ -159,7 +159,7 @@ struct CarbsView: View {
             Text("🧀")
             Spacer()
             Text(numberFormatter.string(from: fatAmount as NSNumber)! + " g")
-                .font(selection == .fat ? .title : .title3)
+                .font(selection == .fat ? .title2 : .headline)
                 .foregroundColor(.loopYellow)
                 .focusable(selection == .fat)
                 .digitalCrownRotation(
@@ -207,7 +207,8 @@ struct CarbsView: View {
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
             label: { Text("Save") }
-                .font(.callout)
+
+                .font(.title3.weight(.semibold))
                 .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
                 .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
 
