@@ -85,7 +85,7 @@ extension Bolus {
                                 .frame(maxWidth: .infinity, alignment: .center)
                         } else {
                             Button { isAddInsulinAlertPresented = true }
-                            label: { Text("Add insulin without actually bolusing").font(.title3) }
+                            label: { Text("Add insulin without actually bolusing") }
                                 .disabled(state.amount <= 0)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
