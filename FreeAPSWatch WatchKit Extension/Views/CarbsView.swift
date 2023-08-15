@@ -207,7 +207,7 @@ struct CarbsView: View {
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
             label: { Text("Save") }
-                .buttonStyle(.borderless)
+
                 .font(.callout)
                 .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
                 .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
