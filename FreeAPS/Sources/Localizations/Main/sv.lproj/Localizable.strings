@@ -1183,10 +1183,10 @@ Enact a temp Basal or a temp target */
 "Disable SMBs" = "Stäng av autobolusar (SMBs)";
 
 /* Your normal Profile. Use a short string */
-"Normal Profile" = "Normal Profil";
+"Normal Profile" = "Normal profil";
 
 /* Custom but unsaved Profile */
-"Custom Profile" = "Anpassad Profil";
+"Custom Profile" = "Anpassad profil";
 
 /* */
 "Profiles" = "Profiler";
