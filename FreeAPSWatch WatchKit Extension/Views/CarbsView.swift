@@ -31,6 +31,7 @@ struct CarbsView: View {
     var body: some View {
         VStack {
             // nutrient
+
             carbs
             if state.displayFatAndProteinOnWatch {
                 Spacer()
@@ -191,10 +192,10 @@ struct CarbsView: View {
         HStack(spacing: 25) {
             /* To do: display the actual meal presets
              Button {
-                 displayPresets.toggle()
+             displayPresets.toggle()
              }
              label: { Image(systemName: "menucard.fill") }
-                 .buttonStyle(.borderless)
+             .buttonStyle(.borderless)
              */
             Button {
                 WKInterfaceDevice.current().play(.click)
@@ -202,14 +203,16 @@ struct CarbsView: View {
                 let amountCarbs = Int(numberFormatter.string(from: carbAmount as NSNumber)!) ?? Int(carbAmount.rounded())
                 let amountFat = Int(numberFormatter.string(from: fatAmount as NSNumber)!) ?? Int(fatAmount.rounded())
                 let amountProtein = Int(numberFormatter.string(from: proteinAmount as NSNumber)!) ??
-                    Int(proteinAmount.rounded())
+                Int(proteinAmount.rounded())
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
-            label: { Text("Save") }
+        label: { Text("Save") }
                 .buttonStyle(.borderless)
                 .font(.callout)
                 .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
                 .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
+            
+        .navigationTitle("Måltid")
         }
         .frame(maxHeight: .infinity, alignment: .bottom)
         .padding(.top)
