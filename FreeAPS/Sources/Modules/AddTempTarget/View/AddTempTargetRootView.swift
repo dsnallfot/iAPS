@@ -103,6 +103,9 @@ extension AddTempTarget {
                         DatePicker("Date", selection: $state.date)
                         Button { isPromtPresented = true }
                         label: { Text("Spara som favorit") }
+                            .disabled(state.duration == 0)
+                            .controlSize(.mini)
+                            .buttonStyle(BorderlessButtonStyle())
                     }
                 }
                 if state.viewPercantage {
@@ -117,6 +120,8 @@ extension AddTempTarget {
                         Button { isPromtPresented = true }
                         label: { Text("Spara som favorit") }
                             .disabled(state.duration == 0)
+                            .controlSize(.mini)
+                            .buttonStyle(BorderlessButtonStyle())
                     }
                 }
 
