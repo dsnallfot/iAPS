@@ -29,7 +29,7 @@ struct BolusView: View {
                         .frame(width: geo.size.width / 4)
                     Spacer()
                     Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " U")
-                        .font(.headline)
+                        .font(.title3)
                         .focusable(true)
                         .digitalCrownRotation(
                             $steps,
