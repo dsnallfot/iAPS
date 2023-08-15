@@ -27,9 +27,10 @@ struct BolusView: View {
                         steps = max(newValue, 0)
                     } label: { Image(systemName: "minus") }
                         .frame(width: geo.size.width / 4)
+                        .padding(.bottom)
                     Spacer()
                     Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " U")
-                        .font(.title3)
+                        .font(.title2)
                         .focusable(true)
                         .digitalCrownRotation(
                             $steps,
@@ -40,6 +41,7 @@ struct BolusView: View {
                             isContinuous: false,
                             isHapticFeedbackEnabled: true
                         )
+                        .padding(.bottom)
                     Spacer()
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -47,6 +49,7 @@ struct BolusView: View {
                         steps = min(newValue, Double((state.maxBolus ?? 5) / (state.bolusIncrement ?? 0.1)))
                     } label: { Image(systemName: "plus") }
                         .frame(width: geo.size.width / 4)
+                        .padding(.bottom)
                 }
 
                 HStack {
