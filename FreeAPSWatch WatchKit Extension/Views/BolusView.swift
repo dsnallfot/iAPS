@@ -28,8 +28,9 @@ struct BolusView: View {
                     } label: { Image(systemName: "minus") }
                         .frame(width: geo.size.width / 4)
                         .padding(.bottom)
+                        .padding(.top)
                     Spacer()
-                    Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " U")
+                    Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " E")
                         .font(.title2)
                         .focusable(true)
                         .digitalCrownRotation(
@@ -42,6 +43,7 @@ struct BolusView: View {
                             isHapticFeedbackEnabled: true
                         )
                         .padding(.bottom)
+                        .padding(.top)
                     Spacer()
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -50,32 +52,35 @@ struct BolusView: View {
                     } label: { Image(systemName: "plus") }
                         .frame(width: geo.size.width / 4)
                         .padding(.bottom)
+                        .padding(.top)
                 }
 
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
+
                         state.isBolusViewActive = false
                     }
                     label: {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopRed)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 24, height: 24)
                     }
                     Button {
                         WKInterfaceDevice.current().play(.click)
+
                         enactBolus()
                     }
                     label: {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopGreen)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 24, height: 24)
                     }
                     .disabled(steps <= 0)
                 }
-            }.frame(maxHeight: .infinity)
+            }.frame(maxHeight: .infinity, alignment: .bottom)
         }
         .navigationTitle("Enact Bolus")
         .onAppear {

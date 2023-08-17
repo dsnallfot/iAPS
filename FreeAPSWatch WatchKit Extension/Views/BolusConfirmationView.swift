@@ -65,6 +65,7 @@ struct BolusConfirmationView: View {
                 label: {
                     Text("Cancel")
                 }
+                .font(.title3.weight(.semibold))
                 if isCrownLeftOriented {
                     Spacer().frame(width: elementSize / 2)
                 }
