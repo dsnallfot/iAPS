@@ -33,22 +33,39 @@ extension ISFEditor {
                             } else {
                                 Text(rateFormatter.string(from: autotune.sensitivity as NSNumber) ?? "0")
                             }
-                            Text(state.units.rawValue + "/U").foregroundColor(.secondary)
+                            Text(state.units.rawValue + "/E").foregroundColor(.secondary)
                         }
                     }
                 }
                 if let newISF = state.autosensISF {
-                    Section(header: Text("Autosens")) {
+                    Section(
+                                            header: !state.settingsManager.preferences
+                                                .useNewFormula ? Text("Autosens") : Text("Dynamisk känslighet")
+                                        ) {
+                                            let dynamicRatio = state.provider.suggestion?.sensitivityRatio ?? 0
+                                            let dynamicISF = state.provider.suggestion?.isf ?? 0
                         HStack {
                             Text("Sensitivity Ratio")
                             Spacer()
-                            Text(rateFormatter.string(from: state.autosensRatio as NSNumber) ?? "1")
+                            Text(
+                                                            rateFormatter
+                                                                .string(from: (
+                                                                    !state.settingsManager.preferences.useNewFormula ? state
+                                                                        .autosensRatio : dynamicRatio
+                                                                ) as NSNumber) ?? "1"
+                                                        )
                         }
                         HStack {
                             Text("Calculated Sensitivity")
                             Spacer()
-                            Text(rateFormatter.string(from: newISF as NSNumber) ?? "0")
-                            Text(state.units.rawValue + "/U").foregroundColor(.secondary)
+                            Text(
+                                                            rateFormatter
+                                                                .string(from: (
+                                                                    !state.settingsManager.preferences
+                                                                        .useNewFormula ? newISF : dynamicISF
+                                                                ) as NSNumber) ?? "0"
+                                                        )
+                            Text(state.units.rawValue + "/E").foregroundColor(.secondary)
                         }
                     }
                 }
@@ -126,7 +143,7 @@ extension ISFEditor {
                         HStack {
                             Text("Rate").foregroundColor(.secondary)
                             Text(
-                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") \(state.units.rawValue)/U"
+                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") \(state.units.rawValue)/E"
                             )
                             Spacer()
                             Text("starts at").foregroundColor(.secondary)
