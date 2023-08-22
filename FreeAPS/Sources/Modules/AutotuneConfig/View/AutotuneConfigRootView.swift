@@ -31,6 +31,9 @@ extension AutotuneConfig {
             Form {
                 Section {
                     Toggle("Use Autotune", isOn: $state.useAutotune)
+                    if state.useAutotune {
+                        Toggle("Använd endast Autotune för basal", isOn: $state.onlyAutotuneBasals)
+                    }
                 }
 
                 Section {
@@ -44,22 +47,27 @@ extension AutotuneConfig {
                 }
 
                 if let autotune = state.autotune {
-                    Section {
-                        HStack {
-                            Text("Carb ratio")
-                            Spacer()
-                            Text(isfFormatter.string(from: autotune.carbRatio as NSNumber) ?? "0")
-                            Text("g/U").foregroundColor(.secondary)
-                        }
-                        HStack {
-                            Text("Sensitivity")
-                            Spacer()
-                            if state.units == .mmolL {
-                                Text(isfFormatter.string(from: autotune.sensitivity.asMmolL as NSNumber) ?? "0")
-                            } else {
-                                Text(isfFormatter.string(from: autotune.sensitivity as NSNumber) ?? "0")
+                    if !state.onlyAutotuneBasals {
+                        Section {
+                            HStack {
+                                Text("Carb ratio")
+                                Spacer()
+                                Text(isfFormatter.string(from: autotune.carbRatio as NSNumber) ?? "0")
+                                Text("g/E").foregroundColor(.secondary)
                             }
-                            Text(state.units.rawValue + "/U").foregroundColor(.secondary)
+                            HStack {
+                                Text("Sensitivity")
+                                Spacer()
+                                if state.units == .mmolL {
+                                    Text(
+                                        isfFormatter
+                                            .string(from: autotune.sensitivity.asMmolL as NSNumber) ?? "0"
+                                    )
+                                } else {
+                                    Text(isfFormatter.string(from: autotune.sensitivity as NSNumber) ?? "0")
+                                }
+                                Text(state.units.rawValue + "/E").foregroundColor(.secondary)
+                            }
                         }
                     }
 
@@ -69,7 +77,7 @@ extension AutotuneConfig {
                                 Text(autotune.basalProfile[index].start).foregroundColor(.secondary)
                                 Spacer()
                                 Text(rateFormatter.string(from: autotune.basalProfile[index].rate as NSNumber) ?? "0")
-                                Text("U/hr").foregroundColor(.secondary)
+                                Text("E/h").foregroundColor(.secondary)
                             }
                         }
                         HStack {
@@ -79,7 +87,7 @@ extension AutotuneConfig {
                             Spacer()
                             Text(rateFormatter.string(from: autotune.basalProfile.reduce(0) { $0 + $1.rate } as NSNumber) ?? "0")
                                 .foregroundColor(.primary) +
-                                Text(" U/day")
+                                Text(" E/dag")
                                 .foregroundColor(.secondary)
                         }
                     }
