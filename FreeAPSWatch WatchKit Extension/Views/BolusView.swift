@@ -25,7 +25,7 @@ struct BolusView: View {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps - 1
                         steps = max(newValue, 0)
-                    } label: { Image(systemName: "minus") }
+                    } label: { Image(systemName: "minus").scaleEffect(1.25) }
                         .frame(width: geo.size.width / 4)
                         .padding(.bottom)
                         .padding(.top)
@@ -49,7 +49,7 @@ struct BolusView: View {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps + 1
                         steps = min(newValue, Double((state.maxBolus ?? 5) / (state.bolusIncrement ?? 0.1)))
-                    } label: { Image(systemName: "plus") }
+                    } label: { Image(systemName: "plus").scaleEffect(1.25) }
                         .frame(width: geo.size.width / 4)
                         .padding(.bottom)
                         .padding(.top)

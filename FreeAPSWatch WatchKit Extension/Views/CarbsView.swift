@@ -64,8 +64,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount - 5
                     carbAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus") }
-                    .buttonStyle(.borderless).padding(.leading, 5)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .carbs ? .blue : .none)
             }
             Spacer()
@@ -89,8 +89,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount + 5
                     carbAmount = min(newValue, Double(state.maxCOB ?? 120))
-                } label: { Image(systemName: "plus") }
-                    .buttonStyle(.borderless).padding(.trailing, 5)
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .carbs ? .blue : .none)
             }
         }
@@ -108,8 +108,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount - 5
                     proteinAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus") }
-                    .buttonStyle(.borderless).padding(.leading, 5)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .protein ? .blue : .none)
             }
             Spacer()
@@ -134,7 +134,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount + 5
                     proteinAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus") }.buttonStyle(.borderless).padding(.trailing, 5)
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }.buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .protein ? .blue : .none)
             }
         }
@@ -151,8 +151,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount - 5
                     fatAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus") }
-                    .buttonStyle(.borderless).padding(.leading, 5)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .fat ? .blue : .none)
             }
             Spacer()
@@ -177,8 +177,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount + 5
                     fatAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus") }
-                    .buttonStyle(.borderless).padding(.trailing, 5)
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .fat ? .blue : .none)
             }
         }
