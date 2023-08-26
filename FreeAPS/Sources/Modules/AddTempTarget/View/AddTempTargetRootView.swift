@@ -169,7 +169,7 @@ extension AddTempTarget {
                     }
                     HStack(spacing: 2) {
                         Text(
-                            "\(formatter.string(from: (low ?? 0) as NSNumber)!) - \(formatter.string(from: (high ?? 0) as NSNumber)!)"
+                            "\(formatter.string(from: (low ?? 0) as NSNumber)!)"
                         )
                         .foregroundColor(.secondary)
                         .font(.caption)

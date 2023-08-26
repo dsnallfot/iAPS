@@ -185,8 +185,8 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
         }
 
         let description =
-            "\(targetFormatter.string(from: (low ?? 0) as NSNumber)!) - \(targetFormatter.string(from: (high ?? 0) as NSNumber)!)" +
-            " for \(targetFormatter.string(from: target.duration as NSNumber)!) min"
+            "\(targetFormatter.string(from: (low ?? 0) as NSNumber)!)" +
+            " mmol/L i \(targetFormatter.string(from: target.duration as NSNumber)!) min"
 
         return description
     }
