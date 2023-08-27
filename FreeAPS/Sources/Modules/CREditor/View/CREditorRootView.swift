@@ -106,7 +106,7 @@ extension CREditor {
                         HStack {
                             Text("Ratio").foregroundColor(.secondary)
                             Text(
-                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") g/U"
+                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") g/E"
                             )
                             Spacer()
                             Text("starts at").foregroundColor(.secondary)
