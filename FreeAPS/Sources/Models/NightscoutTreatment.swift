@@ -16,6 +16,7 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     var fat: Decimal?
     var protein: Decimal?
     var foodType: String?
+    var reason: String?
     let targetTop: Decimal?
     let targetBottom: Decimal?
 
@@ -49,6 +50,7 @@ extension NigtscoutTreatment {
         case fat
         case protein
         case foodType
+        case reason
         case targetTop
         case targetBottom
     }
