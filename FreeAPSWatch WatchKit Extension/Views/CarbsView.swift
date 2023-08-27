@@ -69,7 +69,7 @@ struct CarbsView: View {
                     .tint(selection == .carbs ? .blue : .none)
             }
             Spacer()
-            Text("🥨").font(selection == .carbs ? .title2 : .headline)
+            Text("Kh").font(selection == .carbs ? .title2 : .headline)
             Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
                 .font(selection == .carbs ? .title2 : .headline)
@@ -99,6 +99,7 @@ struct CarbsView: View {
         }
         .background(selection == .carbs && state.displayFatAndProteinOnWatch ? colorOfselection : .black)
         .padding(.top)
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 
     var protein: some View {
