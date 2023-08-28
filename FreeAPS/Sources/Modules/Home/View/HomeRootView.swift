@@ -101,21 +101,30 @@ extension Home {
         var cobIobView: some View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("IOB").font(.footnote).foregroundColor(.secondary)
+                    Text("IOB  ")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" U", comment: "Insulin unit")
                     )
-                    .font(.footnote).fontWeight(.bold)
-                }.frame(alignment: .top)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+                }
+                .frame(alignment: .top) // Align the whole HStack to the top
+
                 HStack {
-                    Text("COB").font(.footnote).foregroundColor(.secondary)
+                    Text("COB ")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.footnote).fontWeight(.bold)
-                }.frame(alignment: .bottom)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+                }
+                .frame(alignment: .bottom) // Align the whole HStack to the bottom
             }
         }
 
@@ -495,7 +504,7 @@ extension Home {
                                     .background(Capsule().fill(Color.red))
                             }
                         }
-                    }.buttonStyle(.borderless)
+                    }
                     Spacer()
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
@@ -504,9 +513,7 @@ extension Home {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(8)
-                    }
-                    .foregroundColor(.loopGreen)
-                    .buttonStyle(.borderless)
+                    }.foregroundColor(.loopGreen)
                     Spacer()
                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
                     label: {
@@ -515,9 +522,7 @@ extension Home {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(8)
-                    }
-                    .foregroundColor(.insulin)
-                    .buttonStyle(.borderless)
+                    }.foregroundColor(.insulin)
                     Spacer()
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
@@ -527,9 +532,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .padding(8)
-                        }
-                        .foregroundColor(.insulin)
-                        .buttonStyle(.borderless)
+                        }.foregroundColor(.insulin)
                         Spacer()
                     }
                     Button { state.showModal(for: .statistics)
@@ -540,9 +543,7 @@ extension Home {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(8)
-                    }
-                    .foregroundColor(.purple)
-                    .buttonStyle(.borderless)
+                    }.foregroundColor(.purple)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
@@ -551,9 +552,7 @@ extension Home {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .padding(8)
-                    }
-                    .foregroundColor(.loopGray)
-                    .buttonStyle(.borderless)
+                    }.foregroundColor(.loopGray)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, geo.safeAreaInsets.bottom)

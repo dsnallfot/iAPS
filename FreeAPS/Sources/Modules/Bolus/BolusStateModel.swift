@@ -20,6 +20,7 @@ extension Bolus {
         @Published var isf: Decimal = 0
         @Published var percentage: Decimal = 0
         @Published var threshold: Decimal = 0
+        @Published var maxBolus: Decimal = 0.0
         @Published var minGuardBG: Decimal = 0
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
@@ -34,6 +35,7 @@ extension Bolus {
             units = settingsManager.settings.units
             percentage = settingsManager.settings.insulinReqPercentage
             threshold = provider.suggestion?.threshold ?? 0
+            maxBolus = provider.pumpSettings().maxBolus
 
             if waitForSuggestionInitial {
                 apsManager.determineBasal()

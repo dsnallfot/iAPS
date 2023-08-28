@@ -37,19 +37,51 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            Text("Insulin recommended")
-                                .foregroundColor((state.error && state.insulinRecommended > 0) ? .red : .secondary)
-                            Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinRecommended as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor((state.error && state.insulinRecommended > 0) ? .red : .secondary)
-                        }.contentShape(Rectangle())
-                            .onTapGesture {
-                                if state.error, state.insulinRecommended > 0 { displayError = true }
-                                else { state.amount = state.insulinRecommended }
+                            if state.error && state.insulinRecommended > 0 {
+                                Text("🔴 Vänta med att ge bolus")
+                                    .foregroundColor(.red)
+                            } else if state.error && state.insulinRecommended < 0 {
+                                Text("🟢 Rekommenderad bolus")
+                                    .foregroundColor(.green)
+                            } else {
+                                Text("🟢 Rekommenderad bolus")
+                                    .foregroundColor(.green)
                             }
+
+                            Spacer()
+
+                            if state.error && state.insulinRecommended > 0 {
+                                // Visa önskat innehåll för "Beräknad insulindos"
+                                Text(
+                                    formatter
+                                        .string(from: state.insulinRecommended as NSNumber)! +
+                                        NSLocalizedString(" U", comment: "Insulin unit")
+                                ).foregroundColor(.red)
+                            } else if state.error && state.insulinRecommended < 0 {
+                                // Visa önskat innehåll för "Avvakta"
+                                Text(
+                                    formatter
+                                        .string(from: state.insulinRecommended as NSNumber)! +
+                                        NSLocalizedString(" U", comment: "Insulin unit")
+                                ).foregroundColor(.green)
+                            } else {
+                                // Visa önskat innehåll för "Beräknad insulindos"
+                                Text(
+                                    formatter
+                                        .string(from: state.insulinRecommended as NSNumber)! +
+                                        NSLocalizedString(" U", comment: "Insulin unit")
+                                ).foregroundColor(.green)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            if state.error, state.insulinRecommended > 0 {
+                                displayError = true
+                            } else {
+                                state.amount = state.insulinRecommended
+                            }
+                        }
+
                         HStack {
                             Image(systemName: "info.bubble").symbolRenderingMode(.palette).foregroundStyle(
                                 .primary, .blue
@@ -162,12 +194,15 @@ extension Bolus {
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("ISF:")
-                        Text("Insulin Sensitivity")
-                    }.foregroundColor(.secondary).italic()
+                        Text("Inställd maxbolus").foregroundColor(.secondary)
+                        let MB = state.maxBolus
+                        Text(MB.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
+                        Text(NSLocalizedString("U", comment: "/Insulin unit"))
+                            .foregroundColor(.secondary)
+                    }
                     if state.percentage != 100 {
                         HStack {
-                            Text("Percentage setting").foregroundColor(.secondary)
+                            Text("Inställd manuell bolusprocent").foregroundColor(.secondary)
                             let percentage = state.percentage
                             Text(percentage.formatted())
                             Text("%").foregroundColor(.secondary)
@@ -190,12 +225,16 @@ extension Bolus {
                     let color: Color = (state.percentage != 100 && state.insulin > 0) ? .secondary : .blue
                     let fontWeight: Font.Weight = (state.percentage != 100 && state.insulin > 0) ? .regular : .bold
                     HStack {
-                        Text(NSLocalizedString("Insulin recommended", comment: "") + ":").font(.callout)
+                        Text(NSLocalizedString("Totalt beräknat insulinbehov", comment: "") + ":").font(.callout)
                         Text(state.insulin.formatted() + unit).font(.callout).foregroundColor(color).fontWeight(fontWeight)
                     }
                     if state.percentage != 100, state.insulin > 0 {
                         Divider()
-                        HStack { Text(state.percentage.formatted() + " % ->").font(.callout).foregroundColor(.secondary)
+                        HStack {
+                            Text(
+                                "Förslag: (" + state.percentage.formatted() + " % eller maxbolus) ="
+                            )
+                            .font(.callout).foregroundColor(.secondary)
                             Text(
                                 state.insulinRecommended.formatted() + unit
                             ).font(.callout).foregroundColor(.blue).bold()
