@@ -38,11 +38,11 @@ extension Bolus {
                     } else {
                         HStack {
                             if state.error && state.insulinRecommended > 0 {
-                                Text("🔴 Vänta med att ge bolus")
+                                Text("🟠 Vänta med att ge bolus")
+                                    .foregroundColor(.orange)
+                            } else if state.insulinRecommended <= 0 {
+                                Text("🔴 Ingen bolus rekommenderas")
                                     .foregroundColor(.red)
-                            } else if state.error && state.insulinRecommended < 0 {
-                                Text("🟢 Rekommenderad bolus")
-                                    .foregroundColor(.green)
                             } else {
                                 Text("🟢 Rekommenderad bolus")
                                     .foregroundColor(.green)
@@ -51,21 +51,21 @@ extension Bolus {
                             Spacer()
 
                             if state.error && state.insulinRecommended > 0 {
-                                // Visa önskat innehåll för "Beräknad insulindos"
+                                // Visa önskat innehåll för "Vänta med att ge bolus"
+                                Text(
+                                    formatter
+                                        .string(from: state.insulinRecommended as NSNumber)! +
+                                        NSLocalizedString(" U", comment: "Insulin unit")
+                                ).foregroundColor(.orange)
+                            } else if state.insulinRecommended <= 0 {
+                                // Visa önskat innehåll för "Ingen bolus rekommenderas"
                                 Text(
                                     formatter
                                         .string(from: state.insulinRecommended as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.red)
-                            } else if state.error && state.insulinRecommended < 0 {
-                                // Visa önskat innehåll för "Avvakta"
-                                Text(
-                                    formatter
-                                        .string(from: state.insulinRecommended as NSNumber)! +
-                                        NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.green)
                             } else {
-                                // Visa önskat innehåll för "Beräknad insulindos"
+                                // Visa önskat innehåll för "Rekommenderad bolus"
                                 Text(
                                     formatter
                                         .string(from: state.insulinRecommended as NSNumber)! +
