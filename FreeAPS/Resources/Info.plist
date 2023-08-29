@@ -37,7 +37,7 @@
 			<string>com.loop.custom</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>Loop</string>
+				<string>$(APP_URL_SCHEME)</string>
 			</array>
 		</dict>
 	</array>
