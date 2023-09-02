@@ -1707,25 +1707,25 @@ Enact a temp Basal or a temp target */
 "With this option enabled, the SMB algorithm can recognize unannounced meals. This is helpful, if you forget to tell iAPS about your carbs or estimate your carbs wrong and the amount of entered carbs is wrong or if a meal with lots of fat and protein has a longer duration than expected. Without any carb entry, UAM can recognize fast glucose increasments caused by carbs, adrenaline, etc, and tries to adjust it with SMBs. This also works the opposite way: if there is a fast glucose decreasement, it can stop SMBs earlier." = "Med denna inställning på kan appen upptäcka kolhydrater som inte matats in. Detta kan vara till hjälp om du glömmer att mata in eller uppskattar dina kolhydrater fel, eller vid måltider med mycket fett och protein, som har en längre verkan än förväntat. Utan inlagda kolhydrater kan UAM känna igen snabba glukosförändringar orsakade av kolhydrater, adrenalin, etc, och försöker justera dessa med SMBs. Detta fungerar också omvänt: vid snabb glukosminskning stoppas SMB: s tidigare.";
 
 /* Headline "Enable SMB With COB" */
-"Enable SMB With COB" = "Använd SMB med kolhydrater (COB)";
+"Enable SMB With COB" = "* Använd SMB med kolhydrater (COB)";
 
 /* Enable SMB With COB" */
 "This enables supermicrobolus (SMB) while carbs on board (COB) are positive." = "Detta tillåter supermikrobolusar (SMB) medan det finns aktiva kolhydrater (COB).";
 
 /* Headline "Enable SMB With Temptarget” */
-"Enable SMB With Temptarget" = "Använd SMB vid ett lågt temporärt målvärde";
+"Enable SMB With Temptarget" = "* Använd SMB vid ett lågt temporärt målvärde";
 
 /* "Enable SMB With Temptarget” */
 "This enables supermicrobolus (SMB) with eating soon / low temp targets. With this feature enabled, any temporary target below 100mg/dL, such as a temp target of 99 (or 80, the typical eating soon target) will enable SMB." = "Detta tillåter supermikrobolusar (SMB) vid låga tillfälliga målvärden (tex 'Äter snart'). Med denna funktion aktiverad, kommer SMB:ar vara aktiva även vid tillfälliga målvärden under 100mg/dL (5,6 mmol/l).";
 
 /* Headline "Enable SMB Always" */
-"Enable SMB Always" = "Använd alltid SMB";
+"Enable SMB Always" = "Använd alltid SMB (Aktiverar nedan *)";
 
 /* "Enable SMB Always" */
 "Defaults to false. When true, always enable supermicrobolus (unless disabled by high temptarget)." = "Av som standard. Vid läge på, tillåts alltid supermikrobolusar (SMB) (såvida inte automatiskt inaktiverat av ett högt målvärde).";
 
 /* Headline "Enable SMB After Carbs" */
-"Enable SMB After Carbs" = "Använd SMB även efter kolhydrater";
+"Enable SMB After Carbs" = "* Använd SMB även efter kolhydrater";
 
 /* "Enable SMB After Carbs" */
 "Defaults to false. When true, enables supermicrobolus (SMB) for 6h after carbs, even with 0 carbs on board (COB)." = "Av som standard. Tillåter supermikrobolusar (SMB) även 6h efter kolhydrater, också vid 0 aktiva kolhydrater (COB).";
@@ -1886,13 +1886,13 @@ Enact a temp Basal or a temp target */
 "Enable Dynamic ISF" = "Aktivera dynamisk insulinkänslighet (ISF)";
 
 /* Enable Dynamic ISF */
-"Calculate a new ISF with every loop cycle. New ISF will be based on current BG, TDD of insulin (past 24 hours or a weighted average) and an Adjustment Factor (default is 1).\n\nDynamic ISF and CR ratios will be limited by your autosens.min/max limits.\n\nDynamic ratio replaces the autosens.ratio: New ISF = Static ISF / Dynamic ratio,\nDynamic ratio = profile.sens * adjustmentFactor * tdd * Math.log(BG/insulinFactor+1) / 1800,\ninsulinFactor = 120 - InsulinPeakTimeInMinutes" = "Beräkna ny insulinkänslighet varje loopcykel. Ny ISF (insulinkänslighet) beräknas på nuvarande blodsocker, TDD (insulin senaste 24 timmarna, eller ett viktad genomsnitt) och AF-konstant (standardvärde är 1).\n\nDynamiska ISF och CR (kolhydratkvot) kvoter begränsas av dina autosens.min/max-inställningar.\n\nDynamiska kvoterna ersätter autosens-kvoten: Ny ISF =inställd ISF / dynamisk kvot,\nDynamisk kvot = profile.sens * adjustmentFactor * tdd * Math.log(BG/insulinFactor+1) / 1800,\ninsulinFactor = 120 - tiden, i minuter, för insulinets maximala blodsockersänkande effekt.";
+"Calculate a new ISF with every loop cycle. New ISF will be based on current BG, TDD of insulin (past 24 hours or a weighted average) and an Adjustment Factor (default is 1).\n\nDynamic ISF and CR ratios will be limited by your autosens.min/max limits.\n\nDynamic ratio replaces the autosens.ratio:\n\nNew ISF = Static ISF / Dynamic ratio,\n\nDynamic ratio = profile.sens * adjustmentFactor * tdd * Math.log(BG/insulinFactor+1) / 1800,\n\ninsulinFactor = 120 - InsulinPeakTimeInMinutes" = "Beräkna ny insulinkänslighet varje loopcykel. Ny ISF (insulinkänslighet) beräknas på nuvarande blodsocker, TDD (insulin senaste 24 timmarna, eller ett viktat genomsnitt) och AF-konstant (standardvärde är 1).\n\nDynamiska ISF och CR kvoter begränsas av dina autosens min/max-inställningar.\n\nDe dynamiska kvoterna ersätter autosens-kvoten: Ny ISF =inställd ISF / dynamisk kvot,\nDynamisk kvot = profil ISF * Justeringsfaktor * TDD * Math.log(BG/insulinFactor+1) / 1800,\nInsulinFactor = 120 - tiden, i minuter, för insulinets maximala blodsockersänkande effekt.";
 
 /* Headline "Enable Dynamic CR" */
 "Enable Dynamic CR" = "Aktivera dynamisk insulinkvot (CR)";
 
 /* Enable Dynamic CR */
-"Use Dynamic CR. The dynamic ratio will be used for CR as follows:\n\n When ratio > 1:  dynCR = (newRatio - 1) / 2 + 1.\nWhen ratio < 1: dynCR = CR/dynCR.\n\nDon't use toghether with a high Insulin Fraction (> 2)" = "Använd dynamisk kolhydratkvot. Den dynamiska kvoten kommer att beräknas som flöjer::\n\n när kvot  > 1:  dynamisk kolhydratkvot = (dynamiskISFkvot - 1) / 2 + 1.\nNär kvot < 1: dynamisk kolhydratkvot = inställd kolhydratkvot/dynamisk kolhydratkvot.\n\nUndvik att använda tillsamans med en inställning för \"Kvot av rekommenderad mängd insulin\" över 2";
+"Use Dynamic CR. The dynamic ratio will be used for CR as follows:\n\n When ratio > 1:  dynCR = (newRatio - 1) / 2 + 1.\nWhen ratio < 1: dynCR = CR/dynCR.\n\nDon't use toghether with a high Insulin Fraction (> 2)" = "Använd dynamisk kolhydratkvot. Den dynamiska kvoten kommer att beräknas som följer: \n\nNär kvot  > 1:  dynamisk kolhydratkvot = (dynamiskISFkvot - 1) / 2 + 1.\nNär kvot < 1: dynamisk kolhydratkvot = inställd kolhydratkvot/dynamisk kolhydratkvot.\n\nUndvik att använda tillsamans med en inställning för \"Kvot av rekommenderad mängd insulin\" över 2";
 
 /* Headline "Adjust Dynamic ISF constant" */
 "Adjust Dynamic ISF constant" = "Ändra dynamisk ISF-konstant";
@@ -1902,7 +1902,7 @@ Enact a temp Basal or a temp target */
 
 
 /* Headline "Use Sigmoid Function" */
-"Use Sigmoid Function" = "Använd S-formad dynamisk insulinkänslighet";
+"Use Sigmoid Function" = "Använd Sigmoid dynamisk insulinkänslighet";
 
 /* Use Sigmoid Function */
 "Use a sigmoid function for ISF (and for CR, when enabled), instead of the default Logarithmic formula. Requires the Dynamic ISF setting to be enabled in settings\n\nThe Adjustment setting adjusts the slope of the curve (Y: Dynamic ratio, X: Blood Glucose). A lower value ==> less steep == less aggressive.\n\nThe autosens.min/max settings determines both the max/min limits for the dynamic ratio AND how much the dynamic ratio is adjusted. If AF is the slope of the curve, the autosens.min/max is the height of the graph, the Y-interval, where Y: dynamic ratio. The curve will always have a sigmoid shape, no matter which autosens.min/max settings are used, meaning these settings have big consequences for the outcome of the computed dynamic ISF. Please be careful setting a too high autosens.max value. With a proper profile ISF setting, you will probably never need it to be higher than 1.5\n\nAn Autosens.max limit > 1.5 is not advisable when using the sigmoid function." = "Använd en sigmoidfunktion för ISF (och för CR, när det är aktiverat), istället för den logaritmiska standardformeln. Kräver att den dynamiska ISF-inställningen är aktiverad i inställningarna\n\nJusteringsinställningen justerar lutningen på kurvan (Y: Dynamiskt förhållande, X: Blodglukos). Ett lägre värde ==> mindre brant == mindre aggressiv.\n\nAutosens. in/max inställningar bestämmer både max/min gränsen för det dynamiska förhållandet OCH hur mycket det dynamiska förhållandet justeras. Om AF är sluttningen av kurvan, autosens. in/max är höjden på grafen, Y-intervallet, där Y: dynamiskt förhållande. Kurvan kommer alltid att ha en sigmoid form, oavsett vilken autosens. in/max inställningar används, vilket innebär att dessa inställningar har stora konsekvenser för resultatet av den beräknade dynamiska ISF. Var försiktig med att ställa in ett för högt autosens.max värde. Med en korrekt profil ISF inställning, kommer du förmodligen aldrig behöver det att vara högre än 1.\n\nEn autosens.max gräns > 1.5 är inte lämpligt när du använder sigmoid-funktionen.";
@@ -1936,10 +1936,10 @@ Enact a temp Basal or a temp target */
 "... When Blood Glucose Is Over (mg/dl):" = "Aktivera SMB när blodsocker överskrider (mg/dl):";
 
 /* ... When Blood Glucose Is Over (mg/dl): */
-"Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange vid vilket blodsockervärde som SMB kommer att aktiveras. Om blodsockret stiger ver detta värde aktiveras SMB. \n\nInställningen anges i mg/dl";
+"Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange vid vilket blodsockervärde som SMB kommer att aktiveras. Om blodsockret stiger över detta värde aktiveras SMB. \n\nInställningen anges i mg/dl";
 
 /* Headline "Enable SMB With High BG" */
-"Enable SMB With High BG" = "Aktivera SMB vid ett högt blodsocker";
+"Enable SMB With High BG" = "* Aktivera SMB vid ett högt blodsocker";
 
 /* "Enable SMB With High BG" */
 "Enable SMBs when a high BG is detected, based on the high BG target (adjusted or profile)" = "Aktivera SMB vid högt blodsocker, enligt inställning nedan";
