@@ -1785,13 +1785,13 @@ Enact a temp Basal or a temp target */
 "Half Basal Exercise Target" = "Halva basaldosen vid Motionsläge";
 
 /* "Half Basal Exercise Target" */
-"Set to a number, e.g. 160, which means when temp target is 160 mg/dL and exercise_mode=true, run 50% basal at this level (120 = 75%; 140 = 60%). This can be adjusted, to give you more control over your exercise modes." = "Inställd till ett blodsockervärde, t.ex. 160 (mg/dl = 8,9 mmol/l), vilket innebär att när det temporära målvärdet är 8,9 mmol/l och 'Exercise Mode' är på, används endast en 50%-ig basal vid detta blodglukosvärde (120 = 75%; 140 = 60%). Detta kan justeras, för att ge dig mer kontroll över dina temporära målvärden vid träning.";
+"Set to a number, e.g. 160, which means when temp target is 160 mg/dL, run 50% basal at this level (120 = 75%; 140 = 60%). This can be adjusted, to give you more control over your exercise modes." = "Inställd till ett blodsockervärde, t.ex. 160 (mg/dl = 8,9 mmol/l), vilket innebär att när det temporära målvärdet är 8,9 mmol/l, används endast en 50%-ig basal vid detta blodglukosvärde (6,7 = 75%; 7,8 = 60%). Detta kan justeras, för att ge dig mer kontroll över dina temporära målvärden vid träning. \n\nInställningen anges i mg/dl";
 
 /* Headline "Max COB" */
 "Max COB" = "Max mängd aktiva kolhydrater (COB)";
 
 /* "Max COB" */
-"This defaults maxCOB to 120 because that’s the most a typical body can absorb over 4 hours. (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120. Essentially, this just limits AMA as a safety cap against weird COB calculations due to fluky data.)" = "Standardvärde 120, eftersom det är vad kroppen typiskt här anses absorbera över 4 timmar. (I händelse att någon matar in mer/överlappar med mer kolhydrater, kommer iAPS att minska dosering baserad på 120. I grund och botten begränsar detta endast AMA med ett tak, för skydd mot felaktiga aktiva kolhydrater-beräkningar på grund av opålitlig data.)";
+"This defaults maxCOB to 120 because that’s the most a typical body can absorb over 4 hours. (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120. Essentially, this just limits AMA as a safety cap against weird COB calculations due to fluky data.)" = "Standardvärde 120g, eftersom det är vad kroppen typiskt anses kunna absorbera under 4 timmar. (I händelse att man registrerar mer/överlappar med mer kolhydrater, kommer iAPS att minska dosering baserad på 120g. I grund och botten begränsar detta endast AMA med ett tak, för skydd mot felaktiga aktiva kolhydrater-beräkningar på grund av opålitlig data.)";
 
 /* Headline "Bolus Snooze DIA Divisor" */
 "Bolus Snooze DIA Divisor" = "Bolus \"snooze\" - nämnare";
@@ -1803,7 +1803,7 @@ Enact a temp Basal or a temp target */
 "Min 5m Carbimpact" = "Lägsta Kh absorptionshastighet";
 
 /* "Min 5m Carbimpact" */
-"This is a setting for default carb absorption impact per 5 minutes. The default is an expected 8 mg/dL/5min. This affects how fast COB is decayed in situations when carb absorption is not visible in BG deviations. The default of 8 mg/dL/5min corresponds to a minimum carb absorption rate of 24g/hr at a CSF of 4 mg/dL/g." = "Standardvärde är 8 mg/dl per 5 min (0,4 mmol/l per 5 min). Detta är en inställning för kolhydratsabsorptionseffekt per 5 minuter, som påverkar hur snabbt aktiva kolhydrater klingar av i situationer när kolhydratsabsorption inte syns i blodsockeravvikelser. Standarden på 0,4 mmol/l per 5 min motsvarar en minsta absorptionshastighet på 24 g/h vid en CSF ('Carb Sensitivity Factor', hur mycket ditt blodsockervärde stiger per gram kolhydrat) på 0,2 mmol/l/g.";
+"This is a setting for default carb absorption impact per 5 minutes. The default is an expected 8 mg/dL/5min. This affects how fast COB is decayed in situations when carb absorption is not visible in BG deviations. The default of 8 mg/dL/5min corresponds to a minimum carb absorption rate of 24g/hr at a CSF of 4 mg/dL/g." = "Standardvärde är 8 mg/dl per 5 min (0,4 mmol/l per 5 min). Detta är en inställning för kolhydratsabsorption per 5 minuter, som påverkar hur snabbt aktiva kolhydrater klingar av i situationer när kolhydratsabsorptionen inte syns i blodsockeravvikelser. Standarden på 0,4 mmol/l per 5 min motsvarar en minsta absorptionshastighet på 24 g/h vid en CSF ('Carb Sensitivity Factor', hur mycket ditt blodsockervärde stiger per gram kolhydrat) på 0,2 mmol/l/g.";
 
 /* Headline "Autotune ISF Adjustment Fraction" */
 "Autotune ISF Adjustment Fraction" = "Autotune - standard ISF - skillnad";
@@ -1912,7 +1912,7 @@ Enact a temp Basal or a temp target */
 "Threshold Setting (mg/dl)" = "Inställning för tröskelvärde (mg/dl)";
 
 /* Threshold Setting */
-"The default threshold in FAX depends on your current minimum BG target, as follows:\n\nIf your minimum BG target = 90 mg/dl -> threshold = 65 mg/dl,\n\nif minimum BG target = 100 mg/dl -> threshold = 70 mg/dl,\n\nminimum BG target = 110 mg/dl -> threshold = 75 mg/dl,\n\nand if minimum BG target = 130 mg/dl  -> threshold = 85 mg/dl.\n\nThis setting allows you to change the default to a higher threshold for looping with dynISF. Valid values are 65 mg/dl<= Threshold Setting <= 120 mg/dl." = "Tröskelvärde för blodsocker beror på ditt nuvarande undre blodsockermålvärde, enligt följande:\n\nOm ditt målvräde = 5 mmol/l -> tröskelvörde = 3,6 mmol/l,\n\nOm ditt målvräde = 5,6 -> tröskelärde = 3,9 mmol/l,\n\nOm ditt målvräde = 6,1 mmol/l -> tröskelvärde = 4,2 mmol/l,\n\nOch om ditt målvräde = 7,2 mmol/l  -> tröskelvärde = 4,7 mmol/l.\n\nDenna inställning tillåter dig att ändra trösklevärdet till en högre inställnig när du loopar med dynamiska kvoter. Giltiga värden är 3,6 - 6,7.";
+"The default threshold in FAX depends on your current minimum BG target, as follows:\n\nIf your minimum BG target = 90 mg/dl -> threshold = 65 mg/dl,\n\nif minimum BG target = 100 mg/dl -> threshold = 70 mg/dl,\n\nminimum BG target = 110 mg/dl -> threshold = 75 mg/dl,\n\nand if minimum BG target = 130 mg/dl  -> threshold = 85 mg/dl.\n\nThis setting allows you to change the default to a higher threshold for looping with dynISF. Valid values are 65 mg/dl<= Threshold Setting <= 120 mg/dl." = "Tröskelvärde för blodsocker beror på ditt nuvarande blodsockermålvärde, enligt följande:\n\nOm ditt målvärde = 5 mmol/l -> tröskelvärde = 3,6 mmol/l,\n\nOm ditt målvärde = 5,6 -> tröskelvärde = 3,9 mmol/l,\n\nOm ditt målvärde = 6,1 mmol/l -> tröskelvärde = 4,2 mmol/l,\n\nOch om ditt målvärde = 7,2 mmol/l  -> tröskelvärde = 4,7 mmol/l.\n\nDenna inställning tillåter dig att ändra trösklevärdet till en högre inställnig när du loopar med dynamiska kvoter. Giltiga värden är 3,6 - 6,7. \n\nInställningen anges i mg/dl";
 
 /* Headline "Weighted Average of TDD. Weight of past 24 hours:" */
 "Weighted Average of TDD. Weight of past 24 hours:" = "Viktat Genomsnitt av TDD. Vikt de senaste 24 timmarna:";
@@ -1933,16 +1933,16 @@ Enact a temp Basal or a temp target */
 "Defaults to 0.2 (20%). Maximum positive percentual change of BG level to use SMB, above that will disable SMB. Hardcoded cap of 40%. For UAM fully-closed-loop 30% is advisable. Observe in log and popup (maxDelta 27 > 20% of BG 100 - disabling SMB!)." = "Standardvärde 0,2 (20%). Maximal blodsockerförändring (ökning) som tillåter användning av SMB (autobolus). Över detta värde kommer SMB tillfälligt att avaktiveras. Högsta tillåtna värde är 0,4 (40%). Om du loopar utan att ange kolhydrater (UAM fully-closed-loop) rekommederas 30%. I loggar kommer detta registreras likt exempel: '(maxDelta 27 > 20% of BG 100 - disabling SMB!'.";
 
 /* Headline "... When Blood Glucose Is Over (mg/dl):" */
-"... When Blood Glucose Is Over (mg/dl):" = "Aktivera SMB när blodsocker är över (mg/dl):";
+"... When Blood Glucose Is Over (mg/dl):" = "Aktivera SMB när blodsocker överskrider (mg/dl):";
 
 /* ... When Blood Glucose Is Over (mg/dl): */
-"Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange blodsockervärdet vid vilket SMB kommer att aktiveras. När blodsocker är högre än detta värde bör SMB aktiveras, även om andra inställningar för SMB är av.";
+"Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange vid vilket blodsockervärde som SMB kommer att aktiveras. Om blodsockret stiger ver detta värde aktiveras SMB. \n\nInställningen anges i mg/dl";
 
 /* Headline "Enable SMB With High BG" */
 "Enable SMB With High BG" = "Aktivera SMB vid ett högt blodsocker";
 
 /* "Enable SMB With High BG" */
-"Enable SMBs when a high BG is detected, based on the high BG target (adjusted or profile)" = "Aktivera SMB: er vid högt blodsocker, eller enligt inställning nedan";
+"Enable SMBs when a high BG is detected, based on the high BG target (adjusted or profile)" = "Aktivera SMB vid högt blodsocker, enligt inställning nedan";
 
 /* Headline "Dynamic settings" */
 "Dynamic settings" = "Dynamiska inställningar";
