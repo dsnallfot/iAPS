@@ -1725,7 +1725,7 @@ Enact a temp Basal or a temp target */
 "Defaults to false. When true, always enable supermicrobolus (unless disabled by high temptarget)." = "Av som standard. Vid läge på, tillåts alltid supermikrobolusar (SMB) (Med undantag när SMB är inaktiverade av ett högt målvärde).";
 
 /* Headline "Enable SMB After Carbs" */
-"Enable SMB After Carbs" = "* Använd SMB även efter kolhydrater";
+"Enable SMB After Carbs" = "* Använd SMB även efter kolhydrater (UAM)";
 
 /* "Enable SMB After Carbs" */
 "Defaults to false. When true, enables supermicrobolus (SMB) for 6h after carbs, even with 0 carbs on board (COB)." = "Av som standard. Tillåter supermikrobolusar (SMB) även 6h efter kolhydrater, också vid 0 aktiva kolhydrater (COB).";
@@ -1927,13 +1927,13 @@ Enact a temp Basal or a temp target */
 "Enable adjustment of basal based on the ratio of current TDD / 7 day average TDD" = "Justera även basal enligt följande: ny basal = basal * (TDD / 7-dagars medelvärde av TDD)";
 
 /* Headline "Max Delta-BG Threshold SMB" */
-"Max Delta-BG Threshold SMB" = "Högsta tillåtna blodsockerförändring";
+"Max Delta-BG Threshold SMB" = "Högsta tillåtna BG förändring för SMB";
 
 /* Max Delta-BG Threshold SMB */
 "Defaults to 0.2 (20%). Maximum positive percentual change of BG level to use SMB, above that will disable SMB. Hardcoded cap of 40%. For UAM fully-closed-loop 30% is advisable. Observe in log and popup (maxDelta 27 > 20% of BG 100 - disabling SMB!)." = "Standardvärde 0,2 (20%). Maximal blodsockerförändring (ökning) som tillåter användning av SMB (autobolus). Över detta värde kommer SMB tillfälligt att avaktiveras. Högsta tillåtna värde är 0,4 (40%). Om du loopar utan att ange kolhydrater (UAM fully-closed-loop) rekommederas 30%. I loggar kommer detta registreras likt exempel: '(maxDelta 27 > 20% of BG 100 - disabling SMB!'.";
 
 /* Headline "... When Blood Glucose Is Over (mg/dl):" */
-"... When Blood Glucose Is Over (mg/dl):" = "Aktivera SMB när blodsockret överskrider (mg/dl):";
+"... When Blood Glucose Is Over (mg/dl):" = "...när blodsockret överskrider (mg/dl):";
 
 /* ... When Blood Glucose Is Over (mg/dl): */
 "Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange vid vilket blodsockervärde som SMB kommer att aktiveras. Om blodsockret stiger över detta värde aktiveras SMB. \n\nInställningen anges i mg/dl";
