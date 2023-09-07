@@ -483,7 +483,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             carbratio: cr,
             units: nsUnits
         )
-        let defaultProfile = "default"
+        let defaultProfile = "iAPS"
         let now = Date()
         let p = NightscoutProfileStore(
             defaultProfile: defaultProfile,
