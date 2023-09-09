@@ -175,46 +175,47 @@ extension Bolus {
                 // Variables
                 VStack(spacing: 3) {
                     HStack {
-                        Text("Eventual Glucose").foregroundColor(.secondary)
+                        Text("Blodsockerprognos:").foregroundColor(.secondary)
                         let evg = state.units == .mmolL ? Decimal(state.evBG).asMmolL : Decimal(state.evBG)
                         Text(evg.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
                         Text(state.units.rawValue).foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Target Glucose").foregroundColor(.secondary)
+                        Text("Målvärde glukos:").foregroundColor(.secondary)
                         let target = state.units == .mmolL ? state.target.asMmolL : state.target
                         Text(target.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
                         Text(state.units.rawValue).foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("ISF").foregroundColor(.secondary)
+                        Text("Aktuell ISF:").foregroundColor(.secondary)
                         let isf = state.isf
                         Text(isf.formatted())
                         Text(state.units.rawValue + NSLocalizedString("/U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Inställd maxbolus").foregroundColor(.secondary)
+                        Text("Angiven maxbolus:").foregroundColor(.secondary)
                         let MB = state.maxBolus
                         Text(MB.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
                         Text(NSLocalizedString("U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
-                    if state.percentage != 100 {
+                    if state.percentage != 101 {
                         HStack {
-                            Text("Inställd manuell bolusprocent").foregroundColor(.secondary)
+                            Text("Angiven manuell bolusprocent:").foregroundColor(.secondary).padding(.bottom, 4)
                             let percentage = state.percentage
-                            Text(percentage.formatted())
-                            Text("%").foregroundColor(.secondary)
+                            Text(percentage.formatted()).padding(.bottom, 4)
+                            Text("%").foregroundColor(.secondary).padding(.bottom, 4)
                         }
                     }
+                    Divider()
                     HStack {
                         Text("Formula:")
                         Text("(Eventual Glucose - Target) / ISF")
                     }.foregroundColor(.secondary).italic().padding(.top, 5)
                 }
                 .font(.footnote)
-                .padding(.top, 10)
+                .padding(.top, 6)
                 Divider()
                 // Formula
                 VStack(spacing: 5) {
@@ -222,19 +223,25 @@ extension Bolus {
                         " U",
                         comment: "Unit in number of units delivered (keep the space character!)"
                     )
-                    let color: Color = (state.percentage != 100 && state.insulin > 0) ? .secondary : .blue
-                    let fontWeight: Font.Weight = (state.percentage != 100 && state.insulin > 0) ? .regular : .bold
+                    let color: Color = (state.percentage != 101 && state.insulin > 0) ? .secondary : .blue
+                    let fontWeight: Font.Weight = (state.percentage != 101 && state.insulin > 0) ? .regular : .bold
                     HStack {
-                        Text(NSLocalizedString("Totalt beräknat insulinbehov", comment: "") + ":").font(.callout)
-                        Text(state.insulin.formatted() + unit).font(.callout).foregroundColor(color).fontWeight(fontWeight)
+                        Text(NSLocalizedString("Totalt beräknat insulinbehov", comment: "") + ":")
+                            .font(.callout).foregroundColor(.secondary)
+                        Text(state.insulin.formatted() + unit).font(.callout).foregroundColor(color)
+                            .fontWeight(fontWeight) // Daniel svensk anpassad översättning
                     }
-                    if state.percentage != 100, state.insulin > 0 {
+                    .padding(.bottom, 5)
+                    if state.percentage != 101, state.insulin > 0 {
                         Divider()
                         HStack {
                             Text(
-                                "Förslag: (" + state.percentage.formatted() + " % eller maxbolus) ="
+                                "Förslag dos"
+                            ).font(.callout).foregroundColor(.primary).bold()
+                            Text(
+                                "(" + state.percentage.formatted() + "% el. maxbolus) = "
                             )
-                            .font(.callout).foregroundColor(.secondary)
+                            .foregroundColor(.primary)
                             Text(
                                 state.insulinRecommended.formatted() + unit
                             ).font(.callout).foregroundColor(.blue).bold()
@@ -245,7 +252,7 @@ extension Bolus {
                 if state.error, state.insulinRecommended > 0 {
                     VStack(spacing: 5) {
                         Divider()
-                        Text("Warning!").font(.callout).bold().foregroundColor(.red)
+                        Text("VARNING!").font(.callout).bold().foregroundColor(.red)
                         Text(alertString()).font(.footnote)
                         Divider()
                     }.padding(.horizontal, 10)
