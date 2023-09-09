@@ -202,23 +202,24 @@ extension Bolus {
                     }
                     if state.percentage != 101 {
                         HStack {
-                            Text("Angiven manuell bolusprocent:").foregroundColor(.secondary).padding(.bottom, 4)
+                            Text("Angiven manuell bolusprocent:").foregroundColor(.secondary)
                             let percentage = state.percentage
-                            Text(percentage.formatted()).padding(.bottom, 4)
-                            Text("%").foregroundColor(.secondary).padding(.bottom, 4)
+                            Text(percentage.formatted())
+                            Text("%").foregroundColor(.secondary)
                         }
+                        .padding(.bottom, 4)
                     }
                     Divider()
                     HStack {
                         Text("Formula:")
                         Text("(Eventual Glucose - Target) / ISF")
-                    }.foregroundColor(.secondary).italic().padding(.top, 5)
+                    }.foregroundColor(.secondary).italic().padding(.top, 4)
                 }
                 .font(.footnote)
-                .padding(.top, 6)
+                .padding(.top, 4)
                 Divider()
                 // Formula
-                VStack(spacing: 5) {
+                VStack(spacing: 4) {
                     let unit = NSLocalizedString(
                         " U",
                         comment: "Unit in number of units delivered (keep the space character!)"
@@ -231,7 +232,7 @@ extension Bolus {
                         Text(state.insulin.formatted() + unit).font(.callout).foregroundColor(color)
                             .fontWeight(fontWeight) // Daniel svensk anpassad översättning
                     }
-                    .padding(.bottom, 5)
+                    .padding(.bottom, 4)
                     if state.percentage != 101, state.insulin > 0 {
                         Divider()
                         HStack {
@@ -246,11 +247,12 @@ extension Bolus {
                                 state.insulinRecommended.formatted() + unit
                             ).font(.callout).foregroundColor(.blue).bold()
                         }
+                        .padding(.top, 4)
                     }
                 }
                 // Warning
                 if state.error, state.insulinRecommended > 0 {
-                    VStack(spacing: 5) {
+                    VStack(spacing: 4) {
                         Divider()
                         Text("VARNING!").font(.callout).bold().foregroundColor(.red)
                         Text(alertString()).font(.footnote)
