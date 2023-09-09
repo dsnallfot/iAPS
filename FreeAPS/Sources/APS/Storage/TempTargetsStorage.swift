@@ -96,6 +96,7 @@ final class BaseTempTargetsStorage: TempTargetsStorage, Injectable {
                 eventType: .nsTempTarget,
                 createdAt: $0.createdAt,
                 enteredBy: TempTarget.manual,
+                reason: TempTarget.custom,
                 bolus: nil,
                 insulin: nil,
                 notes: nil,
