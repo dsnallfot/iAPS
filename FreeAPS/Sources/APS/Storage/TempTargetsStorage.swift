@@ -85,7 +85,7 @@ final class BaseTempTargetsStorage: TempTargetsStorage, Injectable {
     func nightscoutTretmentsNotUploaded() -> [NigtscoutTreatment] {
         let uploaded = storage.retrieve(OpenAPS.Nightscout.uploadedTempTargets, as: [NigtscoutTreatment].self) ?? []
 
-        let eventsManual = recent().filter { $0.enteredBy == TempTarget.manual }
+        let eventsManual = recent().filter { $0.enteredBy == TempTarget.manual || $0.reason == TempTarget.custom }
         let treatments = eventsManual.map {
             NigtscoutTreatment(
                 duration: Int($0.duration),
@@ -100,6 +100,7 @@ final class BaseTempTargetsStorage: TempTargetsStorage, Injectable {
                 insulin: nil,
                 notes: nil,
                 carbs: nil,
+                reason: TempTarget.custom,
                 targetTop: $0.targetTop,
                 targetBottom: $0.targetBottom
             )
