@@ -111,7 +111,7 @@ extension ISFEditor {
                                     (
                                         self.rateFormatter
                                             .string(from: state.rateValues[i] as NSNumber) ?? ""
-                                    ) + " \(state.units.rawValue)/U"
+                                    ) + " \(state.units.rawValue)/E"
                                 ).tag(i)
                             }
                         }
