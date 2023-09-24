@@ -44,7 +44,7 @@ extension Bolus {
                                 Text("🔴 Ingen bolus rekommenderas")
                                     .foregroundColor(.red)
                             } else {
-                                Text("🟢 Rekommenderad bolus")
+                                Text("🟢 Förslag bolus dos")
                                     .foregroundColor(.green)
                             }
 
