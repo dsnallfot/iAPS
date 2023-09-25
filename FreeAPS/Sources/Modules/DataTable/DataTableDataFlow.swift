@@ -124,7 +124,7 @@ enum DataTable {
             }
 
             if amount == 0, duration == 0 {
-                return "Cancel temp"
+                return "Avbröts"
             }
 
             switch type {
@@ -154,8 +154,7 @@ enum DataTable {
                     secondAmount = secondAmount.asMmolL
                 }
 
-                return tempTargetFormater.string(from: converted as NSNumber)! + " - " + tempTargetFormater
-                    .string(from: secondAmount as NSNumber)! + " \(units.rawValue)"
+                return tempTargetFormater.string(from: converted as NSNumber)! + " \(units.rawValue)"
             case .resume,
                  .suspend:
                 return type.name
