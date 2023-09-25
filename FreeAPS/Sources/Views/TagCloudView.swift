@@ -71,7 +71,7 @@ struct TagCloudView: View {
                  textTag where textTag.contains("Autosens/Dynamic Limit:"),
                  textTag where textTag.contains("Dynamic ISF/CR"),
                  textTag where textTag.contains("Dynamisk ISF/CR"),
-                 textTag where textTag.contains("Basal ratio"),
+                 textTag where textTag.contains("Basal Ratio"),
                  textTag where textTag.contains("SMB Ratio"):
                 return .zt
             default:
