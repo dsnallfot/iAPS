@@ -81,7 +81,7 @@ final class BaseCalendarManager: CalendarManager, Injectable {
 
         let fetchedSuggestion = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
         let cobText = cobFormatter.string(from: (fetchedSuggestion?.cob ?? 0) as NSNumber) ?? ""
-        let iobText = iobFormatter.string(from: (fetchedSuggestion?.iob ?? 0.0) as NSNumber) ?? ""
+        let iobText = iobFormatter.string(from: (fetchedSuggestion?.iob ?? 0) as NSNumber) ?? ""
 
         var glucoseDisplayText = settingsManager.settings.displayCalendarEmojis ? glucoseIcon + " " : ""
         glucoseDisplayText += glucoseText + " " + directionText + " " + deltaText
