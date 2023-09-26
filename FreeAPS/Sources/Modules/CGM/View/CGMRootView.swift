@@ -54,13 +54,15 @@ extension CGM {
                         Text("Calibrations").navigationLink(to: .calibrations, from: self)
                     }
                     Section(header: Text("Calendar")) {
-                        Toggle("Create events in calendar", isOn: $state.createCalendarEvents)
+                        Toggle("Create Events in Calendar", isOn: $state.createCalendarEvents)
                         if state.calendarIDs.isNotEmpty {
                             Picker("Calendar", selection: $state.currentCalendarID) {
                                 ForEach(state.calendarIDs, id: \.self) {
                                     Text($0).tag($0)
                                 }
                             }
+                        Toggle("Visa emojis", isOn: $state.displayCalendarEmojis)
+                        Toggle("Visa COB och IOB", isOn: $state.displayCalendarIOBandCOB)
                         }
                     }
 

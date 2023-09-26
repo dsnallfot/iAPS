@@ -63,6 +63,10 @@ final class BaseCalendarManager: CalendarManager, Injectable {
         // create an event now
         let event = EKEvent(eventStore: eventStore)
 
+        var glucoseIcon = "🟢"
+        glucoseIcon = Double(glucoseValue) <= Double(settingsManager.settings.low) ? "🔴" : glucoseIcon
+        glucoseIcon = Double(glucoseValue) >= Double(settingsManager.settings.high) ? "🟠" : glucoseIcon
+
         let glucoseText = glucoseFormatter
             .string(from: Double(
                 settingsManager.settings.units == .mmolL ?glucoseValue
@@ -76,12 +80,30 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             } ?? "--"
 
         let fetchedSuggestion = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
-        let iobText = iobFormatter.string(from: (fetchedSuggestion?.iob ?? 0) as NSNumber) ?? ""
         let cobText = cobFormatter.string(from: (fetchedSuggestion?.cob ?? 0) as NSNumber) ?? ""
+        let iobText = iobFormatter.string(from: (fetchedSuggestion?.iob ?? 0) as NSNumber) ?? ""
 
-        let title = glucoseText + " " + directionText + " " + deltaText + "\nCOB " + cobText + "g IOB " + iobText + "E"
+        var glucoseDisplayText = settingsManager.settings.displayCalendarEmojis ? glucoseIcon + " " : ""
+        glucoseDisplayText += glucoseText + " " + directionText + " " + deltaText
 
-        event.title = title
+        var cobDisplayText = ""
+        var iobDisplayText = ""
+
+        if settingsManager.settings.displayCalendarIOBandCOB {
+            if settingsManager.settings.displayCalendarEmojis {
+                cobDisplayText += "\nCOB"
+                iobDisplayText += "IOB"
+            } else {
+                cobDisplayText += "\nCOB"
+                iobDisplayText += "IOB"
+            }
+            cobDisplayText += " " + cobText + "g"
+            iobDisplayText += " " + iobText + "E"
+
+            event.location = cobDisplayText + " " + iobDisplayText
+        }
+
+        event.title = glucoseDisplayText
         event.notes = "iAPS"
         event.startDate = Date()
         event.endDate = Date(timeIntervalSinceNow: 60 * 10)
