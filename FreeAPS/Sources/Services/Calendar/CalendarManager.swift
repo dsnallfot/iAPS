@@ -91,10 +91,10 @@ final class BaseCalendarManager: CalendarManager, Injectable {
 
         if settingsManager.settings.displayCalendarIOBandCOB {
             if settingsManager.settings.displayCalendarEmojis {
-                cobDisplayText += "\nCOB"
+                cobDisplayText += "COB"
                 iobDisplayText += "IOB"
             } else {
-                cobDisplayText += "\nCOB"
+                cobDisplayText += "COB"
                 iobDisplayText += "IOB"
             }
             cobDisplayText += " " + cobText + "g"
