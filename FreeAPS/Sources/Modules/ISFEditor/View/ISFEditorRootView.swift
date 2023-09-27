@@ -39,32 +39,32 @@ extension ISFEditor {
                 }
                 if let newISF = state.autosensISF {
                     Section(
-                                            header: !state.settingsManager.preferences
-                                                .useNewFormula ? Text("Autosens") : Text("Dynamisk känslighet")
-                                        ) {
-                                            let dynamicRatio = state.provider.suggestion?.sensitivityRatio ?? 0
-                                            let dynamicISF = state.provider.suggestion?.isf ?? 0
+                        header: !state.settingsManager.preferences
+                            .useNewFormula ? Text("Autosens") : Text("Dynamisk känslighet")
+                    ) {
+                        let dynamicRatio = state.provider.suggestion?.sensitivityRatio ?? 0
+                        let dynamicISF = state.provider.suggestion?.isf ?? 0
                         HStack {
                             Text("Sensitivity Ratio")
                             Spacer()
                             Text(
-                                                            rateFormatter
-                                                                .string(from: (
-                                                                    !state.settingsManager.preferences.useNewFormula ? state
-                                                                        .autosensRatio : dynamicRatio
-                                                                ) as NSNumber) ?? "1"
-                                                        )
+                                rateFormatter
+                                    .string(from: (
+                                        !state.settingsManager.preferences.useNewFormula ? state
+                                            .autosensRatio : dynamicRatio
+                                    ) as NSNumber) ?? "1"
+                            )
                         }
                         HStack {
                             Text("Calculated Sensitivity")
                             Spacer()
                             Text(
-                                                            rateFormatter
-                                                                .string(from: (
-                                                                    !state.settingsManager.preferences
-                                                                        .useNewFormula ? newISF : dynamicISF
-                                                                ) as NSNumber) ?? "0"
-                                                        )
+                                rateFormatter
+                                    .string(from: (
+                                        !state.settingsManager.preferences
+                                            .useNewFormula ? newISF : dynamicISF
+                                    ) as NSNumber) ?? "0"
+                            )
                             Text(state.units.rawValue + "/E").foregroundColor(.secondary)
                         }
                     }
