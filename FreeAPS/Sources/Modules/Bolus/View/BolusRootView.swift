@@ -107,8 +107,10 @@ extension Bolus {
                 if !state.waitForSuggestion {
                     Section {
                         Button { state.add() }
-                        label: { Text("Enact bolus").font(.title3.weight(.semibold)) }
-                            .disabled(state.amount <= 0)
+                        label: { Text(!(state.amount > state.maxBolus) ? "Enact bolus" : "Max Bolus exceeded!").font(.title3.weight(.semibold)) }
+                            .disabled(
+                                state.amount <= 0 || state.amount > state.maxBolus
+                            )
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     Section {
@@ -119,7 +121,9 @@ extension Bolus {
                         } else {
                             Button { isAddInsulinAlertPresented = true }
                             label: { Text("Add insulin without actually bolusing") }
-                                .disabled(state.amount <= 0)
+                                .disabled(
+                                    state.amount <= 0 || state.amount > state.maxBolus
+                                )
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                     }

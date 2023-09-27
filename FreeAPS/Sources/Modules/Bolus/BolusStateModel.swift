@@ -57,7 +57,7 @@ extension Bolus {
                 return
             }
 
-            let maxAmount = Double(min(amount, provider.pumpSettings().maxBolus))
+            let maxAmount = Double(min(amount, maxBolus))
 
             unlockmanager.unlock()
                 .sink { _ in } receiveValue: { [weak self] _ in
@@ -73,6 +73,7 @@ extension Bolus {
                 showModal(for: nil)
                 return
             }
+            amount = min(amount, maxBolus)
 
             pumpHistoryStorage.storeEvents(
                 [
