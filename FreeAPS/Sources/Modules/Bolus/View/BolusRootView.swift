@@ -100,7 +100,7 @@ extension Bolus {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("U").fontWeight(.semibold)
+                        Text(!(state.amount > state.maxBolus) ? "U" : "😵").fontWeight(.semibold)
                     }
                 }
 
