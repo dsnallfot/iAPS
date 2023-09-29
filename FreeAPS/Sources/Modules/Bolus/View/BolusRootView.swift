@@ -38,13 +38,13 @@ extension Bolus {
                     } else {
                         HStack {
                             if state.error && state.insulinRecommended > 0 {
-                                Text("🟠 Vänta med att ge bolus")
+                                Text("⚠️ Vänta med att ge bolus")
                                     .foregroundColor(.orange)
                             } else if state.insulinRecommended <= 0 {
-                                Text("🔴 Ingen bolus rekommenderas")
+                                Text("⛔ Ingen bolus rekommenderas")
                                     .foregroundColor(.red)
                             } else {
-                                Text("🟢 Förslag bolus dos")
+                                Text("✅ Förslag bolus dos")
                                     .foregroundColor(.green)
                             }
 
