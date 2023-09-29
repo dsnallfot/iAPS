@@ -19,6 +19,9 @@
 /* Header */
 "Enact Bolus" = "Ge bolus";
 
+/* Alert when adding large amount without bolusing. Don't remove the " " */
+"\nAmount is more than your Max Bolus setting! \nAre you sure you want to add " = "\nMängden är större än din maxbolus! \nÄr du säker på att du vill logga ";
+
 /* Button */
 "Enact bolus" = "Ge bolus";
 
@@ -1338,7 +1341,7 @@ Enact a temp Basal or a temp target */
 ". Changing: " = ". Ändras: ";
 
 /* Add insulin without bolusing alert */
-" without bolusing" = " utan att ge insulin";
+" without bolusing" = " (utan att ge någon bolus med iAPS)";
 
 /* -------------------------------------------------------------------------------------------
   DASH strings

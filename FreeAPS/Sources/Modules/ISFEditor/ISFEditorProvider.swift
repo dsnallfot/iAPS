@@ -21,8 +21,8 @@ extension ISFEditor {
         }
 
         var suggestion: Suggestion? {
-                    storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
-                }
+            storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
+        }
 
         var autotune: Autotune? {
             storage.retrieve(OpenAPS.Settings.autotune, as: Autotune.self)

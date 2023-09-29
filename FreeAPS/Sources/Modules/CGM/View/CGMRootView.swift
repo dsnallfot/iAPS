@@ -61,8 +61,8 @@ extension CGM {
                                     Text($0).tag($0)
                                 }
                             }
-                        Toggle("Visa emojis", isOn: $state.displayCalendarEmojis)
-                        Toggle("Visa COB och IOB", isOn: $state.displayCalendarIOBandCOB)
+                            Toggle("Visa emojis", isOn: $state.displayCalendarEmojis)
+                            Toggle("Visa COB och IOB", isOn: $state.displayCalendarIOBandCOB)
                         }
                     }
 
