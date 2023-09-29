@@ -94,13 +94,13 @@ extension Bolus {
                         Text("Bolus Amount").fontWeight(.semibold)
                         Spacer()
                         DecimalTextField(
-                            "0",
+                            "0,00",
                             value: $state.amount,
                             formatter: formatter,
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text(!(state.amount > state.maxBolus) ? "U" : "☠️").fontWeight(.semibold)
+                        Text(!(state.amount > state.maxBolus * 3) ? "U" : "☠️").fontWeight(.semibold)
                     }
                 }
 
@@ -112,7 +112,7 @@ extension Bolus {
                         label: {
                             Text(
                                 !(state.amount > state.maxBolus) ? "Enact bolus" :
-                                    "Mer än inställd maxbolus \(formattedMaxAmountBolus)E!"
+                                    "⛔  Inställd maxgräns: \(formattedMaxAmountBolus)E   "
                             )
                             .font(.title3.weight(.semibold)) }
                             .disabled(

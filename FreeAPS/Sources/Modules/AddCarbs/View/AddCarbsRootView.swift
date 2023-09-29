@@ -110,7 +110,7 @@ extension AddCarbs {
                     label: {
                         Text(
                             !(state.carbs > state.maxCarbs) ? "Save and continue" :
-                                "Mer än inställd maxmängd \(formattedMaxAmountCarbs)g!"
+                                "⛔  Inställd maxgräns: \(formattedMaxAmountCarbs)g   "
                         )
                         .font(.title3.weight(.semibold)) }
                         .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
