@@ -232,7 +232,7 @@ extension Bolus {
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Angiven maxbolus:").foregroundColor(.secondary)
+                        Text("Inställd maxbolus:").foregroundColor(.secondary)
                         let MB = state.maxBolus
                         Text(MB.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
                         Text(NSLocalizedString("U", comment: "/Insulin unit"))
@@ -240,7 +240,7 @@ extension Bolus {
                     }
                     if state.percentage != 101 {
                         HStack {
-                            Text("Angiven manuell bolusprocent:").foregroundColor(.secondary)
+                            Text("Inställd manuell bolusprocent:").foregroundColor(.secondary)
                             let percentage = state.percentage
                             Text(percentage.formatted())
                             Text("%").foregroundColor(.secondary)
