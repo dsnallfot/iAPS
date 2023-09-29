@@ -104,11 +104,17 @@ extension AddCarbs {
                 }
 
                 Section {
+                    let maxamountcarbs = Double(state.maxCarbs)
+                    let formattedMaxAmountCarbs = String(format: "%.0f", maxamountcarbs)
                     Button { state.add() }
-                    label: { Text("Save and continue").font(.title3.weight(.semibold)) }
-                        .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0)
+                    label: {
+                        Text(
+                            !(state.carbs > state.maxCarbs) ? "Save and continue" :
+                                "Mer än inställd maxmängd \(formattedMaxAmountCarbs)g!"
+                        )
+                        .font(.title3.weight(.semibold)) }
+                        .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
                         .frame(maxWidth: .infinity, alignment: .center)
-
                 } footer: { Text(state.waitersNotepad().description) }
             }
             .onAppear(perform: configureView)

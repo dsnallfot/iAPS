@@ -106,10 +106,15 @@ extension Bolus {
 
                 if !state.waitForSuggestion {
                     Section {
+                        let maxamountbolus = Double(state.maxBolus)
+                        let formattedMaxAmountBolus = String(maxamountbolus)
                         Button { state.add() }
                         label: {
-                            Text(!(state.amount > state.maxBolus) ? "Enact bolus" : "Max Bolus exceeded!")
-                                .font(.title3.weight(.semibold)) }
+                            Text(
+                                !(state.amount > state.maxBolus) ? "Enact bolus" :
+                                    "Mer än inställd maxbolus \(formattedMaxAmountBolus)E!"
+                            )
+                            .font(.title3.weight(.semibold)) }
                             .disabled(
                                 state.amount <= 0 || state.amount > state.maxBolus
                             )
@@ -165,7 +170,7 @@ extension Bolus {
                                     )
                             ),
                             primaryButton: .destructive(
-                                Text("Add"),
+                                Text("Logga"),
                                 action: {
                                     state.addWithoutBolus()
                                     isAddInsulinAlertPresented = false
