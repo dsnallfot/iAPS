@@ -126,43 +126,24 @@ extension DataTable {
             }
         }
 
-        @ViewBuilder private func treatmentView(_ bolus: Treatment) -> some View {
+        @ViewBuilder private func treatmentView(_ item: Treatment) -> some View {
             HStack {
-                Text((bolus.isSMB ?? false) ? "SMB" : bolus.type.name)
-                Text(bolus.amountText).foregroundColor(.secondary)
+                Text((item.isSMB ?? false) ? "SMB" : item.type.name)
+                Text(item.amountText).foregroundColor(.secondary)
 
-                if let duration = bolus.durationText {
+                if let duration = item.durationText {
                     Text(duration).foregroundColor(.secondary)
                 }
 
+                if item.type == .carbs {
+                    if item.note != "" {
+                        Text(item.note ?? "").foregroundColor(.brown)
+                    }
+                }
                 Spacer()
 
-                Text(dateFormatter.string(from: bolus.date))
+                Text(dateFormatter.string(from: item.date))
                     .moveDisabled(true)
-
-                /*
-                 if item.type == .bolus {
-                     Spacer()
-                     Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                         .contentShape(Rectangle())
-                         .padding(.vertical)
-                         .onTapGesture {
-                             removeInsulinAlert = Alert(
-                                 title: Text("Delete insulin?"),
-                                 message: Text(item.amountText),
-                                 primaryButton: .destructive(
-                                     Text("Delete"),
-                                     action: { state.deleteInsulin(item) }
-                                 ),
-                                 secondaryButton: .cancel()
-                             )
-                             isRemoveInsulinAlertPresented = true
-                         }
-                         .alert(isPresented: $isRemoveInsulinAlertPresented) {
-                             removeInsulinAlert!
-                         }
-                 }
-                  */
             }
         }
 
@@ -179,56 +160,6 @@ extension DataTable {
 
                 Text(dateFormatter.string(from: tempBasal.date))
                     .moveDisabled(true)
-
-                /*
-                 if item.type == .carbs {
-                     if item.note != "" {
-                         Spacer()
-                         Text(item.note ?? "").foregroundColor(.brown)
-                     }
-                     Spacer()
-                     Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                         .contentShape(Rectangle())
-                         .padding(.vertical)
-                         .onTapGesture {
-                             removeCarbsAlert = Alert(
-                                 title: Text("Delete carbs?"),
-                                 message: Text(item.amountText),
-                                 primaryButton: .destructive(
-                                     Text("Delete"),
-                                     action: { state.deleteCarbs(item) }
-                                 ),
-                                 secondaryButton: .cancel()
-                             )
-                             isRemoveCarbsAlertPresented = true
-                         }
-                         .alert(isPresented: $isRemoveCarbsAlertPresented) {
-                             removeCarbsAlert!
-                         }
-                 }
-
-                 if item.type == .fpus {
-                     Spacer()
-                     Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                         .contentShape(Rectangle())
-                         .padding(.vertical)
-                         .onTapGesture {
-                             removeCarbsAlert = Alert(
-                                 title: Text("Delete carb equivalents?"),
-                                 message: Text(""), // Temporary fix. New to fix real amount of carb equivalents later
-                                 primaryButton: .destructive(
-                                     Text("Delete"),
-                                     action: { state.deleteCarbs(item) }
-                                 ),
-                                 secondaryButton: .cancel()
-                             )
-                             isRemoveCarbsAlertPresented = true
-                         }
-                         .alert(isPresented: $isRemoveCarbsAlertPresented) {
-                             removeCarbsAlert!
-                         }
-                 }
-                 */
             }
         }
 
