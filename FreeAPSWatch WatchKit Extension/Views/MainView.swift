@@ -254,10 +254,10 @@ struct MainView: View {
                 CarbsView()
                     .environmentObject(state)
             } label: {
-                Image("carbs", bundle: nil)
+                Image(systemName: "fork.knife.circle")
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 27, height: 27)
                     .foregroundColor(.loopYellow)
             }
 
@@ -266,10 +266,10 @@ struct MainView: View {
                     .environmentObject(state)
             } label: {
                 VStack {
-                    Image("target", bundle: nil)
+                    Image(systemName: "target")
                         .renderingMode(.template)
                         .resizable()
-                        .frame(width: 24, height: 24)
+                        .frame(width: 27, height: 27)
                         .foregroundColor(.loopGreen)
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
                         Text(until, style: .timer)
@@ -283,10 +283,10 @@ struct MainView: View {
                 BolusView()
                     .environmentObject(state)
             } label: {
-                Image("bolus", bundle: nil)
+                Image(systemName: "drop.circle")
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 27, height: 27)
                     .foregroundColor(.insulin)
             }
         }
