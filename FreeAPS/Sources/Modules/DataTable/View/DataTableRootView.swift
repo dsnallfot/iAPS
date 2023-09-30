@@ -104,7 +104,7 @@ extension DataTable {
                 ForEach(state.treatments) { item in
                     treatmentView(item)
                 }
-                .onDelete(perform: deleteTreatment)
+                .onDelete(perform: deleteCarbs)
             }
         }
 
@@ -113,7 +113,6 @@ extension DataTable {
                 ForEach(state.basals) { item in
                     basalView(item)
                 }
-                .onDelete(perform: deleteMeal)
             }
         }
 
@@ -128,6 +127,7 @@ extension DataTable {
 
         @ViewBuilder private func treatmentView(_ item: Treatment) -> some View {
             HStack {
+                Image(systemName: "circle.fill").foregroundColor(item.color)
                 Text((item.isSMB ?? false) ? "SMB" : item.type.name)
                 Text(item.amountText).foregroundColor(.secondary)
 
@@ -179,11 +179,11 @@ extension DataTable {
             }
         }
 
-        private func deleteTreatment(at offsets: IndexSet) {
+        private func deleteInsulin(at offsets: IndexSet) {
             state.deleteInsulin(at: offsets[offsets.startIndex])
         }
 
-        private func deleteMeal(at offsets: IndexSet) {
+        private func deleteCarbs(at offsets: IndexSet) {
             state.deleteCarbs(at: offsets[offsets.startIndex])
         }
 

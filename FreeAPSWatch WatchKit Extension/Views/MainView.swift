@@ -257,7 +257,7 @@ struct MainView: View {
                 Image(systemName: "fork.knife.circle")
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 27, height: 27)
+                    .frame(width: 30, height: 30)
                     .foregroundColor(.loopYellow)
             }
 
@@ -269,7 +269,7 @@ struct MainView: View {
                     Image(systemName: "target")
                         .renderingMode(.template)
                         .resizable()
-                        .frame(width: 27, height: 27)
+                        .frame(width: 30, height: 30)
                         .foregroundColor(.loopGreen)
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
                         Text(until, style: .timer)
@@ -286,7 +286,7 @@ struct MainView: View {
                 Image(systemName: "drop.circle")
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 27, height: 27)
+                    .frame(width: 30, height: 30)
                     .foregroundColor(.insulin)
             }
         }

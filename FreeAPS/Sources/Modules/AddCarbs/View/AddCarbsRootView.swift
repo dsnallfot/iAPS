@@ -163,14 +163,13 @@ extension AddCarbs {
                         ForEach(carbPresets, id: \.self) { (preset: Presets) in
                             Text(preset.dish ?? "").tag(preset as Presets?)
                         }
-
-                        .pickerStyle(.automatic)
-                        ._onBindingChange($state.selection) { _ in
-                            state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
-                            state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
-                            state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
-                            state.addToSummation()
-                        }
+                    }
+                    .pickerStyle(.automatic)
+                    ._onBindingChange($state.selection) { _ in
+                        state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
+                        state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
+                        state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+                        state.addToSummation()
                     }
                 }
                 HStack {
@@ -178,7 +177,7 @@ extension AddCarbs {
                         showAlert.toggle()
                     }
                     .disabled(state.selection == nil)
-                    .accentColor(.orange)
+                    .accentColor(.red)
                     .buttonStyle(BorderlessButtonStyle())
                     .controlSize(.mini)
                     .alert(
@@ -211,7 +210,10 @@ extension AddCarbs {
                         } else { state.fat = 0 }
 
                         if state.protein != 0,
-                           (state.protein - (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) as Decimal) >= 0
+                           (
+                               state.protein - (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) as Decimal
+                           ) >=
+                           0
                         {
                             state.protein -= (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal)
                         } else { state.protein = 0 }
@@ -224,13 +226,14 @@ extension AddCarbs {
                             state
                                 .selection == nil ||
                                 (
-                                    !state.summation.contains(state.selection?.dish ?? "") && (state.selection?.dish ?? "") != ""
+                                    !state.summation
+                                        .contains(state.selection?.dish ?? "") && (state.selection?.dish ?? "") != ""
                                 )
                         )
                         .buttonStyle(BorderlessButtonStyle())
-                        .controlSize(.mini)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .accentColor(.minus)
+                        .controlSize(.mini)
                     Button {
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
@@ -241,8 +244,8 @@ extension AddCarbs {
                     label: { Text("[ +1 ]") }
                         .disabled(state.selection == nil)
                         .buttonStyle(BorderlessButtonStyle())
-                        .controlSize(.mini)
                         .accentColor(.blue)
+                        .controlSize(.mini)
                 }
             }
         }

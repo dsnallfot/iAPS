@@ -144,11 +144,11 @@ enum DataTable {
                 var bolusText = " "
 
                 if isSMB ?? false {
-                    bolusText += NSLocalizedString("Automatisk", comment: "Automatic delivered treatments")
+                    bolusText += NSLocalizedString(" [Auto]", comment: "Automatic delivered treatments")
                 } else if isNonPump ?? false {
-                    bolusText += NSLocalizedString("Insulinpenna", comment: "Insulinpenna")
+                    bolusText += NSLocalizedString(" [Insulinpenna]", comment: "Insulinpenna")
                 } else {
-                    bolusText += NSLocalizedString("Manual", comment: "Manual Bolus")
+                    bolusText += NSLocalizedString(" [Manuell]", comment: "Manual Bolus")
                 }
 
                 return numberFormatter
@@ -183,8 +183,8 @@ enum DataTable {
             case .fpus:
                 return .loopRed
             case .bolus:
-                // return (isNonPump ?? false) ? Color.nonPumpInsulin : (isSMB ?? false) ? Color.smb : Color.insulin
-                return .insulin
+                return (isNonPump ?? false) ? Color.nonPumpInsulin : (isSMB ?? false) ? Color.insulin : Color.smb
+            // return .insulin
             case .tempBasal:
                 return Color.insulin.opacity(0.4)
             case .resume,
@@ -198,7 +198,7 @@ enum DataTable {
             guard let duration = duration, duration > 0 else {
                 return nil
             }
-            return numberFormatter.string(from: duration as NSNumber)! + " min"
+            return numberFormatter.string(from: duration as NSNumber)! + "m"
         }
     }
 
