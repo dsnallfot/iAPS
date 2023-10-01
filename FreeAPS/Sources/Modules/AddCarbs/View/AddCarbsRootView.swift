@@ -86,7 +86,7 @@ extension AddCarbs {
                                             .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
                                             state
                                             .protein
-                                    ) ? .secondary : .primary
+                                    ) ? Color(.systemGray2) : Color(.systemBlue)
                             )
                             .disabled(
                                 (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
