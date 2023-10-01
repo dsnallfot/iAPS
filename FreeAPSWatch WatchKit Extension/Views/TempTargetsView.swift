@@ -12,6 +12,7 @@ struct TempTargetsView: View {
         }.font(.headline.weight(.semibold))
             .padding(.bottom)
             .padding(.top)
+            .tint(.red)
         List {
             if state.tempTargets.isEmpty {
                 Text("Set temp targets presets on iPhone first").padding()

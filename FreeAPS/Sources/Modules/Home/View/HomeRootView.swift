@@ -428,8 +428,8 @@ extension Home {
                     if cancel, selectedProfile().isOn {
                         Button { showCancelAlert.toggle() }
                         label: {
-                            Image(systemName: "xmark")
-                                .foregroundStyle(.secondary)
+                            Image(systemName: "arrow.uturn.backward")
+                                .foregroundStyle(.red)
                         }
                     }
                     Button { state.showModal(for: .overrideProfilesConfig) }

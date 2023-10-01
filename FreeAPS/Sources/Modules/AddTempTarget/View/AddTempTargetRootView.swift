@@ -26,9 +26,17 @@ extension AddTempTarget {
         var body: some View {
             Form {
                 Section {
-                    Button { state.cancel() }
-                    label: { Text("Cancel Temp Target").font(.title3.weight(.semibold)) }
+                    Button(action: state.cancel) {
+                        HStack {
+                            Image(systemName: "x.circle")
+                                .tint(.red)
+                            Text("Cancel Temp Target")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .tint(.red)
+                        }
                         .frame(maxWidth: .infinity, alignment: .center)
+                    }
                 }
                 if !state.presets.isEmpty {
                     Section(header: Text("Aktivera favorit")) {
@@ -38,10 +46,8 @@ extension AddTempTarget {
                     }
                 }
                 HStack {
-                    Text("Experimental")
+                    Text("Override %")
                     Toggle(isOn: $state.viewPercantage) {}.controlSize(.mini)
-                    Image(systemName: "figure.highintensity.intervaltraining")
-                    Image(systemName: "fork.knife")
                 }
 
                 if state.viewPercantage {
