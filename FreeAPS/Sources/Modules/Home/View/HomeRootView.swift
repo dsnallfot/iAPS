@@ -500,7 +500,7 @@ extension Home {
                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
                                     .font(.caption)
                                     .foregroundColor(.white)
-                                    .padding(4)
+                                    .padding(3)
                                     .background(Capsule().fill(Color.red))
                             }
                         }
@@ -508,12 +508,22 @@ extension Home {
                     Spacer()
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
-                        Image(systemName: "target")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                            .padding(8)
-                    }.foregroundColor(.loopGreen)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image(systemName: "target")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .foregroundColor(.loopGreen)
+                                .padding(8)
+                            if state.tempTarget != nil {
+                                Image(systemName: "timer")
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                    .padding(3)
+                                    .background(Capsule().fill(Color.red))
+                            }
+                        }
+                    }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
                     label: {
