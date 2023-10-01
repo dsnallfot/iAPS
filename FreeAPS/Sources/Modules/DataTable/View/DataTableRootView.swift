@@ -99,12 +99,17 @@ extension DataTable {
             }
         }
 
+        private func deleteTreatments(at offsets: IndexSet) {
+            deleteCarbs(at: offsets)
+            deleteInsulin(at: offsets)
+        }
+
         private var treatmentsList: some View {
             List {
                 ForEach(state.treatments) { item in
                     treatmentView(item)
                 }
-                .onDelete(perform: deleteCarbs)
+                .onDelete(perform: deleteTreatments)
             }
         }
 

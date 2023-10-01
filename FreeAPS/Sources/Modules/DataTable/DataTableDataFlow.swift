@@ -144,11 +144,11 @@ enum DataTable {
                 var bolusText = " "
 
                 if isSMB ?? false {
-                    bolusText += NSLocalizedString(" [Auto]", comment: "Automatic delivered treatments")
+                    bolusText += NSLocalizedString(" • Auto", comment: "Automatic delivered treatments")
                 } else if isNonPump ?? false {
-                    bolusText += NSLocalizedString(" [Insulinpenna]", comment: "Insulinpenna")
+                    bolusText += NSLocalizedString(" • Insulinpenna", comment: "Insulinpenna")
                 } else {
-                    bolusText += NSLocalizedString(" [Manuell]", comment: "Manual Bolus")
+                    bolusText += NSLocalizedString(" • Manuell", comment: "Manual Bolus")
                 }
 
                 return numberFormatter
