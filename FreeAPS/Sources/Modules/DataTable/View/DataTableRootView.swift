@@ -12,8 +12,9 @@ extension DataTable {
         @State private var isRemoveGlucoseAlertPresented = false
         @State private var isInsulinAmountAlertPresented = false
         @State private var removeGlucoseAlert: Alert?
-        @State private var newGlucose = false
-        @State private var nonPumpInsulin = false
+        @State private var showManualGlucose: Bool = false
+        @State private var showNonPumpInsulin: Bool = false
+        @State private var showFutureEntries: Bool = false
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -50,6 +51,19 @@ extension DataTable {
             return formatter
         }
 
+        var futureEntryBtn: some View {
+            Button(action: { showFutureEntries.toggle() }, label: {
+                Text((showFutureEntries ? "Hide" : "Show") + " Future Entries").foregroundColor(Color.white)
+                    .font(.caption)
+                Image(systemName: showFutureEntries ? "calendar.badge.minus" : "calendar.badge.plus")
+                    .resizable()
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color.white)
+            })
+                .padding(.trailing, 20)
+                .offset(x: 0, y: -50)
+        }
+
         var body: some View {
             VStack {
                 Picker("Mode", selection: $state.mode) {
@@ -69,31 +83,47 @@ extension DataTable {
             .navigationBarItems(
                 leading: Button("Close", action: state.hideModal),
                 trailing: HStack {
-                    if state.mode == .treatments && !nonPumpInsulin {
-                        Button(action: { nonPumpInsulin = true }) {
-                            Text("Insulinpenna")
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                        Spacer()
+                    if state.mode == .treatments {
+                        Button(action: { showFutureEntries.toggle() }, label: {
+                            Text((showFutureEntries ? "Dölj" : "Visa") + " framtida")
+                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                                .font(.caption)
+                            Image(
+                                systemName: showFutureEntries ? "calendar.badge.minus" :
+                                    "calendar.badge.plus"
+                            )
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                        }).buttonStyle(.bordered)
+                            
                     }
 
-                    if state.mode == .glucose && !newGlucose {
-                        Button(action: { newGlucose = true }) {
-                            Text("Fingerstick")
+                    if state.mode == .treatments && !showNonPumpInsulin {
+                        Spacer()
+                        Button(action: { showNonPumpInsulin = true }) {
+                            Text("Insulin")
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
                         }
+                    }
+
+                    if state.mode == .glucose && !showManualGlucose {
                         Spacer()
+                        Button(action: { showManualGlucose = true }) {
+                            Text("Blodsocker")
+                            Image(systemName: "plus.circle.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                        }
                     }
                 }
             )
-            .sheet(isPresented: $newGlucose) {
+            .sheet(isPresented: $showManualGlucose) {
                 addManualGlucoseView
             }
-            .sheet(isPresented: $nonPumpInsulin) {
+            .sheet(isPresented: $showNonPumpInsulin) {
                 addNonPumpInsulinView
             }
         }
@@ -127,7 +157,7 @@ extension DataTable {
 
                                 Button {
                                     state.addManualGlucose()
-                                    newGlucose = false
+                                    showManualGlucose = false
                                 }
                                 label: { Text("Logga BG från fingerstick") }
                                     .frame(maxWidth: .infinity, alignment: .center)
@@ -143,7 +173,7 @@ extension DataTable {
                 .onAppear(perform: configureView)
                 .navigationTitle("Fingerstick")
                 .navigationBarTitleDisplayMode(.automatic)
-                .navigationBarItems(leading: Button("Close", action: { newGlucose = false
+                .navigationBarItems(leading: Button("Close", action: { showManualGlucose = false
                     state.manualGlucose = 0 }))
             }
         }
@@ -178,7 +208,7 @@ extension DataTable {
                             HStack {
                                 Button {
                                     state.addNonPumpInsulin()
-                                    nonPumpInsulin = false
+                                    showNonPumpInsulin = false
                                 }
                                 label: {
                                     HStack {
@@ -206,7 +236,7 @@ extension DataTable {
                 .onAppear(perform: configureView)
                 .navigationTitle("Insulinpenna")
                 .navigationBarTitleDisplayMode(.automatic)
-                .navigationBarItems(leading: Button("Close", action: { nonPumpInsulin = false
+                .navigationBarItems(leading: Button("Close", action: { showNonPumpInsulin = false
                     state.nonPumpInsulinAmount = 0 }))
             }
         }
@@ -223,10 +253,26 @@ extension DataTable {
 
         private var treatmentsList: some View {
             List {
-                ForEach(state.treatments) { item in
-                    treatmentView(item)
+                if !state.treatments.isEmpty {
+                    if !showFutureEntries {
+                        ForEach(state.treatments.filter { item in
+                            item.date <= Date()
+                        }) { item in
+
+                            treatmentView(item)
+                        }
+                        .onDelete(perform: deleteTreatments)
+                    } else {
+                        ForEach(state.treatments) { item in
+                            treatmentView(item)
+                        }
+                        .onDelete(perform: deleteTreatments)
+                    }
+                } else {
+                    HStack {
+                        Text("Ingen data.")
+                    }
                 }
-                .onDelete(perform: deleteTreatments)
             }
             .alert(isPresented: $isRemoveTreatmentsAlertPresented) {
                 removeTreatmentsAlert!
@@ -235,18 +281,34 @@ extension DataTable {
 
         private var basalsList: some View {
             List {
-                ForEach(state.basals) { item in
-                    basalView(item)
+                if !state.basals.isEmpty {
+                    ForEach(state.basals) { item in
+                        basalView(item)
+                    }
+
+                } else {
+                    HStack {
+                        Text("Ingen data.")
+                    }
                 }
+            }
+            .alert(isPresented: $isRemoveTreatmentsAlertPresented) {
+                removeTreatmentsAlert!
             }
         }
 
         private var glucoseList: some View {
             List {
-                ForEach(state.glucose) { item in
-                    glucoseView(item)
+                if !state.glucose.isEmpty {
+                    ForEach(state.glucose) { item in
+                        glucoseView(item)
+                    }
+                    .onDelete(perform: deleteGlucose)
+                } else {
+                    HStack {
+                        Text("Ingen data.")
+                    }
                 }
-                .onDelete(perform: deleteGlucose)
             }
             .alert(isPresented: $isRemoveGlucoseAlertPresented) {
                 removeGlucoseAlert!
