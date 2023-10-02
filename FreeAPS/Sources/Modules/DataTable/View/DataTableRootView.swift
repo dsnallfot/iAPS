@@ -7,11 +7,11 @@ extension DataTable {
         let resolver: Resolver
         @StateObject var state = StateModel()
 
-        @State private var isRemoveCarbsAlertPresented = false
-        @State private var removeCarbsAlert: Alert?
-        @State private var isRemoveInsulinAlertPresented = false
-        @State private var removeInsulinAlert: Alert?
+        @State private var isRemoveTreatmentsAlertPresented = false
+        @State private var removeTreatmentsAlert: Alert?
         @State private var newGlucose = false
+        @State private var testAlert: Alert?
+        @State private var isTestPresented = false
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -37,19 +37,16 @@ extension DataTable {
             VStack {
                 Picker("Mode", selection: $state.mode) {
                     ForEach(Mode.allCases.indexed(), id: \.1) { index, item in
-                        Text(item.name).tag(index)
+                        Text(item.name)
+                            .tag(index)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-
-                Form {
-                    switch state.mode {
-                    case .treatments: treatmentsList
-                    case .basals: basalsList
-                    case .glucose: glucoseList
-                    }
+                .alert(isPresented: $isTestPresented) {
+                    testAlert!
                 }
+                historyContent
             }
             .onAppear(perform: configureView)
             .navigationTitle("History")
@@ -63,13 +60,13 @@ extension DataTable {
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                            Spacer()
                         }
+                        Spacer()
                     }
                 }
             )
             .popup(isPresented: newGlucose, alignment: .top, direction: .bottom) {
-                VStack {
+                Form {
                     HStack {
                         Text("Blodsocker")
                         DecimalTextField(" ... ", value: $state.manualGlcuose, formatter: glucoseFormatter)
@@ -99,6 +96,16 @@ extension DataTable {
             }
         }
 
+        private var historyContent: some View {
+            Form {
+                switch state.mode {
+                case .treatments: treatmentsList
+                case .basals: basalsList
+                case .glucose: glucoseList
+                }
+            }
+        }
+
         private func deleteTreatments(at offsets: IndexSet) {
             deleteCarbs(at: offsets)
             deleteInsulin(at: offsets)
@@ -110,6 +117,9 @@ extension DataTable {
                     treatmentView(item)
                 }
                 .onDelete(perform: deleteTreatments)
+            }
+            .alert(isPresented: $isRemoveTreatmentsAlertPresented) {
+                removeTreatmentsAlert!
             }
         }
 
@@ -185,11 +195,38 @@ extension DataTable {
         }
 
         private func deleteInsulin(at offsets: IndexSet) {
-            state.deleteInsulin(at: offsets[offsets.startIndex])
+            let treatment = state.treatments[offsets[offsets.startIndex]]
+
+            removeTreatmentsAlert = Alert(
+                title: Text("Radera behandling?"),
+                message: Text(treatment.amountText),
+                primaryButton: .destructive(
+                    Text("Delete"),
+                    action: {
+                        state.deleteInsulin(treatment)
+                        state.deleteCarbs(treatment) // Add the new action here
+                    }
+                ),
+                secondaryButton: .cancel()
+            )
+
+            isRemoveTreatmentsAlertPresented = true
         }
 
         private func deleteCarbs(at offsets: IndexSet) {
-            state.deleteCarbs(at: offsets[offsets.startIndex])
+            let treatment = state.treatments[offsets[offsets.startIndex]]
+
+            removeTreatmentsAlert = Alert(
+                title: Text("Radera behandling?"),
+                message: Text(treatment.amountText),
+                primaryButton: .destructive(
+                    Text("Delete"),
+                    action: { state.deleteCarbs(treatment) }
+                ),
+                secondaryButton: .cancel()
+            )
+
+            isRemoveTreatmentsAlertPresented = true
         }
 
         private func deleteGlucose(at offsets: IndexSet) {

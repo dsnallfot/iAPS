@@ -136,14 +136,17 @@ extension DataTable {
             }
         }
 
-        func deleteCarbs(at index: Int) {
-            let carbEntry = treatments[index]
-            provider.deleteCarbs(carbEntry)
+        func deleteCarbs(_ treatment: Treatment) {
+            provider.deleteCarbs(treatment)
         }
 
-        func deleteInsulin(at index: Int) {
-            let treatment = treatments[index]
-            provider.deleteInsulin(treatment)
+        func deleteInsulin(_ treatment: Treatment) {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.provider.deleteInsulin(treatment)
+                }
+                .store(in: &lifetime)
         }
 
         func deleteGlucose(at index: Int) {
