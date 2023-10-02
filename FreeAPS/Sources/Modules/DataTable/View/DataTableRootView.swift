@@ -81,9 +81,16 @@ extension DataTable {
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(
-                leading: Button("Close", action: state.hideModal),
-                trailing: HStack {
+                leading: HStack {
+                    Button("Close", action: state.hideModal)
                     if state.mode == .treatments {
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
                         Button(action: { showFutureEntries.toggle() }, label: {
                             Text((showFutureEntries ? "Dölj" : "Visa") + " framtida")
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
@@ -96,11 +103,10 @@ extension DataTable {
                             .frame(width: 16, height: 16)
                             .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                         }).buttonStyle(.bordered)
-                            
                     }
-
+                },
+                trailing: HStack {
                     if state.mode == .treatments && !showNonPumpInsulin {
-                        Spacer()
                         Button(action: { showNonPumpInsulin = true }) {
                             Text("Insulin")
                             Image(systemName: "plus.circle.fill")
@@ -110,7 +116,6 @@ extension DataTable {
                     }
 
                     if state.mode == .glucose && !showManualGlucose {
-                        Spacer()
                         Button(action: { showManualGlucose = true }) {
                             Text("Blodsocker")
                             Image(systemName: "plus.circle.fill")
