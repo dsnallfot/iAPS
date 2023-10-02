@@ -338,6 +338,7 @@ extension DataTable {
             let treatment = state.treatments[offsets[offsets.startIndex]]
             var alertTitle = Text("Radera Insulin?")
             var alertMessage = Text(treatment.amountText)
+            var primaryButtonText = "Delete"
             var primaryAction: () -> Void = {
                 state.deleteInsulin(treatment)
             }
@@ -345,9 +346,31 @@ extension DataTable {
             if treatment.type == .carbs {
                 alertTitle = Text("Radera kolhydrater?")
                 alertMessage = Text(treatment.amountText)
+                primaryButtonText = "Delete"
                 primaryAction = {
                     state.deleteCarbs(treatment)
                 }
+            }
+
+            if treatment.type == .tempTarget {
+                alertTitle = Text("Tillfälligt mål")
+                alertMessage = Text("Kan inte raderas!")
+                primaryButtonText = ""
+                primaryAction = {}
+            }
+
+            if treatment.type == .suspend {
+                alertTitle = Text("Pumphändelse")
+                alertMessage = Text("Kan inte raderas!")
+                primaryButtonText = ""
+                primaryAction = {}
+            }
+
+            if treatment.type == .resume {
+                alertTitle = Text("Pumphändelse")
+                alertMessage = Text("Kan inte raderas!")
+                primaryButtonText = ""
+                primaryAction = {}
             }
 
             if treatment.type == .fpus {
@@ -363,6 +386,7 @@ extension DataTable {
 
                 alertTitle = Text("Radera Protein/Fett?")
                 alertMessage = Text(carbEquivalents + NSLocalizedString(" g", comment: "gram of carbs"))
+                primaryButtonText = "Delete"
                 primaryAction = {
                     state.deleteCarbs(treatment)
                 }
@@ -372,7 +396,7 @@ extension DataTable {
                 title: alertTitle,
                 message: alertMessage,
                 primaryButton: .destructive(
-                    Text("Delete"),
+                    Text(primaryButtonText),
                     action: primaryAction
                 ),
                 secondaryButton: .cancel()

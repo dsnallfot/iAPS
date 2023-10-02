@@ -978,10 +978,10 @@ Enact a temp Basal or a temp target */
 "Temp Target" = "Tillfälligt målvärde";
 
 /* */
-"Resume" = "Återuppta";
+"Resume" = "Återuppta pump";
 
 /* */
-"Suspend" = "Pausa";
+"Suspend" = "Pausa pump";
 
 /* */
 "Animated Background" = "Animerad Bakgrund";
