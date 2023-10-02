@@ -71,7 +71,7 @@ extension DataTable {
                 trailing: HStack {
                     if state.mode == .treatments && !nonPumpInsulin {
                         Button(action: { nonPumpInsulin = true }) {
-                            Text("")
+                            Text("Insulinpenna")
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -81,7 +81,7 @@ extension DataTable {
 
                     if state.mode == .glucose && !newGlucose {
                         Button(action: { newGlucose = true }) {
-                            Text("")
+                            Text("Fingerstick")
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -129,7 +129,7 @@ extension DataTable {
                                     state.addManualGlucose()
                                     newGlucose = false
                                 }
-                                label: { Text("Logga blodsocker") }
+                                label: { Text("Logga BG från fingerstick") }
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .font(.title3.weight(.semibold))
                                     .disabled(
@@ -141,7 +141,7 @@ extension DataTable {
                     }
                 }
                 .onAppear(perform: configureView)
-                .navigationTitle("Manuell loggning")
+                .navigationTitle("Fingerstick")
                 .navigationBarTitleDisplayMode(.automatic)
                 .navigationBarItems(leading: Button("Close", action: { newGlucose = false
                     state.nonPumpInsulinAmount = 0 }))
@@ -323,8 +323,10 @@ extension DataTable {
                     ) as NSNumber)!
                 } ?? "--")
                 Text(state.units.rawValue)
-                Text(item.glucose.direction?.symbol ?? "Manuell")
-                    .foregroundColor(.secondary)
+                Text(item.glucose.direction?.symbol ?? "Finger")
+                    .foregroundColor(
+                        item.glucose.direction?.symbol != nil ? .secondary : .red
+                    )
 
                 Spacer()
 
