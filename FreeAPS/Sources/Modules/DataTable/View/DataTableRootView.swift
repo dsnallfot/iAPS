@@ -299,9 +299,9 @@ extension DataTable {
                     ) as NSNumber)!
                 } ?? "--")
                 Text(state.units.rawValue)
-                Text(item.glucose.direction?.symbol ?? "Finger")
+                Text(item.glucose.direction?.symbol ?? "Fingerstick")
                     .foregroundColor(
-                        item.glucose.direction?.symbol != nil ? .secondary : .red
+                        item.glucose.direction?.symbol != nil ? .secondary : .orange
                     )
 
                 Spacer()
