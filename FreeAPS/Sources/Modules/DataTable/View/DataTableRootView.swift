@@ -105,6 +105,7 @@ extension DataTable {
                         Section {
                             HStack {
                                 Text("Blodsocker")
+                                    .font(.title3.weight(.semibold))
                                 DecimalTextField(
                                     " ... ",
                                     value: $state.manualGlucose,
@@ -112,6 +113,7 @@ extension DataTable {
                                     autofocus: true
                                 )
                                 Text(state.units.rawValue).foregroundStyle(.secondary)
+                                    .font(.title3.weight(.semibold))
                             }
                         }
 
@@ -139,7 +141,7 @@ extension DataTable {
                     }
                 }
                 .onAppear(perform: configureView)
-                .navigationTitle("Manuell registrering")
+                .navigationTitle("Manuell loggning")
                 .navigationBarTitleDisplayMode(.automatic)
                 .navigationBarItems(leading: Button("Close", action: { newGlucose = false
                     state.nonPumpInsulinAmount = 0 }))
@@ -153,6 +155,7 @@ extension DataTable {
                         Section {
                             HStack {
                                 Text("Dos")
+                                    .font(.title3.weight(.semibold))
                                 Spacer()
                                 DecimalTextField(
                                     "0,0",
@@ -161,7 +164,7 @@ extension DataTable {
                                     autofocus: true,
                                     cleanInput: true
                                 )
-                                Text("U").foregroundColor(.secondary)
+                                Text(!(state.nonPumpInsulinAmount > state.maxBolus * 3) ? "U" : "☠️").fontWeight(.semibold)
                             }
                         }
 
@@ -169,10 +172,9 @@ extension DataTable {
                             DatePicker("Date", selection: $state.nonPumpInsulinDate)
                         }
 
-                        let amountWarningCondition = (state.nonPumpInsulinAmount > state.maxBolus)
-                        let amountStopCondition = (state.nonPumpInsulinAmount > state.maxBolus * 3)
-
                         Section {
+                            let maxamountbolus = Double(state.maxBolus)
+                            let formattedMaxAmountBolus = String(maxamountbolus)
                             HStack {
                                 Button {
                                     /*
@@ -187,26 +189,17 @@ extension DataTable {
                                     state.addNonPumpInsulin()
                                     nonPumpInsulin = false
                                 }
-                                label: { Text("Add insulin without actually bolusing") }
-                                    .foregroundColor(
-                                        amountStopCondition ? Color(.systemGray2) : amountWarningCondition ?
-                                            .warning : .accentColor
-                                    )
-                                    .font(.title3.weight(.semibold))
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .disabled(
-                                        state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
-                                            .maxBolus * 3
-                                    )
-                            }
-                        }
-                        header: {
-                            let maxamountbolus = Double(state.maxBolus)
-                            let formattedMaxAmountBolus = String(maxamountbolus)
-                            if amountWarningCondition
-                            {
-                                Text(
-                                    "⚠️ Inställd maxbolus: \(formattedMaxAmountBolus)E"
+                                label: { Text(
+                                    !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
+                                        "⚠️  Inställd maxbolus: \(formattedMaxAmountBolus)E   "
+                                )
+                                }
+
+                                .font(.title3.weight(.semibold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .disabled(
+                                    state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
+                                        .maxBolus * 3
                                 )
                             }
                         }
