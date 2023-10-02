@@ -152,10 +152,10 @@ extension DataTable {
                     Form {
                         Section {
                             HStack {
-                                Text("Amount")
+                                Text("Dos")
                                 Spacer()
                                 DecimalTextField(
-                                    "0",
+                                    "0,0",
                                     value: $state.nonPumpInsulinAmount,
                                     formatter: insulinFormatter,
                                     autofocus: true,
