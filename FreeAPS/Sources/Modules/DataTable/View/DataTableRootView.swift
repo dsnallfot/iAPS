@@ -53,11 +53,11 @@ extension DataTable {
 
         var futureEntryBtn: some View {
             Button(action: { showFutureEntries.toggle() }, label: {
-                Text((showFutureEntries ? "Hide" : "Show") + " Future Entries").foregroundColor(Color.white)
+                Text(showFutureEntries ? "Dölj framtida" : "Visa framtida").foregroundColor(Color.white)
                     .font(.caption)
                 Image(systemName: showFutureEntries ? "calendar.badge.minus" : "calendar.badge.plus")
                     .resizable()
-                    .frame(width: 18, height: 18)
+                    .frame(width: 16, height: 16)
                     .foregroundColor(Color.white)
             })
                 .padding(.trailing, 20)
@@ -92,7 +92,7 @@ extension DataTable {
                         Spacer()
                         Spacer()
                         Button(action: { showFutureEntries.toggle() }, label: {
-                            Text((showFutureEntries ? "Dölj" : "Visa") + " framtida")
+                            Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .font(.caption)
                             Image(
