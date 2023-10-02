@@ -144,7 +144,7 @@ extension DataTable {
                 .navigationTitle("Fingerstick")
                 .navigationBarTitleDisplayMode(.automatic)
                 .navigationBarItems(leading: Button("Close", action: { newGlucose = false
-                    state.nonPumpInsulinAmount = 0 }))
+                    state.manualGlucose = 0 }))
             }
         }
 
@@ -177,15 +177,6 @@ extension DataTable {
                             let formattedMaxAmountBolus = String(maxamountbolus)
                             HStack {
                                 Button {
-                                    /*
-                                     if amountWarningCondition
-                                     {
-                                         isInsulinAmountAlertPresented = true
-                                     } else {
-                                         state.addNonPumpInsulin()
-                                         nonPumpInsulin = false
-                                     }
-                                      */
                                     state.addNonPumpInsulin()
                                     nonPumpInsulin = false
                                 }
@@ -204,34 +195,12 @@ extension DataTable {
                             }
                         }
                     }
-                    /*
-                     .alert(isPresented: $isInsulinAmountAlertPresented) {
-                         let insulinAmount = insulinFormatter.string(from: state.nonPumpInsulinAmount as NSNumber)!
-                         let alertMessage = NSLocalizedString(
-                             "The entered insulin amount is greater than your Max Bolus setting! Are you sure you want to add ",
-                             comment: "Alert"
-                         ) + insulinAmount +
-                             NSLocalizedString(" U", comment: "Insulin unit") + " of non-pump insulin?"
-                         return Alert(
-                             title: Text("Warning"),
-                             message: Text(alertMessage),
-                             primaryButton: .destructive(
-                                 Text("Confirm"),
-                                 action: {
-                                     state.addNonPumpInsulin()
-                                     nonPumpInsulin = false
-                                     isInsulinAmountAlertPresented = false
-                                 }
-                             ),
-                             secondaryButton: .cancel()
-                         )
-                     }
-                      */
                 }
                 .onAppear(perform: configureView)
                 .navigationTitle("Insulinpenna")
                 .navigationBarTitleDisplayMode(.automatic)
-                .navigationBarItems(leading: Button("Close", action: { nonPumpInsulin = false }))
+                .navigationBarItems(leading: Button("Close", action: { nonPumpInsulin = false
+                    state.nonPumpInsulinAmount = 0 }))
             }
         }
 
