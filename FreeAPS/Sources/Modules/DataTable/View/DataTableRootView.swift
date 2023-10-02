@@ -164,7 +164,7 @@ extension DataTable {
                                     state.addManualGlucose()
                                     showManualGlucose = false
                                 }
-                                label: { Text("Logga BG från fingerstick") }
+                                label: { Text("Logga värde från fingerstick") }
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .font(.title3.weight(.semibold))
                                     .disabled(
