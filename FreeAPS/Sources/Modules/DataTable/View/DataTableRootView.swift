@@ -136,7 +136,7 @@ extension DataTable {
                 ForEach(state.treatments) { item in
                     treatmentView(item)
                 }
-                .onDelete(perform: deleteInsulin)
+                .onDelete(perform: deleteTreatments)
             }
             .alert(isPresented: $isRemoveTreatmentsAlertPresented) {
                 removeTreatmentsAlert!
@@ -218,7 +218,7 @@ extension DataTable {
             }
         }
 
-        private func deleteInsulin(at offsets: IndexSet) {
+        private func deleteTreatments(at offsets: IndexSet) {
             let treatment = state.treatments[offsets[offsets.startIndex]]
             var alertTitle = Text("Radera Insulin?")
             var alertMessage = Text(treatment.amountText)
@@ -268,7 +268,7 @@ extension DataTable {
         private func deleteGlucose(at offsets: IndexSet) {
             let glucose = state.glucose[offsets[offsets.startIndex]]
             let glucoseValue = glucoseFormatter.string(from: Double(
-                state.units == .mmolL ? glucose.glucose.value.asMmolL : glucose.glucose.value.asMgdL
+                state.units == .mmolL ? Double(glucose.glucose.value.asMmolL) : glucose.glucose.value
             ) as NSNumber)! + " " + state.units.rawValue
 
             removeGlucoseAlert = Alert(
