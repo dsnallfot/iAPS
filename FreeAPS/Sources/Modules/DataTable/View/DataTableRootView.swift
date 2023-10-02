@@ -222,10 +222,16 @@ extension DataTable {
             let treatment = state.treatments[offsets[offsets.startIndex]]
             var alertTitle = Text("Radera Insulin?")
             var alertMessage = Text(treatment.amountText)
+            var primaryAction: () -> Void = {
+                state.deleteInsulin(treatment)
+            }
 
             if treatment.type == .carbs {
                 alertTitle = Text("Radera kolhydrater?")
                 alertMessage = Text(treatment.amountText)
+                primaryAction = {
+                    state.deleteCarbs(treatment)
+                }
             }
 
             if treatment.type == .fpus {
@@ -241,6 +247,9 @@ extension DataTable {
 
                 alertTitle = Text("Radera Protein/Fett?")
                 alertMessage = Text(carbEquivalents + NSLocalizedString(" g", comment: "gram of carbs"))
+                primaryAction = {
+                    state.deleteCarbs(treatment)
+                }
             }
 
             removeTreatmentsAlert = Alert(
@@ -248,10 +257,7 @@ extension DataTable {
                 message: alertMessage,
                 primaryButton: .destructive(
                     Text("Delete"),
-                    action: {
-                        state.deleteInsulin(treatment)
-                        state.deleteCarbs(treatment)
-                    }
+                    action: primaryAction
                 ),
                 secondaryButton: .cancel()
             )
