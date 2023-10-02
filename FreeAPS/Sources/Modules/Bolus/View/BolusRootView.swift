@@ -37,13 +37,19 @@ extension Bolus {
                     } else {
                         HStack {
                             if state.error && state.insulinRecommended > 0 {
-                                Text("⚠️ Vänta med att ge bolus")
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Vänta med att ge bolus")
                                     .foregroundColor(.orange)
                             } else if state.insulinRecommended <= 0 {
-                                Text("⛔ Ingen bolus rekommenderas")
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                                Text("Ingen bolus rekommenderas")
                                     .foregroundColor(.red)
                             } else {
-                                Text("✅ Förslag bolus dos")
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("Förslag bolus dos")
                                     .foregroundColor(.green)
                             }
 
@@ -107,17 +113,27 @@ extension Bolus {
                     Section {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
-                        Button { state.add() }
-                        label: {
-                            Text(
-                                !(state.amount > state.maxBolus) ? "Enact bolus" :
-                                    "⛔  Inställd maxgräns: \(formattedMaxAmountBolus)E   "
-                            )
-                            .font(.title3.weight(.semibold)) }
-                            .disabled(
-                                state.amount <= 0 || state.amount > state.maxBolus
-                            )
-                            .frame(maxWidth: .infinity, alignment: .center)
+
+                        Button {
+                            state.add()
+                        } label: {
+                            HStack {
+                                if state.amount > state.maxBolus {
+                                    Image(systemName: "x.circle.fill")
+                                        .foregroundColor(.red)
+                                }
+
+                                Text(
+                                    !(state.amount > state.maxBolus) ? "Enact bolus" :
+                                        "Inställd maxgräns: \(formattedMaxAmountBolus)E   "
+                                )
+                                .font(.title3.weight(.semibold))
+                            }
+                        }
+                        .disabled(
+                            state.amount <= 0 || state.amount > state.maxBolus
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                     Section {
                         if waitForSuggestion {

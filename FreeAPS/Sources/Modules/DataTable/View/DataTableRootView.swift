@@ -180,18 +180,25 @@ extension DataTable {
                                     state.addNonPumpInsulin()
                                     nonPumpInsulin = false
                                 }
-                                label: { Text(
-                                    !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
-                                        "⚠️  Inställd maxbolus: \(formattedMaxAmountBolus)E   "
-                                )
-                                }
+                                label: {
+                                    HStack {
+                                        if state.nonPumpInsulinAmount > state.maxBolus {
+                                            Image(systemName: "exclamationmark.triangle.fill")
+                                                .foregroundColor(.orange)
+                                        }
+                                        Text(
+                                            !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
+                                                "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
+                                        )
+                                    }
 
-                                .font(.title3.weight(.semibold))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .disabled(
-                                    state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
-                                        .maxBolus * 3
-                                )
+                                    .font(.title3.weight(.semibold))
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .disabled(
+                                        state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
+                                            .maxBolus * 3
+                                    )
+                                }
                             }
                         }
                     }
