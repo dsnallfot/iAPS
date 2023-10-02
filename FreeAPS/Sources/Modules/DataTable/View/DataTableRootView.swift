@@ -117,7 +117,7 @@ extension DataTable {
 
                     if state.mode == .glucose && !showManualGlucose {
                         Button(action: { showManualGlucose = true }) {
-                            Text("Blodsocker")
+                            Text("Fingerstick")
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
