@@ -486,14 +486,95 @@ extension Home {
             ZStack {
                 Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 54 + geo.safeAreaInsets.bottom)
 
+                /*
+                  HStack {
+                     Button { state.showModal(for: .addCarbs) }
+                     label: {
+                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                             Image(systemName: "fork.knife.circle")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .foregroundColor(.loopYellow)
+                                 .padding(8)
+                             if let carbsReq = state.carbsRequired {
+                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                     .font(.caption)
+                                     .foregroundColor(.white)
+                                     .padding(3)
+                                     .background(Capsule().fill(Color.red))
+                             }
+                         }
+                     }.buttonStyle(.plain)
+                     Spacer()
+                     Button { state.showModal(for: .addTempTarget) }
+                     label: {
+                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                             Image(systemName: "target")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .foregroundColor(.loopGreen)
+                                 .padding(8)
+                             if state.tempTarget != nil {
+                                 Image(systemName: "timer")
+                                     .font(.caption)
+                                     .foregroundColor(.white)
+                                     .padding(3)
+                                     .background(Capsule().fill(Color.red))
+                             }
+                         }
+                     }.buttonStyle(.plain)
+                     Spacer()
+                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
+                     label: {
+                         Image(systemName: "drop.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.insulin)
+                     Spacer()
+                     if state.allowManualTemp {
+                         Button { state.showModal(for: .manualTempBasal) }
+                         label: {
+                             Image(systemName: "plus.circle")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .padding(8)
+                         }.foregroundColor(.insulin)
+                         Spacer()
+                     }
+                     Button { state.showModal(for: .statistics)
+                     }
+                     label: {
+                         Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.purple)
+                     Spacer()
+                     Button { state.showModal(for: .settings) }
+                     label: {
+                         Image(systemName: "gearshape.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.gray)
+                 }
+
+                   */
                 HStack {
                     Button { state.showModal(for: .addCarbs) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image(systemName: "fork.knife.circle")
+                            Image("carbs")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 24, height: 24)
                                 .foregroundColor(.loopYellow)
                                 .padding(8)
                             if let carbsReq = state.carbsRequired {
@@ -509,10 +590,10 @@ extension Home {
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image(systemName: "target")
+                            Image("target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 24, height: 24)
                                 .foregroundColor(.loopGreen)
                                 .padding(8)
                             if state.tempTarget != nil {
@@ -527,20 +608,20 @@ extension Home {
                     Spacer()
                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
                     label: {
-                        Image(systemName: "drop.circle")
+                        Image("bolus")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 32, height: 32)
+                            .frame(width: 24, height: 24)
                             .padding(8)
                     }.foregroundColor(.insulin)
                     Spacer()
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
                         label: {
-                            Image(systemName: "plus.circle")
+                            Image("bolus1")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 24, height: 24)
                                 .padding(8)
                         }.foregroundColor(.insulin)
                         Spacer()
@@ -548,19 +629,19 @@ extension Home {
                     Button { state.showModal(for: .statistics)
                     }
                     label: {
-                        Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                        Image(systemName: "chart.xyaxis.line")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 32, height: 32)
+                            .frame(width: 24, height: 24)
                             .padding(8)
                     }.foregroundColor(.purple)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
-                        Image(systemName: "gearshape.circle")
+                        Image("settings1")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 32, height: 32)
+                            .frame(width: 24, height: 24)
                             .padding(8)
                     }.foregroundColor(.gray)
                 }

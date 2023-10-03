@@ -83,30 +83,30 @@ extension DataTable {
             .navigationBarItems(
                 leading: HStack {
                     Button("Close", action: state.hideModal)
-                    if state.mode == .treatments {
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Button(action: { showFutureEntries.toggle() }, label: {
-                            Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
-                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                                .font(.caption)
-                            Image(
-                                systemName: showFutureEntries ? "calendar.badge.minus" :
-                                    "calendar.badge.plus"
-                            )
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                        }).buttonStyle(.bordered)
-                    }
                 },
                 trailing: HStack {
+                    if state.mode == .treatments {
+                        Button(action: { showFutureEntries.toggle() }, label: {
+                            Text(showFutureEntries ? " Framtida" : " Framtida")
+                                .foregroundColor(colorScheme == .dark ? Color(.systemGray) : Color(.systemGray))
+                                .font(.caption2)
+
+                            Image(
+                                systemName: showFutureEntries ? "eye.slash" :
+                                    "eye"
+                            )
+                            .resizable()
+                            .frame(width: 20, height: 12)
+                            .foregroundColor(colorScheme == .dark ? Color(.systemGray) : Color(.systemGray))
+                        }).buttonStyle(.bordered)
+                    }
+
                     if state.mode == .treatments && !showNonPumpInsulin {
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+
                         Button(action: { showNonPumpInsulin = true }) {
                             Text("Insulin")
                             Image(systemName: "plus.circle.fill")
