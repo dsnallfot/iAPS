@@ -50,9 +50,26 @@ extension ManualTempBasal {
                 }
 
                 Section {
+                    let maxamountbasal = Double(state.maxBasal)
+                    let formattedMaxAmountBasal = String(maxamountbasal)
                     Button { state.enact() }
-                    label: { Text("Aktivera temp basal").font(.title3.weight(.semibold)) }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    label: {
+                        HStack {
+                            if state.rate > state.maxBasal {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+
+                            Text(
+                                !(state.rate > state.maxBasal) ? "Aktivera temp basal" :
+                                    "Inställd maxgräns: \(formattedMaxAmountBasal)E/h"
+                            )
+                            .font(.title3.weight(.semibold))
+                        }
+                    }.disabled(
+                        state.rate <= 0 || state.rate > state.maxBasal
+                    )
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .onAppear(perform: configureView)
