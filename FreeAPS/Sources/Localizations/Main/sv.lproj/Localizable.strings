@@ -459,7 +459,7 @@ Enact a temp Basal or a temp target */
 "Low target" = "Undre målvärde";
 
 /* Daniel adderat */
-"Bolus Amount" = "Bolus dos";
+"Bolus Amount" = "Bolusdos";
 
 /* When bolusing */
 "Bolusing" = "Ger bolus";
