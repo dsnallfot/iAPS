@@ -49,7 +49,7 @@ extension Bolus {
                             } else {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.green)
-                                Text("Förslag bolus dos")
+                                Text("Förslag bolusdos")
                                     .foregroundColor(.green)
                             }
 
