@@ -54,7 +54,7 @@ extension CGM {
                         Text("Calibrations").navigationLink(to: .calibrations, from: self)
                     }
                     Section(header: Text("Calendar")) {
-                        Toggle("Create Events in Calendar", isOn: $state.createCalendarEvents)
+                        Toggle("Skapa kalenderhändelser", isOn: $state.createCalendarEvents)
                         if state.calendarIDs.isNotEmpty {
                             Picker("Calendar", selection: $state.currentCalendarID) {
                                 ForEach(state.calendarIDs, id: \.self) {
@@ -63,6 +63,19 @@ extension CGM {
                             }
                             Toggle("Visa emojis", isOn: $state.displayCalendarEmojis)
                             Toggle("Visa COB och IOB", isOn: $state.displayCalendarIOBandCOB)
+                        } else if state.createCalendarEvents {
+                            if #available(iOS 17.0, *) {
+                                Text(
+                                    "Om du inte får upp kalendrar att välja från här, gå till Inställningar  -> iAPS -> Kalendrar och ändra behörighet till \"Full åtkomst\""
+                                ).font(.footnote)
+
+                                Button("Open Settings") {
+                                    // Get the settings URL and open it
+                                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }
+                            }
                         }
                     }
 
