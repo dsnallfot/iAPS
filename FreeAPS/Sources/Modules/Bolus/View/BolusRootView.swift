@@ -124,7 +124,7 @@ extension Bolus {
                                 }
 
                                 Text(
-                                    !(state.amount > state.maxBolus) ? "Enact bolus" :
+                                    !(state.amount > state.maxBolus) ? "Ge bolusdos" :
                                         "Inställd maxgräns: \(formattedMaxAmountBolus)E   "
                                 )
                                 .font(.title3.weight(.semibold))
