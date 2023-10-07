@@ -34,7 +34,7 @@ extension NightscoutAPI {
         struct Check: Codable, Equatable {
             var eventType = "Note"
             var enteredBy = "iAPS"
-            var notes = "iAPS connected"
+            var notes = "iAPS anslöts till Nightscout"
         }
         let check = Check()
         var request = URLRequest(url: url.appendingPathComponent(Config.treatmentsPath))
