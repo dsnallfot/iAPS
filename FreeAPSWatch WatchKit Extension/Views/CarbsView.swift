@@ -41,7 +41,7 @@ struct CarbsView: View {
             }
             buttonStack
         }
-        .onAppear { carbAmount = Double(state.carbsRequired ?? 0) }
+        .onAppear { carbAmount = 0 }
     }
 
     var nutrient: some View {
@@ -77,7 +77,7 @@ struct CarbsView: View {
                 .digitalCrownRotation(
                     $carbAmount,
                     from: 0,
-                    through: Double(state.maxCOB ?? 120),
+                    through: Double(state.maxCOB ?? 120) * 0.25,
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -88,7 +88,7 @@ struct CarbsView: View {
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount + 5
-                    carbAmount = min(newValue, Double(state.maxCOB ?? 120))
+                    carbAmount = min(newValue, Double(state.maxCOB ?? 120) * 0.25)
                 } label: { Image(systemName: "plus").scaleEffect(1.35) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .carbs ? .blue : .none)
