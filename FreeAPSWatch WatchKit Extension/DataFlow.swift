@@ -11,6 +11,7 @@ struct WatchState: Codable {
     var lastLoopDateInterval: UInt64?
     var bolusIncrement: Decimal?
     var maxCOB: Decimal?
+    var maxCarbs: Decimal?
     var maxBolus: Decimal?
     var carbsRequired: Decimal?
     var bolusRecommended: Decimal?

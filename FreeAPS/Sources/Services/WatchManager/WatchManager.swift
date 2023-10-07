@@ -72,6 +72,7 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
             }
             self.state.bolusIncrement = self.settingsManager.preferences.bolusIncrement
             self.state.maxCOB = self.settingsManager.preferences.maxCOB
+            self.state.maxCarbs = self.settingsManager.settings.maxCarbs
             self.state.maxBolus = self.settingsManager.pumpSettings.maxBolus
             self.state.carbsRequired = self.suggestion?.carbsReq
 
