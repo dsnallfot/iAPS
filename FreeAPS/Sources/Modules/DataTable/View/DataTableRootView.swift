@@ -101,7 +101,7 @@ extension DataTable {
                         }).buttonStyle(.bordered)
                     }
 
-                    if state.mode == .treatments && !showNonPumpInsulin {
+                    if state.mode == .treatments {
                         Spacer()
                         Spacer()
                         Spacer()
@@ -115,7 +115,7 @@ extension DataTable {
                         }
                     }
 
-                    if state.mode == .glucose && !showManualGlucose {
+                    if state.mode == .glucose {
                         Button(action: { showManualGlucose = true }) {
                             Text("Fingerstick")
                             Image(systemName: "plus.circle.fill")
@@ -125,10 +125,10 @@ extension DataTable {
                     }
                 }
             )
-            .sheet(isPresented: $showManualGlucose) {
+            .sheet(isPresented: $showManualGlucose, onDismiss: { state.manualGlucose = 0 }) {
                 addManualGlucoseView
             }
-            .sheet(isPresented: $showNonPumpInsulin) {
+            .sheet(isPresented: $showNonPumpInsulin, onDismiss: { state.nonPumpInsulinAmount = 0 }) {
                 addNonPumpInsulinView
             }
         }
