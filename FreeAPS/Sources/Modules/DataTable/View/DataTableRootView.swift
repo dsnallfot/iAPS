@@ -238,12 +238,11 @@ extension DataTable {
 
                     Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
                         .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                        .font(.footnote)
+                        .font(.subheadline)
 
                 })
                     .buttonStyle(.borderless)
-                    .background(Color.clear.opacity(1.0))
-                    .listRowBackground(Color(.tertiarySystemFill))
+                    .listRowBackground(Color(.systemGray4))
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
