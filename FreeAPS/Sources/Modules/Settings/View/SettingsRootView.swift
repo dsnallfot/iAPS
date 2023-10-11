@@ -49,8 +49,18 @@ extension Settings {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
                         Group {
-                            Text("NS Upload Profile and Settings").onTapGesture {
-                                state.uploadProfileAndSettings()
+                            HStack {
+                                Text("Profil & inställningar")
+                                Button(action: {
+                                    state.uploadProfileAndSettings()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "icloud.and.arrow.up")
+                                        Text("Nightscout")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .buttonStyle(.borderedProminent)
                             }
                         }
                         Group {

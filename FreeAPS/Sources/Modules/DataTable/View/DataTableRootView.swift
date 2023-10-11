@@ -52,19 +52,6 @@ extension DataTable {
             return formatter
         }
 
-        var futureEntryBtn: some View {
-            Button(action: { showFutureEntries.toggle() }, label: {
-                Text(showFutureEntries ? "Dölj framtida" : "Visa framtida").foregroundColor(Color.white)
-                    .font(.caption)
-                Image(systemName: showFutureEntries ? "calendar.badge.minus" : "calendar.badge.plus")
-                    .resizable()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(Color.white)
-            })
-                .padding(.trailing, 20)
-                .offset(x: 0, y: -50)
-        }
-
         var body: some View {
             VStack {
                 Picker("Mode", selection: $state.mode) {
@@ -87,27 +74,6 @@ extension DataTable {
                 },
                 trailing: HStack {
                     if state.mode == .treatments {
-                        Button(action: { showFutureEntries.toggle() }, label: {
-                            Text(showFutureEntries ? " Framtida" : " Framtida")
-                                .foregroundColor(colorScheme == .dark ? Color(.systemGray) : Color(.systemGray))
-                                .font(.caption2)
-
-                            Image(
-                                systemName: showFutureEntries ? "eye.slash" :
-                                    "eye"
-                            )
-                            .resizable()
-                            .frame(width: 20, height: 12)
-                            .foregroundColor(colorScheme == .dark ? Color(.systemGray) : Color(.systemGray))
-                        }).buttonStyle(.bordered)
-                    }
-
-                    if state.mode == .treatments {
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-
                         Button(action: { showNonPumpInsulin = true }) {
                             Text("Insulin")
                             Image(systemName: "plus.circle.fill")
@@ -261,6 +227,15 @@ extension DataTable {
 
         private var treatmentsList: some View {
             List {
+                Button(action: { showFutureEntries.toggle() }, label: {
+                    Text(showFutureEntries ? "Dölj framtida" : "Visa framtida...")
+                        .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                        .font(.footnote)
+
+                })
+                    .buttonStyle(.borderless)
+                    .background(Color.clear.opacity(1.0))
+
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
                         ForEach(state.treatments.filter { item in
@@ -325,7 +300,10 @@ extension DataTable {
 
         @ViewBuilder private func treatmentView(_ item: Treatment) -> some View {
             HStack {
-                Image(systemName: "circle.fill").foregroundColor(item.color)
+                if item.isSMB ?? false { Image(systemName: "bolt.circle.fill").foregroundColor(item.color) }
+                else { Image(systemName: "circle.fill").foregroundColor(item.color)
+                }
+
                 Text((item.isSMB ?? false) ? "SMB" : item.type.name)
                 Text(item.amountText).foregroundColor(.secondary)
 

@@ -321,10 +321,10 @@ Enact a temp Basal or a temp target */
 "This will replace some or all of your current pump settings. Are you sure you want to import profile settings from Nightscout?" = "Detta kommer att ersätta alla eller vissa av dina pumpinställningar. Är du säker att du vill fortsätta med import av inställningar?";
 
 /* Import Error */
-"\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!" = "\nDu har ogiltiga basalinställningar i Nightscouts profilinställningar.\n\nImport avbruten. Du behöver kontrollera dina Nightcoutinställningar.";
+"\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!" = "\nDu har ogiltiga basalinställningar i Nightscouts profilinställningar. \n\nImport avbruten. Du behöver kontrollera dina Nightcoutinställningar.";
 
 /* Import Error */
-"\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings" =  "\nDina inställningar blev importerade men kunde inte sparas till pump (Ingen pump). Kontrollera dina pumpinstälningar och klicka därefter på ´Spara på pump´ för att programmera din pump med de nya basalinställningarna";
+"\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings" = "\nDina inställningar blev importerade men kunde inte sparas till pump (Ingen pump). Kontrollera dina pumpinstälningar och klicka därefter på ´Spara på pump´ för att programmera din pump med de nya basalinställningarna";
 
 /* Import Error Headline */
 "Import Error" = "Fel vid import av inställningar";
