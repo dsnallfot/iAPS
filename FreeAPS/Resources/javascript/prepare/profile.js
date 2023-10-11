@@ -63,6 +63,7 @@ function generate(pumpsettings_data, bgtargets_data, isf_data, basalprofile_data
     var preferences = { };
     if (preferences_input) {
         preferences = preferences_input;
+        preferences.insulinPeakTime = Math.max(preferences.insulinPeakTime, 55);
     }
 
     var inputs = { };
