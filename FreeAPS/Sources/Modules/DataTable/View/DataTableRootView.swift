@@ -228,13 +228,22 @@ extension DataTable {
         private var treatmentsList: some View {
             List {
                 Button(action: { showFutureEntries.toggle() }, label: {
-                    Text(showFutureEntries ? "Dölj framtida" : "Visa framtida...")
-                        .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                    Image(
+                        systemName: showFutureEntries ? "chevron.down" :
+                            "chevron.up"
+                    )
+                    .resizable()
+                    .frame(width: 20, height: 11)
+                    .foregroundColor(colorScheme == .dark ? .primary : .primary)
+
+                    Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
+                        .foregroundColor(colorScheme == .dark ? .primary : .primary)
                         .font(.footnote)
 
                 })
                     .buttonStyle(.borderless)
                     .background(Color.clear.opacity(1.0))
+                    .listRowBackground(Color(.tertiarySystemFill))
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
