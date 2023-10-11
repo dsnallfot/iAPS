@@ -96,26 +96,26 @@ extension AutotuneConfig {
                             .foregroundColor(.red)
                     }
 
-                                        Section {
-                                            Button {
-                                                replaceAlert = true
-                                            }
-                                            label: { Text("Save as your Normal Basal Rates") }
-                                        } header: {
-                                            Text("Replace Normal Basal")
-                                        }
+                    Section {
+                        Button {
+                            replaceAlert = true
+                        }
+                        label: { Text("Save as your Normal Basal Rates") }
+                    } header: {
+                        Text("Replace Normal Basal")
+                    }
                 }
             }
             .onAppear(perform: configureView)
             .navigationTitle("Autotune")
             .navigationBarTitleDisplayMode(.automatic)
             .alert(Text("Are you sure?"), isPresented: $replaceAlert) {
-                            Button("Yes", action: {
-                                state.replace()
-                                replaceAlert.toggle()
-                            })
-                            Button("No", action: { replaceAlert.toggle() })
-                        }
+                Button("Yes", action: {
+                    state.replace()
+                    replaceAlert.toggle()
+                })
+                Button("No", action: { replaceAlert.toggle() })
+            }
         }
     }
 }
