@@ -1993,7 +1993,7 @@ Enact a temp Basal or a temp target */
 "Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable." = "Ange vid vilket blodsockervärde som SMB kommer att aktiveras. Om blodsockret stiger över detta värde aktiveras SMB. \n\nInställningen anges i mg/dl";
 
 /* Headline "Enable SMB With High BG" */
-"Enable SMB With High BG" = "4. Använd SMB vid ett högt blodsocker";
+"Enable SMB With High BG" = "3. Använd SMB vid ett högt blodsocker";
 
 /* "Enable SMB With High BG" */
 "Enable SMBs when a high BG is detected, based on the high BG target (adjusted or profile)" = "Aktivera SMB vid högt blodsocker, enligt inställning nedan";
