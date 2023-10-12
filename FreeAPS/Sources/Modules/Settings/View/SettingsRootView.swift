@@ -49,21 +49,6 @@ extension Settings {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
                         Group {
-                            HStack {
-                                Text("Profil & inställningar")
-                                Button(action: {
-                                    state.uploadProfileAndSettings()
-                                }) {
-                                    HStack {
-                                        Image(systemName: "icloud.and.arrow.up")
-                                        Text("Nightscout")
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .buttonStyle(.borderedProminent)
-                            }
-                        }
-                        Group {
                             Text("Preferences")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
                             Text("Pump Settings")
@@ -112,6 +97,21 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
                             Text("Edit settings json")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
+                        }
+                        Group {
+                            HStack {
+                                Text("Profil & inställningar")
+                                Button(action: {
+                                    state.uploadProfileAndSettings()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "icloud.and.arrow.up")
+                                        Text("Nightscout")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .buttonStyle(.borderedProminent)
+                            }
                         }
                     }
                 }

@@ -1773,7 +1773,7 @@ Enact a temp Basal or a temp target */
 "This enables supermicrobolus (SMB) with eating soon / low temp targets. With this feature enabled, any temporary target below 100mg/dL, such as a temp target of 99 (or 80, the typical eating soon target) will enable SMB." = "Detta tillåter supermikrobolusar (SMB) vid låga tillfälliga målvärden (tex 'Äter snart'). Med denna funktion aktiverad, kommer SMB:ar vara aktiva även vid tillfälliga målvärden under 100mg/dL (5,6 mmol/l).";
 
 /* Headline "Enable SMB Always" */
-"Enable SMB Always" = "Använd alltid SMB (Aktiverar 1-4 nedan)";
+"Enable SMB Always" = "Använd alltid SMB \n(Aktiverar 1-4 nedan)";
 
 /* "Enable SMB Always" */
 "Defaults to false. When true, always enable supermicrobolus (unless disabled by high temptarget)." = "Av som standard. Vid läge på, tillåts alltid supermikrobolusar (SMB) (Med undantag när SMB är inaktiverade av ett högt målvärde).";
@@ -1836,7 +1836,7 @@ Enact a temp Basal or a temp target */
 "The other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets." = "Standardvärde: 0.7. Denna multipel begränsar hur mycket autosens (och autotune) automatiskt kan justera ned basaler och öka insulinkänslighet och/eller målvärde.";
 
 /* Headline "Half Basal Exercise Target" */
-"Half Basal Exercise Target" = "Halvera basaldosen vid detta tillfälliga målvärde";
+"Half Basal Exercise Target" = "Halvera basaldosen vid detta tillfälliga målvärde (mg/dl)";
 
 /* "Half Basal Exercise Target" */
 "Set to a number, e.g. 160, which means when temp target is 160 mg/dL, run 50% basal at this level (120 = 75%; 140 = 60%). This can be adjusted, to give you more control over your exercise modes." = "Inställd till ett blodsockervärde, t.ex. 160 (mg/dl = 8,9 mmol/l), vilket innebär att när det temporära målvärdet är 8,9 mmol/l, används endast en 50%-ig basal vid detta blodglukosvärde (6,7 = 75%; 7,8 = 60%). Detta kan justeras, för att ge dig mer kontroll över dina temporära målvärden vid träning. \n\nInställningen anges i mg/dl";
@@ -1854,7 +1854,7 @@ Enact a temp Basal or a temp target */
 "Bolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2)." = "Denna är aktiv efter att du har gett en måltidsbolus, för att motverka en låg temporär basal när du just ätit. I detta exempel med standardvärdet 2 och med DIA-inställning på 3 h kommer 'Bolus Snooze' att fasas ut över 1,5 h (3 DIA / 2).";
 
 /* Headline "Min 5m Carbimpact" */
-"Min 5m Carbimpact" = "Lägsta Kh absorptionshastighet mg/dl per 5 min";
+"Min 5m Carbimpact" = "Lägsta kh absorptionshastighet mg/dl per 5 min";
 
 /* "Min 5m Carbimpact" */
 "This is a setting for default carb absorption impact per 5 minutes. The default is an expected 8 mg/dL/5min. This affects how fast COB is decayed in situations when carb absorption is not visible in BG deviations. The default of 8 mg/dL/5min corresponds to a minimum carb absorption rate of 24g/hr at a CSF of 4 mg/dL/g." = "Standardvärde är 8 mg/dl per 5 min (0,4 mmol/l per 5 min). Detta är en inställning för kolhydratsabsorption per 5 minuter, som påverkar hur snabbt aktiva kolhydrater klingar av i situationer när kolhydratsabsorptionen inte syns i blodsockeravvikelser. Standarden på 0,4 mmol/l per 5 min motsvarar en minsta absorptionshastighet på 24 g/h vid en CSF ('Carb Sensitivity Factor', hur mycket ditt blodsockervärde stiger per gram kolhydrat) på 0,2 mmol/l/g.";
@@ -1872,10 +1872,10 @@ Enact a temp Basal or a temp target */
 "This is the fraction of carbs we’ll assume will absorb over 4h if we don’t yet see carb absorption." = "Del av kolhydrater som vi antar kommer att absorberas över 4h om vi ännu inte ser 'carb absorption'.";
 
 /* Headline "Remaining Carbs Cap" */
-"Remaining Carbs Cap" = "Max mängd absorption av kolhydrater";
+"Remaining Carbs Cap" = "Max mängd 4h absorption av kolhydrater";
 
 /* "Remaining Carbs Cap" */
-"This is the amount of the maximum number of carbs we’ll assume will absorb over 4h if we don’t yet see carb absorption." = "Mängd av maximala antal kolhydrater som vi antar kommer att absorberas över 4h om vi ännu inte ser 'carb absorption'.";
+"This is the amount of the maximum number of carbs we’ll assume will absorb over 4h if we don’t yet see carb absorption." = "Mängd av maximala antal kolhydrater iAPS antar kommer att absorberas över 4h om ingen 'carb absorption' identifierats.";
 
 /* Headline ”Max SMB Basal Minutes" */
 "Max SMB Basal Minutes" = "Max basalminuter automatiska bolusar (SMB)";
