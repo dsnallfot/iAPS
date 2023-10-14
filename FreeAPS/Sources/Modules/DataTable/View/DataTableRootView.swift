@@ -229,14 +229,12 @@ extension DataTable {
             List {
                 Button(action: { showFutureEntries.toggle() }, label: {
                     Image(
-                        systemName: showFutureEntries ? "chevron.down" :
-                            "chevron.up"
+                        systemName: showFutureEntries ? "chevron.down.circle" :
+                            "chevron.right.circle"
                     )
-                    .resizable()
-                    .frame(width: 20, height: 11)
                     .foregroundColor(colorScheme == .dark ? .primary : .primary)
 
-                    Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
+                    Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
                         .foregroundColor(colorScheme == .dark ? .primary : .primary)
                         .font(.subheadline)
 
@@ -251,11 +249,17 @@ extension DataTable {
                         }) { item in
 
                             treatmentView(item)
+                                .listRowBackground(
+                                    item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
+                                ) // Set the list row background color conditionally
                         }
                         .onDelete(perform: deleteTreatments)
                     } else {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
+                                .listRowBackground(
+                                    item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
+                                )
                         }
                         .onDelete(perform: deleteTreatments)
                     }
