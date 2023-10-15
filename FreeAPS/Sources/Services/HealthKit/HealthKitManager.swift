@@ -241,7 +241,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                 }
             }
         }
-        
+
         func save(bolus: [InsulinBolus], basal: [InsulinBasal]) {
             let bolusSamples = bolus
                 .map {
@@ -357,7 +357,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
     func pumpHistoryDidUpdate(_ events: [PumpHistoryEvent]) {
         saveIfNeeded(pumpEvents: events)
     }
-    
+
     func createBGObserver() {
         guard settingsManager.settings.useAppleHealth else { return }
 

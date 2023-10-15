@@ -10,26 +10,26 @@ enum StateIntentError: Error {
 @available(iOS 16, *) struct StateiAPSResults: AppEntity {
     static var defaultQuery = StateBGQuery()
 
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "iAPS State Result"
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "iAPS status"
 
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(title: "\(glucose)")
     }
 
     var id: UUID
-    @Property(title: "Glucose") var glucose: String
+    @Property(title: "Glukos") var glucose: String
 
     @Property(title: "Trend") var trend: String
 
     @Property(title: "Delta") var delta: String
 
-    @Property(title: "Date") var date: Date
+    @Property(title: "Datum") var date: Date
 
     @Property(title: "IOB") var iob: Double?
 
     @Property(title: "COB") var cob: Double?
 
-    @Property(title: "unit") var unit: String?
+    @Property(title: "enhet") var unit: String?
 
     init(glucose: String, trend: String, delta: String, date: Date, iob: Double, cob: Double, unit: GlucoseUnits) {
         id = UUID()
@@ -54,7 +54,6 @@ enum StateIntentError: Error {
 }
 
 @available(iOS 16.0, *) final class StateIntentRequest: BaseIntentsRequest {
-
     func getLastBG() throws -> (dateGlucose: Date, glucose: String, trend: String, delta: String) {
         let glucose = glucoseStorage.recent()
         guard let lastGlucose = glucose.last, let glucoseValue = lastGlucose.glucose else { throw StateIntentError.NoBG }
