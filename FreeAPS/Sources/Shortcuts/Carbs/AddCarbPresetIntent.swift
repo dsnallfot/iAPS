@@ -45,6 +45,11 @@ import Swinject
     ) var dateAdded: Date
 
     @Parameter(
+        title: "Notering",
+        description: "Emoji eller kort text"
+    ) var note: String?
+
+    @Parameter(
         title: "Bekräfta innan registrering",
         description: "Om aktiverad, behöver du konfirmera innan registrering genomförs",
         default: true
@@ -55,12 +60,14 @@ import Swinject
             Summary("Registrera \(\.$carbQuantity) \(\.$dateAdded)") {
                 \.$fatQuantity
                 \.$proteinQuantity
+                \.$note
                 \.$confirmBeforeApplying
             }
         }, otherwise: {
             Summary("Omedelbar registrering av \(\.$carbQuantity) \(\.$dateAdded)") {
                 \.$fatQuantity
                 \.$proteinQuantity
+                \.$note
                 \.$confirmBeforeApplying
             }
         })
@@ -82,7 +89,14 @@ import Swinject
                 )
             }
 
-            let finalQuantityCarbsDisplay = try carbRequest.addCarbs(quantityCarbs, fatQuantity, proteinQuantity, dateAdded)
+            // Pass the 'note' parameter when calling addCarbs
+            let finalQuantityCarbsDisplay = try carbRequest.addCarbs(
+                quantityCarbs,
+                fatQuantity,
+                proteinQuantity,
+                dateAdded,
+                note
+            )
             return .result(
                 dialog: IntentDialog(stringLiteral: finalQuantityCarbsDisplay)
             )

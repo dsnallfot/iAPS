@@ -21,7 +21,7 @@ import Foundation
             intent: AddCarbPresentIntent(),
             phrases: [
                 "Lägg till måltid i \(.applicationName)",
-                "\(.applicationName) tillåter att måltid lägs till"
+                "\(.applicationName) tillåter att måltid läggs till"
             ]
         )
     }
