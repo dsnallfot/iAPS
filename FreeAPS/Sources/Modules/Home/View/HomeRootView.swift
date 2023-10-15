@@ -101,7 +101,7 @@ extension Home {
         var cobIobView: some View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("IOB  ")
+                    Text("IOB: ")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                     Text(
@@ -114,7 +114,7 @@ extension Home {
                 .frame(alignment: .top) // Align the whole HStack to the top
 
                 HStack {
-                    Text("COB ")
+                    Text("COB:")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                     Text(
@@ -300,13 +300,13 @@ extension Home {
                     Text(tempBasalString)
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.insulin)
-                        .padding(.leading, 8)
+                        .padding(.leading, 5)
                 }
 
                 if let tempTargetString = tempTargetString {
                     Text(tempTargetString)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.primary)
                 }
 
                 Spacer()
@@ -314,8 +314,8 @@ extension Home {
                 if let overrideString = overrideString {
                     Text("👤 " + overrideString)
                         .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                        .padding(.trailing, 8)
+                        .foregroundColor(.primary)
+                        .padding(.trailing, 5)
                 }
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
@@ -327,13 +327,13 @@ extension Home {
                         .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
                     ProgressView(value: Double(progress))
                         .progressViewStyle(BolusProgressViewStyle())
-                        .padding(.trailing, 8)
+                        .padding(.trailing, 5)
                         .onTapGesture {
                             state.cancelBolus()
                         }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 30)
+            .frame(maxWidth: .infinity, maxHeight: 36)
         }
 
         var legendPanel: some View {
@@ -425,7 +425,7 @@ extension Home {
                 Rectangle().fill(Color.gray.opacity(0.3)).frame(maxHeight: 40)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
-                    Text(selectedProfile().name).foregroundColor(.secondary)
+                    Text(selectedProfile().name).foregroundColor(.primary)
                     if cancel, selectedProfile().isOn {
                         Button { showCancelAlert.toggle() }
                         label: {
