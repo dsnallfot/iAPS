@@ -17,5 +17,12 @@ import Foundation
                 "\(.applicationName) status"
             ]
         )
+        AppShortcut(
+            intent: AddCarbPresentIntent(),
+            phrases: [
+                "Lägg till måltid i \(.applicationName)",
+                "\(.applicationName) tillåter att måltid lägs till"
+            ]
+        )
     }
 }
