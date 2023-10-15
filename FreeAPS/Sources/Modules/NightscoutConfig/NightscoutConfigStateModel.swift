@@ -184,7 +184,7 @@ extension NightscoutConfig {
                                 if pumpName != "Omnipod DASH", basal.value <= 0
                                 {
                                     error =
-                                    "\nInvalid Nightcsout Basal Settings. Some or all of your basal settings are 0 U/h.\n\nImport aborted. Please check your Nightscout Profile Basal Settings before trying to import again. Import has been aborted.)"
+                                        "\nInvalid Nightcsout Basal Settings. Some or all of your basal settings are 0 U/h.\n\nImport aborted. Please check your Nightscout Profile Basal Settings before trying to import again. Import has been aborted.)"
                                     areBasalsOK = false
                                 }
                                 return BasalProfileEntry(
