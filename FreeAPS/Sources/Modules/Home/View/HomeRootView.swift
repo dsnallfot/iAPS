@@ -294,28 +294,39 @@ extension Home {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
                     Text("Pump suspended")
-                        .font(.system(size: 12, weight: .bold)).foregroundColor(.loopGray)
+                        .font(.system(size: 14, weight: .bold)).foregroundColor(.loopGray)
                         .padding(.leading, 8)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.insulin)
-                        .padding(.leading, 5)
+                        .padding(.leading, 8)
                 }
 
-                if let tempTargetString = tempTargetString {
-                    Text(tempTargetString)
-                        .font(.caption)
-                        .foregroundColor(.primary)
+                Button(action: {
+                    state.showModal(for: .addTempTarget)
+                }) {
+                    if let tempTargetString = tempTargetString {
+                        Text(tempTargetString)
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                    }
                 }
 
                 Spacer()
 
-                if let overrideString = overrideString {
-                    Text("👤 " + overrideString)
-                        .font(.system(size: 12))
-                        .foregroundColor(.primary)
-                        .padding(.trailing, 5)
+                Button(action: {
+                    state.showModal(for: .overrideProfilesConfig)
+                }) {
+                    if let overrideString = overrideString {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(.cyan)
+                        Text(overrideString)
+                            .font(.system(size: 12))
+                            .foregroundColor(.cyan)
+                            .padding(.trailing, 8)
+                    }
                 }
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
@@ -327,7 +338,7 @@ extension Home {
                         .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
                     ProgressView(value: Double(progress))
                         .progressViewStyle(BolusProgressViewStyle())
-                        .padding(.trailing, 5)
+                        .padding(.trailing, 8)
                         .onTapGesture {
                             state.cancelBolus()
                         }
@@ -425,7 +436,9 @@ extension Home {
                 Rectangle().fill(Color.gray.opacity(0.3)).frame(maxHeight: 40)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
-                    Text(selectedProfile().name).foregroundColor(.primary)
+                    Button { state.showModal(for: .overrideProfilesConfig) }
+                    label: {
+                        Text(selectedProfile().name).foregroundColor(.primary) }
                     if cancel, selectedProfile().isOn {
                         Button { showCancelAlert.toggle() }
                         label: {
