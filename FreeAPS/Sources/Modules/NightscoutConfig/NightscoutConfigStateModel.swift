@@ -255,7 +255,7 @@ extension NightscoutConfig {
                         let syncValues = basals.map {
                             RepeatingScheduleValue(startTime: TimeInterval($0.minutes * 60), value: Double($0.rate))
                         }
-                        // SAVE TO STORAGE. SAVE TO PUMP (LoopKit)
+                        // SSAVE TO STORAGE. SAVE TO PUMP (LoopKit)
                         pump.syncBasalRateSchedule(items: syncValues) { result in
                             switch result {
                             case .success:
@@ -266,22 +266,14 @@ extension NightscoutConfig {
                                 debug(.service, "Settings have been imported and the Basals saved to pump!")
                                 // DIA. Save if changed.
                                 let dia = fetchedProfile.dia
-                                if dia != self.dia, dia <= 4 {
+                                if dia != self.dia, dia <= 0 {
                                     let file = PumpSettings(
                                         insulinActionCurve: dia,
                                         maxBolus: self.maxBolus,
                                         maxBasal: self.maxBasal
                                     )
-                                    self.storage.save(
-                                        file,
-                                        as: OpenAPS.Settings.settings
-                                    )
-                                    debug(
-                                        .nightscout,
-                                        "DIA setting updated to " + dia
-                                            .description +
-                                            " after a NS import."
-                                    )
+                                    self.storage.save(file, as: OpenAPS.Settings.settings)
+                                    debug(.nightscout, "DIA setting updated to " + dia.description + " after a NS import.")
                                 }
                                 group.leave()
                             case .failure:
