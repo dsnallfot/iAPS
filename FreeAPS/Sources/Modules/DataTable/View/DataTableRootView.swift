@@ -227,20 +227,21 @@ extension DataTable {
 
         private var treatmentsList: some View {
             List {
-                Button(action: { showFutureEntries.toggle() }, label: {
-                    Image(
-                        systemName: showFutureEntries ? "chevron.down.circle" :
-                            "chevron.right.circle"
-                    )
-                    .foregroundColor(colorScheme == .dark ? .primary : .primary)
-
-                    Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
+                if state.treatments.contains(where: { $0.date > Date() }) {
+                    Button(action: { showFutureEntries.toggle() }, label: {
+                        Image(
+                            systemName: showFutureEntries ? "chevron.down.circle" : "chevron.right.circle"
+                        )
                         .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                        .font(.subheadline)
 
-                })
-                    .buttonStyle(.borderless)
-                    .listRowBackground(Color(.systemGray4))
+                        Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
+                            .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                            .font(.subheadline)
+
+                    })
+                        .buttonStyle(.borderless)
+                        .listRowBackground(Color(.systemGray4))
+                }
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
