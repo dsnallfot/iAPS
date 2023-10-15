@@ -18,6 +18,7 @@
 		190EBCC629FF138000BA767D /* StatConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EBCC529FF138000BA767D /* StatConfigProvider.swift */; };
 		190EBCC829FF13AA00BA767D /* StatConfigStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EBCC729FF13AA00BA767D /* StatConfigStateModel.swift */; };
 		190EBCCB29FF13CB00BA767D /* StatConfigRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190EBCCA29FF13CB00BA767D /* StatConfigRootView.swift */; };
+		191F62682AD6B05A004D7911 /* NightscoutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191F62672AD6B05A004D7911 /* NightscoutSettings.swift */; };
 		1927C8E62744606D00347C69 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1927C8E82744606D00347C69 /* InfoPlist.strings */; };
 		1935364028496F7D001E0B16 /* Oref2_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1935363F28496F7D001E0B16 /* Oref2_variables.swift */; };
 		193F6CDD2A512C8F001240FD /* Loops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193F6CDC2A512C8F001240FD /* Loops.swift */; };
@@ -262,13 +263,11 @@
 		45717281F743594AA9D87191 /* ConfigEditorRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920DDB21E5D0EB813197500D /* ConfigEditorRootView.swift */; };
 		5075C1608E6249A51495C422 /* TargetsEditorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDEA2DC60EDE0A3CA54DC73 /* TargetsEditorProvider.swift */; };
 		53F2382465BF74DB1A967C8B /* PumpConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8630D58BDAD6D9C650B9B39 /* PumpConfigProvider.swift */; };
-		5A663B0C2AD558B600D375DC /* FetchedProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A663B0B2AD558B600D375DC /* FetchedProfile.swift */; };
 		5BFA1C2208114643B77F8CEB /* AddTempTargetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE53A13D26F101B332EFFC8 /* AddTempTargetProvider.swift */; };
 		5D16287A969E64D18CE40E44 /* PumpConfigStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F60E97100041040446F44E7 /* PumpConfigStateModel.swift */; };
 		61962FCAF8A2D222553AC5A3 /* LibreConfigDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A5B83E7967C38F7CBD883C /* LibreConfigDataFlow.swift */; };
 		63E890B4D951EAA91C071D5C /* BasalProfileEditorStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFF91130F2FCCC7EBBA11AD /* BasalProfileEditorStateModel.swift */; };
 		642F76A05A4FF530463A9FD0 /* NightscoutConfigRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8782B44544F38F2B2D82C38E /* NightscoutConfigRootView.swift */; };
-		6550B1612AD6F52E00A4845A /* NightscoutSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550B1602AD6F52E00A4845A /* NightscoutSettings.swift */; };
 		6632A0DC746872439A858B44 /* ISFEditorDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BDA519C9B890FD9A5DFCF3 /* ISFEditorDataFlow.swift */; };
 		69A31254F2451C20361D172F /* BolusStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223EC0494F55A91E3EA69EF4 /* BolusStateModel.swift */; };
 		69B9A368029F7EB39F525422 /* CREditorStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AA5E04A2761F6EEA6568E1 /* CREditorStateModel.swift */; };
@@ -494,6 +493,7 @@
 		190EBCC729FF13AA00BA767D /* StatConfigStateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatConfigStateModel.swift; sourceTree = "<group>"; };
 		190EBCCA29FF13CB00BA767D /* StatConfigRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatConfigRootView.swift; sourceTree = "<group>"; };
 		1918333A26ADA46800F45722 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		191F62672AD6B05A004D7911 /* NightscoutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutSettings.swift; sourceTree = "<group>"; };
 		1927C8E92744611700347C69 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1927C8EA2744611800347C69 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1927C8EB2744611900347C69 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -777,7 +777,6 @@
 		4DD795BA46B193644D48138C /* TargetsEditorRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TargetsEditorRootView.swift; sourceTree = "<group>"; };
 		500371C09F54F89A97D65FDB /* CalibrationsRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalibrationsRootView.swift; sourceTree = "<group>"; };
 		505E09DC17A0C3D0AF4B66FE /* ISFEditorStateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ISFEditorStateModel.swift; sourceTree = "<group>"; };
-		5A663B0B2AD558B600D375DC /* FetchedProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedProfile.swift; sourceTree = "<group>"; };
 		5B8A42073A2D03A278914448 /* AddTempTargetDataFlow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddTempTargetDataFlow.swift; sourceTree = "<group>"; };
 		5C018D1680307A31C9ED7120 /* CGMStateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CGMStateModel.swift; sourceTree = "<group>"; };
 		5D5B4F8B4194BB7E260EF251 /* ConfigEditorStateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConfigEditorStateModel.swift; sourceTree = "<group>"; };
@@ -785,7 +784,6 @@
 		60744C3E9BB3652895C908CC /* DataTableProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataTableProvider.swift; sourceTree = "<group>"; };
 		618E62C9757B2F95431B5DC0 /* AddCarbsProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddCarbsProvider.swift; sourceTree = "<group>"; };
 		64AA5E04A2761F6EEA6568E1 /* CREditorStateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CREditorStateModel.swift; sourceTree = "<group>"; };
-		6550B1602AD6F52E00A4845A /* NightscoutSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutSettings.swift; sourceTree = "<group>"; };
 		66A5B83E7967C38F7CBD883C /* LibreConfigDataFlow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibreConfigDataFlow.swift; sourceTree = "<group>"; };
 		67F94DD2853CF42BA4E30616 /* BasalProfileEditorDataFlow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BasalProfileEditorDataFlow.swift; sourceTree = "<group>"; };
 		680C4420C9A345D46D90D06C /* ManualTempBasalProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ManualTempBasalProvider.swift; sourceTree = "<group>"; };
@@ -1605,13 +1603,12 @@
 				19012CDB291D2CB900FB8210 /* LoopStats.swift */,
 				FE41E4D329463C660047FD55 /* NightscoutStatistics.swift */,
 				FE41E4D529463EE20047FD55 /* NightscoutPreferences.swift */,
-				6550B1602AD6F52E00A4845A /* NightscoutSettings.swift */,
+				191F62672AD6B05A004D7911 /* NightscoutSettings.swift */,
 				1967DFBD29D052C200759F30 /* Icons.swift */,
 				19D4E4EA29FC6A9F00351451 /* TIRforChart.swift */,
 				19A910352A24D6D700C8951B /* DateFilter.swift */,
 				193F6CDC2A512C8F001240FD /* Loops.swift */,
 				CC6C406D2ACDD69E009B8058 /* RawFetchedProfile.swift */,
-				5A663B0B2AD558B600D375DC /* FetchedProfile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2518,7 +2515,6 @@
 				CE7CA3552A064973004BE681 /* ListStateIntent.swift in Sources */,
 				3862CC2E2743F9F700BF832C /* CalendarManager.swift in Sources */,
 				CEA4F62329BE10F70011ADF7 /* SavitzkyGolayFilter.swift in Sources */,
-				6550B1612AD6F52E00A4845A /* NightscoutSettings.swift in Sources */,
 				38B4F3C325E2A20B00E76A18 /* PumpSetupView.swift in Sources */,
 				38E4453C274E411700EC9A94 /* Disk+Codable.swift in Sources */,
 				19E1F7EF29D08EBA005C8D20 /* IconConfigRootWiew.swift in Sources */,
@@ -2625,6 +2621,7 @@
 				38A9260525F012D8009E3739 /* CarbRatios.swift in Sources */,
 				38FCF3D625E8FDF40078B0D1 /* MD5.swift in Sources */,
 				3871F39C25ED892B0013ECB5 /* TempTarget.swift in Sources */,
+				191F62682AD6B05A004D7911 /* NightscoutSettings.swift in Sources */,
 				FEFA5C11299F814A00765C17 /* CoreDataStack.swift in Sources */,
 				3811DEAB25C9D88300A708ED /* HTTPResponseStatus.swift in Sources */,
 				3811DE5F25C9D4D500A708ED /* ProgressBar.swift in Sources */,
@@ -2692,7 +2689,6 @@
 				F90692D1274B99B60037068D /* HealthKitProvider.swift in Sources */,
 				19F95FF729F10FEE00314DDC /* StatStateModel.swift in Sources */,
 				385CEAC125F2EA52002D6D5B /* Announcement.swift in Sources */,
-				5A663B0C2AD558B600D375DC /* FetchedProfile.swift in Sources */,
 				8B759CFCF47B392BB365C251 /* BasalProfileEditorDataFlow.swift in Sources */,
 				389442CB25F65F7100FA1F27 /* NightscoutTreatment.swift in Sources */,
 				CE7CA3512A064973004BE681 /* ApplyTempPresetIntent.swift in Sources */,
