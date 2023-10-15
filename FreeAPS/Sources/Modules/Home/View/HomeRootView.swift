@@ -320,7 +320,7 @@ extension Home {
                 }) {
                     if let overrideString = overrideString {
                         Image(systemName: "person.fill")
-                            .font(.system(size: 12))
+                            .font(.system(size: 14))
                             .foregroundColor(.cyan)
                         Text(overrideString)
                             .font(.system(size: 12))
@@ -438,16 +438,8 @@ extension Home {
                 HStack(spacing: cancel ? 25 : 15) {
                     Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
-                        Text(selectedProfile().name).foregroundColor(.primary) }
-                    if cancel, selectedProfile().isOn {
-                        Button { showCancelAlert.toggle() }
-                        label: {
-                            Image(systemName: "arrow.uturn.backward")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    Button { state.showModal(for: .overrideProfilesConfig) }
-                    label: {
+                        Text(selectedProfile().name).foregroundColor(.primary)
+
                         Image(systemName: "person.3.sequence.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(
@@ -455,6 +447,13 @@ extension Home {
                                 !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
                                 .purple
                             )
+                    }
+                    if cancel, selectedProfile().isOn {
+                        Button { showCancelAlert.toggle() }
+                        label: {
+                            Image(systemName: "arrow.uturn.backward")
+                                .foregroundStyle(.red)
+                        }
                     }
                 }
             }
