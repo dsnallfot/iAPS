@@ -181,7 +181,7 @@ enum DataTable {
             case .carbs:
                 return .loopYellow
             case .fpus:
-                return .loopRed
+                return .uam
             case .bolus:
                 return (isNonPump ?? false) ? Color.nonPumpInsulin : (isSMB ?? false) ? Color.insulin : Color.insulin
             // return .insulin

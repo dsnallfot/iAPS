@@ -410,9 +410,9 @@ struct MainChartView: View {
     private func fpuView(fullSize: CGSize) -> some View {
         ZStack {
             fpuPath
-                .fill(Color.red)
+                .fill(Color.uam)
             fpuPath
-                .stroke(Color.primary, lineWidth: 0.5)
+                .stroke(Color.loopYellow, lineWidth: 0.5)
 
             ForEach(fpuDots, id: \.rect.minX) { info -> AnyView in
                 let position = CGPoint(x: info.rect.midX, y: info.rect.minY - 8)

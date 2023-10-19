@@ -587,12 +587,12 @@ extension Home {
                             Image("carbs")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(8)
+                                .padding(9)
                             if let carbsReq = state.carbsRequired {
                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                    .font(.caption)
+                                    .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(3)
                                     .background(Capsule().fill(Color.red))
@@ -606,27 +606,40 @@ extension Home {
                             Image("target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 27, height: 27)
                                 .foregroundColor(.loopGreen)
-                                .padding(8)
+                                .padding(9)
                             if state.tempTarget != nil {
                                 Image(systemName: "timer")
-                                    .font(.caption)
+                                    .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(3)
+                                    .padding(3.5)
                                     .background(Capsule().fill(Color.red))
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
-                    Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
-                    label: {
-                        Image("bolus")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
-                    }.foregroundColor(.insulin)
+                    Button {
+                        state.showModal(for: .bolus(waitForSuggestion: false))
+                    } label: {
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image("bolus")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .foregroundColor(.insulin)
+                                .padding(9)
+
+                            if let insulinRequested = state.suggestion?.insulinForManualBolus, insulinRequested > 0.3 {
+                                let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
+                                Text(formattedInsulin)
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                                    .padding(3)
+                                    .background(Capsule().fill(Color.red))
+                            }
+                        }
+                    }
                     Spacer()
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
@@ -634,8 +647,8 @@ extension Home {
                             Image("bolus1")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
-                                .padding(8)
+                                .frame(width: 27, height: 27)
+                                .padding(9)
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
@@ -645,8 +658,8 @@ extension Home {
                         Image(systemName: "chart.xyaxis.line")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
+                            .frame(width: 27, height: 27)
+                            .padding(9)
                     }.foregroundColor(.purple)
                     Spacer()
                     Button { state.showModal(for: .settings) }
@@ -654,8 +667,8 @@ extension Home {
                         Image("settings1")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
+                            .frame(width: 27, height: 27)
+                            .padding(9)
                     }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)
