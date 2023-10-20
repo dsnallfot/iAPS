@@ -76,6 +76,7 @@ struct MainView: View {
                 HStack {
                     Text(state.glucose).font(.title)
                     Text(state.trend)
+                        .font(.title)
                         .scaledToFill()
                         .minimumScaleFactor(0.5)
                     Spacer()
@@ -85,10 +86,13 @@ struct MainView: View {
             }
             VStack {
                 HStack {
-                    let cleanedDelta = state.delta.replacingOccurrences(of: ",", with: ".")
+                    let cleanedDelta = state.delta
+                        .replacingOccurrences(of: ",", with: ".")
                         .replacingOccurrences(of: "+", with: "")
+                        .replacingOccurrences(of: "−", with: "-") // Replace any em dash characters with a regular minus sign
 
-                    let cleanedGlucose = state.glucose.replacingOccurrences(of: ",", with: ".")
+                    let cleanedGlucose = state.glucose
+                        .replacingOccurrences(of: ",", with: ".")
 
                     if let glucoseValue = Double(cleanedGlucose),
                        let deltaValue = Double(cleanedDelta)
@@ -98,16 +102,22 @@ struct MainView: View {
                         // Use string interpolation with format specifier to display one decimal place
                         let formattedComputedValue = String(format: "%.1f", computedValue)
 
+                        // Replace the decimal separator
+                        let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
+
                         Text(state.delta)
                             .font(.caption2)
                             .scaledToFill()
                             .foregroundColor(.gray)
+
                         Spacer()
+
                         Image(systemName: "goforward.15")
-                            .font(.caption2)
-                            .scaledToFill()
+                            .font(.system(size: 12)) // Adjust the size as needed
                             .foregroundColor(.gray)
-                        Text(formattedComputedValue)
+                            .padding(.horizontal, -4)
+
+                        Text(formattedComputedValueWithComma)
                             .font(.caption2)
                             .foregroundColor(.gray)
                     } else {
@@ -116,9 +126,11 @@ struct MainView: View {
                             .scaledToFill()
                             .foregroundColor(.gray)
                     }
+
                     Spacer()
+
                     if state.lastLoopDate != nil {
-                        Text(timeString)
+                        Text(timeString + "  ")
                             .font(.caption2)
                             .scaledToFill()
                             .foregroundColor(.gray)
@@ -427,7 +439,7 @@ struct MainView: View {
         if minAgo > 1440 {
             return "--"
         }
-        return "\(minAgo) " + NSLocalizedString("min", comment: "Minutes ago since last loop")
+        return "\(minAgo) " + NSLocalizedString("m", comment: "Minutes ago since last loop")
     }
 
     private var color: Color {

@@ -135,27 +135,53 @@ final class BaseCalendarManager: CalendarManager, Injectable {
                 deltaFormatter
                     .string(from: Double(settingsManager.settings.units == .mmolL ? $0.asMmolL : Decimal($0)) as NSNumber)!
             } ?? "--"
-
+        
+        
+        let cleanedDelta = deltaText
+            .replacingOccurrences(of: ",", with: ".")
+            .replacingOccurrences(of: "+", with: "")
+            .replacingOccurrences(of: "−", with: "-") // Replace any em dash characters with a regular minus sign
+        
+        let cleanedGlucose = glucoseText
+            .replacingOccurrences(of: ",", with: ".")
+        
+        guard let glucoseValueFifteen = Double(cleanedGlucose) else { return <#default value#> }
+        let deltaValue = Double(cleanedDelta)!
+        
+        let computedValue = glucoseValueFifteen + deltaValue * 3
+            
+        // Use string interpolation with format specifier to display one decimal place
+        let formattedComputedValue = String(format: "%.1f", computedValue)
+            
+        // Replace the decimal separator
+        let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
+            
+        let fifteenMinutesText = formattedComputedValueWithComma
+        
         let iobText = iobFormatter.string(from: (lastLoop.first?.iob ?? 0) as NSNumber) ?? ""
         let cobText = cobFormatter.string(from: (lastLoop.first?.cob ?? 0) as NSNumber) ?? ""
-
+        
         var glucoseDisplayText = displayEmojis ? glucoseIcon + " " : ""
         glucoseDisplayText += glucoseText + " " + directionText + " " + deltaText
 
         var cobDisplayText = ""
         var iobDisplayText = ""
-
+        var fifteenMinutesDisplayText = ""
+        
         if displeyCOBandIOB {
             if displayEmojis {
-                cobDisplayText += "COB"
-                iobDisplayText += "IOB"
+                cobDisplayText += ""
+                iobDisplayText += ""
+                fifteenMinutesDisplayText += "15m:"
             } else {
                 cobDisplayText += "COB"
                 iobDisplayText += "IOB"
+                fifteenMinutesDisplayText += ""
             }
-            cobDisplayText += " " + cobText + "g"
-            iobDisplayText += " " + iobText + "E"
-            event.location = cobDisplayText + " " + iobDisplayText
+            cobDisplayText += " " + cobText + "g "
+            iobDisplayText += " " + iobText + "E "
+            fifteenMinutesDisplayText += " " + fifteenMinutesText
+            event.location = cobDisplayText + " " + iobDisplayText + " " + fifteenMinutesDisplayText
         }
 
         event.title = glucoseDisplayText
