@@ -176,7 +176,6 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             } else {
                 cobDisplayText += "COB"
                 iobDisplayText += "IOB"
-                fifteenMinutesDisplayText += ""
             }
             cobDisplayText += " " + cobText + "g "
             iobDisplayText += " " + iobText + "E "
