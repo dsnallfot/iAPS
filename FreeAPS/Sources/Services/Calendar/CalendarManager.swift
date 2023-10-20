@@ -182,19 +182,19 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             if displayEmojis {
                 cobDisplayText += ""
                 iobDisplayText += ""
-                fifteenMinutesDisplayText += "15m"
+                fifteenMinutesDisplayText += ""
             } else {
                 cobDisplayText += "COB"
                 iobDisplayText += "IOB"
                 fifteenMinutesDisplayText += ""
             }
-            cobDisplayText += "" + cobText + "g • "
-            iobDisplayText += "" + iobText + "E • "
-            fifteenMinutesDisplayText += " " + fifteenMinutesText + ""
-            // event.location = cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
+            cobDisplayText += "" + cobText + "g"
+            iobDisplayText += "" + iobText + "E"
+            fifteenMinutesDisplayText += "" + fifteenMinutesText + ""
+            event.location = "[" + fifteenMinutesDisplayText + "] " + iobDisplayText + "•" + cobDisplayText
         }
 
-        event.title = glucoseDisplayText + "\n" + cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
+        event.title = glucoseDisplayText // + "\n" + cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
         event.notes = "iAPS"
         event.startDate = Date()
         event.endDate = Date(timeIntervalSinceNow: 60 * 10)
