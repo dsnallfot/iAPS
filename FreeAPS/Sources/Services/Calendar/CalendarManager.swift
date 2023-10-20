@@ -191,7 +191,7 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             cobDisplayText += "" + cobText + "g"
             iobDisplayText += "" + iobText + "E"
             fifteenMinutesDisplayText += "" + fifteenMinutesText + ""
-            event.location = "->[" + fifteenMinutesDisplayText + "]•" + iobDisplayText + "•" + cobDisplayText
+            event.location = "->" + fifteenMinutesDisplayText + "•" + iobDisplayText + "•" + cobDisplayText
         }
 
         event.title = glucoseDisplayText // + "\n" + cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
