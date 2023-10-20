@@ -73,29 +73,64 @@ struct MainView: View {
     var header: some View {
         VStack {
             HStack(alignment: .top) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(state.glucose).font(.title)
-                        Text(state.trend)
-                            .scaledToFill()
-                            .minimumScaleFactor(0.5)
-                    }
-                    Text(state.delta).font(.caption2).foregroundColor(.gray)
+                HStack {
+                    Text(state.glucose).font(.title)
+                    Text(state.trend)
+                        .scaledToFill()
+                        .minimumScaleFactor(0.5)
+                    Spacer()
+                    Spacer()
+                    Circle().stroke(color, lineWidth: 5).frame(width: 26, height: 26).padding(10)
                 }
-                Spacer()
+            }
+            VStack {
+                HStack {
+                    let cleanedDelta = state.delta.replacingOccurrences(of: ",", with: ".")
+                        .replacingOccurrences(of: "+", with: "")
 
-                VStack(spacing: 0) {
-                    HStack {
-                        Circle().stroke(color, lineWidth: 5).frame(width: 26, height: 26).padding(10)
-                    }
+                    let cleanedGlucose = state.glucose.replacingOccurrences(of: ",", with: ".")
 
-                    if state.lastLoopDate != nil {
-                        Text(timeString).font(.caption2).foregroundColor(.gray)
+                    if let glucoseValue = Double(cleanedGlucose),
+                       let deltaValue = Double(cleanedDelta)
+                    {
+                        let computedValue = glucoseValue + deltaValue * 3
+
+                        // Use string interpolation with format specifier to display one decimal place
+                        let formattedComputedValue = String(format: "%.1f", computedValue)
+
+                        Text(state.delta)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Image(systemName: "goforward.15")
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(.gray)
+                        Text(formattedComputedValue)
+                            .font(.caption2)
+                            .foregroundColor(.gray)
                     } else {
-                        Text("--").font(.caption2).foregroundColor(.gray)
+                        Text(state.delta)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    if state.lastLoopDate != nil {
+                        Text(timeString)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(.gray)
+                    } else {
+                        Text("--")
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(.gray)
                     }
                 }
             }
+
             Spacer()
             HStack(alignment: .firstTextBaseline) {
                 Text(iobFormatter.string(from: (state.cob ?? 0) as NSNumber)!)
