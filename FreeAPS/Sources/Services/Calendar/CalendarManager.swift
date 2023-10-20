@@ -117,10 +117,21 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             freshLoop = -1 * (lastLoop.first?.timestamp ?? .distantPast).timeIntervalSinceNow.minutes
         }
 
-        var glucoseIcon = "🟢"
+        // var glucoseIcon = "🟢"
+        // if displayEmojis {
+        // glucoseIcon = Double(glucoseValue) <= Double(settingsManager.settings.low) ? "🔴" : glucoseIcon
+        // glucoseIcon = Double(glucoseValue) >= Double(settingsManager.settings.high) ? "🟠" : glucoseIcon
+        // glucoseIcon = freshLoop > 15 ? "🚫" : glucoseIcon
+        // }
+        let deltaSymbols = Double(delta!)
+        let glucoseSymbols = Double(glucoseValue)
+
+        let symbolsValue = glucoseSymbols + deltaSymbols * 3
+
+        var glucoseIcon = "✅"
         if displayEmojis {
-            glucoseIcon = Double(glucoseValue) <= Double(settingsManager.settings.low) ? "🔴" : glucoseIcon
-            glucoseIcon = Double(glucoseValue) >= Double(settingsManager.settings.high) ? "🟠" : glucoseIcon
+            glucoseIcon = symbolsValue <= Double(settingsManager.settings.low) ? "‼️" : glucoseIcon
+            glucoseIcon = symbolsValue >= Double(settingsManager.settings.high) ? "⚠️" : glucoseIcon
             glucoseIcon = freshLoop > 15 ? "🚫" : glucoseIcon
         }
 
@@ -171,25 +182,19 @@ final class BaseCalendarManager: CalendarManager, Injectable {
             if displayEmojis {
                 cobDisplayText += ""
                 iobDisplayText += ""
-                var fifteenMinutesDisplayText = ""
-
-                if computedValue > 7.8 {
-                    fifteenMinutesDisplayText += "⚠️" // Emoji for values higher than 7.8
-                } else if computedValue < 3.9 {
-                    fifteenMinutesDisplayText += "‼️" // Emoji for values lower than 3.9
-                } else {
-                    fifteenMinutesDisplayText += "➡️" // Emoji for values in-between 3.9 and 7.8
-                }            } else {
+                fifteenMinutesDisplayText += "15m"
+            } else {
                 cobDisplayText += "COB"
                 iobDisplayText += "IOB"
+                fifteenMinutesDisplayText += ""
             }
-            cobDisplayText += " " + cobText + "g "
-            iobDisplayText += " " + iobText + "E "
-            fifteenMinutesDisplayText += " " + fifteenMinutesText
-            event.location = cobDisplayText + " " + iobDisplayText + " " + fifteenMinutesDisplayText
+            cobDisplayText += "" + cobText + "g • "
+            iobDisplayText += "" + iobText + "E • "
+            fifteenMinutesDisplayText += " " + fifteenMinutesText + ""
+            // event.location = cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
         }
 
-        event.title = glucoseDisplayText
+        event.title = glucoseDisplayText + "\n" + cobDisplayText + "" + iobDisplayText + "" + fifteenMinutesDisplayText
         event.notes = "iAPS"
         event.startDate = Date()
         event.endDate = Date(timeIntervalSinceNow: 60 * 10)
