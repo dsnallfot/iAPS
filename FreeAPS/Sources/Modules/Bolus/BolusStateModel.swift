@@ -26,6 +26,12 @@ extension Bolus {
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
         @Published var units: GlucoseUnits = .mmolL
+        @Published var carbRatio: Decimal = 0.0
+        @Published var items: [Item] = []
+
+        let timeValues = stride(from: 0.0, to: 1.days.timeInterval, by: 30.minutes.timeInterval).map { $0 }
+
+        let rateValues = stride(from: 1.0, to: 501.0, by: 1.0).map { ($0.decimal ?? .zero) / 10 }
 
         var waitForSuggestionInitial: Bool = false
 
@@ -36,6 +42,11 @@ extension Bolus {
             percentage = settingsManager.settings.insulinReqPercentage
             threshold = provider.suggestion?.threshold ?? 0
             maxBolus = provider.pumpSettings().maxBolus
+            items = provider.profile.schedule.map { value in
+                let timeIndex = timeValues.firstIndex(of: Double(value.offset * 60)) ?? 0
+                let rateIndex = rateValues.firstIndex(of: value.ratio) ?? 0
+                return Item(rateIndex: rateIndex, timeIndex: timeIndex)
+            }
 
             if waitForSuggestionInitial {
                 apsManager.determineBasal()

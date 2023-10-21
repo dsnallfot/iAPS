@@ -12,6 +12,26 @@ extension Bolus {
 
         @Environment(\.colorScheme) var colorScheme
 
+        private var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.timeStyle = .short
+            return formatter
+        }
+
+        private var rateFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            return formatter
+        }
+
+        private var resultFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 2
+            return formatter
+        }
+
         private var formatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -194,6 +214,22 @@ extension Bolus {
                         Text(state.units.rawValue + NSLocalizedString("/U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
+                    /* HStack {
+                         Text("Aktuell CR:").foregroundColor(.secondary)
+
+                         let currentTime = Date()
+                         var carbRatioNow: Double = 0.0 // Default value
+
+                         if let currentItem = state.items.first(where: { currentTime.timeIntervalSince1970 > state.timeValues[$0.timeIndex] }) {
+                             let rateValue = state.rateValues[currentItem.rateIndex]
+                             carbRatioNow = Double(rateValue) // Convert Decimal to Double
+                         }
+
+                         Text("\(carbRatioNow, specifier: "%.2f")")
+                         Text(NSLocalizedString("g/E", comment: "g kh per enhet insulin"))
+                             .foregroundColor(.secondary)
+                     } */
+
                     HStack {
                         Text("Inställd maxbolus:").foregroundColor(.secondary)
                         let MB = state.maxBolus
@@ -215,6 +251,25 @@ extension Bolus {
                         Text("Formula:")
                         Text("(Eventual Glucose - Target) / ISF")
                     }.foregroundColor(.secondary).italic().padding(.top, 4)
+                    HStack {
+                        let evg = state.units == .mmolL ? Decimal(state.evBG).asMmolL : Decimal(state.evBG)
+                        let target = state.units == .mmolL ? state.target.asMmolL : state.target
+                        let isf = state.isf
+                        let result = (evg - target) / isf
+
+                        Text(
+                            "(\(evg.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))" +
+                                " - \(target.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))))" +
+                                " / \(isf.formatted()) ="
+                        )
+                        let fractionDigits: Int = 2 // Set the number of decimal places
+                        Text(
+                            "\(result.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))) E"
+                        )
+                    }
+
+                    .foregroundColor(.secondary)
+                    .italic()
                 }
                 .font(.footnote)
                 .padding(.top, 4)
