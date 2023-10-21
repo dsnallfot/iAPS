@@ -24,8 +24,8 @@ extension DataTable {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 0
             if state.units == .mmolL {
-                formatter.minimumFractionDigits = 1
                 formatter.maximumFractionDigits = 1
+                formatter.roundingMode = .ceiling
             }
             formatter.roundingMode = .halfUp
             return formatter
@@ -297,7 +297,7 @@ extension DataTable {
             List {
                 if !state.glucose.isEmpty {
                     ForEach(state.glucose) { item in
-                        glucoseView(item)
+                        glucoseView(item, isManual: item.glucose)
                     }
                     .onDelete(perform: deleteGlucose)
                 } else {
@@ -352,7 +352,7 @@ extension DataTable {
             }
         }
 
-        @ViewBuilder private func glucoseView(_ item: Glucose) -> some View {
+        @ViewBuilder private func glucoseView(_ item: Glucose, isManual: BloodGlucose) -> some View {
             HStack {
                 Text(item.glucose.glucose.map {
                     glucoseFormatter.string(from: Double(
@@ -360,11 +360,12 @@ extension DataTable {
                     ) as NSNumber)!
                 } ?? "--")
                 Text(state.units.rawValue)
-                Text(item.glucose.direction?.symbol ?? "Fingerstick")
-                    .foregroundColor(
-                        item.glucose.direction?.symbol != nil ? .secondary : .orange
-                    )
-
+                if isManual.type == GlucoseType.manual.rawValue {
+                    Image(systemName: "drop.fill").symbolRenderingMode(.monochrome).foregroundStyle(.red)
+                } else {
+                    Text(item.glucose.direction?.symbol ?? "--")
+                        .foregroundColor(item.glucose.direction?.symbol != nil ? .secondary : .orange)
+                }
                 Spacer()
 
                 Text(dateFormatter.string(from: item.glucose.dateString))
@@ -453,7 +454,7 @@ extension DataTable {
                 message: Text(glucoseValue),
                 primaryButton: .destructive(
                     Text("Radera"),
-                    action: { state.deleteGlucose(glucose) }
+                    action: { state.deleteGlucose(at: offsets[offsets.startIndex]) }
                 ),
                 secondaryButton: .cancel()
             )
