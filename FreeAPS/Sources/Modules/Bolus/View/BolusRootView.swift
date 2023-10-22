@@ -214,21 +214,40 @@ extension Bolus {
                         Text(state.units.rawValue + NSLocalizedString("/U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
-                    /* HStack {
-                         Text("Aktuell CR:").foregroundColor(.secondary)
+                    /*HStack {
+                        Text("Aktuell CR:").foregroundColor(.secondary)
 
-                         let currentTime = Date()
-                         var carbRatioNow: Double = 0.0 // Default value
+                        let currentTime = Date()
+                        var carbRatioNow: String = "0" // Default value
 
-                         if let currentItem = state.items.first(where: { currentTime.timeIntervalSince1970 > state.timeValues[$0.timeIndex] }) {
-                             let rateValue = state.rateValues[currentItem.rateIndex]
-                             carbRatioNow = Double(rateValue) // Convert Decimal to Double
-                         }
+                        if let currentItem = state.items.first(where: { currentTime.timeIntervalSince1970 > state.timeValues[$0.timeIndex] }) {
+                            let rateValue = state.rateValues[currentItem.rateIndex]
+                            carbRatioNow = rateFormatter.string(from: rateValue as NSNumber) ?? "0"
+                        }
 
-                         Text("\(carbRatioNow, specifier: "%.2f")")
-                         Text(NSLocalizedString("g/E", comment: "g kh per enhet insulin"))
-                             .foregroundColor(.secondary)
-                     } */
+                        Text(carbRatioNow.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
+                        Text(NSLocalizedString("g/E", comment: "g kh per enhet insulin"))
+                            .foregroundColor(.secondary)
+                    }
+
+                    List {
+                        ForEach(state.items.indexed(), id: \.1.id) { _, item in
+                            HStack {
+                                Text(
+                                    "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0")"
+                                )
+                                Spacer()
+                                Text(
+                                    "\(dateFormatter.string(from: Date(timeIntervalSince1970: state.timeValues[item.timeIndex])))"
+                                )
+                            }
+                        }
+                    }*/
+
+
+
+
+
 
                     HStack {
                         Text("Inställd maxbolus:").foregroundColor(.secondary)
