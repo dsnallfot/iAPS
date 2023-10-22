@@ -687,6 +687,7 @@ extension BaseNightscoutManager: TempTargetsObserver {
 
 extension BaseNightscoutManager: GlucoseObserver {
     func glucoseDidUpdate(_: [BloodGlucose]) {
+        uploadGlucose()
         uploadManualGlucose()
     }
 }
