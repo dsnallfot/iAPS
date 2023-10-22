@@ -75,7 +75,7 @@ struct MainView: View {
             HStack(alignment: .top) {
                 HStack {
                     Text(state.glucose).font(.title)
-                    Text(state.trenid)
+                    Text(state.trend)
                         .font(.title2)
                         .scaledToFill()
                         .minimumScaleFactor(0.5)
