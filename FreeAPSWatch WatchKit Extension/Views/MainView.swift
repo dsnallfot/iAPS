@@ -92,7 +92,7 @@ struct MainView: View {
                     let cleanedDelta = state.delta
                         .replacingOccurrences(of: ",", with: ".")
                         .replacingOccurrences(of: "+", with: "")
-                        .replacingOccurrences(of: "−", with: "-") // Replace any em dash characters with a regular minus sign
+                        .replacingOccurrences(of: "−", with: "-")
 
                     let cleanedGlucose = state.glucose
                         .replacingOccurrences(of: ",", with: ".")
@@ -101,11 +101,7 @@ struct MainView: View {
                        let deltaValue = Double(cleanedDelta)
                     {
                         let computedValue = glucoseValue + deltaValue * 3
-
-                        // Use string interpolation with format specifier to display one decimal place
                         let formattedComputedValue = String(format: "%.1f", computedValue)
-
-                        // Replace the decimal separator
                         let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
 
                         Text(state.delta)
@@ -115,14 +111,32 @@ struct MainView: View {
 
                         Spacer()
 
-                        Image(systemName: "goforward.15")
-                            .font(.system(size: 12)) // Adjust the size as needed
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, -4)
-
-                        Text(formattedComputedValueWithComma)
-                            .font(.caption2)
-                            .foregroundColor(.gray)
+                        // Conditionally format the Image and Text
+                        if computedValue > 7.8 {
+                            Image(systemName: "goforward.15")
+                                .font(.system(size: 12))
+                                .foregroundColor(.loopYellow)
+                                .padding(.horizontal, -4)
+                            Text(formattedComputedValueWithComma)
+                                .font(.caption)
+                                .foregroundColor(.loopYellow)
+                        } else if computedValue < 3.9 {
+                            Image(systemName: "goforward.15")
+                                .font(.system(size: 12))
+                                .foregroundColor(.red)
+                                .padding(.horizontal, -4)
+                            Text(formattedComputedValueWithComma)
+                                .font(.caption)
+                                .foregroundColor(.red)
+                        } else {
+                            Image(systemName: "goforward.15")
+                                .font(.system(size: 12))
+                                .foregroundColor(.loopGreen)
+                                .padding(.horizontal, -4)
+                            Text(formattedComputedValueWithComma)
+                                .font(.caption)
+                                .foregroundColor(.loopGreen)
+                        }
                     } else {
                         Text(state.delta)
                             .font(.caption2)
@@ -133,7 +147,7 @@ struct MainView: View {
                     Spacer()
 
                     if state.lastLoopDate != nil {
-                        Text(timeString + "  ")
+                        Text(timeString)
                             .font(.caption2)
                             .scaledToFill()
                             .foregroundColor(.gray)
@@ -154,17 +168,6 @@ struct MainView: View {
                     .foregroundColor(Color.white)
                     .minimumScaleFactor(0.5)
                 Text("g").foregroundColor(.loopYellow)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .minimumScaleFactor(0.5)
-                Spacer()
-                Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .foregroundColor(Color.white)
-                    .minimumScaleFactor(0.5)
-
-                Text("U").foregroundColor(.insulin)
                     .font(.caption2)
                     .scaledToFill()
                     .minimumScaleFactor(0.5)
@@ -247,6 +250,17 @@ struct MainView: View {
                             .minimumScaleFactor(0.5)
                     }
                 }
+                Spacer()
+                Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
+                    .font(.caption2)
+                    .scaledToFill()
+                    .foregroundColor(Color.white)
+                    .minimumScaleFactor(0.5)
+
+                Text("U").foregroundColor(.insulin)
+                    .font(.caption2)
+                    .scaledToFill()
+                    .minimumScaleFactor(0.5)
             }
             Spacer()
                 .onAppear(perform: start)
@@ -442,7 +456,7 @@ struct MainView: View {
         if minAgo > 1440 {
             return "--"
         }
-        return "\(minAgo) " + NSLocalizedString("m", comment: "Minutes ago since last loop")
+        return "\(minAgo) " + NSLocalizedString("min", comment: "Minutes ago since last loop")
     }
 
     private var color: Color {
