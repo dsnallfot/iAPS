@@ -16,7 +16,7 @@ class NightscoutAPI {
         static let treatmentsPath = "/api/v1/treatments.json"
         static let statusPath = "/api/v1/devicestatus.json"
         static let profilePath = "/api/v1/profile.json"
-        static let retryCount = 1
+        static let retryCount = 3 // Jon: I doubt this will make a difference
         static let timeout: TimeInterval = 60
     }
 
