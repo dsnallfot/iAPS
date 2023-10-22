@@ -12,26 +12,6 @@ extension Bolus {
 
         @Environment(\.colorScheme) var colorScheme
 
-        private var dateFormatter: DateFormatter {
-            let formatter = DateFormatter()
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            formatter.timeStyle = .short
-            return formatter
-        }
-
-        private var rateFormatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            return formatter
-        }
-
-        private var resultFormatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 2
-            return formatter
-        }
-
         private var formatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -214,35 +194,6 @@ extension Bolus {
                         Text(state.units.rawValue + NSLocalizedString("/U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
-                    /* HStack {
-                         Text("Aktuell CR:").foregroundColor(.secondary)
-
-                         let currentTime = Date()
-                         var carbRatioNow: String = "0" // Default value
-
-                         if let currentItem = state.items.first(where: { currentTime.timeIntervalSince1970 > state.timeValues[$0.timeIndex] }) {
-                             let rateValue = state.rateValues[currentItem.rateIndex]
-                             carbRatioNow = rateFormatter.string(from: rateValue as NSNumber) ?? "0"
-                         }
-
-                         Text(carbRatioNow.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
-                         Text(NSLocalizedString("g/E", comment: "g kh per enhet insulin"))
-                             .foregroundColor(.secondary)
-                     }
-
-                     List {
-                         ForEach(state.items.indexed(), id: \.1.id) { _, item in
-                             HStack {
-                                 Text(
-                                     "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0")"
-                                 )
-                                 Spacer()
-                                 Text(
-                                     "\(dateFormatter.string(from: Date(timeIntervalSince1970: state.timeValues[item.timeIndex])))"
-                                 )
-                             }
-                         }
-                     } */
 
                     HStack {
                         Text("Inställd maxbolus:").foregroundColor(.secondary)

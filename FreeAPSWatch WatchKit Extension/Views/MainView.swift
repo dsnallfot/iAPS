@@ -74,12 +74,15 @@ struct MainView: View {
         VStack {
             HStack(alignment: .top) {
                 HStack {
-                    Text(state.glucose).font(.title)
-                    Text(state.trend)
+                    Text(state.glucose)
                         .font(.title)
                         .scaledToFill()
-                        .minimumScaleFactor(0.5)
-                    Spacer()
+                        .minimumScaleFactor(0.3)
+
+                    Text(state.trend)
+                        .font(.title2)
+                        .scaledToFill()
+                        .minimumScaleFactor(0.3)
                     Spacer()
                     Circle().stroke(color, lineWidth: 5).frame(width: 26, height: 26).padding(10)
                 }
