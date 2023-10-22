@@ -196,7 +196,8 @@ extension DataTable {
                 filtered: nil,
                 noise: nil,
                 glucose: Int(glucose),
-                type: GlucoseType.manual.rawValue
+                type: GlucoseType.manual.rawValue,
+                device: "iAPS"
             )
             provider.glucoseStorage.storeGlucose([saveToJSON])
             debug(.default, "Manual Glucose saved to glucose.json")

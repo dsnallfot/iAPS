@@ -135,7 +135,7 @@ extension DexcomSourceG7: CGMManagerDelegate {
         debug(.deviceManager, "DEXCOMG7 - Process CGM Reading Result launched")
         switch readingResult {
         case let .newData(values):
-            
+
             var activationDate: Date = .distantPast
             var sessionStart: Date = .distantPast
             if let cgmG7Manager = cgmManager as? G7CGMManager {
@@ -158,6 +158,7 @@ extension DexcomSourceG7: CGMManagerDelegate {
                     noise: nil,
                     glucose: value,
                     type: "sgv",
+                    device: "iAPS",
                     activationDate: activationDate,
                     sessionStartDate: sessionStart
                 )

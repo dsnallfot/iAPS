@@ -356,11 +356,11 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
         // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
         let openapsStatus = OpenAPSStatus(
-                    iob: iob?.first,
-                    suggested: useEnacted ? nil : suggested,
-                    enacted: useEnacted ? enacted : nil,
-                    version: "0.7.1"
-                )
+            iob: iob?.first,
+            suggested: useEnacted ? nil : suggested,
+            enacted: useEnacted ? enacted : nil,
+            version: "0.7.1"
+        )
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
@@ -597,31 +597,31 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     }
 
     private func uploadPodAge() {
-         let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
-         if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
-            uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
-         {
-             let siteTreatment = NigtscoutTreatment(
-                 duration: nil,
-                 rawDuration: nil,
-                 rawRate: nil,
-                 absolute: nil,
-                 rate: nil,
-                 eventType: .nsSiteChange,
-                 createdAt: podAge,
-                 enteredBy: NigtscoutTreatment.local,
-                 bolus: nil,
-                 insulin: nil,
-                 notes: nil,
-                 carbs: nil,
-                 fat: nil,
-                 protein: nil,
-                 targetTop: nil,
-                 targetBottom: nil
-             )
-             uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
-         }
-     }
+        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
+        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
+           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
+        {
+            let siteTreatment = NigtscoutTreatment(
+                duration: nil,
+                rawDuration: nil,
+                rawRate: nil,
+                absolute: nil,
+                rate: nil,
+                eventType: .nsSiteChange,
+                createdAt: podAge,
+                enteredBy: NigtscoutTreatment.local,
+                bolus: nil,
+                insulin: nil,
+                notes: nil,
+                carbs: nil,
+                fat: nil,
+                protein: nil,
+                targetTop: nil,
+                targetBottom: nil
+            )
+            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
+        }
+    }
 
     private func uploadTreatments(_ treatments: [NigtscoutTreatment], fileToSave: String) {
         guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {

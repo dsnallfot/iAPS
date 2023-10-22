@@ -73,7 +73,8 @@ struct AppGroupSource: GlucoseSource {
                     filtered: nil,
                     noise: nil,
                     glucose: glucose,
-                    type: "sgv"
+                    type: "sgv",
+                    device: "iAPS"
                 )
             )
         }

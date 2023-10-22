@@ -30,6 +30,7 @@ struct BloodGlucose: JSON, Identifiable, Hashable {
     let noise: Int?
     var glucose: Int?
     let type: String?
+    let device: String?
     var activationDate: Date? = nil
     var sessionStartDate: Date? = nil
     var transmitterID: String? = nil
