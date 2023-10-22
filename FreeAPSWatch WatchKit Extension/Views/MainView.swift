@@ -208,7 +208,7 @@ struct MainView: View {
                             Text(eventualBG)
                                 .font(.caption2)
                                 .scaledToFill()
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
                     }
