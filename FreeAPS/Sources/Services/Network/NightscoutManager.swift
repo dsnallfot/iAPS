@@ -346,32 +346,21 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         var suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
         var enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
 
+        var useEnacted = true
         if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
             enacted?.predictions = nil
+            useEnacted = false
         } else {
             suggested?.predictions = nil
         }
 
-        let loopIsClosed = settingsManager.settings.closedLoop
-
-        var openapsStatus: OpenAPSStatus
-
         // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
-        if loopIsClosed {
-            openapsStatus = OpenAPSStatus(
-                iob: iob?.first,
-                suggested: nil,
-                enacted: enacted,
-                version: "0.7.1"
-            )
-        } else {
-            openapsStatus = OpenAPSStatus(
-                iob: iob?.first,
-                suggested: suggested,
-                enacted: nil,
-                version: "0.7.1"
-            )
-        }
+        let openapsStatus = OpenAPSStatus(
+                    iob: iob?.first,
+                    suggested: useEnacted ? nil : suggested,
+                    enacted: useEnacted ? enacted : nil,
+                    version: "0.7.1"
+                )
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
@@ -413,35 +402,6 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
                     }
                 } receiveValue: {}
                 .store(in: &self.lifetime)
-        }
-
-        uploadPodAge()
-    }
-
-    func uploadPodAge() {
-        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
-        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
-           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
-        {
-            let siteTreatment = NigtscoutTreatment(
-                duration: nil,
-                rawDuration: nil,
-                rawRate: nil,
-                absolute: nil,
-                rate: nil,
-                eventType: .nsSiteChange,
-                createdAt: podAge,
-                enteredBy: NigtscoutTreatment.local,
-                bolus: nil,
-                insulin: nil,
-                notes: nil,
-                carbs: nil,
-                fat: nil,
-                protein: nil,
-                targetTop: nil,
-                targetBottom: nil
-            )
-            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
         }
     }
 
@@ -636,6 +596,33 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         }
     }
 
+    private func uploadPodAge() {
+         let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
+         if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
+            uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
+         {
+             let siteTreatment = NigtscoutTreatment(
+                 duration: nil,
+                 rawDuration: nil,
+                 rawRate: nil,
+                 absolute: nil,
+                 rate: nil,
+                 eventType: .nsSiteChange,
+                 createdAt: podAge,
+                 enteredBy: NigtscoutTreatment.local,
+                 bolus: nil,
+                 insulin: nil,
+                 notes: nil,
+                 carbs: nil,
+                 fat: nil,
+                 protein: nil,
+                 targetTop: nil,
+                 targetBottom: nil
+             )
+             uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
+         }
+     }
+
     private func uploadTreatments(_ treatments: [NigtscoutTreatment], fileToSave: String) {
         guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {
             return
@@ -670,6 +657,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 extension BaseNightscoutManager: PumpHistoryObserver {
     func pumpHistoryDidUpdate(_: [PumpHistoryEvent]) {
         uploadPumpHistory()
+        uploadPodAge()
     }
 }
 
