@@ -81,6 +81,7 @@ extension Home {
         }
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
+            let colour: Color = colorScheme == .dark ? .black : .white
             HStack(alignment: .bottom) {
                 Spacer()
                 cobIobView
@@ -95,7 +96,9 @@ extension Home {
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
             .padding(.bottom, 10)
-            .background(Color.gray.opacity(0.2))
+            .background(Color.gray.opacity(0.3))
+
+            Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         var cobIobView: some View {
@@ -345,6 +348,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: 36)
+            .background(Color.gray.opacity(0.2))
         }
 
         var legendPanel: some View {
@@ -434,7 +438,7 @@ extension Home {
             let colour: Color = colorScheme == .dark ? .black : .white
             // Rectangle().fill(colour).frame(maxHeight: 1)
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.3)).frame(maxHeight: 40)
+                Rectangle().fill(Color.gray.opacity(0.2)).frame(maxHeight: 40)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
                     Button { state.showModal(for: .overrideProfilesConfig) }
@@ -698,7 +702,7 @@ extension Home {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color(UIColor.darkGray))
+                            .fill(Color(UIColor.systemGray3))
                     )
                     .onTapGesture {
                         isStatusPopupPresented = false
@@ -724,7 +728,7 @@ extension Home {
                     Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption).foregroundColor(.white)
 
                 } else {
-                    Text("No sugestion found").font(.body).foregroundColor(.white)
+                    Text("No suggestion found").font(.body).foregroundColor(.white)
                 }
 
                 if let errorMessage = state.errorMessage, let date = state.errorDate {
