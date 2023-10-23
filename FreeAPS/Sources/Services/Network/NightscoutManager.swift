@@ -71,6 +71,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         broadcaster.register(CarbsObserver.self, observer: self)
         broadcaster.register(TempTargetsObserver.self, observer: self)
         broadcaster.register(GlucoseObserver.self, observer: self)
+        broadcaster.register(EnactedSuggestionObserver.self, observer: self) //Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
         _ = reachabilityManager.startListening(onQueue: processQueue) { status in
             debug(.nightscout, "Network status: \(status)")
         }
@@ -677,5 +678,11 @@ extension BaseNightscoutManager: GlucoseObserver {
     func glucoseDidUpdate(_: [BloodGlucose]) {
         uploadGlucose()
         uploadManualGlucose()
+    }
+}
+//Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
+extension BaseNightscoutManager: EnactedSuggestionObserver {
+    func enactedSuggestionDidUpdate(_: Suggestion) {
+        uploadStatus()
     }
 }
