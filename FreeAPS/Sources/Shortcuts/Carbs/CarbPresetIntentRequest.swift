@@ -2,7 +2,13 @@ import CoreData
 import Foundation
 
 @available(iOS 16.0,*) final class CarbPresetIntentRequest: BaseIntentsRequest {
-    func addCarbs(_ quantityCarbs: Double, _ quantityFat: Double, _ quantityProtein: Double, _ dateAdded: Date) throws -> String {
+    func addCarbs(
+        _ quantityCarbs: Double,
+        _ quantityFat: Double,
+        _ quantityProtein: Double,
+        _ dateAdded: Date,
+        _ note: String?
+    ) throws -> String {
         guard quantityCarbs >= 0.0 || quantityFat >= 0.0 || quantityProtein >= 0.0 else {
             return "Måltid registreras inte i iAPS"
         }
@@ -16,7 +22,7 @@ import Foundation
                 carbs: carbs,
                 fat: Decimal(quantityFat),
                 protein: Decimal(quantityProtein),
-                note: "inlagt via genväg",
+                note: note,
                 enteredBy: CarbsEntry.manual,
                 isFPU: false, fpuID: nil
             )]

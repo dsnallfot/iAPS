@@ -298,15 +298,15 @@ extension OverrideProfilesConfig {
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"
-            let scheduledSMBstring = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "Scheduled SMBs" : ""
-            let smbString = (preset.smbIsOff && scheduledSMBstring == "") ? "SMBs are off" : ""
+            let scheduledSMBstring = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "SMB schema •" : ""
+            let smbString = (preset.smbIsOff && scheduledSMBstring == "") ? "SMB av •" : ""
             let targetString = target != 0 ? "\(glucoseFormatter.string(from: target as NSNumber)!)" : ""
             let maxMinutesSMB = (preset.smbMinutes as Decimal?) != nil ? (preset.smbMinutes ?? 0) as Decimal : 0
             let maxMinutesUAM = (preset.uamMinutes as Decimal?) != nil ? (preset.uamMinutes ?? 0) as Decimal : 0
 
             let isfString = preset.isf ? "ISF" : ""
-            let crString = preset.cr ? "CR" : ""
-            let dash = crString != "" ? "/" : ""
+            let crString = preset.cr ? "CR •" : ""
+            let dash = crString != "" ? "/" : "•"
             let isfAndCRstring = isfString + dash + crString
 
             if name != "" {
@@ -316,25 +316,27 @@ extension OverrideProfilesConfig {
                             Text(name)
                             Spacer()
                         }
-                        HStack(spacing: 5) {
+                        HStack(spacing: 3) {
                             Text(percent.formatted(.percent.grouping(.never).rounded().precision(.fractionLength(0))))
                             if targetString != "" {
                                 Text(targetString)
-                                Text(targetString != "" ? state.units.rawValue : "")
+                                Text(targetString != "" ? "mmol" : "")
                             }
-                            if durationString != "" { Text(durationString + (perpetual ? "" : "min")) }
+                            if durationString != "" { Text(durationString + (perpetual ? "" : "m")) }
+                            if preset.advancedSettings {
+                                Text(isfAndCRstring)
+                            }
                             if smbString != "" { Text(smbString).foregroundColor(.secondary).font(.caption) }
                             if scheduledSMBstring != "" { Text(scheduledSMBstring) }
                             if preset.advancedSettings {
                                 Text(maxMinutesSMB == 0 ? "" : maxMinutesSMB.formatted() + " SMB")
                                 Text(maxMinutesUAM == 0 ? "" : maxMinutesUAM.formatted() + " UAM")
-                                Text(isfAndCRstring)
                             }
                             Spacer()
                         }
                         .padding(.top, 2)
                         .foregroundColor(.secondary)
-                        .font(.caption)
+                        .font(.caption2)
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {

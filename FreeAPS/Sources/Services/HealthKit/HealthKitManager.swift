@@ -496,7 +496,8 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     filtered: nil,
                     noise: nil,
                     glucose: sample.glucose,
-                    type: "sgv"
+                    type: "sgv",
+                    device: "iAPS"
                 )
             }
             .filter { $0.dateString >= Date().addingTimeInterval(-1.days.timeInterval) }

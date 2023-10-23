@@ -158,6 +158,7 @@ extension DexcomSourceG5: CGMManagerDelegate {
                     noise: nil,
                     glucose: value,
                     type: "sgv",
+                    device: "iAPS",
                     transmitterID: self.transmitterID
                 )
             }

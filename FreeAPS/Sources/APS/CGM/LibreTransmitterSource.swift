@@ -83,6 +83,7 @@ extension BaseLibreTransmitterSource: LibreTransmitterManagerDelegate {
                     noise: nil,
                     glucose: Int(value.glucose),
                     type: "sgv",
+                    device: "iAPS",
                     activationDate: value.sensorStartDate ?? manager.sensorStartDate,
                     sessionStartDate: value.sensorStartDate ?? manager.sensorStartDate,
                     transmitterID: manager.sensorSerialNumber

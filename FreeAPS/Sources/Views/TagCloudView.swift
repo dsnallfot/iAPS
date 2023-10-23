@@ -64,7 +64,7 @@ struct TagCloudView: View {
             case textTag where textTag.contains("Total insulin:"),
                  textTag where textTag.contains("tdd_factor"),
                  textTag where textTag.contains("Sigmoid function"),
-                 textTag where textTag.contains("Sigmoid På"),
+                 textTag where textTag.contains("Sigmoid"),
                  textTag where textTag.contains("Logarithmic formula"),
                  textTag where textTag.contains("Logaritmisk formel"),
                  textTag where textTag.contains("AF:"),

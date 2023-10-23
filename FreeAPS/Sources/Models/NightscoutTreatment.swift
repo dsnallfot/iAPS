@@ -19,6 +19,9 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     var reason: String?
     let targetTop: Decimal?
     let targetBottom: Decimal?
+    var glucoseType: String?
+    var glucose: String?
+    var units: String?
 
     static let local = "iAPS"
 
@@ -53,5 +56,8 @@ extension NigtscoutTreatment {
         case reason
         case targetTop
         case targetBottom
+        case glucoseType
+        case glucose
+        case units
     }
 }

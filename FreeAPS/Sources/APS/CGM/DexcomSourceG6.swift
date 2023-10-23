@@ -163,6 +163,7 @@ extension DexcomSourceG6: CGMManagerDelegate {
                         noise: nil,
                         glucose: value,
                         type: "sgv",
+                        device: "iAPS",
                         activationDate: activationDate,
                         sessionStartDate: sessionStartDate,
                         transmitterID: self.transmitterID
@@ -190,6 +191,6 @@ extension DexcomSourceG6: CGMManagerDelegate {
 
 extension DexcomSourceG6 {
     func sourceInfo() -> [String: Any]? {
-        [GlucoseSourceKey.description.rawValue: "Dexcom tramsmitter ID: \(transmitterID)"]
+        [GlucoseSourceKey.description.rawValue: "Dexcom transmitter ID: \(transmitterID)"]
     }
 }

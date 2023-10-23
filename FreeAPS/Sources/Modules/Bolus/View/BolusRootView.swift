@@ -194,6 +194,7 @@ extension Bolus {
                         Text(state.units.rawValue + NSLocalizedString("/U", comment: "/Insulin unit"))
                             .foregroundColor(.secondary)
                     }
+
                     HStack {
                         Text("Inställd maxbolus:").foregroundColor(.secondary)
                         let MB = state.maxBolus
@@ -215,6 +216,25 @@ extension Bolus {
                         Text("Formula:")
                         Text("(Eventual Glucose - Target) / ISF")
                     }.foregroundColor(.secondary).italic().padding(.top, 4)
+                    HStack {
+                        let evg = state.units == .mmolL ? Decimal(state.evBG).asMmolL : Decimal(state.evBG)
+                        let target = state.units == .mmolL ? state.target.asMmolL : state.target
+                        let isf = state.isf
+                        let result = (evg - target) / isf
+
+                        Text(
+                            "(\(evg.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))" +
+                                " - \(target.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))))" +
+                                " / \(isf.formatted()) ="
+                        )
+                        let fractionDigits: Int = 2 // Set the number of decimal places
+                        Text(
+                            "\(result.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))) E"
+                        )
+                    }
+
+                    .foregroundColor(.secondary)
+                    .italic()
                 }
                 .font(.footnote)
                 .padding(.top, 4)

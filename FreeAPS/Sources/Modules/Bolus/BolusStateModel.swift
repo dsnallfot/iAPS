@@ -26,6 +26,7 @@ extension Bolus {
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
         @Published var units: GlucoseUnits = .mmolL
+        @Published var carbRatio: Decimal = 0.0
 
         var waitForSuggestionInitial: Bool = false
 

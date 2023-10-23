@@ -107,7 +107,11 @@ extension AddCarbs {
                     let maxamountcarbs = Double(state.maxCarbs)
                     let formattedMaxAmountCarbs = String(format: "%.0f", maxamountcarbs)
                     Button {
-                        state.add()
+                        if state.carbs <= state.maxCarbs {
+                            // Only allow button click if carbs are within maxCarbs
+
+                            state.add()
+                        }
                     } label: {
                         HStack {
                             if state.carbs > state.maxCarbs {
@@ -119,12 +123,12 @@ extension AddCarbs {
                                 !(state.carbs > state.maxCarbs) ? "Save and continue" :
                                     "Inställd maxgräns: \(formattedMaxAmountCarbs)g   "
                             )
-                            .font(.title3.weight(.semibold)) }
-                            .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3.weight(.semibold))
+                        }
                     }
+                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
-
                 Section { mealPresets
                 }
 
