@@ -56,7 +56,7 @@ extension AddTempTarget {
                                         )
                                         isRemoveAlertPresented = true
                                     }) {
-                                        Label("Delete", systemImage: "trash")
+                                        Text("Delete")
                                     }
                                 }
                                 .alert(isPresented: $isRemoveAlertPresented) {
