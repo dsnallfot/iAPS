@@ -373,74 +373,66 @@ extension DataTable {
         }
 
         private func deleteTreatments(at offsets: IndexSet) {
-            let treatment = state.treatments[offsets[offsets.startIndex]]
-            var alertTitle = Text("Radera Insulin?")
-            var alertMessage = Text(treatment.amountText)
-            var primaryButtonText = "Radera"
-            var primaryAction: () -> Void = {
-                state.deleteInsulin(treatment)
-            }
+            if let indexToDelete = offsets.first {
+                let item = showFutureEntries ?
+                    state.treatments[indexToDelete] :
+                    state.treatments.filter { $0.date <= Date() }[indexToDelete]
 
-            if treatment.type == .carbs {
-                alertTitle = Text("Radera kolhydrater?")
-                alertMessage = Text(treatment.amountText)
-                primaryButtonText = "Radera"
-                primaryAction = {
-                    state.deleteCarbs(treatment)
+                var alertTitle = Text("Radera insulin?")
+                var alertMessage = Text(item.amountText)
+                var primaryButtonText = "Radera"
+                var primaryAction: () -> Void = {
+                    state.deleteInsulin(item)
                 }
-            }
 
-            if treatment.type == .tempTarget {
-                alertTitle = Text("Tillfälligt mål")
-                alertMessage = Text("Kan inte raderas!")
-                primaryButtonText = ""
-                primaryAction = {}
-            }
-
-            if treatment.type == .suspend {
-                alertTitle = Text("Pumphändelse")
-                alertMessage = Text("Kan inte raderas!")
-                primaryButtonText = ""
-                primaryAction = {}
-            }
-
-            if treatment.type == .resume {
-                alertTitle = Text("Pumphändelse")
-                alertMessage = Text("Kan inte raderas!")
-                primaryButtonText = ""
-                primaryAction = {}
-            }
-
-            if treatment.type == .fpus {
-                let fpus = state.treatments
-                let carbEquivalents = fpuFormatter.string(from: Double(
-                    fpus.filter { fpu in
-                        fpu.fpuID == treatment.fpuID
+                if item.type == .carbs {
+                    alertTitle = Text("Radera kolhydrater?")
+                    primaryButtonText = "Radera"
+                    primaryAction = {
+                        state.deleteCarbs(item)
                     }
-                    .map { fpu in
-                        fpu.amount ?? 0 }
-                    .reduce(0, +)
-                ) as NSNumber)!
+                } else if item.type == .tempTarget {
+                    alertTitle = Text("Tillfälligt mål")
+                    alertMessage = Text("Kan inte raderas!")
+                    primaryButtonText = ""
+                    primaryAction = {}
+                } else if item.type == .suspend {
+                    alertTitle = Text("Pumphändelse")
+                    alertMessage = Text("Kan inte raderas!")
+                    primaryButtonText = ""
+                    primaryAction = {}
+                } else if item.type == .resume {
+                    alertTitle = Text("Pumphändelse")
+                    alertMessage = Text("Kan inte raderas!")
+                    primaryButtonText = ""
+                    primaryAction = {}
+                } else if item.type == .fpus {
+                    let carbEquivalents = fpuFormatter.string(from: Double(
+                        state.treatments.filter { $0.type == .fpus && $0.fpuID == item.fpuID }
+                            .map { $0.amount ?? 0 }
+                            .reduce(0, +)
+                    ) as NSNumber)!
 
-                alertTitle = Text("Radera Protein/Fett?")
-                alertMessage = Text(carbEquivalents + NSLocalizedString(" g", comment: "gram of carbs"))
-                primaryButtonText = "Radera"
-                primaryAction = {
-                    state.deleteCarbs(treatment)
+                    alertTitle = Text("Radera Protein/Fett?")
+                    alertMessage = Text(carbEquivalents + NSLocalizedString(" g", comment: "gram of carbs"))
+                    primaryButtonText = "Radera"
+                    primaryAction = {
+                        state.deleteCarbs(item)
+                    }
                 }
+
+                removeTreatmentsAlert = Alert(
+                    title: alertTitle,
+                    message: alertMessage,
+                    primaryButton: .destructive(
+                        Text(primaryButtonText),
+                        action: primaryAction
+                    ),
+                    secondaryButton: .cancel()
+                )
+
+                isRemoveTreatmentsAlertPresented = true
             }
-
-            removeTreatmentsAlert = Alert(
-                title: alertTitle,
-                message: alertMessage,
-                primaryButton: .destructive(
-                    Text(primaryButtonText),
-                    action: primaryAction
-                ),
-                secondaryButton: .cancel()
-            )
-
-            isRemoveTreatmentsAlertPresented = true
         }
 
         private func deleteGlucose(at offsets: IndexSet) {
