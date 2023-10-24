@@ -43,7 +43,27 @@ extension AddTempTarget {
                     Section(header: Text("Aktivera favorit")) {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
+                                .swipeActions {
+                                    Button(role: .destructive, action: {
+                                        removeAlert = Alert(
+                                            title: Text("Are you sure?"),
+                                            message: Text("Delete preset \"\(preset.displayName)\""),
+                                            primaryButton: .destructive(Text("Delete"), action: {
+                                                state.removePreset(id: preset.id)
+                                                isRemoveAlertPresented = false // Dismiss the alert after deletion
+                                            }),
+                                            secondaryButton: .cancel()
+                                        )
+                                        isRemoveAlertPresented = true
+                                    }) {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .alert(isPresented: $isRemoveAlertPresented) {
+                                    removeAlert!
+                                }
                         }
+                        .onDelete(perform: delete)
                     }
                 }
                 HStack {
@@ -202,22 +222,26 @@ extension AddTempTarget {
                     state.enactPreset(id: preset.id)
                 }
 
-                Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                    .contentShape(Rectangle())
-                    .padding(.vertical)
-                    .onTapGesture {
-                        removeAlert = Alert(
-                            title: Text("Are you sure?"),
-                            message: Text("Delete preset \"\(preset.displayName)\""),
-                            primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
-                            secondaryButton: .cancel()
-                        )
-                        isRemoveAlertPresented = true
-                    }
-                    .alert(isPresented: $isRemoveAlertPresented) {
-                        removeAlert!
-                    }
+                /* Image(systemName: "xmark.circle").foregroundColor(.secondary)
+                 .contentShape(Rectangle())
+                 .padding(.vertical)
+                 .onTapGesture {
+                     removeAlert = Alert(
+                         title: Text("Are you sure?"),
+                         message: Text("Delete preset \"\(preset.displayName)\""),
+                         primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
+                         secondaryButton: .cancel()
+                     )
+                     isRemoveAlertPresented = true
+                 }
+                 .alert(isPresented: $isRemoveAlertPresented) {
+                     removeAlert!
+                 } */
             }
+        }
+
+        private func delete(at offsets: IndexSet) {
+            state.presets.remove(atOffsets: offsets)
         }
     }
 }
