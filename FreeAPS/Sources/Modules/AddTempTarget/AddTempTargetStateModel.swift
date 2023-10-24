@@ -1,10 +1,14 @@
 import CoreData
+import SwiftDate
 import SwiftUI
 
 extension AddTempTarget {
     final class StateModel: BaseStateModel<Provider> {
+        @Injected() var broadcaster: Broadcaster!
         @Injected() private var storage: TempTargetsStorage!
         @Injected() var apsManager: APSManager!
+        private let timer = DispatchTimer(timeInterval: 5)
+        private(set) var filteredHours = 24
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -20,6 +24,9 @@ extension AddTempTarget {
         @Published var viewPercantage = false
         @Published var hbt: Double = 160
         @Published var saveSettings: Bool = false
+        @Published var timerDate = Date()
+        @Published var tempTargets: [TempTarget] = []
+        @Published var tempTarget: TempTarget?
 
         private(set) var units: GlucoseUnits = .mmolL
 
@@ -27,6 +34,29 @@ extension AddTempTarget {
             units = settingsManager.settings.units
             presets = storage.presets()
             maxValue = settingsManager.preferences.autosensMax
+
+            setupTempTargets()
+            setupCurrentTempTarget()
+
+            broadcaster.register(TempTargetsObserver.self, observer: self)
+
+            timer.eventHandler = {
+                DispatchQueue.main.async { [weak self] in
+                    self?.timerDate = Date()
+                    self?.setupCurrentTempTarget()
+                }
+            }
+        }
+
+        private func setupTempTargets() {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.tempTargets = self.provider.tempTargets(hours: self.filteredHours)
+            }
+        }
+
+        private func setupCurrentTempTarget() {
+            tempTarget = provider.tempTarget()
         }
 
         func enact() {
@@ -189,5 +219,13 @@ extension AddTempTarget {
             }
             return Decimal(Double(target))
         }
+    }
+}
+
+extension AddTempTarget.StateModel:
+    TempTargetsObserver
+{
+    func tempTargetsDidUpdate(_: [TempTarget]) {
+        setupTempTargets()
     }
 }

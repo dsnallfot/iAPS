@@ -37,6 +37,7 @@ extension AddTempTarget {
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
+                    .disabled(state.tempTarget == nil)
                 }
                 if !state.presets.isEmpty {
                     Section(header: Text("Aktivera favorit")) {
