@@ -311,12 +311,12 @@ extension Home {
         }
 
         private func setupAnnouncements() {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        self.announcement = self.provider.announcement(self.filteredHours)
-                    }
-                }
-        
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.announcement = self.provider.announcement(self.filteredHours)
+            }
+        }
+
         private func setStatusTitle() {
             guard let suggestion = suggestion else {
                 statusTitle = "No suggestion"

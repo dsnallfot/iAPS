@@ -59,11 +59,11 @@ extension Home {
         }
 
         func announcement(_ hours: Int) -> [Announcement] {
-                    announcementStorage.validate().filter {
-                        $0.createdAt.addingTimeInterval(hours.hours.timeInterval) > Date()
-                    }
-                }
-        
+            announcementStorage.validate().filter {
+                $0.createdAt.addingTimeInterval(hours.hours.timeInterval) > Date()
+            }
+        }
+
         func pumpSettings() -> PumpSettings {
             storage.retrieve(OpenAPS.Settings.settings, as: PumpSettings.self)
                 ?? PumpSettings(from: OpenAPS.defaults(for: OpenAPS.Settings.settings))

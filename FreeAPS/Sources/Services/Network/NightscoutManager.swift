@@ -71,7 +71,11 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         broadcaster.register(CarbsObserver.self, observer: self)
         broadcaster.register(TempTargetsObserver.self, observer: self)
         broadcaster.register(GlucoseObserver.self, observer: self)
-        broadcaster.register(EnactedSuggestionObserver.self, observer: self) //Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
+        broadcaster
+            .register(
+                EnactedSuggestionObserver.self,
+                observer: self
+            ) // Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
         _ = reachabilityManager.startListening(onQueue: processQueue) { status in
             debug(.nightscout, "Network status: \(status)")
         }
@@ -526,19 +530,19 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         {
             NSLog("NightscoutManager uploadProfile, no profile change")
         } else {
-                    processQueue.async {
-                        nightscout.uploadProfile(p)
-                            .sink { completion in
-                                switch completion {
-                                case .finished:
-                                    self.storage.save(p, as: OpenAPS.Nightscout.uploadedProfile)
-                                    debug(.nightscout, "Profile uploaded")
-                                case let .failure(error):
-                                    debug(.nightscout, error.localizedDescription)
-                                }
-                            } receiveValue: {}
-                            .store(in: &self.lifetime)
-                    }
+            processQueue.async {
+                nightscout.uploadProfile(p)
+                    .sink { completion in
+                        switch completion {
+                        case .finished:
+                            self.storage.save(p, as: OpenAPS.Nightscout.uploadedProfile)
+                            debug(.nightscout, "Profile uploaded")
+                        case let .failure(error):
+                            debug(.nightscout, error.localizedDescription)
+                        }
+                    } receiveValue: {}
+                    .store(in: &self.lifetime)
+            }
         }
     }
 
@@ -679,7 +683,8 @@ extension BaseNightscoutManager: GlucoseObserver {
         uploadManualGlucose()
     }
 }
-//Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
+
+// Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
 extension BaseNightscoutManager: EnactedSuggestionObserver {
     func enactedSuggestionDidUpdate(_: Suggestion) {
         uploadStatus()

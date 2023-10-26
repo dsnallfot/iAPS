@@ -67,14 +67,14 @@ final class BaseAnnouncementsStorage: AnnouncementsStorage, Injectable {
         }
         return recent
     }
-    
+
     func validate() -> [Announcement] {
-            guard let enactedEvents = storage.retrieve(OpenAPS.FreeAPS.announcementsEnacted, as: [Announcement].self)?.reversed()
-            else {
-                return []
-            }
-            let validate = enactedEvents
-                .filter({ $0.enteredBy == Announcement.remote })
-            return validate
+        guard let enactedEvents = storage.retrieve(OpenAPS.FreeAPS.announcementsEnacted, as: [Announcement].self)?.reversed()
+        else {
+            return []
         }
+        let validate = enactedEvents
+            .filter({ $0.enteredBy == Announcement.remote })
+        return validate
+    }
 }
