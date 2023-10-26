@@ -120,8 +120,13 @@ extension DataTable {
                         }
 
                         Section {
-                            DatePicker("Date", selection: $state.manualGlucoseDate)
+                            DatePicker(
+                                "Date",
+                                selection: $state.manualGlucoseDate,
+                                in: ...Date() // Disable selecting future dates
+                            )
                         }
+
                         Section {
                             HStack {
                                 let limitLow: Decimal = state.units == .mmolL ? 2.2 : 40
@@ -172,7 +177,11 @@ extension DataTable {
                         }
 
                         Section {
-                            DatePicker("Date", selection: $state.nonPumpInsulinDate)
+                            DatePicker(
+                                "Date",
+                                selection: $state.nonPumpInsulinDate,
+                                in: ...Date() // Disable selecting future dates
+                            )
                         }
 
                         Section {
