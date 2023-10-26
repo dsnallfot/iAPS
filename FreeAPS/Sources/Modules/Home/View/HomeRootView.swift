@@ -347,8 +347,8 @@ extension Home {
                         }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 36)
-            .background(Color.gray.opacity(0.2))
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(Color.gray.opacity(0.22))
         }
 
         var legendPanel: some View {
@@ -394,7 +394,7 @@ extension Home {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 20)
+                .padding([.bottom], 17)
             }
         }
 
@@ -413,6 +413,7 @@ extension Home {
                     tempBasals: $state.tempBasals,
                     boluses: $state.boluses,
                     suspensions: $state.suspensions,
+                    announcement: $state.announcement,
                     hours: .constant(state.filteredHours),
                     maxBasal: $state.maxBasal,
                     autotunedBasalProfile: $state.autotunedBasalProfile,
@@ -438,7 +439,7 @@ extension Home {
             let colour: Color = colorScheme == .dark ? .black : .white
             // Rectangle().fill(colour).frame(maxHeight: 1)
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.2)).frame(maxHeight: 40)
+                Rectangle().fill(Color.gray.opacity(0.22)).frame(maxHeight: 50)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
                     Button { state.showModal(for: .overrideProfilesConfig) }
@@ -594,7 +595,10 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(9)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
                                     .font(.caption2)
@@ -613,12 +617,15 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopGreen)
-                                .padding(9)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
                             if state.tempTarget != nil {
                                 Image(systemName: "timer")
                                     .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(3.5)
+                                    .padding(3)
                                     .background(Capsule().fill(Color.red))
                             }
                         }
@@ -633,7 +640,10 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
-                                .padding(9)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
 
                             if let insulinRequested = state.suggestion?.insulinForManualBolus, insulinRequested > 0.3 {
                                 let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
@@ -653,7 +663,10 @@ extension Home {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 27, height: 27)
-                                .padding(9)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
@@ -664,7 +677,10 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(9)
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 9)
                     }.foregroundColor(.purple)
                     Spacer()
                     Button { state.showModal(for: .settings) }
@@ -673,7 +689,10 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(9)
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 9)
                     }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)

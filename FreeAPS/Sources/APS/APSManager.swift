@@ -540,6 +540,7 @@ final class BaseAPSManager: APSManager, Injectable {
                 return
             }
             let roundedAmount = pump.roundToSupportedBolusVolume(units: Double(amount))
+
             pump.enactBolus(units: roundedAmount, activationType: .manualRecommendationAccepted) { error in
                 if let error = error {
                     // warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
@@ -721,7 +722,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     $0.enactedSuggestionDidUpdate(enacted)
                 }
             }
-            //nightscout.uploadStatus()
+            // nightscout.uploadStatus()
             statistics()
         }
     }

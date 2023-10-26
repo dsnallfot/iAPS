@@ -73,23 +73,23 @@ extension DataTable {
                     Button("Close", action: state.hideModal)
                 },
                 trailing: HStack {
-                    if state.mode == .treatments {
-                        Button(action: { showNonPumpInsulin = true }) {
-                            Text("Insulin")
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                    }
+                    /* if state.mode == .treatments {
+                         Button(action: { showNonPumpInsulin = true }) {
+                             Text("Insulin")
+                             Image(systemName: "plus.circle.fill")
+                                 .resizable()
+                                 .frame(width: 24, height: 24)
+                         }
+                     } */
 
-                    if state.mode == .glucose {
-                        Button(action: { showManualGlucose = true }) {
-                            Text("Fingerstick")
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                        }
-                    }
+                    /* if state.mode == .glucose {
+                         Button(action: { showManualGlucose = true }) {
+                             Text("Fingerstick")
+                             Image(systemName: "plus.circle.fill")
+                                 .resizable()
+                                 .frame(width: 24, height: 24)
+                         }
+                     } */
                 }
             )
             .sheet(isPresented: $showManualGlucose, onDismiss: { if isAmountUnconfirmed { state.manualGlucose = 0 } }) {
@@ -120,8 +120,13 @@ extension DataTable {
                         }
 
                         Section {
-                            DatePicker("Date", selection: $state.manualGlucoseDate)
+                            DatePicker(
+                                "Date",
+                                selection: $state.manualGlucoseDate,
+                                in: ...Date() // Disable selecting future dates
+                            )
                         }
+
                         Section {
                             HStack {
                                 let limitLow: Decimal = state.units == .mmolL ? 2.2 : 40
@@ -172,7 +177,11 @@ extension DataTable {
                         }
 
                         Section {
-                            DatePicker("Date", selection: $state.nonPumpInsulinDate)
+                            DatePicker(
+                                "Date",
+                                selection: $state.nonPumpInsulinDate,
+                                in: ...Date() // Disable selecting future dates
+                            )
                         }
 
                         Section {
@@ -227,32 +236,43 @@ extension DataTable {
 
         private var treatmentsList: some View {
             List {
-                if state.treatments.contains(where: { $0.date > Date() }) {
-                    Button(action: { showFutureEntries.toggle() }, label: {
-                        Image(
-                            systemName: showFutureEntries ? "chevron.down.circle" : "chevron.right.circle"
-                        )
-                        .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                HStack {
+                    if state.treatments.contains(where: { $0.date > Date() }) {
+                        Button(action: { showFutureEntries.toggle() }, label: {
+                            Image(
+                                systemName: showFutureEntries ? "chevron.down.circle" : "chevron.right.circle"
+                            )
+                            .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
 
-                        Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
-                            .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                            .font(.subheadline)
+                            Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
+                                .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                                .font(.footnote)
+                        })
+                            .buttonStyle(.borderless)
+                    }
+                    Spacer() // Add a spacer to push the next button to the right
 
+                    Button(action: { showNonPumpInsulin = true }, label: {
+                        Text("Insulin")
+                            // .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                            .font(.footnote)
+
+                        Image(systemName: "plus.circle.fill")
+                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
                     })
                         .buttonStyle(.borderless)
-                        .listRowBackground(Color(.systemGray4))
                 }
+                .listRowBackground(Color(.tertiarySystemBackground))
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
                         ForEach(state.treatments.filter { item in
                             item.date <= Date()
                         }) { item in
-
                             treatmentView(item)
                                 .listRowBackground(
-                                    item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
-                                ) // Set the list row background color conditionally
+                                    item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
+                                )
                         }
                         .onDelete(perform: deleteTreatments)
                     } else {
@@ -295,6 +315,20 @@ extension DataTable {
 
         private var glucoseList: some View {
             List {
+                HStack {
+                    Spacer() // Add a spacer to push the next button to the right
+                    Button(action: { showManualGlucose = true }, label: {
+                        Text("Fingerstick")
+                            // .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                            .font(.footnote)
+
+                        Image(systemName: "plus.circle.fill")
+                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                    })
+                        .buttonStyle(.borderless)
+                }
+                .listRowBackground(Color(.tertiarySystemBackground))
+
                 if !state.glucose.isEmpty {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
