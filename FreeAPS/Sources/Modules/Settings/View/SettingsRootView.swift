@@ -102,7 +102,7 @@ extension Settings {
                             HStack {
                                 Text("Profil & inställningar")
                                 Button(action: {
-                                    state.uploadProfileAndSettings()
+                                    state.uploadProfileAndSettings(true)
                                 }) {
                                     HStack {
                                         Image(systemName: "icloud.and.arrow.up")
