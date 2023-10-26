@@ -100,7 +100,8 @@ extension NightscoutConfig {
             let group = DispatchGroup()
             group.enter()
             var error = ""
-            let path = "/api/v1/profile.json"
+            //let path = "/api/v1/profile.json"
+            let path = "/api/v2/profile.json" //Test v2
             let timeout: TimeInterval = 60
 
             var components = URLComponents()
