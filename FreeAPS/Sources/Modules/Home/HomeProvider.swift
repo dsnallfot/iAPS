@@ -9,6 +9,7 @@ extension Home {
         @Injected() var pumpHistoryStorage: PumpHistoryStorage!
         @Injected() var tempTargetsStorage: TempTargetsStorage!
         @Injected() var carbsStorage: CarbsStorage!
+        @Injected() var announcementStorage: AnnouncementsStorage!
 
         var suggestion: Suggestion? {
             storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
@@ -57,6 +58,12 @@ extension Home {
             }
         }
 
+        func announcement(_ hours: Int) -> [Announcement] {
+                    announcementStorage.validate().filter {
+                        $0.createdAt.addingTimeInterval(hours.hours.timeInterval) > Date()
+                    }
+                }
+        
         func pumpSettings() -> PumpSettings {
             storage.retrieve(OpenAPS.Settings.settings, as: PumpSettings.self)
                 ?? PumpSettings(from: OpenAPS.defaults(for: OpenAPS.Settings.settings))
