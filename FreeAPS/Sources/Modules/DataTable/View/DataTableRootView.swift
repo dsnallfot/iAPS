@@ -66,8 +66,9 @@ extension DataTable {
                 historyContentView
             }
             .onAppear(perform: configureView)
+
             .navigationTitle("History")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: HStack {
                     Button("Close", action: state.hideModal)

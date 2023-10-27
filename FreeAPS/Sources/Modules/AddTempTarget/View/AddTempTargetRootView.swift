@@ -6,7 +6,7 @@ extension AddTempTarget {
     struct RootView: BaseView {
         let resolver: Resolver
         @StateObject var state = StateModel()
-        @State private var isPromtPresented = false
+        @State private var isPromptPresented = false
         @State private var isRemoveAlertPresented = false
         @State private var removeAlert: Alert?
         @State private var isEditing = false
@@ -158,16 +158,16 @@ extension AddTempTarget {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .popover(isPresented: $isPromtPresented) {
+            .popover(isPresented: $isPromptPresented) {
                 Form {
                     Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
                         Button {
                             state.save()
-                            isPromtPresented = false
+                            isPromptPresented = false
                         }
                         label: { Text("Save") }
-                        Button { isPromtPresented = false }
+                        Button { isPromptPresented = false }
                         label: { Text("Cancel") }
                     }
                 }
@@ -177,7 +177,7 @@ extension AddTempTarget {
                 state.hbt = isEnabledArray.first?.hbt ?? 160
             }
             .navigationTitle("Enact Temp Target")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
         }
 

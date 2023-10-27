@@ -52,6 +52,11 @@ extension Bolus {
                                 Text("Förslag bolusdos")
                                     .foregroundColor(.green)
                             }
+                            Image(systemName: "info.bubble")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.primary, .blue)
+                                .onTapGesture {
+                                    presentInfo.toggle()
 
                             Spacer()
 
@@ -85,14 +90,6 @@ extension Bolus {
                             } else {
                                 state.amount = state.insulinRecommended
                             }
-                        }
-
-                        HStack {
-                            Image(systemName: "info.bubble").symbolRenderingMode(.palette).foregroundStyle(
-                                .primary, .blue
-                            )
-                        }.onTapGesture {
-                            presentInfo.toggle()
                         }
                     }
                     HStack {
@@ -164,7 +161,7 @@ extension Bolus {
                 }
             }
             .navigationTitle("Enact Bolus")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .popup(isPresented: presentInfo, alignment: .center, direction: .bottom) {
                 bolusInfo
