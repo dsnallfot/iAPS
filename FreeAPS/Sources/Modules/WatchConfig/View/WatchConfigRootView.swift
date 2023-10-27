@@ -19,7 +19,7 @@ extension WatchConfig {
                     }
                 }
 
-                Toggle("Display Protein & Fat", isOn: $state.displayFatAndProteinOnWatch)
+                Toggle("Visa protein och fett", isOn: $state.displayFatAndProteinOnWatch)
 
                 Section(header: Text("Garmin Watch")) {
                     List {
@@ -34,7 +34,7 @@ extension WatchConfig {
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Watch Configuration")
+            .navigationTitle("Konfigurera klocka")
             .navigationBarTitleDisplayMode(.automatic)
         }
 

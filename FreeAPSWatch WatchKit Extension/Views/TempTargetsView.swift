@@ -4,6 +4,15 @@ struct TempTargetsView: View {
     @EnvironmentObject var state: WatchStateModel
 
     var body: some View {
+        Button {
+            WKInterfaceDevice.current().play(.click)
+            state.enactTempTarget(id: "cancel")
+        } label: {
+            Text("Avbryt tf målvärde")
+        }.font(.headline.weight(.semibold))
+            .padding(.bottom)
+            .padding(.top)
+            .tint(.red)
         List {
             if state.tempTargets.isEmpty {
                 Text("Set temp targets presets on iPhone first").padding()
@@ -25,13 +34,6 @@ struct TempTargetsView: View {
                         }
                     }
                 }
-            }
-
-            Button {
-                WKInterfaceDevice.current().play(.click)
-                state.enactTempTarget(id: "cancel")
-            } label: {
-                Text("Cancel Temp Target")
             }
         }
         .navigationTitle("Temp Targets")

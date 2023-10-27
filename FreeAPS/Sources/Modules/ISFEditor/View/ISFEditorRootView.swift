@@ -33,14 +33,14 @@ extension ISFEditor {
                             } else {
                                 Text(rateFormatter.string(from: autotune.sensitivity as NSNumber) ?? "0")
                             }
-                            Text(state.units.rawValue + "/U").foregroundColor(.secondary)
+                            Text(state.units.rawValue + "/E").foregroundColor(.secondary)
                         }
                     }
                 }
                 if let newISF = state.autosensISF {
                     Section(
                         header: !state.settingsManager.preferences
-                            .useNewFormula ? Text("Autosens") : Text("Dynamic Sensitivity")
+                            .useNewFormula ? Text("Autosens") : Text("Dynamisk känslighet")
                     ) {
                         let dynamicRatio = state.provider.suggestion?.sensitivityRatio ?? 0
                         let dynamicISF = state.provider.suggestion?.isf ?? 0
@@ -65,7 +65,7 @@ extension ISFEditor {
                                             .useNewFormula ? newISF : dynamicISF
                                     ) as NSNumber) ?? "0"
                             )
-                            Text(state.units.rawValue + "/U").foregroundColor(.secondary)
+                            Text(state.units.rawValue + "/E").foregroundColor(.secondary)
                         }
                     }
                 }
@@ -111,7 +111,7 @@ extension ISFEditor {
                                     (
                                         self.rateFormatter
                                             .string(from: state.rateValues[i] as NSNumber) ?? ""
-                                    ) + " \(state.units.rawValue)/U"
+                                    ) + " \(state.units.rawValue)/E"
                                 ).tag(i)
                             }
                         }
@@ -143,7 +143,7 @@ extension ISFEditor {
                         HStack {
                             Text("Rate").foregroundColor(.secondary)
                             Text(
-                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") \(state.units.rawValue)/U"
+                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") \(state.units.rawValue)/E"
                             )
                             Spacer()
                             Text("starts at").foregroundColor(.secondary)

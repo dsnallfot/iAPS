@@ -63,7 +63,7 @@ final class BaseGarminManager: NSObject, GarminManager, Injectable {
 
     init(resolver: Resolver) {
         super.init()
-        connectIQ?.initialize(withUrlScheme: "freeaps-x", uiOverrideDelegate: self)
+        connectIQ?.initialize(withUrlScheme: "iAPS", uiOverrideDelegate: self)
         injectServices(resolver)
         restoreDevices()
         subscribeToOpenFromGarminConnect()

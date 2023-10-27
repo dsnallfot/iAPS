@@ -183,32 +183,11 @@ extension PreferencesEditor {
                     settable: self
                 ),
                 Field(
-                    displayName: NSLocalizedString("Enable SMB With Temptarget", comment: "Enable SMB With Temptarget"),
-                    type: .boolean(keypath: \.enableSMBWithTemptarget),
-                    infoText: NSLocalizedString(
-                        "This enables supermicrobolus (SMB) with eating soon / low temp targets. With this feature enabled, any temporary target below 100mg/dL, such as a temp target of 99 (or 80, the typical eating soon target) will enable SMB.",
-                        comment: "Enable SMB With Temptarget"
-                    ),
-                    settable: self
-                ),
-                Field(
                     displayName: NSLocalizedString("Enable SMB After Carbs", comment: "Enable SMB After Carbs"),
                     type: .boolean(keypath: \.enableSMBAfterCarbs),
                     infoText: NSLocalizedString(
                         "Defaults to false. When true, enables supermicrobolus (SMB) for 6h after carbs, even with 0 carbs on board (COB).",
                         comment: "Enable SMB After Carbs"
-                    ),
-                    settable: self
-                ),
-                Field(
-                    displayName: NSLocalizedString(
-                        "Allow SMB With High Temptarget",
-                        comment: "Allow SMB With High Temptarget"
-                    ),
-                    type: .boolean(keypath: \.allowSMBWithHighTemptarget),
-                    infoText: NSLocalizedString(
-                        "Defaults to false. When true, allows supermicrobolus (if otherwise enabled) even with high temp targets (> 100 mg/dl).",
-                        comment: "Allow SMB With High Temptarget"
                     ),
                     settable: self
                 ),
@@ -230,6 +209,27 @@ extension PreferencesEditor {
                     infoText: NSLocalizedString(
                         "Set the value enableSMB_high_bg will compare against to enable SMB. If BG > than this value, SMBs should enable.",
                         comment: "... When Blood Glucose Is Over (mg/dl):"
+                    ),
+                    settable: self
+                ),
+                Field(
+                    displayName: NSLocalizedString("Enable SMB With Temptarget", comment: "Enable SMB With Temptarget"),
+                    type: .boolean(keypath: \.enableSMBWithTemptarget),
+                    infoText: NSLocalizedString(
+                        "This enables supermicrobolus (SMB) with eating soon / low temp targets. With this feature enabled, any temporary target below 100mg/dL, such as a temp target of 99 (or 80, the typical eating soon target) will enable SMB.",
+                        comment: "Enable SMB With Temptarget"
+                    ),
+                    settable: self
+                ),
+                Field(
+                    displayName: NSLocalizedString(
+                        "Allow SMB With High Temptarget",
+                        comment: "Allow SMB With High Temptarget"
+                    ),
+                    type: .boolean(keypath: \.allowSMBWithHighTemptarget),
+                    infoText: NSLocalizedString(
+                        "Defaults to false. When true, allows supermicrobolus (if otherwise enabled) even with high temp targets (> 100 mg/dl).",
+                        comment: "Allow SMB With High Temptarget"
                     ),
                     settable: self
                 ),

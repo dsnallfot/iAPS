@@ -5,6 +5,7 @@ struct CarbsView: View {
 
     // Selected nutrient
     enum Selection: String {
+        case none
         case carbs
         case protein
         case fat
@@ -30,6 +31,7 @@ struct CarbsView: View {
     var body: some View {
         VStack {
             // nutrient
+
             carbs
             if state.displayFatAndProteinOnWatch {
                 Spacer()
@@ -39,7 +41,7 @@ struct CarbsView: View {
             }
             buttonStack
         }
-        .onAppear { carbAmount = Double(state.carbsRequired ?? 0) }
+        .onAppear { carbAmount = 0 }
     }
 
     var nutrient: some View {
@@ -62,26 +64,20 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount - 5
                     carbAmount = max(newValue, 0)
-                }
-                label: {
-                    HStack {
-                        Image(systemName: "minus")
-                        Text("") // Ugly fix to increase active tapping (button) area.
-                    }
-                }
-                .buttonStyle(.borderless).padding(.leading, 5)
-                .tint(selection == .carbs ? .blue : .none)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
+                    .tint(selection == .carbs ? .blue : .none)
             }
             Spacer()
-            Text("🥨")
+            Text("Kh").font(selection == .carbs ? .title2 : .headline)
             Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
-                .font(selection == .carbs ? .title : .title3)
+                .font(selection == .carbs ? .title2 : .headline)
                 .focusable(selection == .carbs)
                 .digitalCrownRotation(
                     $carbAmount,
                     from: 0,
-                    through: Double(state.maxCOB ?? 120),
+                    through: Double(state.maxCarbs ?? 120),
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -92,18 +88,18 @@ struct CarbsView: View {
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount + 5
-                    carbAmount = min(newValue, Double(state.maxCOB ?? 120))
-                } label: { Image(systemName: "plus") }
-                    .buttonStyle(.borderless).padding(.trailing, 5)
+                    carbAmount = min(newValue, Double(state.maxCarbs ?? 120))
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .carbs ? .blue : .none)
             }
         }
-        .minimumScaleFactor(0.7)
         .onTapGesture {
             select(entry: .carbs)
         }
         .background(selection == .carbs && state.displayFatAndProteinOnWatch ? colorOfselection : .black)
         .padding(.top)
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 
     var protein: some View {
@@ -113,20 +109,15 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount - 5
                     proteinAmount = max(newValue, 0)
-                } label: {
-                    HStack {
-                        Image(systemName: "minus")
-                        Text("") // Ugly fix to increase active tapping (button) area.
-                    }
-                }
-                .buttonStyle(.borderless).padding(.leading, 5)
-                .tint(selection == .protein ? .blue : .none)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
+                    .tint(selection == .protein ? .blue : .none)
             }
             Spacer()
-            Text("🍗")
+            Text("🍗").font(selection == .protein ? .title2 : .headline)
             Spacer()
             Text(numberFormatter.string(from: proteinAmount as NSNumber)! + " g")
-                .font(selection == .protein ? .title : .title3)
+                .font(selection == .protein ? .title2 : .headline)
                 .foregroundStyle(.red)
                 .focusable(selection == .protein)
                 .digitalCrownRotation(
@@ -144,11 +135,10 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount + 5
                     proteinAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus") }.buttonStyle(.borderless).padding(.trailing, 5)
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }.buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .protein ? .blue : .none)
             }
         }
-        .minimumScaleFactor(0.7)
         .onTapGesture {
             select(entry: .protein)
         }
@@ -162,20 +152,15 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount - 5
                     fatAmount = max(newValue, 0)
-                } label: {
-                    HStack {
-                        Image(systemName: "minus")
-                        Text("") // Ugly fix to increase active tapping (button) area.
-                    }
-                }
-                .buttonStyle(.borderless).padding(.leading, 5)
-                .tint(selection == .fat ? .blue : .none)
+                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    .buttonStyle(.borderless).padding(.leading, 13)
+                    .tint(selection == .fat ? .blue : .none)
             }
             Spacer()
-            Text("🧀")
+            Text("🧀").font(selection == .fat ? .title2 : .headline)
             Spacer()
             Text(numberFormatter.string(from: fatAmount as NSNumber)! + " g")
-                .font(selection == .fat ? .title : .title3)
+                .font(selection == .fat ? .title2 : .headline)
                 .foregroundColor(.loopYellow)
                 .focusable(selection == .fat)
                 .digitalCrownRotation(
@@ -193,12 +178,11 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount + 5
                     fatAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus") }
-                    .buttonStyle(.borderless).padding(.trailing, 5)
+                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .fat ? .blue : .none)
             }
         }
-        .minimumScaleFactor(0.7)
         .onTapGesture {
             select(entry: .fat)
         }
@@ -209,10 +193,10 @@ struct CarbsView: View {
         HStack(spacing: 25) {
             /* To do: display the actual meal presets
              Button {
-                 displayPresets.toggle()
+             displayPresets.toggle()
              }
              label: { Image(systemName: "menucard.fill") }
-                 .buttonStyle(.borderless)
+             .buttonStyle(.borderless)
              */
             Button {
                 WKInterfaceDevice.current().play(.click)
@@ -224,10 +208,12 @@ struct CarbsView: View {
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
             label: { Text("Save") }
-                .buttonStyle(.borderless)
-                .font(.callout)
+
+                .font(.title3.weight(.semibold))
                 .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
                 .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
+
+                .navigationTitle("Reg Måltid")
         }
         .frame(maxHeight: .infinity, alignment: .bottom)
         .padding(.top)

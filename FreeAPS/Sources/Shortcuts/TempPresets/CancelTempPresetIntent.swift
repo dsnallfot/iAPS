@@ -3,10 +3,10 @@ import Foundation
 
 @available(iOS 16.0, *) struct CancelTempPresetIntent: AppIntent {
     // Title of the action in the Shortcuts app
-    static var title: LocalizedStringResource = "Cancel a temporary Preset"
+    static var title: LocalizedStringResource = "Avbryt tillfälligt mål"
 
     // Description of the action in the Shortcuts app
-    static var description = IntentDescription("Cancel temporary preset.")
+    static var description = IntentDescription("Avbryt tillfälligt mål.")
 
     internal var intentRequest: TempPresetsIntentRequest
 
@@ -18,7 +18,7 @@ import Foundation
         do {
             try intentRequest.cancelTempTarget()
             return .result(
-                dialog: IntentDialog(stringLiteral: "Temporary Target canceled")
+                dialog: IntentDialog(stringLiteral: "Tillfälligt mål avbrutet")
             )
         } catch {
             throw error

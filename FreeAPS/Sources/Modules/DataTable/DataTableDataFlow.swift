@@ -6,6 +6,7 @@ enum DataTable {
 
     enum Mode: String, Hashable, Identifiable, CaseIterable {
         case treatments
+        case basals
         case glucose
 
         var id: String { rawValue }
@@ -15,6 +16,8 @@ enum DataTable {
             switch self {
             case .treatments:
                 name = "Treatments"
+            case .basals:
+                name = "Basal"
             case .glucose:
                 name = "Glucose"
             }
@@ -37,13 +40,13 @@ enum DataTable {
             case .carbs:
                 name = "Carbs"
             case .fpus:
-                name = "Protein / Fat"
+                name = "Protein / Fett"
             case .bolus:
                 name = "Bolus"
             case .tempBasal:
                 name = "Temp Basal"
             case .tempTarget:
-                name = "Temp Target"
+                name = "Tillfälligt mål"
             case .suspend:
                 name = "Suspend"
             case .resume:
@@ -127,7 +130,7 @@ enum DataTable {
             }
 
             if amount == 0, duration == 0 {
-                return "Cancel temp"
+                return "Avbröts"
             }
 
             switch type {
@@ -141,11 +144,11 @@ enum DataTable {
                 var bolusText = " "
 
                 if isSMB ?? false {
-                    bolusText += NSLocalizedString("Automatic", comment: "Automatic delivered treatments")
+                    bolusText += NSLocalizedString(" • Auto", comment: "Automatic delivered treatments")
                 } else if isNonPump ?? false {
-                    bolusText += NSLocalizedString("Non-Pump", comment: "Non-pump Insulin")
+                    bolusText += NSLocalizedString(" • Insulinpenna", comment: "Insulinpenna")
                 } else {
-                    bolusText += NSLocalizedString("Manual", comment: "Manual Bolus")
+                    bolusText += NSLocalizedString(" • Manuell", comment: "Manual Bolus")
                 }
 
                 return numberFormatter
@@ -166,8 +169,7 @@ enum DataTable {
                     secondAmount = secondAmount.asMmolL
                 }
 
-                return tempTargetFormater.string(from: converted as NSNumber)! + " - " + tempTargetFormater
-                    .string(from: secondAmount as NSNumber)! + " \(units.rawValue)"
+                return tempTargetFormater.string(from: converted as NSNumber)! + " \(units.rawValue)"
             case .resume,
                  .suspend:
                 return type.name
@@ -181,13 +183,14 @@ enum DataTable {
             case .fpus:
                 return .orange.opacity(0.5)
             case .bolus:
-                return Color.insulin
+                return (isNonPump ?? false) ? Color.nonPumpInsulin : (isSMB ?? false) ? Color.insulin : Color.insulin
+            // return .insulin
             case .tempBasal:
                 return Color.insulin.opacity(0.4)
             case .resume,
                  .suspend,
                  .tempTarget:
-                return .loopGray
+                return .loopGray.opacity(0.4)
             }
         }
 
@@ -195,7 +198,7 @@ enum DataTable {
             guard let duration = duration, duration > 0 else {
                 return nil
             }
-            return numberFormatter.string(from: duration as NSNumber)! + " min"
+            return numberFormatter.string(from: duration as NSNumber)! + "m"
         }
     }
 

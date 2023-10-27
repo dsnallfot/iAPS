@@ -25,25 +25,54 @@ extension AddTempTarget {
 
         var body: some View {
             Form {
+                Section {
+                    Button(action: state.cancel) {
+                        HStack {
+                            Image(systemName: "x.circle")
+                                .tint(.red)
+                            Text("Cancel Temp Target")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .tint(.red)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .disabled(state.tempTarget == nil)
+                }
                 if !state.presets.isEmpty {
-                    Section(header: Text("Presets")) {
+                    Section(header: Text("Aktivera favorit")) {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
+                                .swipeActions {
+                                    Button(role: .destructive, action: {
+                                        removeAlert = Alert(
+                                            title: Text("Are you sure?"),
+                                            message: Text("Delete preset \"\(preset.displayName)\""),
+                                            primaryButton: .destructive(Text("Delete"), action: {
+                                                state.removePreset(id: preset.id)
+                                                isRemoveAlertPresented = false // Dismiss the alert after deletion
+                                            }),
+                                            secondaryButton: .cancel()
+                                        )
+                                        isRemoveAlertPresented = true
+                                    }) {
+                                        Text("Delete")
+                                    }
+                                }
+                                .alert(isPresented: $isRemoveAlertPresented) {
+                                    removeAlert!
+                                }
                         }
+                        .onDelete(perform: delete)
                     }
                 }
-
                 HStack {
-                    Text("Experimental")
+                    Text("Override %")
                     Toggle(isOn: $state.viewPercantage) {}.controlSize(.mini)
-                    Image(systemName: "figure.highintensity.intervaltraining")
-                    Image(systemName: "fork.knife")
                 }
 
                 if state.viewPercantage {
-                    Section(
-                        header: Text("")
-                    ) {
+                    Section(header: Text("Ställ in en procentuell override")) {
                         VStack {
                             Slider(
                                 value: $state.percentage,
@@ -77,7 +106,7 @@ extension AddTempTarget {
                                                 "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
                                                 "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
                                         )
-                                            + NSLocalizedString("  Target Glucose", comment: "")
+                                            + NSLocalizedString("  Målvärde", comment: "")
                                     )
                                     .foregroundColor(.green)
                                 }
@@ -85,22 +114,25 @@ extension AddTempTarget {
                         }
                     }
                 } else {
-                    Section(header: Text("Custom")) {
+                    Section(header: Text("Ställ in ett anpassat målvärde")) {
                         HStack {
                             Text("Target")
                             Spacer()
                             DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
-                            Text(state.units.rawValue).foregroundColor(.secondary)
+                            Text(state.units.rawValue)
                         }
                         HStack {
                             Text("Duration")
                             Spacer()
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromptPresented = true }
-                        label: { Text("Save as preset") }
+                        Button { isPromtPresented = true }
+                        label: { Text("Spara som favorit") }
+                            .disabled(state.duration == 0)
+                            .controlSize(.mini)
+                            .buttonStyle(BorderlessButtonStyle())
                     }
                 }
                 if state.viewPercantage {
@@ -109,25 +141,26 @@ extension AddTempTarget {
                             Text("Duration")
                             Spacer()
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromptPresented = true }
-                        label: { Text("Save as preset") }
+                        Button { isPromtPresented = true }
+                        label: { Text("Spara som favorit") }
                             .disabled(state.duration == 0)
+                            .controlSize(.mini)
+                            .buttonStyle(BorderlessButtonStyle())
                     }
                 }
 
                 Section {
                     Button { state.enact() }
-                    label: { Text("Enact") }
-                    Button { state.cancel() }
-                    label: { Text("Cancel Temp Target") }
+                    label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .popover(isPresented: $isPromptPresented) {
                 Form {
-                    Section(header: Text("Enter preset name")) {
+                    Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
                         Button {
                             state.save()
@@ -163,7 +196,7 @@ extension AddTempTarget {
                     }
                     HStack(spacing: 2) {
                         Text(
-                            "\(formatter.string(from: (low ?? 0) as NSNumber)!) - \(formatter.string(from: (high ?? 0) as NSNumber)!)"
+                            "\(formatter.string(from: (low ?? 0) as NSNumber)!)"
                         )
                         .foregroundColor(.secondary)
                         .font(.caption)
@@ -189,22 +222,26 @@ extension AddTempTarget {
                     state.enactPreset(id: preset.id)
                 }
 
-                Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                    .contentShape(Rectangle())
-                    .padding(.vertical)
-                    .onTapGesture {
-                        removeAlert = Alert(
-                            title: Text("Are you sure?"),
-                            message: Text("Delete preset \"\(preset.displayName)\""),
-                            primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
-                            secondaryButton: .cancel()
-                        )
-                        isRemoveAlertPresented = true
-                    }
-                    .alert(isPresented: $isRemoveAlertPresented) {
-                        removeAlert!
-                    }
+                /* Image(systemName: "xmark.circle").foregroundColor(.secondary)
+                 .contentShape(Rectangle())
+                 .padding(.vertical)
+                 .onTapGesture {
+                     removeAlert = Alert(
+                         title: Text("Are you sure?"),
+                         message: Text("Delete preset \"\(preset.displayName)\""),
+                         primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
+                         secondaryButton: .cancel()
+                     )
+                     isRemoveAlertPresented = true
+                 }
+                 .alert(isPresented: $isRemoveAlertPresented) {
+                     removeAlert!
+                 } */
             }
+        }
+
+        private func delete(at offsets: IndexSet) {
+            state.presets.remove(atOffsets: offsets)
         }
     }
 }

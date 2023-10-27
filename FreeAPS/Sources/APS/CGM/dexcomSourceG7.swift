@@ -141,7 +141,7 @@ extension DexcomSourceG7: CGMManagerDelegate {
             if let cgmG7Manager = cgmManager as? G7CGMManager {
                 activationDate = cgmG7Manager.sensorActivatedAt ?? .distantPast
                 sessionStart = cgmG7Manager.sensorFinishesWarmupAt ?? .distantPast
-                print("Activastion date: " + activationDate.description)
+                print("Activation date: " + activationDate.description)
             }
 
             let bloodGlucose = values.compactMap { newGlucoseSample -> BloodGlucose? in
@@ -158,6 +158,7 @@ extension DexcomSourceG7: CGMManagerDelegate {
                     noise: nil,
                     glucose: value,
                     type: "sgv",
+                    device: "iAPS",
                     activationDate: activationDate,
                     sessionStartDate: sessionStart
                 )

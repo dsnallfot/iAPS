@@ -28,7 +28,7 @@ extension CREditor {
                             Text("Calculated Ratio")
                             Spacer()
                             Text(rateFormatter.string(from: autotune.carbRatio as NSNumber) ?? "0")
-                            Text("g/U").foregroundColor(.secondary)
+                            Text("g/E").foregroundColor(.secondary)
                         }
                     }
                 }
@@ -74,7 +74,7 @@ extension CREditor {
                                     (
                                         self.rateFormatter
                                             .string(from: state.rateValues[i] as NSNumber) ?? ""
-                                    ) + " g/U"
+                                    ) + " g/E"
                                 ).tag(i)
                             }
                         }
@@ -106,7 +106,7 @@ extension CREditor {
                         HStack {
                             Text("Ratio").foregroundColor(.secondary)
                             Text(
-                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") g/U"
+                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") g/E"
                             )
                             Spacer()
                             Text("starts at").foregroundColor(.secondary)

@@ -100,6 +100,7 @@ final class BaseTempTargetsStorage: TempTargetsStorage, Injectable {
                 insulin: nil,
                 notes: nil,
                 carbs: nil,
+                reason: $0.reason,
                 targetTop: $0.targetTop,
                 targetBottom: $0.targetBottom
             )

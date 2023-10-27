@@ -53,13 +53,11 @@ final class BaseGlucoseStorage: GlucoseStorage, Injectable {
             let file = OpenAPS.Monitor.glucose
             self.storage.transaction { storage in
                 storage.append(glucose, to: file, uniqBy: \.dateString)
-
                 let uniqEvents = storage.retrieve(file, as: [BloodGlucose].self)?
                     .filter { $0.dateString.addingTimeInterval(24.hours.timeInterval) > Date() }
                     .sorted { $0.dateString > $1.dateString } ?? []
                 let glucose = Array(uniqEvents)
                 storage.save(glucose, as: file)
-
                 DispatchQueue.main.async {
                     self.broadcaster.notify(GlucoseObserver.self, on: .main) {
                         $0.glucoseDidUpdate(glucose.reversed())
@@ -232,9 +230,9 @@ final class BaseGlucoseStorage: GlucoseStorage, Injectable {
         let manualReadings = filtered.map { item -> NigtscoutTreatment in
             NigtscoutTreatment(
                 duration: nil, rawDuration: nil, rawRate: nil, absolute: nil, rate: nil, eventType: .capillaryGlucose,
-                createdAt: item.dateString, enteredBy: "iAPS", bolus: nil, insulin: nil, notes: "iAPS User", carbs: nil,
+                createdAt: item.dateString, enteredBy: "iAPS", bolus: nil, insulin: nil, notes: "🩸", carbs: nil,
                 fat: nil,
-                protein: nil, foodType: nil, targetTop: nil, targetBottom: nil, glucoseType: "Manual",
+                protein: nil, foodType: nil, targetTop: nil, targetBottom: nil, glucoseType: "Finger",
                 glucose: settingsManager.settings
                     .units == .mgdL ? (glucoseFormatter.string(from: Int(item.glucose ?? 100) as NSNumber) ?? "")
                     : (glucoseFormatter.string(from: Decimal(item.glucose ?? 100).asMmolL as NSNumber) ?? ""),

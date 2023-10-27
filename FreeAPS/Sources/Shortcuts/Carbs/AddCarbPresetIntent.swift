@@ -5,10 +5,10 @@ import Swinject
 
 @available(iOS 16.0,*) struct AddCarbPresentIntent: AppIntent {
     // Title of the action in the Shortcuts app
-    static var title: LocalizedStringResource = "Add carbs"
+    static var title: LocalizedStringResource = "Lägg till måltid"
 
     // Description of the action in the Shortcuts app
-    static var description = IntentDescription("Allow to add carbs in iAPS.")
+    static var description = IntentDescription("Tillåt att måltid läggs till i iAPS.")
 
     internal var carbRequest: CarbPresetIntentRequest
 
@@ -18,49 +18,56 @@ import Swinject
     }
 
     @Parameter(
-        title: "Quantity Carbs",
-        description: "Quantity of carbs in g",
+        title: "Mängd kolhydrater",
+        description: "Mängd kolhydrater i g",
         controlStyle: .field,
         inclusiveRange: (lowerBound: 0, upperBound: 200),
-        requestValueDialog: IntentDialog("What is the numeric value of the carb to add")
+        requestValueDialog: IntentDialog("Vilken mängd kolhydrater i gram vill du lägga till?")
     ) var carbQuantity: Double?
 
     @Parameter(
-        title: "Quantity fat",
-        description: "Quantity of fat in g",
+        title: "Mängd fett",
+        description: "Mängd fett i g",
         default: 0.0,
         inclusiveRange: (0, 200)
     ) var fatQuantity: Double
 
     @Parameter(
-        title: "Quantity Protein",
-        description: "Quantity of Protein in g",
+        title: "Mängd protein",
+        description: "Mängd protein i g",
         default: 0.0,
         inclusiveRange: (0, 200)
     ) var proteinQuantity: Double
 
     @Parameter(
-        title: "Date",
-        description: "Date of adding"
+        title: "Datum",
+        description: "Datum för registrering"
     ) var dateAdded: Date
 
     @Parameter(
-        title: "Confirm Before applying",
-        description: "If toggled, you will need to confirm before applying",
+        title: "Notering",
+        description: "Emoji eller kort text"
+    ) var note: String?
+
+    @Parameter(
+        title: "Bekräfta innan registrering",
+        description: "Om aktiverad, behöver du konfirmera innan registrering genomförs",
         default: true
     ) var confirmBeforeApplying: Bool
 
     static var parameterSummary: some ParameterSummary {
         When(\.$confirmBeforeApplying, .equalTo, true, {
-            Summary("Applying \(\.$carbQuantity) at \(\.$dateAdded)") {
+            Summary("Registrera \(\.$carbQuantity) \(\.$dateAdded)") {
                 \.$fatQuantity
                 \.$proteinQuantity
+                \.$note
                 \.$confirmBeforeApplying
             }
         }, otherwise: {
-            Summary("Immediately applying \(\.$carbQuantity) at \(\.$dateAdded)") {
+            Summary("Omedelbar registrering av \(\.$carbQuantity) \(\.$dateAdded)") {
                 \.$fatQuantity
                 \.$proteinQuantity
+                \.$note
                 \.$confirmBeforeApplying
             }
         })
@@ -72,17 +79,24 @@ import Swinject
             if let cq = carbQuantity {
                 quantityCarbs = cq
             } else {
-                quantityCarbs = try await $carbQuantity.requestValue("How many carbs ?")
+                quantityCarbs = try await $carbQuantity.requestValue("Hur många kh?")
             }
 
             let quantityCarbsName = quantityCarbs.toString()
             if confirmBeforeApplying {
                 try await requestConfirmation(
-                    result: .result(dialog: "Are you sure to add \(quantityCarbsName) g of carbs ?")
+                    result: .result(dialog: "Är du säker på att du vill registrera \(quantityCarbsName) g kh?")
                 )
             }
 
-            let finalQuantityCarbsDisplay = try carbRequest.addCarbs(quantityCarbs, fatQuantity, proteinQuantity, dateAdded)
+            // Pass the 'note' parameter when calling addCarbs
+            let finalQuantityCarbsDisplay = try carbRequest.addCarbs(
+                quantityCarbs,
+                fatQuantity,
+                proteinQuantity,
+                dateAdded,
+                note
+            )
             return .result(
                 dialog: IntentDialog(stringLiteral: finalQuantityCarbsDisplay)
             )

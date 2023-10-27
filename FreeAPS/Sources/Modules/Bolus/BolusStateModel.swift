@@ -20,12 +20,13 @@ extension Bolus {
         @Published var isf: Decimal = 0
         @Published var percentage: Decimal = 0
         @Published var threshold: Decimal = 0
+        @Published var maxBolus: Decimal = 0.0
         @Published var minGuardBG: Decimal = 0
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
         @Published var units: GlucoseUnits = .mmolL
-        @Published var maxBolus: Decimal = 0
+        @Published var carbRatio: Decimal = 0.0
 
         var waitForSuggestionInitial: Bool = false
 
@@ -66,32 +67,6 @@ extension Bolus {
                     self.showModal(for: nil)
                 }
                 .store(in: &lifetime)
-        }
-
-        func addWithoutBolus() {
-            guard amount > 0 else {
-                showModal(for: nil)
-                return
-            }
-            amount = min(amount, maxBolus * 3) // Allow for 3 * Max Bolus for non-pump insulin
-
-            pumpHistoryStorage.storeEvents(
-                [
-                    PumpHistoryEvent(
-                        id: UUID().uuidString,
-                        type: .bolus,
-                        timestamp: Date(),
-                        amount: amount,
-                        duration: nil,
-                        durationMin: nil,
-                        rate: nil,
-                        temp: nil,
-                        carbInput: nil,
-                        isNonPumpInsulin: true
-                    )
-                ]
-            )
-            showModal(for: nil)
         }
 
         func setupInsulinRequired() {

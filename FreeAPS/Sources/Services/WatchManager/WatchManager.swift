@@ -72,6 +72,7 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
             }
             self.state.bolusIncrement = self.settingsManager.preferences.bolusIncrement
             self.state.maxCOB = self.settingsManager.preferences.maxCOB
+            self.state.maxCarbs = self.settingsManager.settings.maxCarbs
             self.state.maxBolus = self.settingsManager.pumpSettings.maxBolus
             self.state.carbsRequired = self.suggestion?.carbsReq
 
@@ -184,8 +185,8 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
         }
 
         let description =
-            "\(targetFormatter.string(from: (low ?? 0) as NSNumber)!) - \(targetFormatter.string(from: (high ?? 0) as NSNumber)!)" +
-            " for \(targetFormatter.string(from: target.duration as NSNumber)!) min"
+            "\(targetFormatter.string(from: (low ?? 0) as NSNumber)!)" +
+            " mmol/L i \(targetFormatter.string(from: target.duration as NSNumber)!) min"
 
         return description
     }
@@ -215,7 +216,8 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
     private var eventualFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 1
         return formatter
     }
 

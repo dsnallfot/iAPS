@@ -274,7 +274,7 @@ class MessageTests: XCTestCase {
         // 79a4 10df 0502
         // Pod expires 1 minute short of 3 days
         let podSoftExpirationTime = TimeInterval(hours:72) - TimeInterval(minutes:1)
-        let alertConfig1 = AlertConfiguration(alertType: .slot7, active: true, autoOffModifier: false, duration: .hours(7), trigger: .timeUntilAlert(podSoftExpirationTime), beepRepeat: .every60Minutes, beepType: .bipBeepBipBeepBipBeepBipBeep)
+        let alertConfig1 = AlertConfiguration(alertType: .slot7, active: false, autoOffModifier: false, duration: .hours(7), trigger: .timeUntilAlert(podSoftExpirationTime), beepRepeat: .every60Minutes, beepType: .bipBeepBipBeepBipBeepBipBeep)
         XCTAssertEqual("79a410df0502", alertConfig1.data.hexadecimalString)
 
         // 2800 1283 0602

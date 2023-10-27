@@ -2,9 +2,15 @@ import CoreData
 import Foundation
 
 @available(iOS 16.0,*) final class CarbPresetIntentRequest: BaseIntentsRequest {
-    func addCarbs(_ quantityCarbs: Double, _ quantityFat: Double, _ quantityProtein: Double, _ dateAdded: Date) throws -> String {
+    func addCarbs(
+        _ quantityCarbs: Double,
+        _ quantityFat: Double,
+        _ quantityProtein: Double,
+        _ dateAdded: Date,
+        _ note: String?
+    ) throws -> String {
         guard quantityCarbs >= 0.0 || quantityFat >= 0.0 || quantityProtein >= 0.0 else {
-            return "no adding carbs in iAPS"
+            return "Måltid registreras inte i iAPS"
         }
 
         let carbs = min(Decimal(quantityCarbs), settingsManager.settings.maxCarbs)
@@ -16,21 +22,21 @@ import Foundation
                 carbs: carbs,
                 fat: Decimal(quantityFat),
                 protein: Decimal(quantityProtein),
-                note: "add with shortcuts",
+                note: note,
                 enteredBy: CarbsEntry.manual,
                 isFPU: false, fpuID: nil
             )]
         )
         var resultDisplay: String
-        resultDisplay = "\(carbs) g carbs"
+        resultDisplay = "\(carbs) g kh"
         if quantityFat > 0.0 {
-            resultDisplay = "\(resultDisplay) and \(quantityFat) g fats"
+            resultDisplay = "\(resultDisplay) och \(quantityFat) g fett"
         }
         if quantityProtein > 0.0 {
-            resultDisplay = "\(resultDisplay) and \(quantityProtein) g protein"
+            resultDisplay = "\(resultDisplay) och \(quantityProtein) g protein"
         }
         let dateName = dateAdded.formatted()
-        resultDisplay = "\(resultDisplay) added at \(dateName)"
+        resultDisplay = "\(resultDisplay) registrerades \(dateName)"
         return resultDisplay
     }
 }

@@ -16,11 +16,25 @@ extension ManualTempBasal {
         var body: some View {
             Form {
                 Section {
+                    Button(action: state.cancel) {
+                        HStack {
+                            Image(systemName: "x.circle")
+                                .tint(.red)
+                            Text("Avbryt temp basal")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .tint(.red)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+
+                Section {
                     HStack {
-                        Text("Amount")
+                        Text("Basaldos")
                         Spacer()
-                        DecimalTextField("0", value: $state.rate, formatter: formatter, autofocus: true, cleanInput: true)
-                        Text("U/hr").foregroundColor(.secondary)
+                        DecimalTextField("0,00", value: $state.rate, formatter: formatter, autofocus: true, cleanInput: true)
+                        Text("E/h").foregroundColor(.secondary)
                     }
                     Picker(selection: $state.durationIndex, label: Text("Duration")) {
                         ForEach(0 ..< state.durationValues.count) { index in
@@ -36,10 +50,26 @@ extension ManualTempBasal {
                 }
 
                 Section {
+                    let maxamountbasal = Double(state.maxBasal)
+                    let formattedMaxAmountBasal = String(maxamountbasal)
                     Button { state.enact() }
-                    label: { Text("Enact") }
-                    Button { state.cancel() }
-                    label: { Text("Cancel Temp Basal") }
+                    label: {
+                        HStack {
+                            if state.rate > state.maxBasal {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+
+                            Text(
+                                !(state.rate > state.maxBasal) ? "Aktivera temp basal" :
+                                    "Inställd maxgräns: \(formattedMaxAmountBasal)E/h"
+                            )
+                            .font(.title3.weight(.semibold))
+                        }
+                    }.disabled(
+                        state.rate <= 0 || state.rate > state.maxBasal
+                    )
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
             .onAppear(perform: configureView)

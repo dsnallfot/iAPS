@@ -12,7 +12,7 @@ extension Settings {
             Form {
                 Section(
                     header: Text(
-                        "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice) "
+                        "iAPS v\(state.versionNumber) - \(state.buildNumber) \nBranch: \(state.branch) \(state.copyrightNotice) "
                     ).textCase(nil)
                 ) {
                     Toggle("Closed loop", isOn: $state.closedLoop)
@@ -48,14 +48,6 @@ extension Settings {
                 Section(header: Text("Developer")) {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
-                        Group {
-                            HStack {
-                                Text("NS Upload Profile and Settings")
-                                Button("Upload") { state.uploadProfileAndSettings(true) }
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .buttonStyle(.borderedProminent)
-                            }
-                        }
                         Group {
                             Text("Preferences")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
@@ -105,6 +97,21 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
                             Text("Edit settings json")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
+                        }
+                        Group {
+                            HStack {
+                                Text("Profil & inställningar")
+                                Button(action: {
+                                    state.uploadProfileAndSettings(true)
+                                }) {
+                                    HStack {
+                                        Image(systemName: "icloud.and.arrow.up")
+                                        Text("Nightscout")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .buttonStyle(.borderedProminent)
+                            }
                         }
                     }
                 }

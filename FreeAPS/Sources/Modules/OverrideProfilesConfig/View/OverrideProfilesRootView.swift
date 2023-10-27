@@ -18,7 +18,7 @@ extension OverrideProfilesConfig {
 
         @FetchRequest(
             entity: OverridePresets.entity(),
-            sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)], predicate: NSPredicate(
+            sortDescriptors: [NSSortDescriptor(key: "percentage", ascending: true)], predicate: NSPredicate(
                 format: "name != %@", "" as String
             )
         ) var fetchedProfiles: FetchedResults<OverridePresets>
@@ -44,8 +44,8 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Name Of Profile", text: $state.profileName)
-                } header: { Text("Enter Name of Profile") }
+                    TextField("Namn på profil", text: $state.profileName)
+                } header: { Text("Ange namn på profil") }
 
                 Section {
                     Button("Save") {
@@ -64,11 +64,28 @@ extension OverrideProfilesConfig {
         var body: some View {
             Form {
                 if state.presets.isNotEmpty {
+                    Button(action: {
+                        state.cancelProfile()
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.uturn.backward")
+                            Text("Återgå till normal profil")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .buttonStyle(BorderlessButtonStyle())
+                        .disabled(!state.isEnabled)
+                        .tint(state.isEnabled ? .red : Color(.systemGray2))
+                    }
+
                     Section {
                         ForEach(fetchedProfiles) { preset in
                             profilesView(for: preset)
                         }.onDelete(perform: removeProfile)
                     }
+                    header: { Text("Aktivera sparad profil") }
                 }
                 Section {
                     VStack {
@@ -96,7 +113,7 @@ extension OverrideProfilesConfig {
                         HStack {
                             Text("Duration")
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: false)
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                     }
 
@@ -109,7 +126,7 @@ extension OverrideProfilesConfig {
                         HStack {
                             Text("Target Glucose")
                             DecimalTextField("0", value: $state.target, formatter: glucoseFormatter, cleanInput: false)
-                            Text(state.units.rawValue).foregroundColor(.secondary)
+                            Text(state.units.rawValue)
                         }
                     }
                     HStack {
@@ -132,12 +149,12 @@ extension OverrideProfilesConfig {
                             HStack {
                                 Text("First Hour SMBs are Off (24 hours)")
                                 DecimalTextField("0", value: $state.start, formatter: formatter, cleanInput: false)
-                                Text("hour").foregroundColor(.secondary)
+                                Text("hour")
                             }
                             HStack {
                                 Text("Last Hour SMBs are Off (24 hours)")
                                 DecimalTextField("0", value: $state.end, formatter: formatter, cleanInput: false)
-                                Text("hour").foregroundColor(.secondary)
+                                Text("hour")
                             }
                         }
                         HStack {
@@ -166,7 +183,7 @@ extension OverrideProfilesConfig {
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                         HStack {
                             Text("UAM SMB Minutes")
@@ -177,7 +194,7 @@ extension OverrideProfilesConfig {
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes").foregroundColor(.secondary)
+                            Text("minutes")
                         }
                     }
 
@@ -243,8 +260,8 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Save as Profile") }
-                            .tint(.orange)
+                        label: { Text("Spara profil") }
+                            .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
                             .controlSize(.mini)
@@ -259,21 +276,12 @@ extension OverrideProfilesConfig {
                     }
                 }
 
-                header: { Text("Insulin") }
+                header: { Text("Ställ in ny profil") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
                     )
                 }
-
-                Button("Return to Normal") {
-                    state.cancelProfile()
-                    dismiss()
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .buttonStyle(BorderlessButtonStyle())
-                .disabled(!state.isEnabled)
-                .tint(.red)
             }
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
@@ -290,14 +298,15 @@ extension OverrideProfilesConfig {
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"
-            let scheduledSMBstring = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "Scheduled SMBs" : ""
-            let smbString = (preset.smbIsOff && scheduledSMBstring == "") ? "SMBs are off" : ""
+            let scheduledSMBstring = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "SMB schema •" : ""
+            let smbString = (preset.smbIsOff && scheduledSMBstring == "") ? "SMB av •" : ""
             let targetString = target != 0 ? "\(glucoseFormatter.string(from: target as NSNumber)!)" : ""
             let maxMinutesSMB = (preset.smbMinutes as Decimal?) != nil ? (preset.smbMinutes ?? 0) as Decimal : 0
             let maxMinutesUAM = (preset.uamMinutes as Decimal?) != nil ? (preset.uamMinutes ?? 0) as Decimal : 0
+
             let isfString = preset.isf ? "ISF" : ""
-            let crString = preset.cr ? "CR" : ""
-            let dash = crString != "" ? "/" : ""
+            let crString = preset.cr ? "CR •" : ""
+            let dash = crString != "" ? "/" : "•"
             let isfAndCRstring = isfString + dash + crString
 
             if name != "" {
@@ -307,25 +316,27 @@ extension OverrideProfilesConfig {
                             Text(name)
                             Spacer()
                         }
-                        HStack(spacing: 5) {
+                        HStack(spacing: 3) {
                             Text(percent.formatted(.percent.grouping(.never).rounded().precision(.fractionLength(0))))
                             if targetString != "" {
                                 Text(targetString)
-                                Text(targetString != "" ? state.units.rawValue : "")
+                                Text(targetString != "" ? "mmol" : "")
                             }
-                            if durationString != "" { Text(durationString + (perpetual ? "" : "min")) }
+                            if durationString != "" { Text(durationString + (perpetual ? "" : "m")) }
+                            if preset.advancedSettings {
+                                Text(isfAndCRstring)
+                            }
                             if smbString != "" { Text(smbString).foregroundColor(.secondary).font(.caption) }
                             if scheduledSMBstring != "" { Text(scheduledSMBstring) }
                             if preset.advancedSettings {
                                 Text(maxMinutesSMB == 0 ? "" : maxMinutesSMB.formatted() + " SMB")
                                 Text(maxMinutesUAM == 0 ? "" : maxMinutesUAM.formatted() + " UAM")
-                                Text(isfAndCRstring)
                             }
                             Spacer()
                         }
                         .padding(.top, 2)
                         .foregroundColor(.secondary)
-                        .font(.caption)
+                        .font(.caption2)
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {

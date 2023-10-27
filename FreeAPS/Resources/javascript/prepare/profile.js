@@ -40,6 +40,11 @@ function generate(pumpsettings_data, bgtargets_data, isf_data, basalprofile_data
         freeaps = freeaps_data;
     }
 
+        var freeaps = { };
+        if (freeaps_data) {
+            freeaps = freeaps_data;
+        }
+
     var model_data = { };
     if (model_input) {
         model_data = model_input.replace(/"/gi, '');
@@ -64,6 +69,7 @@ function generate(pumpsettings_data, bgtargets_data, isf_data, basalprofile_data
     if (preferences_input) {
         preferences = preferences_input;
         if (preferences.curve === "rapid-acting") {
+
             if (preferences.useCustomPeakTime) {
                 preferences.insulinPeakTime =
                 Math.max(50, Math.min(preferences.insulinPeakTime, 120));

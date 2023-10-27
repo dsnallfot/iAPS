@@ -81,6 +81,7 @@ extension Home {
         }
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
+            let colour: Color = colorScheme == .dark ? .black : .white
             HStack(alignment: .bottom) {
                 Spacer()
                 cobIobView
@@ -96,26 +97,37 @@ extension Home {
             .padding(.top, 10 + geo.safeAreaInsets.top)
             .padding(.bottom, 10)
             .background(Color.gray.opacity(0.3))
+
+            Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         var cobIobView: some View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("IOB").font(.footnote).foregroundColor(.secondary)
+                    Text("IOB: ")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" U", comment: "Insulin unit")
                     )
-                    .font(.footnote).fontWeight(.bold)
-                }.frame(alignment: .top)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+                }
+                .frame(alignment: .top) // Align the whole HStack to the top
+
                 HStack {
-                    Text("COB").font(.footnote).foregroundColor(.secondary)
+                    Text("COB:")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.footnote).fontWeight(.bold)
-                }.frame(alignment: .bottom)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+                }
+                .frame(alignment: .bottom) // Align the whole HStack to the bottom
             }
         }
 
@@ -285,7 +297,7 @@ extension Home {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
                     Text("Pump suspended")
-                        .font(.system(size: 12, weight: .bold)).foregroundColor(.loopGray)
+                        .font(.system(size: 14, weight: .bold)).foregroundColor(.loopGray)
                         .padding(.leading, 8)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
@@ -294,19 +306,30 @@ extension Home {
                         .padding(.leading, 8)
                 }
 
-                if let tempTargetString = tempTargetString {
-                    Text(tempTargetString)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                Button(action: {
+                    state.showModal(for: .addTempTarget)
+                }) {
+                    if let tempTargetString = tempTargetString {
+                        Text(tempTargetString)
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                    }
                 }
 
                 Spacer()
 
-                if let overrideString = overrideString {
-                    Text("👤 " + overrideString)
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                        .padding(.trailing, 8)
+                Button(action: {
+                    state.showModal(for: .overrideProfilesConfig)
+                }) {
+                    if let overrideString = overrideString {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.cyan)
+                        Text(overrideString)
+                            .font(.system(size: 12))
+                            .foregroundColor(.cyan)
+                            .padding(.trailing, 8)
+                    }
                 }
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
@@ -324,7 +347,8 @@ extension Home {
                         }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 30)
+            .frame(maxWidth: .infinity, maxHeight: 50)
+            .background(Color.gray.opacity(0.22))
         }
 
         var legendPanel: some View {
@@ -370,7 +394,7 @@ extension Home {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 20)
+                .padding([.bottom], 17)
             }
         }
 
@@ -415,19 +439,13 @@ extension Home {
             let colour: Color = colorScheme == .dark ? .black : .white
             // Rectangle().fill(colour).frame(maxHeight: 1)
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.3)).frame(maxHeight: 40)
+                Rectangle().fill(Color.gray.opacity(0.22)).frame(maxHeight: 50)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
-                    Text(selectedProfile().name).foregroundColor(.secondary)
-                    if cancel, selectedProfile().isOn {
-                        Button { showCancelAlert.toggle() }
-                        label: {
-                            Image(systemName: "xmark")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
                     Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
+                        Text(selectedProfile().name).foregroundColor(.primary)
+
                         Image(systemName: "person.3.sequence.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(
@@ -435,6 +453,13 @@ extension Home {
                                 !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
                                 .purple
                             )
+                    }
+                    if cancel, selectedProfile().isOn {
+                        Button { showCancelAlert.toggle() }
+                        label: {
+                            Image(systemName: "arrow.uturn.backward")
+                                .foregroundStyle(.red)
+                        }
                     }
                 }
             }
@@ -478,8 +503,89 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 50 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 54 + geo.safeAreaInsets.bottom)
 
+                /*
+                  HStack {
+                     Button { state.showModal(for: .addCarbs) }
+                     label: {
+                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                             Image(systemName: "fork.knife.circle")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .foregroundColor(.loopYellow)
+                                 .padding(8)
+                             if let carbsReq = state.carbsRequired {
+                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                     .font(.caption)
+                                     .foregroundColor(.white)
+                                     .padding(3)
+                                     .background(Capsule().fill(Color.red))
+                             }
+                         }
+                     }.buttonStyle(.plain)
+                     Spacer()
+                     Button { state.showModal(for: .addTempTarget) }
+                     label: {
+                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                             Image(systemName: "target")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .foregroundColor(.loopGreen)
+                                 .padding(8)
+                             if state.tempTarget != nil {
+                                 Image(systemName: "timer")
+                                     .font(.caption)
+                                     .foregroundColor(.white)
+                                     .padding(3)
+                                     .background(Capsule().fill(Color.red))
+                             }
+                         }
+                     }.buttonStyle(.plain)
+                     Spacer()
+                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
+                     label: {
+                         Image(systemName: "drop.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.insulin)
+                     Spacer()
+                     if state.allowManualTemp {
+                         Button { state.showModal(for: .manualTempBasal) }
+                         label: {
+                             Image(systemName: "plus.circle")
+                                 .renderingMode(.template)
+                                 .resizable()
+                                 .frame(width: 32, height: 32)
+                                 .padding(8)
+                         }.foregroundColor(.insulin)
+                         Spacer()
+                     }
+                     Button { state.showModal(for: .statistics)
+                     }
+                     label: {
+                         Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.purple)
+                     Spacer()
+                     Button { state.showModal(for: .settings) }
+                     label: {
+                         Image(systemName: "gearshape.circle")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 32, height: 32)
+                             .padding(8)
+                     }.foregroundColor(.gray)
+                 }
+
+                   */
                 HStack {
                     Button { state.showModal(for: .addCarbs) }
                     label: {
@@ -487,40 +593,68 @@ extension Home {
                             Image("carbs")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(8)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                    .font(.caption)
+                                    .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(4)
+                                    .padding(3)
                                     .background(Capsule().fill(Color.red))
                             }
                         }
-                    }.buttonStyle(.borderless)
+                    }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
-                        Image("target")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
-                    }
-                    .foregroundColor(.loopGreen)
-                    .buttonStyle(.borderless)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image("target")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .foregroundColor(.loopGreen)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+                            if state.tempTarget != nil {
+                                Image(systemName: "timer")
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                                    .padding(3)
+                                    .background(Capsule().fill(Color.red))
+                            }
+                        }
+                    }.buttonStyle(.plain)
                     Spacer()
-                    Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
-                    label: {
-                        Image("bolus")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
+                    Button {
+                        state.showModal(for: .bolus(waitForSuggestion: false))
+                    } label: {
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image("bolus")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .foregroundColor(.insulin)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+
+                            if let insulinRequested = state.suggestion?.insulinForManualBolus, insulinRequested > 0.3 {
+                                let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
+                                Text(formattedInsulin)
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                                    .padding(3)
+                                    .background(Capsule().fill(Color.red))
+                            }
+                        }
                     }
-                    .foregroundColor(.insulin)
-                    .buttonStyle(.borderless)
                     Spacer()
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
@@ -528,11 +662,12 @@ extension Home {
                             Image("bolus1")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
-                                .padding(8)
-                        }
-                        .foregroundColor(.insulin)
-                        .buttonStyle(.borderless)
+                                .frame(width: 27, height: 27)
+                                .padding(.top, 15)
+                                .padding(.bottom, 5)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+                        }.foregroundColor(.insulin)
                         Spacer()
                     }
                     Button { state.showModal(for: .statistics)
@@ -541,22 +676,24 @@ extension Home {
                         Image(systemName: "chart.xyaxis.line")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
-                    }
-                    .foregroundColor(.purple)
-                    .buttonStyle(.borderless)
+                            .frame(width: 27, height: 27)
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 9)
+                    }.foregroundColor(.purple)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
                         Image("settings1")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(8)
-                    }
-                    .foregroundColor(.loopGray)
-                    .buttonStyle(.borderless)
+                            .frame(width: 27, height: 27)
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 9)
+                    }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, geo.safeAreaInsets.bottom)
@@ -584,7 +721,7 @@ extension Home {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color(UIColor.darkGray))
+                            .fill(Color(UIColor.systemGray3))
                     )
                     .onTapGesture {
                         isStatusPopupPresented = false
@@ -610,7 +747,7 @@ extension Home {
                     Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption).foregroundColor(.white)
 
                 } else {
-                    Text("No sugestion found").font(.body).foregroundColor(.white)
+                    Text("No suggestion found").font(.body).foregroundColor(.white)
                 }
 
                 if let errorMessage = state.errorMessage, let date = state.errorDate {
@@ -620,9 +757,6 @@ extension Home {
                         .padding(.bottom, 4)
                         .padding(.top, 8)
                     Text(errorMessage).font(.caption).foregroundColor(.loopRed)
-                } else if let suggestion = state.suggestion, (suggestion.bg ?? 100) == 400 {
-                    Text("Invalid CGM reading (HIGH).").font(.callout).bold().foregroundColor(.loopRed).padding(.top, 8)
-                    Text("SMBs and High Temps Disabled.").font(.caption).foregroundColor(.white).padding(.bottom, 4)
                 }
             }
         }

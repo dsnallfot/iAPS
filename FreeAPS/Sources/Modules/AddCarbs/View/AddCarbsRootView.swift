@@ -12,6 +12,8 @@ extension AddCarbs {
         @State private var showAlert = false
         @FocusState private var isFocused: Bool
 
+        @Environment(\.colorScheme) var colorScheme
+
         @FetchRequest(
             entity: Presets.entity(),
             sortDescriptors: [NSSortDescriptor(key: "dish", ascending: true)]
@@ -31,9 +33,9 @@ extension AddCarbs {
                 if let carbsReq = state.carbsRequired {
                     Section {
                         HStack {
-                            Text("Carbs required")
+                            Text("Carbs required").foregroundColor(.orange)
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " g")
+                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.orange)
                         }
                     }
                 }
@@ -48,20 +50,15 @@ extension AddCarbs {
                             autofocus: true,
                             cleanInput: true
                         )
-                        Text("grams").foregroundColor(.secondary)
-                    }.padding(.vertical)
+                        Text("grams").fontWeight(.semibold)
+                    }
 
                     if state.useFPUconversion {
                         proteinAndFat()
                     }
-                    HStack {
-                        Text("Note").foregroundColor(.secondary)
-                        TextField("", text: $state.note).multilineTextAlignment(.trailing)
-                        if state.note != "", isFocused {
-                            Button { isFocused = false } label: { Image(systemName: "keyboard.chevron.compact.down") }
-                                .controlSize(.mini)
-                        }
-                    }.focused($isFocused)
+
+                    DatePicker("Date", selection: $state.date)
+
                     HStack {
                         Button {
                             state.useFPUconversion.toggle()
@@ -69,8 +66,8 @@ extension AddCarbs {
                         label: {
                             Text(
                                 state
-                                    .useFPUconversion ? NSLocalizedString("Hide Fat & Protein", comment: "") :
-                                    NSLocalizedString("Fat & Protein", comment: "")
+                                    .useFPUconversion ? NSLocalizedString("Dölj detaljerad vy", comment: "") :
+                                    NSLocalizedString("Visa detaljerad vy", comment: "")
                             ) }
                             .controlSize(.mini)
                             .buttonStyle(BorderlessButtonStyle())
@@ -89,7 +86,7 @@ extension AddCarbs {
                                             .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
                                             state
                                             .protein
-                                    ) ? .secondary : .orange
+                                    ) ? Color(.systemGray2) : Color(.systemBlue)
                             )
                             .disabled(
                                 (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
@@ -106,31 +103,37 @@ extension AddCarbs {
                     }
                 }
 
-                if state.useFPUconversion {
-                    Section {
-                        mealPresets
-                    }
-                }
-
                 Section {
-                    DatePicker("Date", selection: $state.date)
-                }
-
-                Section {
-                    Button { state.add() }
-                    label: { Text("Save and continue") }
-                        .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                } footer: { Text(state.waitersNotepad().description) }
-
-                if !state.useFPUconversion {
-                    Section {
-                        mealPresets
+                    let maxamountcarbs = Double(state.maxCarbs)
+                    let formattedMaxAmountCarbs = String(format: "%.0f", maxamountcarbs)
+                    Button {
+                        if state.carbs <= state.maxCarbs {
+                            // Only allow button click if carbs are within maxCarbs
+                            state.add()
+                        }
+                    } label: {
+                        HStack {
+                            if state.carbs > state.maxCarbs {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                            }
+                            Text(
+                                !(state.carbs > state.maxCarbs) ? "Save and continue" :
+                                    "Inställd maxgräns: \(formattedMaxAmountCarbs)g   "
+                            )
+                            .font(.title3.weight(.semibold))
+                        }
                     }
+                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
+                Section { mealPresets
+                }
+
+                footer: { Text(state.waitersNotepad().description) }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Add Meals")
+            .navigationTitle("Registrera måltid")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
         }
@@ -185,8 +188,9 @@ extension AddCarbs {
                         showAlert.toggle()
                     }
                     .disabled(state.selection == nil)
-                    .accentColor(.orange)
+                    .accentColor(.red)
                     .buttonStyle(BorderlessButtonStyle())
+                    .controlSize(.mini)
                     .alert(
                         "Delete preset '\(state.selection?.dish ?? "")'?",
                         isPresented: $showAlert,
@@ -217,7 +221,10 @@ extension AddCarbs {
                         } else { state.fat = 0 }
 
                         if state.protein != 0,
-                           (state.protein - (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) as Decimal) >= 0
+                           (
+                               state.protein - (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) as Decimal
+                           ) >=
+                           0
                         {
                             state.protein -= (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal)
                         } else { state.protein = 0 }
@@ -230,12 +237,14 @@ extension AddCarbs {
                             state
                                 .selection == nil ||
                                 (
-                                    !state.summation.contains(state.selection?.dish ?? "") && (state.selection?.dish ?? "") != ""
+                                    !state.summation
+                                        .contains(state.selection?.dish ?? "") && (state.selection?.dish ?? "") != ""
                                 )
                         )
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .accentColor(.minus)
+                        .controlSize(.mini)
                     Button {
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
@@ -247,6 +256,7 @@ extension AddCarbs {
                         .disabled(state.selection == nil)
                         .buttonStyle(BorderlessButtonStyle())
                         .accentColor(.blue)
+                        .controlSize(.mini)
                 }
             }
         }
@@ -262,7 +272,7 @@ extension AddCarbs {
                     autofocus: false,
                     cleanInput: true
                 )
-                Text("grams").foregroundColor(.secondary)
+                Text("grams")
             }
             HStack {
                 Text("Protein").foregroundColor(.red) // .fontWeight(.thin)
@@ -275,8 +285,17 @@ extension AddCarbs {
                     cleanInput: true
                 ).foregroundColor(.loopRed)
 
-                Text("grams").foregroundColor(.secondary)
+                Text("grams")
             }
+            HStack {
+                Text("Notering").foregroundColor(.primary)
+                TextField("Emoji eller kort text", text: $state.note).multilineTextAlignment(.trailing)
+                if state.note != "", isFocused {
+                    Button { isFocused = false } label: {
+                        Image(systemName: "keyboard.chevron.compact.down") }
+                        .controlSize(.mini)
+                }
+            }.focused($isFocused)
         }
     }
 }

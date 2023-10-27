@@ -268,7 +268,8 @@ final class BaseDeviceDataManager: DeviceDataManager, Injectable {
                                 filtered: nil,
                                 noise: nil,
                                 glucose: value,
-                                type: "sgv"
+                                type: "sgv",
+                                device: "iAPS"
                             )
                         }
                         if let lastDate = results.last?.dateString {

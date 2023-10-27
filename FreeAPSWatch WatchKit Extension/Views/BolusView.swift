@@ -18,18 +18,21 @@ struct BolusView: View {
     }
 
     var body: some View {
-        GeometryReader { geo in
+        GeometryReader { _ in
             VStack(spacing: 16) {
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps - 1
                         steps = max(newValue, 0)
-                    } label: { Image(systemName: "minus") }
-                        .frame(width: geo.size.width / 4)
+                    } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                        .buttonStyle(.borderless).padding(.leading, 13)
+                        .tint(.blue)
+                        .padding(.bottom, 20)
+
                     Spacer()
-                    Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " U")
-                        .font(.headline)
+                    Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " E")
+                        .font(.title2)
                         .focusable(true)
                         .digitalCrownRotation(
                             $steps,
@@ -40,41 +43,48 @@ struct BolusView: View {
                             isContinuous: false,
                             isHapticFeedbackEnabled: true
                         )
+                        .padding(.bottom, 20)
+
                     Spacer()
                     Button {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps + 1
                         steps = min(newValue, Double((state.maxBolus ?? 5) / (state.bolusIncrement ?? 0.1)))
-                    } label: { Image(systemName: "plus") }
-                        .frame(width: geo.size.width / 4)
+                    } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                        .buttonStyle(.borderless).padding(.trailing, 18)
+                        .tint(.blue)
+                        .padding(.bottom, 20)
                 }
 
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
+
                         state.isBolusViewActive = false
                     }
                     label: {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopRed)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 24, height: 24)
                     }
                     Button {
                         WKInterfaceDevice.current().play(.click)
+
                         enactBolus()
                     }
                     label: {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopGreen)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 24, height: 24)
                     }
                     .disabled(steps <= 0)
                 }
-            }.frame(maxHeight: .infinity)
+            }.frame(maxHeight: .infinity, alignment: .bottom)
         }
         .navigationTitle("Enact Bolus")
+
         .onAppear {
             steps = Double((state.bolusRecommended ?? 0) / (state.bolusIncrement ?? 0.1))
         }

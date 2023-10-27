@@ -22,6 +22,7 @@ class WatchStateModel: NSObject, ObservableObject {
     @Published var glucoseDate: Date?
     @Published var bolusIncrement: Decimal?
     @Published var maxCOB: Decimal?
+    @Published var maxCarbs: Decimal?
     @Published var maxBolus: Decimal?
     @Published var bolusRecommended: Decimal?
     @Published var carbsRequired: Decimal?
@@ -163,6 +164,7 @@ class WatchStateModel: NSObject, ObservableObject {
         lastLoopDate = state.lastLoopDate
         bolusIncrement = state.bolusIncrement
         maxCOB = state.maxCOB
+        maxCarbs = state.maxCarbs
         maxBolus = state.maxBolus
         bolusRecommended = state.bolusRecommended
         carbsRequired = state.carbsRequired

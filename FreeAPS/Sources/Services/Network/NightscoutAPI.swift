@@ -11,12 +11,17 @@ class NightscoutAPI {
     }
 
     private enum Config {
-        static let entriesPath = "/api/v1/entries/sgv.json"
-        static let uploadEntriesPath = "/api/v1/entries.json"
-        static let treatmentsPath = "/api/v1/treatments.json"
-        static let statusPath = "/api/v1/devicestatus.json"
-        static let profilePath = "/api/v1/profile.json"
-        static let retryCount = 1
+        static let entriesPath = "/api/v2/entries/sgv.json" // Test v2
+        static let uploadEntriesPath = "/api/v2/entries.json" // Test v2
+        static let treatmentsPath = "/api/v2/treatments.json" // Test v2
+        static let statusPath = "/api/v2/devicestatus.json" // Test v2
+        static let profilePath = "/api/v2/profile.json" // Test v2
+        /* static let entriesPath = "/api/v1/entries/sgv.json"
+         static let uploadEntriesPath = "/api/v1/entries.json"
+         static let treatmentsPath = "/api/v1/treatments.json"
+         static let statusPath = "/api/v1/devicestatus.json"
+         static let profilePath = "/api/v1/profile.json" */
+        static let retryCount = 3 // Jon: I doubt this will make a difference
         static let timeout: TimeInterval = 60
     }
 
@@ -38,7 +43,7 @@ extension NightscoutAPI {
         struct Check: Codable, Equatable {
             var eventType = "Note"
             var enteredBy = "iAPS"
-            var notes = "iAPS connected"
+            var notes = "iAPS anslöts till Nightscout"
         }
         let check = Check()
         var request = URLRequest(url: url.appendingPathComponent(Config.treatmentsPath))

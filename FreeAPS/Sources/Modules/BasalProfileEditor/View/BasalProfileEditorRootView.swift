@@ -34,7 +34,7 @@ extension BasalProfileEditor {
                         Spacer()
                         Text(rateFormatter.string(from: state.total as NSNumber) ?? "0")
                             .foregroundColor(.primary) +
-                            Text(" U/day")
+                            Text(" E/dag")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -77,7 +77,7 @@ extension BasalProfileEditor {
                                     (
                                         self.rateFormatter
                                             .string(from: state.rateValues[i] as NSNumber) ?? ""
-                                    ) + " U/hr"
+                                    ) + " E/h"
                                 ).tag(i)
                             }
                         }
@@ -111,7 +111,7 @@ extension BasalProfileEditor {
                         HStack {
                             Text("Rate").foregroundColor(.secondary)
                             Text(
-                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") U/hr"
+                                "\(rateFormatter.string(from: state.rateValues[item.rateIndex] as NSNumber) ?? "0") E/h"
                             )
                             Spacer()
                             Text("starts at").foregroundColor(.secondary)

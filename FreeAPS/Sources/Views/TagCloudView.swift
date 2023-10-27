@@ -57,16 +57,21 @@ struct TagCloudView: View {
             switch textTag {
             case textTag where textTag.contains("SMB Delivery Ratio:"):
                 return .uam
-            case textTag where textTag.contains("Bolus"):
+            case textTag where textTag.contains("Bolus"),
+                 textTag where textTag.contains("TDD"),
+                 textTag where textTag.contains("Tot 24h insulin:"):
                 return .green
-            case textTag where textTag.contains("TDD:"),
+            case textTag where textTag.contains("Total insulin:"),
                  textTag where textTag.contains("tdd_factor"),
                  textTag where textTag.contains("Sigmoid function"),
+                 textTag where textTag.contains("Sigmoid"),
                  textTag where textTag.contains("Logarithmic formula"),
+                 textTag where textTag.contains("Logaritmisk formel"),
                  textTag where textTag.contains("AF:"),
                  textTag where textTag.contains("Autosens/Dynamic Limit:"),
                  textTag where textTag.contains("Dynamic ISF/CR"),
-                 textTag where textTag.contains("Basal ratio"),
+                 textTag where textTag.contains("Dynamisk ISF/CR"),
+                 textTag where textTag.contains("Basal Ratio"),
                  textTag where textTag.contains("SMB Ratio"):
                 return .zt
             default:

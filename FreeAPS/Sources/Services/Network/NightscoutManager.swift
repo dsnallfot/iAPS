@@ -71,6 +71,11 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         broadcaster.register(CarbsObserver.self, observer: self)
         broadcaster.register(TempTargetsObserver.self, observer: self)
         broadcaster.register(GlucoseObserver.self, observer: self)
+        broadcaster
+            .register(
+                EnactedSuggestionObserver.self,
+                observer: self
+            ) // Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
         _ = reachabilityManager.startListening(onQueue: processQueue) { status in
             debug(.nightscout, "Network status: \(status)")
         }
@@ -346,32 +351,21 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         var suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
         var enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
 
+        var useEnacted = true
         if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
             enacted?.predictions = nil
+            useEnacted = false
         } else {
             suggested?.predictions = nil
         }
 
-        let loopIsClosed = settingsManager.settings.closedLoop
-
-        var openapsStatus: OpenAPSStatus
-
         // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
-        if loopIsClosed {
-            openapsStatus = OpenAPSStatus(
-                iob: iob?.first,
-                suggested: nil,
-                enacted: enacted,
-                version: "0.7.1"
-            )
-        } else {
-            openapsStatus = OpenAPSStatus(
-                iob: iob?.first,
-                suggested: suggested,
-                enacted: nil,
-                version: "0.7.1"
-            )
-        }
+        let openapsStatus = OpenAPSStatus(
+            iob: iob?.first,
+            suggested: useEnacted ? nil : suggested,
+            enacted: useEnacted ? enacted : nil,
+            version: "0.7.1"
+        )
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
@@ -413,35 +407,6 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
                     }
                 } receiveValue: {}
                 .store(in: &self.lifetime)
-        }
-
-        uploadPodAge()
-    }
-
-    func uploadPodAge() {
-        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
-        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
-           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
-        {
-            let siteTreatment = NigtscoutTreatment(
-                duration: nil,
-                rawDuration: nil,
-                rawRate: nil,
-                absolute: nil,
-                rate: nil,
-                eventType: .nsSiteChange,
-                createdAt: podAge,
-                enteredBy: NigtscoutTreatment.local,
-                bolus: nil,
-                insulin: nil,
-                notes: nil,
-                carbs: nil,
-                fat: nil,
-                protein: nil,
-                targetTop: nil,
-                targetBottom: nil
-            )
-            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
         }
     }
 
@@ -546,7 +511,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             return
         }
 
-        // UPLOAD PREFERNCES WHEN CHANGED
+        // UPLOAD PREFERENCES WHEN CHANGED
         if let uploadedPreferences = storage.retrieve(OpenAPS.Nightscout.uploadedPreferences, as: Preferences.self),
            uploadedPreferences.rawJSON.sorted() == preferences.rawJSON.sorted(), !force
         {
@@ -560,7 +525,6 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             NSLog("NightscoutManager Settings, settings unchanged")
         } else { uploadSettings(settings) }
 
-        // UPLOAD Profiles WHEN CHANGED
         if let uploadedProfile = storage.retrieve(OpenAPS.Nightscout.uploadedProfile, as: NightscoutProfileStore.self),
            (uploadedProfile.store["default"]?.rawJSON ?? "").sorted() == ps.rawJSON.sorted(), !force
         {
@@ -636,6 +600,33 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         }
     }
 
+    private func uploadPodAge() {
+        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
+        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
+           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
+        {
+            let siteTreatment = NigtscoutTreatment(
+                duration: nil,
+                rawDuration: nil,
+                rawRate: nil,
+                absolute: nil,
+                rate: nil,
+                eventType: .nsSiteChange,
+                createdAt: podAge,
+                enteredBy: NigtscoutTreatment.local,
+                bolus: nil,
+                insulin: nil,
+                notes: nil,
+                carbs: nil,
+                fat: nil,
+                protein: nil,
+                targetTop: nil,
+                targetBottom: nil
+            )
+            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
+        }
+    }
+
     private func uploadTreatments(_ treatments: [NigtscoutTreatment], fileToSave: String) {
         guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {
             return
@@ -670,6 +661,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 extension BaseNightscoutManager: PumpHistoryObserver {
     func pumpHistoryDidUpdate(_: [PumpHistoryEvent]) {
         uploadPumpHistory()
+        uploadPodAge()
     }
 }
 
@@ -687,6 +679,14 @@ extension BaseNightscoutManager: TempTargetsObserver {
 
 extension BaseNightscoutManager: GlucoseObserver {
     func glucoseDidUpdate(_: [BloodGlucose]) {
+        uploadGlucose()
         uploadManualGlucose()
+    }
+}
+
+// Test to use EnactedSuggestionObserver instead of uploading the OpenAPS status as part of loop cycle
+extension BaseNightscoutManager: EnactedSuggestionObserver {
+    func enactedSuggestionDidUpdate(_: Suggestion) {
+        uploadStatus()
     }
 }

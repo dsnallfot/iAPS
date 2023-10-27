@@ -145,6 +145,7 @@ class IntelligentGenerator: BloodGlucoseGenerator {
             noise: nil,
             glucose: currentGlucose,
             type: nil,
+            device: "iAPS",
             activationDate: startup,
             sessionStartDate: startup,
             transmitterID: "SIMULATOR"
