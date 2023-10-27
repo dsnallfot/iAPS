@@ -24,5 +24,12 @@ import Foundation
                 "\(.applicationName) tillåter att måltid läggs till"
             ]
         )
+        AppShortcut(
+            intent: AddCarbPresentIntent(),
+            phrases: [
+                "Add carbs in \(.applicationName)",
+                "\(.applicationName) allows to add carbs"
+            ]
+        )
     }
 }

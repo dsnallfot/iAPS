@@ -4,10 +4,10 @@
 */
 /* -------------------------------- */
 /* Bolus screen when adding insulin */
-"Add insulin without actually bolusing" = "Insulin ohne tatsächliche Bolusabgabe erfassen";
+"Add insulin without actually bolusing" = "Insulin ohne Bolusabgabe erfassen";
 
 /* Add insulin from source outside of pump */
-"Add %@ without bolusing" = "Hinzufügen von %@ ohne tatsächliche Bolusabgabe";
+"Add %@ without bolusing" = "Hinzufügen von %@ ohne Bolusabgabe";
 
 "Bolus" = "Bolus";
 
@@ -15,6 +15,9 @@
 
 /* Continue after added carbs without bolus */
 "Continue without bolus" = "Ohne Bolusabgabe fortfahren";
+
+/* Alert when adding large amount without bolusing */
+"\nAmount is more than your Max Bolus setting! \nAre you sure you want to add " = "\nEingegebener Bolus ist größer als Max Bolus Einstellung! Sind Sie sicher, dass er hinzugefügt werden soll ";
 
 /* Header */
 "Enact Bolus" = "Bolus abgeben";
@@ -74,7 +77,7 @@
 "Add Carbs " = "Kohlenhydrate hinzufügen ";
 
 /*  */
-"Amount Carbs" = "Kohlenhydratmenge";
+"Amount Carbs" = "Menge Kohlenhydrate";
 
 /* Grams unit */
 "grams" = "Gramm";
@@ -311,6 +314,45 @@ Enact a temp Basal or a temp target */
 /* Allow remote control from NS */
 "Remote control" = "Fernbedienung";
 
+/* Imported Profiles Alert */
+"\nNow please verify all of your new settings thoroughly:\n\n* Basal Settings\n * Carb Ratios\n * Glucose Targets\n * Insulin Sensitivities\n * DIA\n\n in iAPS Settings > Configuration.\n\nBad or invalid profile settings could have disatrous effects." = "\nNow please verify all of your new settings thoroughly:\n\n* Basal Settings\n * Carb Ratios\n * Glucose Targets\n * Insulin Sensitivities\n * DIA\n\n in iAPS Settings > Configuration.\n\nBad or invalid profile settings could have disatrous effects.";
+
+/* Profile Import Alert */
+"This will replace some or all of your current pump settings. Are you sure you want to import profile settings from Nightscout?" = "This will replace some or all of your current pump settings. Are you sure you want to import profile settings from Nightscout?";
+
+/* Import Error */
+"\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!" = "\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!";
+
+/* Import Error */
+"\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings" = "\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings";
+
+/* Import Error Headline */
+"Import Error" = "Import Error";
+
+/* */
+"Yes, Import" = "Yes, Import";
+
+/* */
+"Import settings from Nightscout" = "Import settings from Nightscout";
+
+/* */
+"Import settings?" = "Import settings?";
+
+/* */
+"Import from Nightscout" = "Import from Nightscout";
+
+/* */
+"Settings imported" = "Settings imported";
+
+/* Import Error */
+"\nMismatching glucose units in Nightscout and Pump Settings. Import settings aborted." = "\nMismatching glucose units in Nightscout and Pump Settings. Import settings aborted.";
+
+/* Import Error */
+"Can't find the default Nightscout Profile." = "Can't find the default Nightscout Profile.";
+
+/* Add Blood Glucose Test, header */
+"Blood Glucose Test" = "Blood Glucose Test";
+
 /* Add Medtronic pump */
 "Add Medtronic" = "Medtronic-Pumpe hinzufügen";
 
@@ -340,6 +382,9 @@ Enact a temp Basal or a temp target */
 
 /* Max setting */
 "Max Bolus" = "Maximaler Bolus";
+
+/* Max setting */
+"Max Carbs" = "Max Kohlenhydrate";
 
 /* */
 "Pump Settings" = "Pumpeneinstellungen";
@@ -452,9 +497,6 @@ Enact a temp Basal or a temp target */
 /* Lower target */
 "Low target" = "Untere Grenze";
 
-/*  */
-"Target Ranges" = "Zielbereiche";
-
 /* When bolusing */
 "Bolusing" = "Bolusabgabe";
 
@@ -467,8 +509,11 @@ Enact a temp Basal or a temp target */
 /* Header */
 "History" = "Verlauf";
 
-/* CGM option */
-"Upload glucose to Nightscout" = "Upload der BZ-Werte auf Nightscout";
+/* Nightscout option */
+"Upload" = "Upload";
+
+/* Nightscout option */
+"Allow Uploads" = "Erlaube Uploads der Daten";
 
 /* Type of CGM or glucose source */
 "Type" = "Typ";
@@ -516,10 +561,13 @@ Enact a temp Basal or a temp target */
 "Calibrations" = "Kalibrierungen";
 
 /* */
-"Create events in calendar" = "Kalendereintrag erstellen";
+"Create Events in Calendar" = "Ereignisse im Kalender erstellen";
 
 /* */
 "Calendar" = "Kalender";
+
+/* Automatic delivered treatments */
+"Automatic" = "Automatisch";
 
 /* */
 "Other" = "Sonstiges";
@@ -942,7 +990,7 @@ Enact a temp Basal or a temp target */
 "iAPS not active" = "iAPS ist nicht aktiv";
 
 /* */
-"Last loop was more then %d min ago" = "Letzter Loop vor mehr als %d Minuten";
+"Last loop was more than %d min ago" = "Letzter Loop vor mehr als %d Minuten";
 
 /* Glucose badge */
 "Show glucose on the app badge" = "Zeige Glucosewert auf dem App Symbol";
@@ -956,11 +1004,17 @@ Enact a temp Basal or a temp target */
 /* */
 "Bolus failed" = "Bolus fehlgeschlagen";
 
+/* "Max Bolus Exceeded label" */
+"Max Bolus exceeded!" = "Maximaler Bolus überschritten!";
+
 /* */
 "Bolus failed or inaccurate. Check pump history before repeating." = "Bolus ist fehlgeschlagen oder ungenau. Prüfe den Pumpenverlauf vor einer erneuten Abgabe.";
 
 /* */
 "Carbs" = "Kohlenhydrate";
+
+/* Food Type / Meal Note */
+"Note" = "Notiz";
 
 /* */
 "Temp Basal" = "Temporäre Basalrate";
@@ -1037,6 +1091,18 @@ Enact a temp Basal or a temp target */
 /* Debug option view Autosense */
 "Autosense" = "Autosense";
 
+/* Insulin sensitivity config header */
+"Dynamic Sensitivity" = "Dynamische Empfindlichkeit";
+
+/* Autotune config */
+"Only Autotune Basal Insulin" = "Nur Autotune Basalinsulin";
+
+/* */
+"Save as your Normal Basal Rates" = "Save as your Normal Basal Rates";
+
+/* */
+"Save on Pump" = "Auf Pumpe speichern";
+
 /* Debug option view Pump History */
 "Pump History" = "Insulinpumpen-Speicher";
 
@@ -1087,7 +1153,7 @@ Enact a temp Basal or a temp target */
 "For write data to Apple Health you must give permissions in Settings > Health > Data Access" = "Um Daten bei Apple Health zu speichern, müssen Sie unter „Einstellungen“ > „Health“ > „Datenzugriff & Geräte“ die entsprechenden Berechtigungen erteilen";
 
 /* */
-"After you create glucose records in the Health app, please open iAPS to help us guaranteed transfer changed data" = "Nachdem Sie Glukosedatensätze in der Health App erstellt oder gelöscht haben, öffnen Sie bitte iAPS, um die Übertragung der geänderten Daten sicher zu gewährleisten";
+"This allows iAPS to read from and write to Apple Heath. You must also give permissions in Settings > Health > Data Access. If you enter a glucose value into Apple Health, open iAPS to confirm it shows up." = "Dies erlaubt iAPS, von Apple Heath zu lesen und in Apple Heath zu schreiben. Sie müssen auch unter Einstellungen > Gesundheit > Datenzugriff Berechtigungen erteilen. Wenn Sie einen Glukosewert in Apple Health eingeben, öffnen Sie iAPS, um zu bestätigen, dass er angezeigt wird.";
 
 /* New ALerts ------------------------- */
 /* Info title */
@@ -1101,6 +1167,12 @@ Enact a temp Basal or a temp target */
 
 /* Manual temp basal mode */
 "Manual" = "manuell";
+
+/* An Automatic delivered bolus (SMB) */
+"SMB" = "SMB";
+
+/* A manually entered dose of non-pump insulin */
+"Non-pump Insulin" = "Externes Insulin";
 
 /* Status highlight when manual temp basal is running. */
 "Manual Basal" = "Manuelle Temporäre Basalrate";
@@ -1163,6 +1235,8 @@ Enact a temp Basal or a temp target */
 
 /* */
 "Normal " = "im Zielbereich ";
+
+"Currently no Override active" = "Derzeit keine Überschreibung aktiv";
 
 /* */
 "Total Insulin Adjustment" = "Gesamte Insulinanpassung";
@@ -1788,7 +1862,7 @@ Enact a temp Basal or a temp target */
 "Max COB" = "Max COB";
 
 /* "Max COB" */
-"This defaults maxCOB to 120 because that’s the most a typical body can absorb over 4 hours. (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120. Essentially, this just limits AMA as a safety cap against weird COB calculations due to fluky data.)" = "Dies ist standardmäßig maxCOB auf 120 da dies die typische Menge ist, die ein Körper über 4 Stunden absorbieren kann. (Wenn jemand mehr Kohlenhydrate oder Menge eingibt; wird OpenAPS einfach die Dosierung auf Basis von 120 einschränken. Im Grunde beschränkt dies nur AMA als Sicherheitsgrenze gegen seltsame COB-Berechnungen aufgrund von unruhigen Daten.)";
+"The default of maxCOB is 120. (If someone enters more carbs in one or multiple entries, iAPS will cap COB to maxCOB and keep it at maxCOB until the carbs entered above maxCOB have shown to be absorbed. Essentially, this just limits UAM as a safety cap against weird COB calculations due to fluky data.)" = "Der Standardwert für maxCOB ist 120. (Wenn jemand in einem oder mehreren Einträgen mehr Kohlenhydrate eingibt, begrenzt iAPS den COB-Wert auf maxCOB und hält ihn bei maxCOB, bis die über maxCOB eingegebenen Kohlenhydrate nachweislich absorbiert wurden. Im Wesentlichen dient dies nur der Begrenzung von UAM als Sicherheitskappe gegen merkwürdige COB-Berechnungen aufgrund von fehlerhaften Daten)";
 
 /* Headline "Bolus Snooze DIA Divisor" */
 "Bolus Snooze DIA Divisor" = "Bolus DIA Schlummerdivisor";

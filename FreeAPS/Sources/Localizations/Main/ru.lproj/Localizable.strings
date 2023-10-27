@@ -16,6 +16,9 @@
 /* Continue after added carbs without bolus */
 "Continue without bolus" = "Продолжить без болюса";
 
+/* Alert when adding large amount without bolusing */
+"\nAmount is more than your Max Bolus setting! \nAre you sure you want to add " = "\nКоличество превышает максимальную дозу болюса! \nВы уверены, что хотите добавить ";
+
 /* Header */
 "Enact Bolus" = "Ввод болюса";
 
@@ -311,6 +314,45 @@ Enact a temp Basal or a temp target */
 /* Allow remote control from NS */
 "Remote control" = "Удаленное управление";
 
+/* Imported Profiles Alert */
+"\nNow please verify all of your new settings thoroughly:\n\n* Basal Settings\n * Carb Ratios\n * Glucose Targets\n * Insulin Sensitivities\n * DIA\n\n in iAPS Settings > Configuration.\n\nBad or invalid profile settings could have disatrous effects." = "\nПожалуйста, проверьте все ваши новые настройки:\n\n* Настройки базала\n * Углеводные коэффициенты\n * Целевой диапазон\n * Чувствительность к инсулину\n\n в настройках iAPS Настройки > Конфигурация.\n\nНекорректные настройки профиля могут привести к катастрофическим последствиям.";
+
+/* Profile Import Alert */
+"This will replace some or all of your current pump settings. Are you sure you want to import profile settings from Nightscout?" = "Это заменит некоторые или все ваши текущие настройки помпы. Вы уверены, что хотите импортировать настройки профиля из Nightscout?";
+
+/* Import Error */
+"\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!" = "\nНедопустимые настройки базы в Nightcsout. \n\nИмпорт прерван. Пожалуйста, проверьте настройки профиля в Nightscout!";
+
+/* Import Error */
+"\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings" = "\nНастройки были импортированы, но базальный профиль не удалось сохранить в помпе (нет помпы). Проверьте свои настройки базы и нажмите \"Сохранить на помпу\", чтобы синхронизировать новый базальный профиль";
+
+/* Import Error Headline */
+"Import Error" = "Ошибка импорта";
+
+/* */
+"Yes, Import" = "Да, импортировать";
+
+/* */
+"Import settings from Nightscout" = "Импортировать настройки из Nightscout";
+
+/* */
+"Import settings?" = "Импорт настроек?";
+
+/* */
+"Import from Nightscout" = "Импорт из Nightscout";
+
+/* */
+"Settings imported" = "Настройки импортированы";
+
+/* Import Error */
+"\nMismatching glucose units in Nightscout and Pump Settings. Import settings aborted." = "\nНесоответствие единиц измерения глюкозы в настройках Nightscout и помпы. Импорт настроек прерван.";
+
+/* Import Error */
+"Can't find the default Nightscout Profile." = "Не удается найти профиль Nightscout по умолчанию.";
+
+/* Add Blood Glucose Test, header */
+"Blood Glucose Test" = "Тест на глюкозу в крови";
+
 /* Add Medtronic pump */
 "Add Medtronic" = "Добавить Medtronic";
 
@@ -340,6 +382,9 @@ Enact a temp Basal or a temp target */
 
 /* Max setting */
 "Max Bolus" = "Макс. Болюс";
+
+/* Max setting */
+"Max Carbs" = "Максимум углеводов";
 
 /* */
 "Pump Settings" = "Настройки помпы";
@@ -452,9 +497,6 @@ Enact a temp Basal or a temp target */
 /* Lower target */
 "Low target" = "Нижняя цель";
 
-/*  */
-"Target Ranges" = "Целевой диапазон";
-
 /* When bolusing */
 "Bolusing" = "Подается болюс";
 
@@ -467,8 +509,11 @@ Enact a temp Basal or a temp target */
 /* Header */
 "History" = "История";
 
-/* CGM option */
-"Upload glucose to Nightscout" = "Загружать глюкозу в Nightscout";
+/* Nightscout option */
+"Upload" = "Выгрузка";
+
+/* Nightscout option */
+"Allow Uploads" = "Разрешить выгрузку";
 
 /* Type of CGM or glucose source */
 "Type" = "Тип";
@@ -516,10 +561,13 @@ Enact a temp Basal or a temp target */
 "Calibrations" = "Калибровки";
 
 /* */
-"Create events in calendar" = "Создавать событий в календаре";
+"Create Events in Calendar" = "Создавать события в календаре";
 
 /* */
 "Calendar" = "Календарь";
+
+/* Automatic delivered treatments */
+"Automatic" = "Автоматически";
 
 /* */
 "Other" = "Прочее";
@@ -942,7 +990,7 @@ Enact a temp Basal or a temp target */
 "iAPS not active" = "iAPS неактивен";
 
 /* */
-"Last loop was more then %d min ago" = "Последний цикл был более %d минут назад";
+"Last loop was more than %d min ago" = "Последний цикл был более %d минут назад";
 
 /* Glucose badge */
 "Show glucose on the app badge" = "Показывать глюкозу на значке приложения";
@@ -956,11 +1004,17 @@ Enact a temp Basal or a temp target */
 /* */
 "Bolus failed" = "Болюс не выполнен";
 
+/* "Max Bolus Exceeded label" */
+"Max Bolus exceeded!" = "Максимальный болюс превышен!";
+
 /* */
 "Bolus failed or inaccurate. Check pump history before repeating." = "Болюс не выполнен или неточный. Перед повторением проверьте историю помпы.";
 
 /* */
 "Carbs" = "Углеводы";
+
+/* Food Type / Meal Note */
+"Note" = "Заметка";
 
 /* */
 "Temp Basal" = "Врем. базал";
@@ -1037,6 +1091,18 @@ Enact a temp Basal or a temp target */
 /* Debug option view Autosense */
 "Autosense" = "Автосенс";
 
+/* Insulin sensitivity config header */
+"Dynamic Sensitivity" = "Динамическая чувствительность";
+
+/* Autotune config */
+"Only Autotune Basal Insulin" = "Автотюн только Базального инсулина";
+
+/* */
+"Save as your Normal Basal Rates" = "Сохранить как Ваш нормальный базальный профиль";
+
+/* */
+"Save on Pump" = "Сохранить на помпу";
+
 /* Debug option view Pump History */
 "Pump History" = "История помпы";
 
@@ -1087,7 +1153,7 @@ Enact a temp Basal or a temp target */
 "For write data to Apple Health you must give permissions in Settings > Health > Data Access" = "Чтобы записывать данные в Apple Health вам необходимо дать соответствующие разрешения, перейдя к меню Настройки > Здоровье > Доступ к данным";
 
 /* */
-"After you create glucose records in the Health app, please open iAPS to help us guaranteed transfer changed data" = "После ручного создания записей о глюкозы в программе Здоровье пожалуйста откройте iAPS, чтобы помочь нам гарантированно загрузить измененные данные";
+"This allows iAPS to read from and write to Apple Heath. You must also give permissions in Settings > Health > Data Access. If you enter a glucose value into Apple Health, open iAPS to confirm it shows up." = "Это позволяет iAPS считывать данные из Apple Health и записывать их в Apple Health. Вы также должны предоставить разрешения в разделе Настройки > Здоровье > Доступ к данным. Если вы вводите значение глюкозы в Apple Health, откройте iAPS, чтобы подтвердить его отображение.";
 
 /* New ALerts ------------------------- */
 /* Info title */
@@ -1101,6 +1167,9 @@ Enact a temp Basal or a temp target */
 
 /* Manual temp basal mode */
 "Manual" = "Ручной режим";
+
+/* An Automatic delivered bolus (SMB) */
+"SMB" = "SMB";
 
 /* Status highlight when manual temp basal is running. */
 "Manual Basal" = "Ручная ВБС";
@@ -1163,6 +1232,8 @@ Enact a temp Basal or a temp target */
 
 /* */
 "Normal " = "Нормальный ";
+
+"Currently no Override active" = "В данный момент профиль не переопределен";
 
 /* */
 "Total Insulin Adjustment" = "Регулировка потребности в инсулине";
@@ -1788,7 +1859,7 @@ Enact a temp Basal or a temp target */
 "Max COB" = "Максимум углеводов в крови";
 
 /* "Max COB" */
-"This defaults maxCOB to 120 because that’s the most a typical body can absorb over 4 hours. (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120. Essentially, this just limits AMA as a safety cap against weird COB calculations due to fluky data.)" = "Максимальное значение углеводов. По умолчанию maxCOB составляет 120, потому что это максимальное значение, которое типичный организм может поглотить за 4 часа. (Если кто-то вводит больше углеводов OpenAPS просто сокращает дозировку принимая в расчет 120. По сути, это просто предел безопасности защищающий от странных расчетов COB из-за непостоянных данных.)";
+"The default of maxCOB is 120. (If someone enters more carbs in one or multiple entries, iAPS will cap COB to maxCOB and keep it at maxCOB until the carbs entered above maxCOB have shown to be absorbed. Essentially, this just limits UAM as a safety cap against weird COB calculations due to fluky data.)" = "Значение max COB по-умолчанию равно 120. (Если кто-то вводит больше углеводов в одной или нескольких записях, IAPs ограничит количество углеводов до maxCOB и сохранит его на maxCOB до тех пор, пока не будет показано, что углеводы, введенные выше maxCOB, усваиваются. По сути, это просто ограничивает UAM в качестве защитного предела от странных вычислений COB из-за случайных данных.)";
 
 /* Headline "Bolus Snooze DIA Divisor" */
 "Bolus Snooze DIA Divisor" = "Делитель DIA откладывания болюсов";

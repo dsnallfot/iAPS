@@ -16,6 +16,9 @@
 /* Continue after added carbs without bolus */
 "Continue without bolus" = "Fortsätt utan bolus";
 
+/* Alert when adding large amount without bolusing */
+"\nAmount is more than your Max Bolus setting! \nAre you sure you want to add " = "\nDetta är mer insulin än din maxdos-inställning!\nÄr du säker på att du vill lägga till ";
+
 /* Header */
 "Enact Bolus" = "Ge bolus";
 
@@ -209,7 +212,7 @@
 "Rate" = "Värde";
 
 /*  */
-"Save on Pump" = "Spara på pump";
+"Save on Pump" = "Spara till pump";
 
 /*  */
 "Saving..." = "Sparar...";
@@ -242,7 +245,7 @@
 "Insulin Sensitivities" = "Insulinkänslighet";
 
 /* */
-"Sensitivity Ratio" = "Autosens-kvot";
+"Sensitivity Ratio" = "Kvot (nämnare)";
 
 /*  */
 "Dismiss" = "Avfärda";
@@ -349,6 +352,45 @@ Enact a temp Basal or a temp target */
 
 /* Import Error */
 "Can't find the default Nightscout Profile." = "Kan inte hitta en profil i Nightscout";
+
+/* Imported Profiles Alert */
+"\nNow please verify all of your new settings thoroughly:\n\n* Basal Settings\n * Carb Ratios\n * Glucose Targets\n * Insulin Sensitivities\n * DIA\n\n in iAPS Settings > Configuration.\n\nBad or invalid profile settings could have disatrous effects." = "\nKontrollera nu alla dina nya pumpinställningar noga:\n\n* Basalinställningar\n * Insulinkvoter\n * Målvärden\n * Insulinkänslighet\n\n i Inställningar > Konfiguration.\n\nDåliga eller ogiltiga pumpinställningar kan gå katastrofala följder.";
+
+/* Profile Import Alert */
+"This will replace some or all of your current pump settings. Are you sure you want to import profile settings from Nightscout?" = "Detta kommer att ersätta alla eller vissa av dina pumpinställningar. Är du säker att du vill fortsätta med import av inställningar?";
+
+/* Import Error */
+"\nInvalid Nightcsout Basal Settings. \n\nImport aborted. Please check your Nightscout Profile Basal Settings!" = "\nDu har ogiltiga basalinställningar i Nightscouts profilinställningar. \n\nImport avbruten. Du behöver kontrollera dina Nightcoutinställningar.";
+
+/* Import Error */
+"\nSettings were imported but the Basals couldn't be saved to pump (No pump). Check your basal settings and tap ´Save on Pump´ to sync the new basal settings" = "\nDina inställningar blev importerade men kunde inte sparas till pump (Ingen pump). Kontrollera dina pumpinstälningar och klicka därefter på ´Spara på pump´ för att programmera din pump med de nya basalinställningarna";
+
+/* Import Error Headline */
+"Import Error" = "Fel vd import av inställningar";
+
+/* */
+"Yes, Import" = "Ja, importera";
+
+/* */
+"Import settings from Nightscout" = "Importera inställningar från Nightscout";
+
+/* */
+"Import settings?" = "Importera inställningar?";
+
+/* */
+"Import from Nightscout" = "Importera från Nightscout";
+
+/* */
+"Settings imported" = "Inställningar importerade";
+
+/* Import Error */
+"\nMismatching glucose units in Nightscout and Pump Settings. Import settings aborted." = "\nDu har olika inställningar för blodsockernehet i Nightscout och iAPS. Import därför avbruten.";
+
+/* Import Error */
+"Can't find the default Nightscout Profile." = "Kan inte hitta en profil i Nightcsout";
+
+/* Add Blood Glucose Test, header */
+"Blood Glucose Test" = "Blodsockerprov";
 
 /* Add Medtronic pump */
 "Add Medtronic" = "Lägg till Medtronic";
@@ -509,8 +551,11 @@ Enact a temp Basal or a temp target */
 /* Header */
 "History" = "Historik";
 
-/* CGM option */
-"Upload glucose to Nightscout" = "Ladda upp blodsocker till Nightscout";
+/* Nightscout option */
+"Upload" = "Ladda upp";
+
+/* Nightscout option */
+"Allow Uploads" = "Tillåt uppladdningar";
 
 /* Type of CGM or glucose source */
 "Type" = "Typ";
@@ -558,10 +603,13 @@ Enact a temp Basal or a temp target */
 "Calibrations" = "Kalibreringar";
 
 /* */
-"Create events in calendar" = "Skapa kalenderhändelser";
+"Create Events in Calendar" = "Skapa kalenderhändelser";
 
 /* */
 "Calendar" = "Kalender";
+
+/* Automatic delivered treatments */
+"Automatic" = "Automatisk";
 
 /* */
 "Other" = "Annan";
@@ -984,7 +1032,7 @@ Enact a temp Basal or a temp target */
 "iAPS not active" = "iAPS är inte aktiv";
 
 /* */
-"Last loop was more then %d min ago" = "Senaste loopen var mer än %d min sedan";
+"Last loop was more than %d min ago" = "Senaste loop var för mer än %d min sedan";
 
 /* Glucose badge */
 "Show glucose on the app badge" = "Visa glukosvärde på app-ikon";
@@ -1006,6 +1054,9 @@ Enact a temp Basal or a temp target */
 
 /* */
 "Carbs" = "Kolhydrater";
+
+/* Food Type / Meal Note */
+"Note" = "Anteckning";
 
 /* */
 "Temp Basal" = "Temporär basal";
@@ -1085,14 +1136,14 @@ Enact a temp Basal or a temp target */
 /* Insulin sensitivity config header */
 "Dynamic Sensitivity" = "Dynamisk insulinkänslighet";
 
+/* Autotune config */
+"Only Autotune Basal Insulin" = "Autojustera endast basalinställningar";
+
 /* */
 "Save as your Normal Basal Rates" = "Spara som ordinarie basalinställningar";
 
 /* */
 "Save on Pump" = "Spara till pump";
-
-/* Autotune config */
-"Only Autotune Basal Insulin" = "Autojustera endast basalinställningar";
 
 /* Debug option view Pump History */
 "Pump History" = "Pumphistorik";
@@ -1144,7 +1195,7 @@ Enact a temp Basal or a temp target */
 "For write data to Apple Health you must give permissions in Settings > Health > Data Access" = "För att kunna skriva data till Apple Hälsa måste du först ge din tillåtelse i Inställningar > Hälsa > Datatillgång och enheter";
 
 /* */
-"After you create glucose records in the Health app, please open iAPS to help us guaranteed transfer changed data" = "Efter att du lagt till glukos i appen 'Hälsa', öppna iAPS för att bekräfta att överföring skett på rätt sätt";
+"This allows iAPS to read from and write to Apple Heath. You must also give permissions in Settings > Health > Data Access. If you enter a glucose value into Apple Health, open iAPS to confirm it shows up." = "Tillåt iAPS att använda databasen Apple Hälsa. För att se och ändra tillåtelser öppna 'Inställningar/Hälsa/Datatillgång och enheter' på din iPhone.";
 
 /* New ALerts ------------------------- */
 /* Info title */
@@ -1158,6 +1209,9 @@ Enact a temp Basal or a temp target */
 
 /* Manual temp basal mode */
 "Manual" = "Manuell";
+
+/* An Automatic delivered bolus (SMB) */
+"SMB" = "SMB";
 
 /* Status highlight when manual temp basal is running. */
 "Manual Basal" = "Manuell basal";
@@ -1220,6 +1274,8 @@ Enact a temp Basal or a temp target */
 
 /* */
 "Normal " = "Normal ";
+
+"Currently no Override active" = "Inget undantag aktivt";
 
 /* */
 "Total Insulin Adjustment" = "Total justering av ditt insulinbehov";
@@ -1673,7 +1729,7 @@ Enact a temp Basal or a temp target */
 
 /* --------------------------------------------------------  Dexcom G7 --------------------------------------*/
 
-"CGM Configuration" = "Inställning av CGM";
+"CGM Configuration" = "CGM-inställning";
 
 "Heartbeat" = "Hjärtslag";
 
@@ -1845,7 +1901,7 @@ Enact a temp Basal or a temp target */
 "Max COB" = "Max aktiva kolhydrater (COB)";
 
 /* "Max COB" */
-"This defaults maxCOB to 120 because that’s the most a typical body can absorb over 4 hours. (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120. Essentially, this just limits AMA as a safety cap against weird COB calculations due to fluky data.)" = "Standardvärde 120g, eftersom det är vad kroppen typiskt anses kunna absorbera under 4 timmar. (I händelse att man registrerar mer/överlappar med mer kolhydrater, kommer iAPS att minska dosering baserad på 120g. I grund och botten begränsar detta endast AMA med ett tak, för skydd mot felaktiga aktiva kolhydrater-beräkningar på grund av opålitlig data.)";
+"The default of maxCOB is 120. (If someone enters more carbs in one or multiple entries, iAPS will cap COB to maxCOB and keep it at maxCOB until the carbs entered above maxCOB have shown to be absorbed. Essentially, this just limits UAM as a safety cap against weird COB calculations due to fluky data.)" = "Standardvärde 120g, eftersom det är vad kroppen typiskt anses kunna absorbera under 4 timmar. (I händelse att man registrerar mer/överlappar med mer kolhydrater, kommer iAPS att minska dosering baserad på 120g. I grund och botten begränsar detta endast AMA med ett tak, för skydd mot felaktiga aktiva kolhydrater-beräkningar på grund av opålitlig data.)";
 
 /* Headline "Bolus Snooze DIA Divisor" */
 "Bolus Snooze DIA Divisor" = "Bolus \"snooze\" - nämnare";

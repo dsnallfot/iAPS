@@ -34,6 +34,11 @@ function generate(pumpsettings_data, bgtargets_data, isf_data, basalprofile_data
     if (temptargets_input) {
         temptargets_data = temptargets_input;
     }
+    
+    var freeaps = { };
+    if (freeaps_data) {
+        freeaps = freeaps_data;
+    }
 
         var freeaps = { };
         if (freeaps_data) {
@@ -64,17 +69,18 @@ function generate(pumpsettings_data, bgtargets_data, isf_data, basalprofile_data
     if (preferences_input) {
         preferences = preferences_input;
         if (preferences.curve === "rapid-acting") {
-                    if (preferences.useCustomPeakTime) {
-                        preferences.insulinPeakTime =
-                        Math.max(50, Math.min(preferences.insulinPeakTime, 120));
-                    } else { preferences.insulinPeakTime = 75; }
-                }
-                else if (preferences.curve === "ultra-rapid") {
-                    if (preferences.useCustomPeakTime) {
-                        preferences.insulinPeakTime =
-                        Math.max(35, Math.min(preferences.insulinPeakTime, 100));
-                    } else { preferences.insulinPeakTime = 55; }
-                }
+
+            if (preferences.useCustomPeakTime) {
+                preferences.insulinPeakTime =
+                Math.max(50, Math.min(preferences.insulinPeakTime, 120));
+            } else { preferences.insulinPeakTime = 75; }
+        } 
+        else if (preferences.curve === "ultra-rapid") {
+            if (preferences.useCustomPeakTime) {
+                preferences.insulinPeakTime =
+                Math.max(35, Math.min(preferences.insulinPeakTime, 100));
+            } else { preferences.insulinPeakTime = 55; }
+        }
     }
 
     var inputs = { };
