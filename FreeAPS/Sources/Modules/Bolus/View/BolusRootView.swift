@@ -52,12 +52,6 @@ extension Bolus {
                                 Text("Förslag bolusdos")
                                     .foregroundColor(.green)
                             }
-                            Image(systemName: "info.bubble")
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.primary, .blue)
-                                .onTapGesture {
-                                    presentInfo.toggle()
-
                             Spacer()
 
                             if state.error && state.insulinRecommended > 0 {
@@ -81,6 +75,12 @@ extension Bolus {
                                         .string(from: state.insulinRecommended as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.green)
+                            }
+                            Image(systemName: "info.circle.fill").symbolRenderingMode(.palette).foregroundStyle(
+                                .primary, .blue
+                            )
+                            .onTapGesture {
+                                presentInfo.toggle()
                             }
                         }
                         .contentShape(Rectangle())
@@ -161,7 +161,7 @@ extension Bolus {
                 }
             }
             .navigationTitle("Enact Bolus")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .popup(isPresented: presentInfo, alignment: .center, direction: .bottom) {
                 bolusInfo

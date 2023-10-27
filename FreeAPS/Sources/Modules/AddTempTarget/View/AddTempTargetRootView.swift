@@ -128,7 +128,7 @@ extension AddTempTarget {
                             Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromtPresented = true }
+                        Button { isPromptPresented = true }
                         label: { Text("Spara som favorit") }
                             .disabled(state.duration == 0)
                             .controlSize(.mini)
@@ -144,7 +144,7 @@ extension AddTempTarget {
                             Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromtPresented = true }
+                        Button { isPromptPresented = true }
                         label: { Text("Spara som favorit") }
                             .disabled(state.duration == 0)
                             .controlSize(.mini)
