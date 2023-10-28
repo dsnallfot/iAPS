@@ -41,6 +41,9 @@
   "yGridLines" : true,
   "oneDimensionalGraph" : false,
   "rulerMarks" : false,
-  "maxCarbs": 1000,
-  "displayFatAndProteinOnWatch": false
+  "displayFatAndProteinOnWatch": false,
+  "overrideFactor": 0.8,
+  "useCalc": false,
+  "fattyMeals": false,
+  "fattyMealFactor": 0.7
 }
