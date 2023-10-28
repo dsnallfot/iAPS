@@ -30,7 +30,7 @@ extension AddTempTarget {
                         HStack {
                             Image(systemName: "x.circle")
                                 .tint(.red)
-                            Text("Cancel Temp Target")
+                            Text("Avbryt tillfälligt mål")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .tint(.red)
@@ -114,7 +114,7 @@ extension AddTempTarget {
                         }
                     }
                 } else {
-                    Section(header: Text("Ställ in ett anpassat målvärde")) {
+                    Section(header: Text("Ställ in ett tillfälligt mål")) {
                         HStack {
                             Text("Target")
                             Spacer()
@@ -128,11 +128,19 @@ extension AddTempTarget {
                             Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromptPresented = true }
-                        label: { Text("Spara som favorit") }
-                            .disabled(state.duration == 0)
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
+                        HStack {
+                            Button { state.enact() }
+                            label: { Text("Aktivera tillfälligt mål") }
+                                .disabled(state.duration == 0)
+                                .controlSize(.mini)
+                                .buttonStyle(BorderlessButtonStyle())
+                            Spacer()
+                            Button { isPromptPresented = true }
+                            label: { Text("Spara favorit") }
+                                .disabled(state.duration == 0)
+                                .controlSize(.mini)
+                                .buttonStyle(BorderlessButtonStyle())
+                        }
                     }
                 }
                 if state.viewPercantage {
@@ -144,19 +152,27 @@ extension AddTempTarget {
                             Text("minutes")
                         }
                         DatePicker("Date", selection: $state.date)
-                        Button { isPromptPresented = true }
-                        label: { Text("Spara som favorit") }
-                            .disabled(state.duration == 0)
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
+                        HStack {
+                            Button { state.enact() }
+                            label: { Text("Aktivera override") }
+                                .disabled(state.duration == 0)
+                                .controlSize(.mini)
+                                .buttonStyle(BorderlessButtonStyle())
+                            Spacer()
+                            Button { isPromptPresented = true }
+                            label: { Text("Spara favorit") }
+                                .disabled(state.duration == 0)
+                                .controlSize(.mini)
+                                .buttonStyle(BorderlessButtonStyle())
+                        }
                     }
                 }
 
-                Section {
-                    Button { state.enact() }
-                    label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
+                /* Section {
+                     Button { state.enact() }
+                     label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
+                         .frame(maxWidth: .infinity, alignment: .center)
+                 } */
             }
             .popover(isPresented: $isPromptPresented) {
                 Form {
@@ -176,7 +192,7 @@ extension AddTempTarget {
                 configureView()
                 state.hbt = isEnabledArray.first?.hbt ?? 160
             }
-            .navigationTitle("Enact Temp Target")
+            .navigationTitle("Tillfälliga mål")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
         }

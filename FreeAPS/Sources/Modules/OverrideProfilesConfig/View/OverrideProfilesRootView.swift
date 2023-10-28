@@ -199,7 +199,7 @@ extension OverrideProfilesConfig {
                     }
 
                     HStack {
-                        Button("Start new Profile") {
+                        Button("Aktivera ny profil") {
                             showAlert.toggle()
                             alertSring = "\(state.percentage.formatted(.number)) %, " +
                                 (
