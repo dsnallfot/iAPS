@@ -23,7 +23,7 @@ final class BaseUnlockManager: UnlockManager {
                 }
             }
 
-            let reason = "We need to make sure you are the owner of the device."
+            let reason = "För att gå vidare med önskad åtgärd"
 
             if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
                 context.evaluatePolicy(

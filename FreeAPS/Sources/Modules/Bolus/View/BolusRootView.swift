@@ -36,21 +36,49 @@ extension Bolus {
                         }
                     } else {
                         HStack {
+                            /* Image(systemName: "info.circle.fill").symbolRenderingMode(.palette).foregroundStyle(
+                                 .primary, .blue
+                             )
+                             .onTapGesture {
+                                 presentInfo.toggle()
+                             } */
+
                             if state.error && state.insulinRecommended > 0 {
-                                Image(systemName: "exclamationmark.triangle.fill")
+                                // Image(systemName: "exclamationmark.triangle.fill")
+                                Image(systemName: "info.circle.fill")
                                     .foregroundColor(.orange)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                                 Text("Vänta med att ge bolus")
                                     .foregroundColor(.orange)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                             } else if state.insulinRecommended <= 0 {
-                                Image(systemName: "x.circle.fill")
+                                // Image(systemName: "x.circle.fill")
+                                Image(systemName: "info.circle.fill")
                                     .foregroundColor(.red)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                                 Text("Ingen bolus rekommenderas")
                                     .foregroundColor(.red)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                             } else {
-                                Image(systemName: "checkmark.circle.fill")
+                                // Image(systemName: "checkmark.circle.fill")
+                                Image(systemName: "info.circle.fill")
                                     .foregroundColor(.green)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                                 Text("Förslag bolusdos")
                                     .foregroundColor(.green)
+                                    .onTapGesture {
+                                        presentInfo.toggle()
+                                    }
                             }
                             Spacer()
 
@@ -76,17 +104,13 @@ extension Bolus {
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.green)
                             }
-                            Image(systemName: "info.circle.fill").symbolRenderingMode(.palette).foregroundStyle(
-                                .primary, .blue
-                            )
-                            .onTapGesture {
-                                presentInfo.toggle()
-                            }
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
                             if state.error, state.insulinRecommended > 0 {
                                 displayError = true
+                            } else if state.insulinRecommended <= 0 {
+                                presentInfo.toggle()
                             } else {
                                 state.amount = state.insulinRecommended
                             }
