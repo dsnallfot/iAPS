@@ -161,7 +161,7 @@ extension Bolus {
                 }
             }
             .navigationTitle("Enact Bolus")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .popup(isPresented: presentInfo, alignment: .center, direction: .bottom) {
                 bolusInfo
