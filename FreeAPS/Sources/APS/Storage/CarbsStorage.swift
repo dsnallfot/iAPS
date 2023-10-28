@@ -185,6 +185,7 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
                 enteredBy: CarbsEntry.manual,
                 bolus: nil,
                 insulin: nil,
+                notes: $0.note,
                 carbs: $0.carbs,
                 fat: nil,
                 protein: nil,
