@@ -210,6 +210,7 @@ extension Bolus {
                         if state.fattyMeals {
                             Text("Fettrik måltid?")
                             // .font(.footnote)
+                            Spacer()
                             Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                                 .toggleStyle(CheckboxToggleStyle())
                                 // .font(.footnote)
