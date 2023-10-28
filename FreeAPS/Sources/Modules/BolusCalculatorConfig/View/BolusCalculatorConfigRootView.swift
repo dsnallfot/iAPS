@@ -16,7 +16,7 @@ extension BolusCalculatorConfig {
 
         var body: some View {
             Form {
-                Section(header: Text("Calculator settings")) {
+                Section(header: Text("Inställningar boluskalkylator")) {
                     HStack {
                         Toggle("Använd alternativ boluskalkylator", isOn: $state.useCalc)
                     }
@@ -26,9 +26,9 @@ extension BolusCalculatorConfig {
                         DecimalTextField("0.8", value: $state.overrideFactor, formatter: conversionFormatter)
                     }
                 }
-                Section(header: Text("Fatty Meals")) {
+                Section(header: Text("Fettrika måltider")) {
                     HStack {
-                        Toggle("Använd faktor för feta måltider", isOn: $state.fattyMeals)
+                        Toggle("Använd faktor för fettrika måltider", isOn: $state.fattyMeals)
                     }
                     HStack {
                         Text("Override With A Factor Of ")

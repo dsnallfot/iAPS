@@ -32,6 +32,7 @@ extension Bolus {
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
         @Published var waitForSuggestion: Bool = false
+        @Published var maxCarbs: Decimal = 0
 
         var waitForSuggestionInitial: Bool = false
 
@@ -76,6 +77,7 @@ extension Bolus {
             useCalc = settings.settings.useCalc
             fattyMeals = settings.settings.fattyMeals
             fattyMealFactor = settings.settings.fattyMealFactor
+            maxCarbs = settings.settings.maxCarbs
 
             // get carb ratio entry schedule
             let schedule = provider.getProfile().schedule
@@ -183,10 +185,18 @@ extension Bolus {
                 insulinCalculated = result
             }
 
+            // Check if insulinCalculated exceeds state.maxBolus and limit it if necessary
+            if insulinCalculated > maxBolus {
+                insulinCalculated = maxBolus
+            }
+
             // display no negative insulinCalculated
             insulinCalculated = max(insulinCalculated, 0)
             let insulinCalculatedAsDouble = Double(insulinCalculated)
-            roundedInsulinCalculated = Decimal(round(100 * insulinCalculatedAsDouble) / 100)
+            roundedInsulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05) * 0.05)
+
+            // Rounding insulinCalculated to the nearest even 0.05
+            insulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05).rounded(.toNearestOrEven) * 0.05)
 
             return insulinCalculated
         }
