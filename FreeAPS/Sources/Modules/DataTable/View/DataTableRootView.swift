@@ -247,7 +247,7 @@ extension DataTable {
 
                             Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
                                 .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
-                                .font(.footnote)
+                                .font(.subheadline)
                         })
                             .buttonStyle(.borderless)
                     }
@@ -256,7 +256,7 @@ extension DataTable {
                     Button(action: { showNonPumpInsulin = true }, label: {
                         Text("Insulin")
                             // .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                            .font(.footnote)
+                            .font(.subheadline)
 
                         Image(systemName: "plus.circle.fill")
                         // .foregroundColor(colorScheme == .dark ? .primary : .primary)
@@ -321,7 +321,7 @@ extension DataTable {
                     Button(action: { showManualGlucose = true }, label: {
                         Text("Fingerstick")
                             // .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                            .font(.footnote)
+                            .font(.subheadline)
 
                         Image(systemName: "plus.circle.fill")
                         // .foregroundColor(colorScheme == .dark ? .primary : .primary)
