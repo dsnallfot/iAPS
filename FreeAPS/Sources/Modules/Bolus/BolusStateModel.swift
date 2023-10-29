@@ -34,9 +34,9 @@ extension Bolus {
             didSet {
                 if !waitForSuggestion, !oldValue {
                     calculateInsulin() // Calculate insulin when waitForSuggestion becomes false
-                    }
                 }
             }
+        }
 
         @Published var maxCarbs: Decimal = 0
         @Published var carbRatio: Decimal = 0
@@ -68,6 +68,7 @@ extension Bolus {
         @Published var fattyMealFactor: Decimal = 0
         @Published var useFattyMealCorrectionFactor: Bool = false
         @Published var currentTime: String = ""
+        @Published var viewDetails: Bool = false
 
         override func subscribe() {
             setupInsulinRequired()
