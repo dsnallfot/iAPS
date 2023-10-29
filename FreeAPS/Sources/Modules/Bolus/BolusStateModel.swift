@@ -83,7 +83,7 @@ extension Bolus {
             let schedule = provider.getProfile().schedule
             // get current time in same format as carb ratio entry start date
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm"
+            dateFormatter.dateFormat = "HH:mm:ss"
             let currentTime = dateFormatter.string(from: Date())
             // loop through schedule to get current carb ratio
             for (index, entry) in schedule.enumerated() {
