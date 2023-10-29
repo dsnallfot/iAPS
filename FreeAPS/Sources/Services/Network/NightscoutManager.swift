@@ -575,8 +575,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             return
         }
         // check if unique code
-         // var uuid = UUID(uuidString: yourString) This will return nil if yourString is not a valid UUID
-         let glucoseWithoutCorrectID = glucose.filter { UUID(uuidString: $0._id) != nil }
+        // var uuid = UUID(uuidString: yourString) This will return nil if yourString is not a valid UUID
+        let glucoseWithoutCorrectID = glucose.filter { UUID(uuidString: $0._id) != nil }
 
         processQueue.async {
             glucose.chunks(ofCount: 100)

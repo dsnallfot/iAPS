@@ -228,9 +228,9 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
         else { return }
 
         func save(bolusToModify: [InsulinBolus], bolus: [InsulinBolus], basal: [InsulinBasal]) {
-                     // first step : delete the HK value
-                     // second step : recreate with the new value !
-                     bolusToModify.forEach { syncID in
+            // first step : delete the HK value
+            // second step : recreate with the new value !
+            bolusToModify.forEach { syncID in
                 let predicate = HKQuery.predicateForObjects(
                     withMetadataKey: HKMetadataKeySyncIdentifier,
                     operatorType: .equalTo,
@@ -242,7 +242,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                 }
             }
             let bolusTotal = bolus + bolusToModify
-                         let bolusSamples = bolusTotal
+            let bolusSamples = bolusTotal
                 .map {
                     HKQuantitySample(
                         type: sampleType,
