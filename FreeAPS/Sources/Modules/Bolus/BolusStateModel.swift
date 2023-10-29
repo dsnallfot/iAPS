@@ -30,7 +30,14 @@ extension Bolus {
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
-        @Published var waitForSuggestion: Bool = false
+        @Published var waitForSuggestion: Bool = false {
+            didSet {
+                if !waitForSuggestion, !oldValue {
+                    calculateInsulin() // Calculate insulin when waitForSuggestion becomes false
+                    }
+                }
+            }
+
         @Published var maxCarbs: Decimal = 0
         @Published var carbRatio: Decimal = 0
 
@@ -222,10 +229,6 @@ extension Bolus {
                     .roundBolus(amount: max(self.insulinRecommended, 0))
 
                 self.getDeltaBG()
-
-                if self.useCalc {
-                    self.apsManager.determineBasalSync()
-                }
             }
         }
     }

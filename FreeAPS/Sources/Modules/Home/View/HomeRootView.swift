@@ -632,7 +632,8 @@ extension Home {
                     }.buttonStyle(.plain)
                     Spacer()
                     Button {
-                        state.showModal(for: .bolus(waitForSuggestion: false))
+                        state.showModal(for: .bolus(waitForSuggestion: true))
+                        state.apsManager.determineBasalSync()
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("bolus")

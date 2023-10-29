@@ -51,13 +51,13 @@ extension AddCarbs {
                 apsManager.determineBasalSync()
                 showModal(for: nil)
             } else {
-                // showModal(for: .bolus(waitForSuggestion: true))
+                showModal(for: .bolus(waitForSuggestion: true))
                 apsManager.determineBasalSync()
 
                 // Add a 0.5-second delay before showing the modal
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                    self?.showModal(for: .bolus(waitForSuggestion: true))
-                }
+                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                // self?.showModal(for: .bolus(waitForSuggestion: true))
+                // }
             }
         }
 

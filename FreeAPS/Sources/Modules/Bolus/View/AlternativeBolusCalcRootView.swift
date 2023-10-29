@@ -49,7 +49,7 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            if state.error && state.insulinCalculated > 0 {
+                            if state.error && Double(insulinCalculated) > 0 {
                                 // Image(systemName: "exclamationmark.triangle.fill")
                                 Image(systemName: "info.circle.fill")
                                     .foregroundColor(.orange)
@@ -61,7 +61,7 @@ extension Bolus {
                                     .onTapGesture {
                                         showInfo.toggle()
                                     }
-                            } else if state.insulinCalculated <= 0 {
+                            } else if Double(insulinCalculated) <= 0 {
                                 // Image(systemName: "x.circle.fill")
                                 Image(systemName: "info.circle.fill")
                                     .foregroundColor(.red)
@@ -88,54 +88,56 @@ extension Bolus {
                             }
                             Spacer()
 
-                            if state.error && state.insulinCalculated > 0 {
+                            if state.error && Double(insulinCalculated) > 0 {
                                 // Visa önskat innehåll för "Vänta med att ge bolus"
                                 Text(
                                     formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
+                                        .string(from: Double(insulinCalculated) as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.orange)
                             } else if state.insulinCalculated <= 0 {
                                 // Visa önskat innehåll för "Ingen bolus rekommenderas"
                                 Text(
                                     formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
+                                        .string(from: Double(insulinCalculated) as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.red)
                             } else {
                                 // Visa önskat innehåll för "Rekommenderad bolus"
                                 Text(
                                     formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
+                                        .string(from: Double(insulinCalculated) as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
                                 ).foregroundColor(.green)
                             }
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            if state.error, state.insulinCalculated > 0 {
+                            if state.error, Double(insulinCalculated) > 0 {
                                 displayError = true
-                            } else if state.insulinCalculated <= 0 {
+                            } else if Double(insulinCalculated) <= 0 {
                                 showInfo.toggle()
                             } else {
-                                state.amount = state.insulinCalculated
+                                state.amount = insulinCalculated
+                            }
+                        }
+
+                        if !state.waitForSuggestion {
+                            HStack {
+                                Text("Bolus Amount").fontWeight(.semibold)
+                                Spacer()
+                                DecimalTextField(
+                                    "0,00",
+                                    value: $state.amount,
+                                    formatter: formatter,
+                                    autofocus: true,
+                                    cleanInput: true
+                                )
+                                Text(!(state.amount > state.maxBolus * 3) ? "U" : "☠️").fontWeight(.semibold)
                             }
                         }
                     }
-                    HStack {
-                        Text("Bolus Amount").fontWeight(.semibold)
-                        Spacer()
-                        DecimalTextField(
-                            "0,00",
-                            value: $state.amount,
-                            formatter: formatter,
-                            autofocus: true,
-                            cleanInput: true
-                        )
-                        Text(!(state.amount > state.maxBolus * 3) ? "U" : "☠️").fontWeight(.semibold)
-                    }
                 }
-
                 header: { Text("Bolus") }
 
                 Section {
@@ -174,7 +176,7 @@ extension Bolus {
                     }
                     .contentShape(Rectangle())
 
-//                   maybe remove this hstack or display entered carbs from carbs entry
+                    //                   maybe remove this hstack or display entered carbs from carbs entry
                     HStack {
                         let maxamountcarbs = Double(state.maxCarbs)
                         let formattedMaxAmountCarbs = String(maxamountcarbs)
@@ -199,22 +201,25 @@ extension Bolus {
                             NSLocalizedString("g", comment: "grams")
                         )
                         .foregroundColor(.secondary)
-                        .alert("Varning! \nInställd maxgräns är \(formattedMaxAmountCarbs)g kh!", isPresented: $carbsWarning) {
+                        .alert(
+                            "Varning! \nInställd maxgräns är \(formattedMaxAmountCarbs)g kh!",
+                            isPresented: $carbsWarning
+                        ) {
                             Button("OK", role: .cancel) {}
                         }
                     }
                     HStack {
                         /* Button(action: {
-                             showInfo.toggle()
-                             insulinCalculated = state.calculateInsulin()
+                         showInfo.toggle()
+                         insulinCalculated = state.calculateInsulin()
                          }, label: {
-                             Image(systemName: "info.circle")
-                             Text("Beräkningar")
+                         Image(systemName: "info.circle")
+                         Text("Beräkningar")
                          })
-                             .foregroundStyle(.blue)
-                             .font(.footnote)
-                             .buttonStyle(PlainButtonStyle())
-                             .frame(maxWidth: .infinity, alignment: .leading)
+                         .foregroundStyle(.blue)
+                         .font(.footnote)
+                         .buttonStyle(PlainButtonStyle())
+                         .frame(maxWidth: .infinity, alignment: .leading)
                          Spacer()*/
                         if state.fattyMeals {
                             Text("Fet måltid?")
@@ -325,7 +330,13 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Spacer()
                             let target = state.units == .mmolL ? state.target.asMmolL : state.target
-                            Text(target.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
+                            Text(
+                                target
+                                    .formatted(
+                                        .number.grouping(.never).rounded()
+                                            .precision(.fractionLength(fractionDigits))
+                                    )
+                            )
                             Text(state.units.rawValue)
                                 .foregroundColor(.secondary)
                         }
@@ -477,8 +488,14 @@ extension Bolus {
                                 .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
 
                             let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
-                            Text(glucose.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                            Text(
+                                glucose
+                                    .formatted(
+                                        .number.grouping(.never).rounded()
+                                            .precision(.fractionLength(fractionDigits))
+                                    )
+                            )
+                            .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
                             Text(state.units.rawValue)
                                 .foregroundColor(.secondary)
                                 .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
@@ -488,8 +505,10 @@ extension Bolus {
                             Spacer()
                             let targetDifferenceInsulin = state.targetDifferenceInsulin
                             // rounding
-                            let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin).doubleValue
-                            let roundedTargetDifferenceInsulin = Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
+                            let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin)
+                                .doubleValue
+                            let roundedTargetDifferenceInsulin =
+                                Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
 
                             Text(roundedTargetDifferenceInsulin.formatted())
 
@@ -503,8 +522,14 @@ extension Bolus {
                                 .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
 
                             let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
-                            Text(trend.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))))
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                            Text(
+                                trend
+                                    .formatted(
+                                        .number.grouping(.never).rounded()
+                                            .precision(.fractionLength(fractionDigits))
+                                    )
+                            )
+                            .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
                             Text(state.units.rawValue).foregroundColor(.secondary)
                                 .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
 
@@ -530,7 +555,8 @@ extension Bolus {
                             .foregroundColor(.secondary)
                         Spacer()
                         let insulin = state.roundedWholeCalc
-                        Text(insulin.formatted()).foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                        Text(insulin.formatted())
+                            .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
                         Text(unit)
                             .foregroundColor(.secondary)
                     }
@@ -558,7 +584,8 @@ extension Bolus {
                         }
 
                         let insulin = state.roundedWholeCalc
-                        Text(insulin.formatted()).foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                        Text(insulin.formatted())
+                            .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
                         Text(unit)
                             .foregroundColor(.secondary)
                         Text(" = ")
@@ -621,13 +648,15 @@ extension Bolus {
                     "Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to ",
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) + state.minGuardBG
-                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " + state.units
+                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
+                    state.units
                     .rawValue + ", " +
                     NSLocalizedString(
                         "which is below your Threshold (",
                         comment: "Bolus pop-up / Alert string. Make translations concise!"
                     ) + state
-                    .threshold.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + ")"
+                    .threshold
+                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + ")"
             case 3:
                 return NSLocalizedString(
                     "Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: ",
@@ -635,7 +664,8 @@ extension Bolus {
                 ) +
                     state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Climbing: ", comment: "Bolus pop-up / Alert string. Make translatons concise!") + state
+                    NSLocalizedString(". Climbing: ", comment: "Bolus pop-up / Alert string. Make translatons concise!") +
+                    state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 4:
                 return NSLocalizedString(
@@ -644,7 +674,8 @@ extension Bolus {
                 ) +
                     state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Falling: ", comment: "Bolus pop-up / Alert string. Make translations concise!") + state
+                    NSLocalizedString(". Falling: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
+                    state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 5:
                 return NSLocalizedString(
@@ -653,7 +684,8 @@ extension Bolus {
                 ) +
                     state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Changing: ", comment: "Bolus pop-up / Alert string. Make translations concise!") + state
+                    NSLocalizedString(". Changing: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
+                    state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 6:
                 return NSLocalizedString(
@@ -661,7 +693,8 @@ extension Bolus {
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) + state
                     .minPredBG
-                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " + state
+                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
+                    state
                     .units
                     .rawValue
             default:
