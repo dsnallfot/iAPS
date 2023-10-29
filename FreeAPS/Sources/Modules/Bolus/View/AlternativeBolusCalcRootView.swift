@@ -22,15 +22,15 @@ extension Bolus {
             formatter.maximumFractionDigits = 2
             return formatter
         }
-        
+
         private var glucoseFormatter: NumberFormatter {
-                     let formatter = NumberFormatter()
-                     formatter.numberStyle = .decimal
-                     if state.units == .mmolL {
-                         formatter.maximumFractionDigits = 1
-                     } else { formatter.maximumFractionDigits = 0 }
-                     return formatter
-                 }
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            if state.units == .mmolL {
+                formatter.maximumFractionDigits = 1
+            } else { formatter.maximumFractionDigits = 0 }
+            return formatter
+        }
 
         private var fractionDigits: Int {
             if state.units == .mmolL {

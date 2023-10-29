@@ -12,7 +12,6 @@ extension Bolus {
         // added for bolus calculator
         @Injected() var glucoseStorage: GlucoseStorage!
         @Injected() var settings: SettingsManager!
-        @Injected() var storage: FileStorage!
 
         @Published var suggestion: Suggestion?
         @Published var amount: Decimal = 0
@@ -33,6 +32,7 @@ extension Bolus {
         @Published var minPredBG: Decimal = 0
         @Published var waitForSuggestion: Bool = false
         @Published var maxCarbs: Decimal = 0
+        @Published var carbRatio: Decimal = 0
 
         var waitForSuggestionInitial: Bool = false
 
@@ -60,8 +60,6 @@ extension Bolus {
         @Published var fattyMeals: Bool = false
         @Published var fattyMealFactor: Decimal = 0
         @Published var useFattyMealCorrectionFactor: Bool = false
-
-        @Published var carbRatio: Decimal = 0
         @Published var currentTime: String = ""
 
         override func subscribe() {
@@ -78,38 +76,6 @@ extension Bolus {
             fattyMeals = settings.settings.fattyMeals
             fattyMealFactor = settings.settings.fattyMealFactor
             maxCarbs = settings.settings.maxCarbs
-
-            // get carb ratio entry schedule
-            let schedule = provider.getProfile().schedule
-            // get current time in same format as carb ratio entry start date
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm:ss"
-            let currentTime = dateFormatter.string(from: Date())
-            // loop through schedule to get current carb ratio
-            for (index, entry) in schedule.enumerated() {
-                if let entryStartTimeDate = dateFormatter.date(from: entry.start) {
-                    var entryEndTimeDate: Date
-
-                    if index < schedule.count - 1 {
-                        let nextEntry = schedule[index + 1]
-                        if let nextEntryStartTimeDate = dateFormatter.date(from: nextEntry.start) {
-                            let timeDifference = nextEntryStartTimeDate.timeIntervalSince(entryStartTimeDate)
-                            entryEndTimeDate = entryStartTimeDate.addingTimeInterval(timeDifference)
-                        } else {
-                            continue
-                        }
-                    } else {
-                        entryEndTimeDate = Date()
-                    }
-                    // if currentTime is between start and end of carb ratio entry -> carbRatio = currentRatio
-                    if let currentTimeDate = dateFormatter.date(from: currentTime) {
-                        if currentTimeDate >= entryStartTimeDate, currentTimeDate <= entryEndTimeDate {
-                            carbRatio = entry.ratio
-                            break
-                        }
-                    }
-                }
-            }
 
             if waitForSuggestionInitial {
                 apsManager.determineBasal()
@@ -237,6 +203,7 @@ extension Bolus {
                 self.currentBG = (self.provider.suggestion?.bg ?? 0)
                 self.cob = self.provider.suggestion?.cob ?? 0
                 self.basal = self.provider.suggestion?.rate ?? 0
+                self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
 
                 if self.settingsManager.settings.insulinReqPercentage != 100 {
                     self.insulinRecommended = self.insulin * (self.settingsManager.settings.insulinReqPercentage / 100)
@@ -255,6 +222,10 @@ extension Bolus {
                     .roundBolus(amount: max(self.insulinRecommended, 0))
 
                 self.getDeltaBG()
+
+                if self.useCalc {
+                    self.apsManager.determineBasalSync()
+                }
             }
         }
     }
