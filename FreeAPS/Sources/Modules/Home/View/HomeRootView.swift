@@ -646,8 +646,9 @@ extension Home {
                                 .padding(.trailing, 9)
 
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.1 {
-                                let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
-                                Text(formattedInsulin)
+                                // let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
+                                // Text(formattedInsulin)
+                                Image(systemName: "exclamationmark.circle")
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(3)

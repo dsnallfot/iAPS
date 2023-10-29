@@ -350,7 +350,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                         }
                         HStack {
-                            Text("Inställd max kh:")
+                            Text("Inställd max kolhydrater:")
                                 .foregroundColor(.secondary)
                             Spacer()
                             let maxCarbs = state.maxCarbs
@@ -359,7 +359,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                         }
                         HStack {
-                            Text("Inställd manuell bolus %:")
+                            Text("Inställd faktor manuell bolus:")
                                 .foregroundColor(.secondary)
                             Spacer()
                             let fraction = state.fraction * 100
@@ -369,7 +369,7 @@ extension Bolus {
                         }
                         if state.useFattyMealCorrectionFactor {
                             HStack {
-                                Text("Inställd fet måltid bolus %:")
+                                Text("Inställd faktor fet måltid :")
                                     .foregroundColor(.orange)
                                 Spacer()
                                 let fraction = state.fattyMealFactor * 100
