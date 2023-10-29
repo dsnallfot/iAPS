@@ -22,6 +22,15 @@ extension Bolus {
             formatter.maximumFractionDigits = 2
             return formatter
         }
+        
+        private var glucoseFormatter: NumberFormatter {
+                     let formatter = NumberFormatter()
+                     formatter.numberStyle = .decimal
+                     if state.units == .mmolL {
+                         formatter.maximumFractionDigits = 1
+                     } else { formatter.maximumFractionDigits = 0 }
+                     return formatter
+                 }
 
         private var fractionDigits: Int {
             if state.units == .mmolL {
@@ -137,20 +146,20 @@ extension Bolus {
                             value: Binding(
                                 get: {
                                     if state.units == .mmolL {
-                                        return state.currentBG * 0.0555
+                                        return state.currentBG.asMmolL
                                     } else {
                                         return state.currentBG
                                     }
                                 },
                                 set: { newValue in
                                     if state.units == .mmolL {
-                                        state.currentBG = newValue * 0.0555
+                                        state.currentBG = newValue.asMmolL
                                     } else {
                                         state.currentBG = newValue
                                     }
                                 }
                             ),
-                            formatter: formatter,
+                            formatter: glucoseFormatter,
                             autofocus: false,
                             cleanInput: true
                         )
