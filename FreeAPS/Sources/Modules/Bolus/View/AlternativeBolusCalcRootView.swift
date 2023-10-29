@@ -386,7 +386,7 @@ extension Bolus {
                         HStack {
                             Text("Variabler").foregroundColor(.primary).fontWeight(.semibold)
                             Spacer()
-                            Text("Behov +/- E").foregroundColor(.primary).fontWeight(.semibold)
+                            Text("Behov +/-  E").foregroundColor(.primary).fontWeight(.semibold)
                         }
                         HStack(alignment: .center, spacing: nil) {
                             Text("Nya kolhydrater:")
