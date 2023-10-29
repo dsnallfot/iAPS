@@ -517,7 +517,7 @@ extension Bolus {
                         .fontWeight(.bold)
 
                     HStack {
-                        Text("Totalt beräknat insulinbehov:")
+                        Text("Summa beräknat insulinbehov:")
                             .foregroundColor(.secondary)
                         Spacer()
                         let insulin = state.roundedWholeCalc
