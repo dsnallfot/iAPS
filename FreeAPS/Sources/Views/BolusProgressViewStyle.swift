@@ -10,7 +10,7 @@ public struct BolusProgressViewStyle: ProgressViewStyle {
                 .frame(width: 27, height: 27)
 
             Rectangle().fill(Color.red)
-                .frame(width: 10, height: 10)
+                .frame(width: 9, height: 9)
 
             Circle()
                 .trim(from: 0.0, to: CGFloat(configuration.fractionCompleted ?? 0))

@@ -314,7 +314,7 @@ extension Bolus {
 
             return VStack {
                 VStack {
-                    VStack {
+                    VStack(spacing: 3) {
                         HStack {
                             Text("Beräkningar")
                                 .font(.title3)
@@ -346,15 +346,16 @@ extension Bolus {
                             Text(state.units.rawValue)
                                 .foregroundColor(.secondary)
                         }
-                        HStack {
-                            Text("Aktuell basal:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            let basal = state.basal
-                            Text(basal.formatted())
-                            Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                                .foregroundColor(.secondary)
-                        }
+                        // Basal dont update for some reason. needs to check. not crucial info in the calc view however
+                        /* HStack {
+                             Text("Aktuell basal:")
+                                 .foregroundColor(.secondary)
+                             Spacer()
+                             let basal = state.basal
+                             Text(basal.formatted())
+                             Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                                 .foregroundColor(.secondary)
+                         } */
                         HStack {
                             Text("Aktuell insulinkvot:")
                                 .foregroundColor(.secondary)
@@ -364,17 +365,30 @@ extension Bolus {
                             Text(NSLocalizedString("g/E", comment: " grams per Unit"))
                                 .foregroundColor(.secondary)
                         }
+                        .padding(.bottom, 3)
                         Divider()
 
                         HStack {
-                            Text("Inställd maxbolus:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            let maxBolus = state.maxBolus
-                            Text(maxBolus.formatted())
-                            Text(NSLocalizedString("E", comment: " Units"))
-                                .foregroundColor(.secondary)
+                            if state.insulinCalculated == state.maxBolus {
+                                Text("Inställd maxbolus:")
+                                    .foregroundColor(.purple)
+                                Spacer()
+                                let maxBolus = state.maxBolus
+                                Text(maxBolus.formatted())
+                                    .foregroundColor(.purple)
+                                Text(NSLocalizedString("E", comment: " Units"))
+                                    .foregroundColor(.purple)
+                            } else {
+                                Text("Inställd maxbolus:")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                let maxBolus = state.maxBolus
+                                Text(maxBolus.formatted())
+                                Text(NSLocalizedString("E", comment: " Units"))
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        .padding(.top, 3)
                         HStack {
                             Text("Inställd max kolhydrater:")
                                 .foregroundColor(.secondary)
@@ -396,39 +410,40 @@ extension Bolus {
                         if state.useFattyMealCorrectionFactor {
                             HStack {
                                 Text("Inställd faktor fet måltid :")
-                                    .foregroundColor(.orange)
+                                    .foregroundColor(.brown)
                                 Spacer()
                                 let fraction = state.fattyMealFactor * 100
                                 Text(fraction.formatted())
-                                    .foregroundColor(.orange)
+                                    .foregroundColor(.brown)
                                 Text("%")
-                                    .foregroundColor(.orange)
+                                    .foregroundColor(.brown)
                             }
                         }
                     }
-                    .padding()
                     Divider()
-                    VStack {
+                    VStack(spacing: 3) {
                         HStack {
                             Text("Variabler").foregroundColor(.primary).fontWeight(.semibold)
                             Spacer()
                             Text("Behov +/-  E").foregroundColor(.primary).fontWeight(.semibold)
                         }
+                        .padding(.top, 3)
+                        .padding(.bottom, 3)
                         HStack(alignment: .center, spacing: nil) {
                             Text("Ännu ej reg KH:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 105, alignment: .leading)
 
                             let carbs = state.enteredCarbs
                             Text(carbs.formatted())
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 50, alignment: .trailing)
 
                             let unitGrams = NSLocalizedString("g", comment: "grams")
                             Text(unitGrams).foregroundColor(.secondary)
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 50, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
                             let insulinCarbs = state.enteredCarbs / state.carbRatio
                             // rounding
@@ -441,18 +456,18 @@ extension Bolus {
                         HStack(alignment: .center, spacing: nil) {
                             Text("COB:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 105, alignment: .leading)
 
                             let cob = state.cob
                             Text(cob.formatted())
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 50, alignment: .trailing)
 
                             let unitGrams = NSLocalizedString("g", comment: "grams")
                             Text(unitGrams).foregroundColor(.secondary)
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 50, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
                             let insulinCob = state.wholeCobInsulin - state.enteredCarbs / state.carbRatio
                             // rounding
@@ -465,21 +480,21 @@ extension Bolus {
                         HStack(alignment: .center, spacing: nil) {
                             Text("IOB:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 105, alignment: .leading)
 
                             let iob = state.iob
                             // rounding
                             let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
                             let roundedIob = Decimal(round(100 * iobAsDouble) / 100)
                             Text(roundedIob.formatted())
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 50, alignment: .trailing)
 
                             Text(unit)
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 50, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
                             let iobCalc = state.iobInsulinReduction
                             // rounding
@@ -491,7 +506,7 @@ extension Bolus {
                         HStack(alignment: .center, spacing: nil) {
                             Text("Blodsocker:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 105, alignment: .leading)
 
                             let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
                             Text(
@@ -501,13 +516,13 @@ extension Bolus {
                                             .precision(.fractionLength(fractionDigits))
                                     )
                             )
-                            .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                            .frame(minWidth: 50, alignment: .trailing)
                             Text(state.units.rawValue)
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 50, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
                             let targetDifferenceInsulin = state.targetDifferenceInsulin
                             // rounding
@@ -525,7 +540,7 @@ extension Bolus {
                         HStack(alignment: .center, spacing: nil) {
                             Text("15 min trend:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 105, alignment: .leading)
 
                             let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
                             Text(
@@ -535,12 +550,12 @@ extension Bolus {
                                             .precision(.fractionLength(fractionDigits))
                                     )
                             )
-                            .frame(minWidth: 50, maxHeight: 10, alignment: .trailing)
+                            .frame(minWidth: 50, alignment: .trailing)
                             Text(state.units.rawValue).foregroundColor(.secondary)
-                                .frame(minWidth: 50, maxHeight: 10, alignment: .leading)
+                                .frame(minWidth: 50, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, maxHeight: 10, alignment: .trailing)
+                                .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
                             let trendInsulin = state.fifteenMinInsulin
                             // rounding
@@ -551,14 +566,13 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .padding()
 
                     Divider()
                         .fontWeight(.bold)
 
                     HStack {
-                        Text("Summa beräknat insulinbehov:")
-                            .foregroundColor(.secondary)
+                        Text("Summa beräknat bolusbehov:")
+                            .foregroundColor(.primary)
                         Spacer()
                         let insulin = state.roundedWholeCalc
                         Text(insulin.formatted())
@@ -566,14 +580,27 @@ extension Bolus {
                         Text(unit)
                             .foregroundColor(.secondary)
                     }
-                    .padding()
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
 
                     Divider()
                         .fontWeight(.bold)
 
                     HStack {
-                        Text("Förslag bolusdos:")
-                            .fontWeight(.bold)
+                        if state.error && state.insulinCalculated > 0 {
+                            Text("Vänta med bolus:")
+                                .fontWeight(.bold)
+                                .foregroundColor(.orange)
+                        } else if state.insulinCalculated <= 0 {
+                            Text("Ingen bolus rek:")
+                                .fontWeight(.bold)
+                                .foregroundColor(.red)
+                        } else {
+                            Text("Förslag bolusdos:")
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
+                        }
+
                         Spacer()
                         let fraction = state.fraction * 100
                         Text(fraction.formatted())
@@ -584,7 +611,7 @@ extension Bolus {
                         if state.useFattyMealCorrectionFactor {
                             let fattyMealFactor = state.fattyMealFactor * 100
                             Text(fattyMealFactor.formatted())
-                                .foregroundColor(.orange)
+                                .foregroundColor(.brown)
                             Text("%  x ")
                                 .foregroundColor(.secondary)
                         }
@@ -601,32 +628,67 @@ extension Bolus {
                         // rounding
                         let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
                         let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
-                        Text(roundedResult.formatted())
-                            .fontWeight(.bold)
-                            .font(.system(size: 16))
-                            .foregroundColor(.blue)
-                        Text(unit)
-                            .foregroundColor(.secondary)
+                        if state.error && state.insulinCalculated > 0 {
+                            Text(roundedResult.formatted())
+                                .fontWeight(.bold)
+                                .font(.system(size: 16))
+                                .foregroundColor(.orange)
+                            Text(unit)
+                                .foregroundColor(.orange)
+                                .font(.system(size: 16))
+                        } else if state.insulinCalculated <= 0 {
+                            Text(roundedResult.formatted())
+                                .fontWeight(.bold)
+                                .font(.system(size: 16))
+                                .foregroundColor(.red)
+                            Text(unit)
+                                .foregroundColor(.red)
+                                .font(.system(size: 16))
+                        } else {
+                            Text(roundedResult.formatted())
+                                .fontWeight(.bold)
+                                .font(.system(size: 16))
+                                .foregroundColor(.green)
+                            Text(unit)
+                                .foregroundColor(.green)
+                                .font(.system(size: 16))
+                        }
                     }
                     .onTapGesture {
                         state.amount = state.insulinCalculated
                         showInfo.toggle()
                     }
-                    .padding(.leading, 16)
-                    .padding(.trailing, 16)
+                    // .padding(.leading, 16)
+                    // .padding(.trailing, 16)
+                    .padding(.top, 15)
                     .padding(.bottom, 5)
                     let maxamountbolus = Double(state.maxBolus)
                     let formattedMaxAmountBolus = String(maxamountbolus)
-                    Text("Obs! Förslaget kan inte överskrida inställd maxbolus \(formattedMaxAmountBolus)E")
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary).italic()
-                        .padding(.leading, 16)
-                        .padding(.trailing, 16)
+                    if state.insulinCalculated == state.maxBolus {
+                        Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
+                            // .font(.system(size: 12))
+                            .foregroundColor(.purple).italic()
+                    }
+                    Divider()
+                    // Warning
+                    if state.error, state.insulinCalculated > 0 {
+                        VStack {
+                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
+                                .padding(.bottom, 3)
+                            Text(alertString())
+                                .foregroundColor(.secondary)
+                                .italic()
+                            Divider()
+                        }
+                        .padding(.top, 10)
+                    }
                 }
                 .padding(.top, 10)
                 .padding(.bottom, 15)
+                .padding(.leading, 16)
+                .padding(.trailing, 16)
 
-                // Hide button
+                // Hide sheet
                 VStack {
                     Button { showInfo = false }
                     label: {
@@ -637,6 +699,7 @@ extension Bolus {
                     .fontWeight(.semibold)
                     .foregroundColor(.blue)
                 }
+                .padding(.top, 20)
                 .padding(.bottom, 20)
             }
             .font(.footnote)

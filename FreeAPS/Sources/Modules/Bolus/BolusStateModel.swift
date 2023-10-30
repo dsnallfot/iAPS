@@ -210,7 +210,7 @@ extension Bolus {
                 self.iob = self.provider.suggestion?.iob ?? 0
                 self.currentBG = (self.provider.suggestion?.bg ?? 0)
                 self.cob = self.provider.suggestion?.cob ?? 0
-                self.basal = self.provider.suggestion?.rate ?? 0
+                self.basal = self.provider.suggestion?.rate ?? 0 //dont seems to work for some reason
                 self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
 
                 if self.settingsManager.settings.insulinReqPercentage != 100 {
