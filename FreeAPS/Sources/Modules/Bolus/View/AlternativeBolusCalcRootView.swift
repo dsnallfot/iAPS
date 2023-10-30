@@ -356,6 +356,41 @@ extension Bolus {
                         }
                         .padding(.bottom, 3)
                         Divider()
+                            .padding(.top, 3)
+                        HStack {
+                            if state.evBG > 0 {
+                                Text("(Oref) Blodsockerprognos:")
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                                Spacer()
+                                let eventualBG = state.evBG / 18
+                                Text(
+                                    eventualBG
+                                        .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
+                                )
+                                .italic()
+                                Text("mmol/L")
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                            }
+                        }
+                        HStack {
+                            if state.insulinRequired > 0 {
+                                Text("(Oref) Insulinbehov:")
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                                Spacer()
+                                Text(state.insulinRequired.formatted())
+                                    .italic()
+
+                                Text(NSLocalizedString("E", comment: " grams per Unit"))
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                            }
+                        }
+
+                        .padding(.bottom, 3)
+                        Divider()
 
                         HStack {
                             if abs(state.maxBolus - state.insulinCalculated) < 0.02 {

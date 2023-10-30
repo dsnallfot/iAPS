@@ -646,7 +646,7 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
-                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.1 {
+                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
                                 // let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
                                 // Text(formattedInsulin)
                                 Image(systemName: "plus.circle")
