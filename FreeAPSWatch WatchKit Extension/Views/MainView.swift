@@ -123,11 +123,11 @@ struct MainView: View {
                         } else if computedValue < 3.9 {
                             Image(systemName: "goforward.15")
                                 .font(.system(size: 12))
-                                .foregroundColor(.red)
+                                .foregroundColor(.loopRed)
                                 .padding(.horizontal, -4)
                             Text(formattedComputedValueWithComma)
                                 .font(.caption)
-                                .foregroundColor(.red)
+                                .foregroundColor(.loopRed)
                         } else {
                             Image(systemName: "goforward.15")
                                 .font(.system(size: 12))

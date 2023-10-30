@@ -521,7 +521,7 @@ extension Home {
                                      .font(.caption)
                                      .foregroundColor(.white)
                                      .padding(3)
-                                     .background(Capsule().fill(Color.red))
+                                     .background(Capsule().fill(Color.loopRed))
                              }
                          }
                      }.buttonStyle(.plain)
@@ -540,7 +540,7 @@ extension Home {
                                      .font(.caption)
                                      .foregroundColor(.white)
                                      .padding(3)
-                                     .background(Capsule().fill(Color.red))
+                                     .background(Capsule().fill(Color.loopRed))
                              }
                          }
                      }.buttonStyle(.plain)
@@ -604,7 +604,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -626,7 +626,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -653,7 +653,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }

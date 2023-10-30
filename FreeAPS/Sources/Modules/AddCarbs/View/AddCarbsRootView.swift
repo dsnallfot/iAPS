@@ -115,7 +115,7 @@ extension AddCarbs {
                         HStack {
                             if state.carbs > state.maxCarbs {
                                 Image(systemName: "x.circle.fill")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                             }
                             Text(
                                 !(state.carbs > state.maxCarbs) ? "Save and continue" :

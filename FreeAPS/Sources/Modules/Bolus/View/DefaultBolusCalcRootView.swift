@@ -58,12 +58,12 @@ extension Bolus {
                             } else if state.insulinRecommended <= 0 {
                                 // Image(systemName: "x.circle.fill")
                                 Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                                     .onTapGesture {
                                         presentInfo.toggle()
                                     }
                                 Text("Ingen bolus rekommenderas")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                                     .onTapGesture {
                                         presentInfo.toggle()
                                     }
@@ -95,7 +95,7 @@ extension Bolus {
                                     formatter
                                         .string(from: state.insulinRecommended as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.red)
+                                ).foregroundColor(.loopRed)
                             } else {
                                 // Visa önskat innehåll för "Rekommenderad bolus"
                                 Text(
@@ -141,7 +141,7 @@ extension Bolus {
                             HStack {
                                 if state.amount > state.maxBolus {
                                     Image(systemName: "x.circle.fill")
-                                        .foregroundColor(.red)
+                                        .foregroundColor(.loopRed)
                                 }
 
                                 Text(
@@ -296,7 +296,7 @@ extension Bolus {
                 if state.error, state.insulinRecommended > 0 {
                     VStack(spacing: 4) {
                         Divider()
-                        Text("VARNING!").font(.callout).bold().foregroundColor(.red)
+                        Text("VARNING!").font(.callout).bold().foregroundColor(.loopRed)
                         Text(alertString()).font(.footnote)
                         Divider()
                     }.padding(.horizontal, 10)

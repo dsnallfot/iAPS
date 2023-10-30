@@ -77,7 +77,7 @@ extension OverrideProfilesConfig {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .buttonStyle(BorderlessButtonStyle())
                         .disabled(!state.isEnabled)
-                        .tint(state.isEnabled ? .red : Color(.systemGray2))
+                        .tint(state.isEnabled ? .loopRed : Color(.systemGray2))
                     }
 
                     Section {
@@ -96,11 +96,11 @@ extension OverrideProfilesConfig {
                             onEditingChanged: { editing in
                                 isEditing = editing
                             }
-                        ).accentColor(state.percentage >= 130 ? .red : .blue)
+                        ).accentColor(state.percentage >= 130 ? .loopRed : .blue)
                         Text("\(state.percentage.formatted(.number)) %")
                             .foregroundColor(
                                 state
-                                    .percentage >= 130 ? .red :
+                                    .percentage >= 130 ? .loopRed :
                                     (isEditing ? .orange : .blue)
                             )
                             .font(.largeTitle)

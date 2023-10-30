@@ -64,12 +64,12 @@ extension Bolus {
                             } else if state.insulinCalculated <= 0 {
                                 // Image(systemName: "x.circle.fill")
                                 Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                                     .onTapGesture {
                                         showInfo.toggle()
                                     }
                                 Text("Ingen bolus rekommenderas")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                                     .onTapGesture {
                                         showInfo.toggle()
                                     }
@@ -101,7 +101,7 @@ extension Bolus {
                                     formatter
                                         .string(from: state.insulinCalculated as NSNumber)! +
                                         NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.red)
+                                ).foregroundColor(.loopRed)
                             } else {
                                 // Visa önskat innehåll för "Rekommenderad bolus"
                                 Text(
@@ -163,7 +163,7 @@ extension Bolus {
                             HStack {
                                 if state.amount > state.maxBolus + 0.02 {
                                     Image(systemName: "x.circle.fill")
-                                        .foregroundColor(.red)
+                                        .foregroundColor(.loopRed)
                                 }
 
                                 Text(
@@ -585,7 +585,7 @@ extension Bolus {
                         } else if state.insulinCalculated <= 0 {
                             Text("Ingen bolus rek:")
                                 .fontWeight(.bold)
-                                .foregroundColor(.red)
+                                .foregroundColor(.loopRed)
                         } else {
                             Text("Förslag bolusdos:")
                                 .fontWeight(.bold)
@@ -631,9 +631,9 @@ extension Bolus {
                             Text(roundedResult.formatted())
                                 .fontWeight(.bold)
                                 .font(.system(size: 16))
-                                .foregroundColor(.red)
+                                .foregroundColor(.loopRed)
                             Text(unit)
-                                .foregroundColor(.red)
+                                .foregroundColor(.loopRed)
                                 .font(.system(size: 16))
                         } else {
                             Text(roundedResult.formatted())

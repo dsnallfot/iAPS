@@ -29,11 +29,11 @@ extension AddTempTarget {
                     Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                                .tint(.red)
+                                .tint(.loopRed)
                             Text("Avbryt tillfälligt mål")
                                 .font(.title3)
                                 .fontWeight(.semibold)
-                                .tint(.red)
+                                .tint(.loopRed)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
