@@ -121,6 +121,20 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
+                        .alert(isPresented: $displayError) {
+                            Alert(
+                                title: Text("Varning!"),
+                                message: Text("\n" + alertString() + "\n"),
+                                primaryButton: .destructive(
+                                    Text("Add"),
+                                    action: {
+                                        state.amount = state.insulinCalculated
+                                        displayError = false
+                                    }
+                                ),
+                                secondaryButton: .cancel()
+                            )
+                        }
 
                         if !state.waitForSuggestion {
                             HStack {
@@ -137,25 +151,9 @@ extension Bolus {
                             }
                         }
                     }
-                    if state.viewDetails {
-                        detailedView()
-                    }
-                    HStack {
-                        Button {
-                            state.viewDetails.toggle()
-                        }
-                        label: {
-                            Text(
-                                state
-                                    .viewDetails ? NSLocalizedString("Dölj detaljerad vy", comment: "") :
-                                    NSLocalizedString("Visa detaljerad vy", comment: "")
-                            ) }
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
-                    }
                 }
-                if !state.waitForSuggestion {
-                    Section {
+                Section {
+                    if !state.waitForSuggestion {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
 
@@ -163,145 +161,136 @@ extension Bolus {
                             state.add()
                         } label: {
                             HStack {
-                                if state.amount > state.maxBolus {
+                                if state.amount > state.maxBolus + 0.02 {
                                     Image(systemName: "x.circle.fill")
                                         .foregroundColor(.red)
                                 }
 
                                 Text(
-                                    !(state.amount > state.maxBolus) ? "Ge bolusdos" :
+                                    !(state.amount > state.maxBolus + 0.02) ? "Ge bolusdos" :
                                         "Inställd maxgräns: \(formattedMaxAmountBolus)E   "
                                 )
                                 .font(.title3.weight(.semibold))
                             }
                         }
                         .disabled(
-                            state.amount <= 0 || state.amount > state.maxBolus
+                            state.amount <= 0 || state.amount > state.maxBolus + 0.02
                         )
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    Section {
-                        if waitForSuggestion {
-                            Button { state.showModal(for: nil) }
-                            label: { Text("Continue without bolus").font(.title3) }
-                                .frame(maxWidth: .infinity, alignment: .center)
+                }
+                Section {
+                    if waitForSuggestion {
+                        Button { state.showModal(for: nil) }
+                        label: { Text("Continue without bolus").font(.title3) }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+                // Transparent section to add space between enact bolus buttons and additional settings
+                Section {
+                    Text(" \n ")
+                }
+                .listRowBackground(Color.clear)
+                Section(header: Text("Extra inställningar")) {
+                    HStack {
+                        if state.fattyMeals {
+                            Text("Fettrik måltid?")
+                                .foregroundColor(.brown)
+                            // .font(.footnote)
+                            Spacer()
+                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
+                                .toggleStyle(CheckboxToggleStyle())
+                                .foregroundColor(.brown)
+                                // .font(.footnote)
+                                .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                    insulinCalculated = state.calculateInsulin()
+                                }
                         }
                     }
-                    .alert(isPresented: $displayError) {
-                        Alert(
-                            title: Text("Varning!"),
-                            message: Text("\n" + alertString() + "\n"),
-                            primaryButton: .destructive(
-                                Text("Add"),
-                                action: {
-                                    state.amount = state.insulinCalculated
-                                    displayError = false
+                    HStack {
+                        Text("Blodsocker")
+                        DecimalTextField(
+                            "0",
+                            value: Binding(
+                                get: {
+                                    if state.units == .mmolL {
+                                        return state.currentBG.asMmolL
+                                    } else {
+                                        return state.currentBG
+                                    }
+                                },
+                                set: { newValue in
+                                    if state.units == .mmolL {
+                                        state.currentBG = newValue.asMmolL
+                                    } else {
+                                        state.currentBG = newValue
+                                    }
                                 }
                             ),
-                            secondaryButton: .cancel()
+                            formatter: glucoseFormatter,
+                            autofocus: false,
+                            cleanInput: true
                         )
-                    }.onAppear {
-                        configureView {
-                            state.waitForSuggestionInitial = waitForSuggestion
-                            state.waitForSuggestion = waitForSuggestion
-                        }
-                    }
-                    .navigationTitle("Enact Bolus")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarItems(leading: Button("Close", action: state.hideModal))
-                    // .blur(radius: showInfo ? 3 : 0)
-                    // .popup(isPresented: showInfo) {
-                    // bolusInfoAlternativeCalculator
-                    // }
-                    .sheet(isPresented: $showInfo) {
-                        bolusInfoAlternativeCalculator
-                    }
-                }
-            }
-        }
-
-        // var detailedView: some View {
-        @ViewBuilder private func detailedView() -> some View {
-            // Section {
-            HStack {
-                Text("Blodsocker")
-                DecimalTextField(
-                    "0",
-                    value: Binding(
-                        get: {
-                            if state.units == .mmolL {
-                                return state.currentBG.asMmolL
-                            } else {
-                                return state.currentBG
+                        .onChange(of: state.currentBG) { newValue in
+                            if newValue > 500 {
+                                state.currentBG = 500 // ensure that user can not input more than 500 mg/dL
                             }
-                        },
-                        set: { newValue in
-                            if state.units == .mmolL {
-                                state.currentBG = newValue.asMmolL
-                            } else {
-                                state.currentBG = newValue
-                            }
-                        }
-                    ),
-                    formatter: glucoseFormatter,
-                    autofocus: false,
-                    cleanInput: true
-                )
-                .onChange(of: state.currentBG) { newValue in
-                    if newValue > 500 {
-                        state.currentBG = 500 // ensure that user can not input more than 500 mg/dL
-                    }
-                    insulinCalculated = state.calculateInsulin()
-                }
-                Text(state.units.rawValue)
-                    .foregroundColor(.secondary)
-            }
-            .contentShape(Rectangle())
-
-            // maybe remove this hstack or display entered carbs from carbs entry
-            HStack {
-                let maxamountcarbs = Double(state.maxCarbs)
-                let formattedMaxAmountCarbs = String(maxamountcarbs)
-                Text("Ännu ej reg KH")
-                Spacer()
-                DecimalTextField(
-                    "0",
-                    value: $state.enteredCarbs,
-                    formatter: formatter,
-                    autofocus: false,
-                    cleanInput: true
-                )
-                .onChange(of: state.enteredCarbs) { newValue in
-                    if newValue > state.maxCarbs {
-                        state.enteredCarbs = state
-                            .maxCarbs // ensure that user can not input more than maxcarbs accidentally
-                        carbsWarning.toggle()
-                    }
-                    insulinCalculated = state.calculateInsulin()
-                }
-                Text(
-                    NSLocalizedString("g", comment: "grams")
-                )
-                .foregroundColor(.secondary)
-                .alert(
-                    "Varning! \nInställd maxgräns är \(formattedMaxAmountCarbs)g kh!",
-                    isPresented: $carbsWarning
-                ) {
-                    Button("OK", role: .cancel) {}
-                }
-            }
-            HStack {
-                if state.fattyMeals {
-                    Text("Fet måltid?")
-                    // .font(.footnote)
-                    Spacer()
-                    Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
-                        .toggleStyle(CheckboxToggleStyle())
-                        // .font(.footnote)
-                        .onChange(of: state.useFattyMealCorrectionFactor) { _ in
                             insulinCalculated = state.calculateInsulin()
                         }
+                        Text(state.units.rawValue)
+                            .foregroundColor(.secondary)
+                    }
+
+                    // maybe remove this hstack or display entered carbs from carbs entry
+                    HStack {
+                        let maxamountcarbs = Double(state.maxCarbs)
+                        let formattedMaxAmountCarbs = String(maxamountcarbs)
+                        Text("Nya Kolhydrater \n(Utöver COB)")
+                        Spacer()
+                        DecimalTextField(
+                            "0",
+                            value: $state.enteredCarbs,
+                            formatter: formatter,
+                            autofocus: false,
+                            cleanInput: true
+                        )
+                        .onChange(of: state.enteredCarbs) { newValue in
+                            if newValue > state.maxCarbs {
+                                state.enteredCarbs = state
+                                    .maxCarbs // ensure that user can not input more than maxcarbs accidentally
+                                carbsWarning.toggle()
+                            }
+                            insulinCalculated = state.calculateInsulin()
+                        }
+                        Text(
+                            NSLocalizedString("g", comment: "grams")
+                        )
+                        .foregroundColor(.secondary)
+                        .alert(
+                            "Varning! \nInställd maxgräns är \(formattedMaxAmountCarbs)g kh!",
+                            isPresented: $carbsWarning
+                        ) {
+                            Button("OK", role: .cancel) {}
+                        }
+                    }
                 }
+            }
+
+            .navigationTitle("Enact Bolus")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: Button("Close", action: state.hideModal))
+            // .blur(radius: showInfo ? 3 : 0)
+            // .popup(isPresented: showInfo) {
+            // bolusInfoAlternativeCalculator
+            // }
+            .onAppear {
+                configureView {
+                    state.waitForSuggestionInitial = waitForSuggestion
+                    state.waitForSuggestion = waitForSuggestion
+                }
+            }
+            .sheet(isPresented: $showInfo) {
+                bolusInfoAlternativeCalculator
             }
         }
 
@@ -369,7 +358,7 @@ extension Bolus {
                         Divider()
 
                         HStack {
-                            if state.insulinCalculated == state.maxBolus {
+                            if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
                                 Text("Inställd maxbolus:")
                                     .foregroundColor(.purple)
                                 Spacer()
@@ -409,7 +398,7 @@ extension Bolus {
                         }
                         if state.useFattyMealCorrectionFactor {
                             HStack {
-                                Text("Inställd faktor fet måltid :")
+                                Text("Inställd faktor fettrik måltid :")
                                     .foregroundColor(.brown)
                                 Spacer()
                                 let fraction = state.fattyMealFactor * 100
@@ -429,29 +418,31 @@ extension Bolus {
                         }
                         .padding(.top, 3)
                         .padding(.bottom, 3)
-                        HStack(alignment: .center, spacing: nil) {
-                            Text("Ännu ej reg KH:")
-                                .foregroundColor(.secondary)
-                                .frame(minWidth: 105, alignment: .leading)
+                        if state.enteredCarbs > 0 {
+                            HStack(alignment: .center, spacing: nil) {
+                                Text("Nya kolhydrater:")
+                                    .foregroundColor(.secondary)
+                                    .frame(minWidth: 105, alignment: .leading)
 
-                            let carbs = state.enteredCarbs
-                            Text(carbs.formatted())
-                                .frame(minWidth: 50, alignment: .trailing)
+                                let carbs = state.enteredCarbs
+                                Text(carbs.formatted())
+                                    .frame(minWidth: 50, alignment: .trailing)
 
-                            let unitGrams = NSLocalizedString("g", comment: "grams")
-                            Text(unitGrams).foregroundColor(.secondary)
-                                .frame(minWidth: 50, alignment: .leading)
+                                let unitGrams = NSLocalizedString("g", comment: "grams")
+                                Text(unitGrams).foregroundColor(.secondary)
+                                    .frame(minWidth: 50, alignment: .leading)
 
-                            Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, alignment: .trailing)
-                            Spacer()
-                            let insulinCarbs = state.enteredCarbs / state.carbRatio
-                            // rounding
-                            let insulinCarbsAsDouble = NSDecimalNumber(decimal: insulinCarbs).doubleValue
-                            let roundedInsulinCarbs = Decimal(round(100 * insulinCarbsAsDouble) / 100)
-                            Text(roundedInsulinCarbs.formatted())
-                            Text(unit)
-                                .foregroundColor(.secondary)
+                                Image(systemName: "arrow.right")
+                                    .frame(minWidth: 15, alignment: .trailing)
+                                Spacer()
+                                let insulinCarbs = state.enteredCarbs / state.carbRatio
+                                // rounding
+                                let insulinCarbsAsDouble = NSDecimalNumber(decimal: insulinCarbs).doubleValue
+                                let roundedInsulinCarbs = Decimal(round(100 * insulinCarbsAsDouble) / 100)
+                                Text(roundedInsulinCarbs.formatted())
+                                Text(unit)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                         HStack(alignment: .center, spacing: nil) {
                             Text("COB:")
@@ -664,7 +655,8 @@ extension Bolus {
                     .padding(.bottom, 5)
                     let maxamountbolus = Double(state.maxBolus)
                     let formattedMaxAmountBolus = String(maxamountbolus)
-                    if state.insulinCalculated == state.maxBolus {
+                    // if state.insulinCalculated == state.maxBolus {
+                    if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
                         Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
                             // .font(.system(size: 12))
                             .foregroundColor(.purple).italic()
