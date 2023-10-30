@@ -633,7 +633,7 @@ extension Home {
                     Spacer()
                     Button {
                         state.showModal(for: .bolus(waitForSuggestion: true))
-                        state.apsManager.determineBasalSync()
+                        // state.apsManager.determineBasalSync()
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("bolus")

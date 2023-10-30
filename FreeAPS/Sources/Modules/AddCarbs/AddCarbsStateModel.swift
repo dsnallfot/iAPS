@@ -53,11 +53,6 @@ extension AddCarbs {
             } else {
                 showModal(for: .bolus(waitForSuggestion: true))
                 apsManager.determineBasalSync()
-
-                // Add a 0.5-second delay before showing the modal
-                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                // self?.showModal(for: .bolus(waitForSuggestion: true))
-                // }
             }
         }
 
