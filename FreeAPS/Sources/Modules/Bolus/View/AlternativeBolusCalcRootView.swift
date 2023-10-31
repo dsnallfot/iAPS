@@ -279,7 +279,7 @@ extension Bolus {
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
-            // .blur(radius: showInfo ? 3 : 0)
+            .navigationBarItems(trailing: Button("Beräkningar", action: { showInfo.toggle() }))
             // .popup(isPresented: showInfo) {
             // bolusInfoAlternativeCalculator
             // }
@@ -296,456 +296,464 @@ extension Bolus {
 
         // calculation showed in popup
         var bolusInfoAlternativeCalculator: some View {
-            let unit = NSLocalizedString(
-                " U",
-                comment: "Unit in number of units delivered (keep the space character!)"
-            )
+            NavigationView {
+                let unit = NSLocalizedString(
+                    " U",
+                    comment: "Unit in number of units delivered (keep the space character!)"
+                )
 
-            return VStack {
-                VStack {
-                    VStack(spacing: 3) {
-                        HStack {
-                            Text("Beräkningar")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Spacer()
-                        }
-                        .padding(.vertical, 10)
-                        Group {
-                            HStack {
-                                Text("Aktuell ISF:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                let isf = state.isf
-                                Text(isf.formatted())
-                                Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.top, 3)
-                            HStack {
-                                Text("Målvärde:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                let target = state.units == .mmolL ? state.target.asMmolL : state.target
-                                Text(
-                                    target
-                                        .formatted(
-                                            .number.grouping(.never).rounded()
-                                                .precision(.fractionLength(fractionDigits))
+                return VStack {
+                    VStack {
+                        VStack {
+                            VStack(spacing: 3) {
+                                HStack {
+                                    Text("Indata")
+                                    // .font(.title2)
+                                    // .fontWeight(.semibold)
+                                    Spacer()
+                                }
+                                Group {
+                                    HStack {
+                                        Text("Aktuell ISF:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let isf = state.isf
+                                        Text(isf.formatted())
+                                        Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(.top, 3)
+                                    HStack {
+                                        Text("Målvärde:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let target = state.units == .mmolL ? state.target.asMmolL : state.target
+                                        Text(
+                                            target
+                                                .formatted(
+                                                    .number.grouping(.never).rounded()
+                                                        .precision(.fractionLength(fractionDigits))
+                                                )
                                         )
-                                )
-                                Text(state.units.rawValue)
-                                    .foregroundColor(.secondary)
-                            }
-                            // Basal dont update for some reason. needs to check. not crucial info in the calc view however
-                            /* HStack {
-                             Text("Aktuell basal:")
-                             .foregroundColor(.secondary)
-                             Spacer()
-                             let basal = state.basal
-                             Text(basal.formatted())
-                             Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                             .foregroundColor(.secondary)
-                             } */
-                            HStack {
-                                Text("Aktuell insulinkvot:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
+                                        Text(state.units.rawValue)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    // Basal dont update for some reason. needs to check. not crucial info in the calc view however
+                                    /* HStack {
+                                     Text("Aktuell basal:")
+                                     .foregroundColor(.secondary)
+                                     Spacer()
+                                     let basal = state.basal
+                                     Text(basal.formatted())
+                                     Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                                     .foregroundColor(.secondary)
+                                     } */
+                                    HStack {
+                                        Text("Aktuell insulinkvot:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
 
-                                Text(state.carbRatio.formatted())
-                                Text(NSLocalizedString("g/E", comment: " grams per Unit"))
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.bottom, 3)
-                        }
+                                        Text(state.carbRatio.formatted())
+                                        Text(NSLocalizedString("g/E", comment: " grams per Unit"))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(.bottom, 3)
+                                }
 
-                        Divider()
+                                Divider()
 
-                        Group {
-                            HStack {
-                                if state.evBG > 0 {
-                                    Text("(Oref) Blodsockerprognos:")
-                                        .foregroundColor(.secondary)
-                                        .italic()
-                                    Spacer()
-                                    let eventualBG = Double(state.evBG) * 0.0555
-                                    Text(
-                                        eventualBG
-                                            .formatted(
-                                                .number.grouping(.never).rounded()
-                                                    .precision(.fractionLength(fractionDigits))
+                                Group {
+                                    HStack {
+                                        if state.evBG > 0 {
+                                            Text("(Oref) Blodsockerprognos:")
+                                                .foregroundColor(.secondary)
+                                                .italic()
+                                            Spacer()
+                                            let eventualBG = Double(state.evBG) * 0.0555
+                                            Text(
+                                                eventualBG
+                                                    .formatted(
+                                                        .number.grouping(.never).rounded()
+                                                            .precision(.fractionLength(fractionDigits))
+                                                    )
                                             )
-                                    )
-                                    .italic()
-                                    Text("mmol/L")
-                                        .foregroundColor(.secondary)
-                                        .italic()
+                                            .italic()
+                                            Text("mmol/L")
+                                                .foregroundColor(.secondary)
+                                                .italic()
+                                        }
+                                    }
+                                    .padding(.top, 3)
+
+                                    HStack {
+                                        // if state.insulinRequired > 0 {
+                                        Text("(Oref) Insulinbehov:")
+                                            .foregroundColor(.secondary)
+                                            .italic()
+                                        Spacer()
+                                        Text(state.insulinRequired.formatted())
+                                            .italic()
+
+                                        Text(NSLocalizedString("E", comment: " grams per Unit"))
+                                            .foregroundColor(.secondary)
+                                            .italic()
+                                        // }
+                                    }
+                                    .padding(.bottom, 3)
+                                }
+                                Divider()
+                                Group {
+                                    HStack {
+                                        if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
+                                            Text("Inställd maxbolus:")
+                                                .foregroundColor(.purple)
+                                            Spacer()
+                                            let maxBolus = state.maxBolus
+                                            Text(maxBolus.formatted())
+                                                .foregroundColor(.purple)
+                                            Text(NSLocalizedString("E", comment: " Units"))
+                                                .foregroundColor(.purple)
+                                        } else {
+                                            Text("Inställd maxbolus:")
+                                                .foregroundColor(.secondary)
+                                            Spacer()
+                                            let maxBolus = state.maxBolus
+                                            Text(maxBolus.formatted())
+                                            Text(NSLocalizedString("E", comment: " Units"))
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                    .padding(.top, 3)
+                                    HStack {
+                                        Text("Inställd max kolhydrater:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let maxCarbs = state.maxCarbs
+                                        Text(maxCarbs.formatted())
+                                        Text(NSLocalizedString("g", comment: "grams"))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    HStack {
+                                        Text("Inställd faktor manuell bolus:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let fraction = state.fraction * 100
+                                        Text(fraction.formatted())
+                                        Text("%")
+                                            .foregroundColor(.secondary)
+                                    }
+                                    if state.useFattyMealCorrectionFactor {
+                                        HStack {
+                                            Text("Inställd faktor fettrik måltid :")
+                                                .foregroundColor(.brown)
+                                            Spacer()
+                                            let fraction = state.fattyMealFactor * 100
+                                            Text(fraction.formatted())
+                                                .foregroundColor(.brown)
+                                            Text("%")
+                                                .foregroundColor(.brown)
+                                        }
+                                    }
                                 }
                             }
-                            .padding(.top, 3)
 
-                            HStack {
-                                // if state.insulinRequired > 0 {
-                                Text("(Oref) Insulinbehov:")
-                                    .foregroundColor(.secondary)
-                                    .italic()
-                                Spacer()
-                                Text(state.insulinRequired.formatted())
-                                    .italic()
+                            Divider()
+                            VStack(spacing: 3) {
+                                Group {
+                                    HStack {
+                                        Text("Boluskalkylering").foregroundColor(.primary) // .fontWeight(.semibold)
+                                        Spacer()
+                                        Text("Behov +/-  E").foregroundColor(.primary) // .fontWeight(.semibold)
+                                    }
+                                    .padding(.top, 3)
+                                    .padding(.bottom, 3)
+                                    if state.enteredCarbs > 0 {
+                                        HStack(alignment: .center, spacing: nil) {
+                                            Text("Nya kolhydrater:")
+                                                .foregroundColor(.secondary)
+                                                .frame(minWidth: 105, alignment: .leading)
 
-                                Text(NSLocalizedString("E", comment: " grams per Unit"))
-                                    .foregroundColor(.secondary)
-                                    .italic()
-                                // }
+                                            let carbs = state.enteredCarbs
+                                            Text(carbs.formatted())
+                                                .frame(minWidth: 50, alignment: .trailing)
+
+                                            let unitGrams = NSLocalizedString("g", comment: "grams")
+                                            Text(unitGrams).foregroundColor(.secondary)
+                                                .frame(minWidth: 50, alignment: .leading)
+
+                                            Image(systemName: "arrow.right")
+                                                .frame(minWidth: 15, alignment: .trailing)
+                                            Spacer()
+                                            let insulinCarbs = state.enteredCarbs / state.carbRatio
+                                            // rounding
+                                            let insulinCarbsAsDouble = NSDecimalNumber(decimal: insulinCarbs).doubleValue
+                                            let roundedInsulinCarbs = Decimal(round(100 * insulinCarbsAsDouble) / 100)
+                                            Text(roundedInsulinCarbs.formatted())
+                                            Text(unit)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                    HStack(alignment: .center, spacing: nil) {
+                                        Text("COB:")
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 105, alignment: .leading)
+
+                                        let cob = state.cob
+                                        Text(cob.formatted())
+                                            .frame(minWidth: 50, alignment: .trailing)
+
+                                        let unitGrams = NSLocalizedString("g", comment: "grams")
+                                        Text(unitGrams).foregroundColor(.secondary)
+                                            .frame(minWidth: 50, alignment: .leading)
+
+                                        Image(systemName: "arrow.right")
+                                            .frame(minWidth: 15, alignment: .trailing)
+                                        Spacer()
+                                        let insulinCob = state.wholeCobInsulin - state.enteredCarbs / state.carbRatio
+                                        // rounding
+                                        let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
+                                        let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
+                                        Text(roundedInsulinCob.formatted())
+                                        Text(unit)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    HStack(alignment: .center, spacing: nil) {
+                                        Text("IOB:")
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 105, alignment: .leading)
+
+                                        let iob = state.iob
+                                        // rounding
+                                        let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
+                                        let roundedIob = Decimal(round(2 * iobAsDouble) / 2)
+                                        Text(roundedIob.formatted())
+                                            .frame(minWidth: 50, alignment: .trailing)
+
+                                        Text(unit)
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 50, alignment: .leading)
+
+                                        Image(systemName: "arrow.right")
+                                            .frame(minWidth: 15, alignment: .trailing)
+                                        Spacer()
+                                        let iobCalc = state.iobInsulinReduction
+                                        // rounding
+                                        let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
+                                        let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
+                                        Text(roundedIobCalc.formatted())
+                                        Text(unit).foregroundColor(.secondary)
+                                    }
+                                    HStack(alignment: .center, spacing: nil) {
+                                        Text("Blodsocker:")
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 105, alignment: .leading)
+
+                                        let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
+                                        Text(
+                                            glucose
+                                                .formatted(
+                                                    .number.grouping(.never).rounded()
+                                                        .precision(.fractionLength(fractionDigits))
+                                                )
+                                        )
+                                        .frame(minWidth: 50, alignment: .trailing)
+                                        Text(state.units.rawValue)
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 50, alignment: .leading)
+
+                                        Image(systemName: "arrow.right")
+                                            .frame(minWidth: 15, alignment: .trailing)
+                                        Spacer()
+                                        let targetDifferenceInsulin = state.targetDifferenceInsulin
+                                        // rounding
+                                        let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin)
+                                            .doubleValue
+                                        let roundedTargetDifferenceInsulin =
+                                            Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
+
+                                        Text(roundedTargetDifferenceInsulin.formatted())
+
+                                        Text(unit)
+
+                                            .foregroundColor(.secondary)
+                                    }
+                                    HStack(alignment: .center, spacing: nil) {
+                                        Text("15 min trend:")
+                                            .foregroundColor(.secondary)
+                                            .frame(minWidth: 105, alignment: .leading)
+
+                                        let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
+                                        Text(
+                                            trend
+                                                .formatted(
+                                                    .number.grouping(.never).rounded()
+                                                        .precision(.fractionLength(fractionDigits))
+                                                )
+                                        )
+                                        .frame(minWidth: 50, alignment: .trailing)
+                                        Text(state.units.rawValue).foregroundColor(.secondary)
+                                            .frame(minWidth: 50, alignment: .leading)
+
+                                        Image(systemName: "arrow.right")
+                                            .frame(minWidth: 15, alignment: .trailing)
+                                        Spacer()
+                                        let trendInsulin = state.fifteenMinInsulin
+                                        // rounding
+                                        let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
+                                        let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
+                                        Text(roundedTrendInsulin.formatted())
+                                        Text(unit)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
                             }
-                            .padding(.bottom, 3)
-                        }
-                        Divider()
-                        Group {
+                            Divider()
+                                .fontWeight(.bold)
+
                             HStack {
-                                if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
-                                    Text("Inställd maxbolus:")
-                                        .foregroundColor(.purple)
-                                    Spacer()
-                                    let maxBolus = state.maxBolus
-                                    Text(maxBolus.formatted())
-                                        .foregroundColor(.purple)
-                                    Text(NSLocalizedString("E", comment: " Units"))
-                                        .foregroundColor(.purple)
+                                Text("Summa beräknat bolusbehov:")
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                let insulin = state.roundedWholeCalc
+                                Text(insulin.formatted())
+                                    .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                                Text(unit)
+                                    .foregroundColor(.primary)
+                            }
+                            .padding(.top, 5)
+                            .padding(.bottom, 5)
+
+                            Divider()
+                                .fontWeight(.bold)
+
+                            HStack {
+                                if state.error && state.insulinCalculated > 0 {
+                                    Text("Vänta med bolus:")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.orange)
+                                } else if state.insulinCalculated <= 0 {
+                                    Text("Ingen bolus rek:")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.loopRed)
                                 } else {
-                                    Text("Inställd maxbolus:")
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                    let maxBolus = state.maxBolus
-                                    Text(maxBolus.formatted())
-                                    Text(NSLocalizedString("E", comment: " Units"))
-                                        .foregroundColor(.secondary)
+                                    Text("Förslag bolusdos:")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.green)
                                 }
-                            }
-                            .padding(.top, 3)
-                            HStack {
-                                Text("Inställd max kolhydrater:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                let maxCarbs = state.maxCarbs
-                                Text(maxCarbs.formatted())
-                                Text(NSLocalizedString("g", comment: "grams"))
-                                    .foregroundColor(.secondary)
-                            }
-                            HStack {
-                                Text("Inställd faktor manuell bolus:")
-                                    .foregroundColor(.secondary)
+
                                 Spacer()
                                 let fraction = state.fraction * 100
                                 Text(fraction.formatted())
-                                Text("%")
+                                Text("%  x ")
                                     .foregroundColor(.secondary)
-                            }
-                            if state.useFattyMealCorrectionFactor {
-                                HStack {
-                                    Text("Inställd faktor fettrik måltid :")
+
+                                // if fatty meal is chosen
+                                if state.useFattyMealCorrectionFactor {
+                                    let fattyMealFactor = state.fattyMealFactor * 100
+                                    Text(fattyMealFactor.formatted())
                                         .foregroundColor(.brown)
-                                    Spacer()
-                                    let fraction = state.fattyMealFactor * 100
-                                    Text(fraction.formatted())
-                                        .foregroundColor(.brown)
-                                    Text("%")
-                                        .foregroundColor(.brown)
-                                }
-                            }
-                        }
-                    }
-                    Divider()
-                    VStack(spacing: 3) {
-                        Group {
-                            HStack {
-                                Text("Variabler").foregroundColor(.primary).fontWeight(.semibold)
-                                Spacer()
-                                Text("Behov +/-  E").foregroundColor(.primary).fontWeight(.semibold)
-                            }
-                            .padding(.top, 3)
-                            .padding(.bottom, 3)
-                            if state.enteredCarbs > 0 {
-                                HStack(alignment: .center, spacing: nil) {
-                                    Text("Nya kolhydrater:")
+                                    Text("%  x ")
                                         .foregroundColor(.secondary)
-                                        .frame(minWidth: 105, alignment: .leading)
+                                }
 
-                                    let carbs = state.enteredCarbs
-                                    Text(carbs.formatted())
-                                        .frame(minWidth: 50, alignment: .trailing)
+                                let insulin = state.roundedWholeCalc
+                                Text(insulin.formatted())
+                                    .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                                Text(unit)
+                                    .foregroundColor(.secondary)
+                                Text(" = ")
+                                    .foregroundColor(.secondary)
 
-                                    let unitGrams = NSLocalizedString("g", comment: "grams")
-                                    Text(unitGrams).foregroundColor(.secondary)
-                                        .frame(minWidth: 50, alignment: .leading)
-
-                                    Image(systemName: "arrow.right")
-                                        .frame(minWidth: 15, alignment: .trailing)
-                                    Spacer()
-                                    let insulinCarbs = state.enteredCarbs / state.carbRatio
-                                    // rounding
-                                    let insulinCarbsAsDouble = NSDecimalNumber(decimal: insulinCarbs).doubleValue
-                                    let roundedInsulinCarbs = Decimal(round(100 * insulinCarbsAsDouble) / 100)
-                                    Text(roundedInsulinCarbs.formatted())
+                                let result = state.insulinCalculated
+                                // rounding
+                                let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
+                                let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
+                                if state.error && state.insulinCalculated > 0 {
+                                    Text(roundedResult.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.orange)
                                     Text(unit)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(.orange)
+                                        .font(.system(size: 16))
+                                } else if state.insulinCalculated <= 0 {
+                                    Text(roundedResult.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.loopRed)
+                                    Text(unit)
+                                        .foregroundColor(.loopRed)
+                                        .font(.system(size: 16))
+                                } else {
+                                    Text(roundedResult.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.green)
+                                    Text(unit)
+                                        .foregroundColor(.green)
+                                        .font(.system(size: 16))
                                 }
                             }
-                            HStack(alignment: .center, spacing: nil) {
-                                Text("COB:")
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 105, alignment: .leading)
-
-                                let cob = state.cob
-                                Text(cob.formatted())
-                                    .frame(minWidth: 50, alignment: .trailing)
-
-                                let unitGrams = NSLocalizedString("g", comment: "grams")
-                                Text(unitGrams).foregroundColor(.secondary)
-                                    .frame(minWidth: 50, alignment: .leading)
-
-                                Image(systemName: "arrow.right")
-                                    .frame(minWidth: 15, alignment: .trailing)
-                                Spacer()
-                                let insulinCob = state.wholeCobInsulin - state.enteredCarbs / state.carbRatio
-                                // rounding
-                                let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
-                                let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
-                                Text(roundedInsulinCob.formatted())
-                                Text(unit)
-                                    .foregroundColor(.secondary)
+                            .onTapGesture {
+                                state.amount = state.insulinCalculated
+                                showInfo.toggle()
                             }
-                            HStack(alignment: .center, spacing: nil) {
-                                Text("IOB:")
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 105, alignment: .leading)
-
-                                let iob = state.iob
-                                // rounding
-                                let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
-                                let roundedIob = Decimal(round(2 * iobAsDouble) / 2)
-                                Text(roundedIob.formatted())
-                                    .frame(minWidth: 50, alignment: .trailing)
-
-                                Text(unit)
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 50, alignment: .leading)
-
-                                Image(systemName: "arrow.right")
-                                    .frame(minWidth: 15, alignment: .trailing)
-                                Spacer()
-                                let iobCalc = state.iobInsulinReduction
-                                // rounding
-                                let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
-                                let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
-                                Text(roundedIobCalc.formatted())
-                                Text(unit).foregroundColor(.secondary)
+                            // .padding(.leading, 16)
+                            // .padding(.trailing, 16)
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            let maxamountbolus = Double(state.maxBolus)
+                            let formattedMaxAmountBolus = String(maxamountbolus)
+                            // if state.insulinCalculated == state.maxBolus {
+                            if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
+                                Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
+                                    // .font(.system(size: 12))
+                                    .foregroundColor(.purple).italic()
                             }
-                            HStack(alignment: .center, spacing: nil) {
-                                Text("Blodsocker:")
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 105, alignment: .leading)
-
-                                let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
-                                Text(
-                                    glucose
-                                        .formatted(
-                                            .number.grouping(.never).rounded()
-                                                .precision(.fractionLength(fractionDigits))
-                                        )
-                                )
-                                .frame(minWidth: 50, alignment: .trailing)
-                                Text(state.units.rawValue)
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 50, alignment: .leading)
-
-                                Image(systemName: "arrow.right")
-                                    .frame(minWidth: 15, alignment: .trailing)
-                                Spacer()
-                                let targetDifferenceInsulin = state.targetDifferenceInsulin
-                                // rounding
-                                let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin)
-                                    .doubleValue
-                                let roundedTargetDifferenceInsulin =
-                                    Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
-
-                                Text(roundedTargetDifferenceInsulin.formatted())
-
-                                Text(unit)
-
-                                    .foregroundColor(.secondary)
-                            }
-                            HStack(alignment: .center, spacing: nil) {
-                                Text("15 min trend:")
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 105, alignment: .leading)
-
-                                let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
-                                Text(
-                                    trend
-                                        .formatted(
-                                            .number.grouping(.never).rounded()
-                                                .precision(.fractionLength(fractionDigits))
-                                        )
-                                )
-                                .frame(minWidth: 50, alignment: .trailing)
-                                Text(state.units.rawValue).foregroundColor(.secondary)
-                                    .frame(minWidth: 50, alignment: .leading)
-
-                                Image(systemName: "arrow.right")
-                                    .frame(minWidth: 15, alignment: .trailing)
-                                Spacer()
-                                let trendInsulin = state.fifteenMinInsulin
-                                // rounding
-                                let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
-                                let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
-                                Text(roundedTrendInsulin.formatted())
-                                Text(unit)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-                    Divider()
-                        .fontWeight(.bold)
-
-                    HStack {
-                        Text("Summa beräknat bolusbehov:")
-                            .foregroundColor(.primary)
-                        Spacer()
-                        let insulin = state.roundedWholeCalc
-                        Text(insulin.formatted())
-                            .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                        Text(unit)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.top, 5)
-                    .padding(.bottom, 5)
-
-                    Divider()
-                        .fontWeight(.bold)
-
-                    HStack {
-                        if state.error && state.insulinCalculated > 0 {
-                            Text("Vänta med bolus:")
-                                .fontWeight(.bold)
-                                .foregroundColor(.orange)
-                        } else if state.insulinCalculated <= 0 {
-                            Text("Ingen bolus rek:")
-                                .fontWeight(.bold)
-                                .foregroundColor(.loopRed)
-                        } else {
-                            Text("Förslag bolusdos:")
-                                .fontWeight(.bold)
-                                .foregroundColor(.green)
-                        }
-
-                        Spacer()
-                        let fraction = state.fraction * 100
-                        Text(fraction.formatted())
-                        Text("%  x ")
-                            .foregroundColor(.secondary)
-
-                        // if fatty meal is chosen
-                        if state.useFattyMealCorrectionFactor {
-                            let fattyMealFactor = state.fattyMealFactor * 100
-                            Text(fattyMealFactor.formatted())
-                                .foregroundColor(.brown)
-                            Text("%  x ")
-                                .foregroundColor(.secondary)
-                        }
-
-                        let insulin = state.roundedWholeCalc
-                        Text(insulin.formatted())
-                            .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                        Text(unit)
-                            .foregroundColor(.secondary)
-                        Text(" = ")
-                            .foregroundColor(.secondary)
-
-                        let result = state.insulinCalculated
-                        // rounding
-                        let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
-                        let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
-                        if state.error && state.insulinCalculated > 0 {
-                            Text(roundedResult.formatted())
-                                .fontWeight(.bold)
-                                .font(.system(size: 16))
-                                .foregroundColor(.orange)
-                            Text(unit)
-                                .foregroundColor(.orange)
-                                .font(.system(size: 16))
-                        } else if state.insulinCalculated <= 0 {
-                            Text(roundedResult.formatted())
-                                .fontWeight(.bold)
-                                .font(.system(size: 16))
-                                .foregroundColor(.loopRed)
-                            Text(unit)
-                                .foregroundColor(.loopRed)
-                                .font(.system(size: 16))
-                        } else {
-                            Text(roundedResult.formatted())
-                                .fontWeight(.bold)
-                                .font(.system(size: 16))
-                                .foregroundColor(.green)
-                            Text(unit)
-                                .foregroundColor(.green)
-                                .font(.system(size: 16))
-                        }
-                    }
-                    .onTapGesture {
-                        state.amount = state.insulinCalculated
-                        showInfo.toggle()
-                    }
-                    // .padding(.leading, 16)
-                    // .padding(.trailing, 16)
-                    .padding(.top, 15)
-                    .padding(.bottom, 5)
-                    let maxamountbolus = Double(state.maxBolus)
-                    let formattedMaxAmountBolus = String(maxamountbolus)
-                    // if state.insulinCalculated == state.maxBolus {
-                    if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
-                        Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
-                            // .font(.system(size: 12))
-                            .foregroundColor(.purple).italic()
-                    }
-                    Divider()
-                    // Warning
-                    if state.error, state.insulinCalculated > 0 {
-                        VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
-                                .padding(.bottom, 3)
-                            Text(alertString())
-                                .foregroundColor(.secondary)
-                                .italic()
                             Divider()
+                            // Warning
+                            if state.error, state.insulinCalculated > 0 {
+                                VStack {
+                                    Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
+                                        .padding(.bottom, 3)
+                                    Text(alertString())
+                                        .foregroundColor(.secondary)
+                                        .italic()
+                                    Divider()
+                                }
+                            }
                         }
                         .padding(.top, 10)
-                    }
-                }
-                .padding(.top, 10)
-                .padding(.bottom, 15)
-                .padding(.leading, 16)
-                .padding(.trailing, 16)
+                        .padding(.bottom, 15)
+                        .padding(.leading, 16)
+                        .padding(.trailing, 16)
 
-                // Hide sheet
-                VStack {
-                    Button { showInfo = false }
-                    label: {
-                        Text("OK")
+                        // Hide sheet
+                        VStack {
+                            Button { showInfo = false }
+                            label: {
+                                Text("OK")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.system(size: 20))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.blue)
+                        }
+                        .padding(.top, 20)
+                        .padding(.bottom, 20)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .font(.system(size: 20))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.blue)
+
+                    .font(.footnote)
+                    /* .background(
+                     RoundedRectangle(cornerRadius: 10, style: .continuous)
+                     .fill(Color(colorScheme == .dark ? UIColor.systemGray4 : UIColor.systemGray4).opacity(0))
+                     ) */
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 20)
+                .navigationTitle("Beräkningar")
+                .navigationBarTitleDisplayMode(.automatic)
+                .navigationBarItems(leading: Button("Close", action: { showInfo.toggle()
+                }))
             }
-            .font(.footnote)
-            .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Color(colorScheme == .dark ? UIColor.systemGray4 : UIColor.systemGray4).opacity(0))
-            )
         }
 
         private func alertString() -> String {
