@@ -367,17 +367,14 @@ extension Bolus {
                                         .italic()
                                     Spacer()
                                     let eventualBG = Double(state.evBG) / 18.0
-                                    let rounded = (eventualBG / 2.0).rounded(.toNearestOrEven) * 2.0
-                                    let formatted = String(format: "%.1f", rounded)
-                                    Text(
-                                        String(format: "%.1f", (eventualBG / 2.0).rounded(.toNearestOrEven) * 2.0)
-                                    )
-                                    .italic()
+                                    Text(eventualBG.formatted()) // Assuming that `eventualBG.formatted()` uses the pre-defined formatter.
+                                        .italic()
                                     Text("mmol/L")
                                         .foregroundColor(.secondary)
                                         .italic()
                                 }
                             }
+
                             HStack {
                                 if state.insulinRequired > 0 {
                                     Text("(Oref) Insulinbehov:")
