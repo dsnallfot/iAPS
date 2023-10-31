@@ -366,7 +366,9 @@ extension Bolus {
                                         .foregroundColor(.secondary)
                                         .italic()
                                     Spacer()
-                                    let eventualBG = state.evBG / 18
+                                    let eventualBG = Double(state.evBG) / 18.0
+                                    let rounded = (eventualBG / 2.0).rounded(.toNearestOrEven) * 2.0
+                                    let formatted = String(format: "%.1f", rounded)
                                     Text(
                                         String(format: "%.1f", (eventualBG / 2.0).rounded(.toNearestOrEven) * 2.0)
                                     )
