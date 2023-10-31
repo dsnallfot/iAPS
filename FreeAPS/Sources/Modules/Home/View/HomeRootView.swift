@@ -40,7 +40,7 @@ extension Home {
         private var numberFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 2
+            formatter.maximumFractionDigits = 1
             return formatter
         }
 

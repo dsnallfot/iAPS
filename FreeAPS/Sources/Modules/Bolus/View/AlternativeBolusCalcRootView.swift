@@ -357,8 +357,9 @@ extension Bolus {
                             }
                         }
                         .padding(.bottom, 3)
+                        .padding(.top, 3)
                         Divider()
-                            .padding(.top, 3)
+
                         Group {
                             HStack {
                                 if state.evBG > 0 {
@@ -366,7 +367,7 @@ extension Bolus {
                                         .foregroundColor(.secondary)
                                         .italic()
                                     Spacer()
-                                    let eventualBG = Double(state.evBG) / 18.0
+                                    let eventualBG = Double(state.evBG) * 0.0555
                                     Text(
                                         eventualBG
                                             .formatted(
@@ -382,21 +383,21 @@ extension Bolus {
                             }
 
                             HStack {
-                                if state.insulinRequired > 0 {
-                                    Text("(Oref) Insulinbehov:")
-                                        .foregroundColor(.secondary)
-                                        .italic()
-                                    Spacer()
-                                    Text(state.insulinRequired.formatted())
-                                        .italic()
+                                // if state.insulinRequired > 0 {
+                                Text("(Oref) Insulinbehov:")
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                                Spacer()
+                                Text(state.insulinRequired.formatted())
+                                    .italic()
 
-                                    Text(NSLocalizedString("E", comment: " grams per Unit"))
-                                        .foregroundColor(.secondary)
-                                        .italic()
-                                }
+                                Text(NSLocalizedString("E", comment: " grams per Unit"))
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                                // }
                             }
                         }
-
+                        .padding(.top, 3)
                         .padding(.bottom, 3)
                         Divider()
                         Group {
@@ -521,7 +522,7 @@ extension Bolus {
                                 let iob = state.iob
                                 // rounding
                                 let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
-                                let roundedIob = Decimal(round(100 * iobAsDouble) / 100)
+                                let roundedIob = Decimal(round(2 * iobAsDouble) / 2)
                                 Text(roundedIob.formatted())
                                     .frame(minWidth: 50, alignment: .trailing)
 
