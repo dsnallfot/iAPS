@@ -367,8 +367,14 @@ extension Bolus {
                                         .italic()
                                     Spacer()
                                     let eventualBG = Double(state.evBG) / 18.0
-                                    Text(eventualBG.formatted()) // Assuming that `eventualBG.formatted()` uses the pre-defined formatter.
-                                        .italic()
+                                    Text(
+                                        eventualBG
+                                            .formatted(
+                                                .number.grouping(.never).rounded()
+                                                    .precision(.fractionLength(fractionDigits))
+                                            )
+                                    )
+                                    .italic()
                                     Text("mmol/L")
                                         .foregroundColor(.secondary)
                                         .italic()
