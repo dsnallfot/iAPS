@@ -368,11 +368,7 @@ extension Bolus {
                                     Spacer()
                                     let eventualBG = state.evBG / 18
                                     Text(
-                                        eventualBG
-                                            .formatted(
-                                                .number.grouping(.never).rounded()
-                                                    .precision(.fractionLength(fractionDigits))
-                                            )
+                                        String(format: "%.1f", (eventualBG / 2.0).rounded(.toNearestOrEven) * 2.0)
                                     )
                                     .italic()
                                     Text("mmol/L")
