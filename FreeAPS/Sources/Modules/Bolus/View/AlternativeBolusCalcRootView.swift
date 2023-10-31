@@ -306,7 +306,7 @@ extension Bolus {
                     VStack(spacing: 3) {
                         HStack {
                             Text("Beräkningar")
-                                .font(.title3)
+                                .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
                         }
@@ -321,6 +321,7 @@ extension Bolus {
                                 Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
                                     .foregroundColor(.secondary)
                             }
+                            .padding(.top, 3)
                             HStack {
                                 Text("Målvärde:")
                                     .foregroundColor(.secondary)
@@ -355,9 +356,9 @@ extension Bolus {
                                 Text(NSLocalizedString("g/E", comment: " grams per Unit"))
                                     .foregroundColor(.secondary)
                             }
+                            .padding(.bottom, 3)
                         }
-                        .padding(.bottom, 3)
-                        .padding(.top, 3)
+
                         Divider()
 
                         Group {
@@ -381,6 +382,7 @@ extension Bolus {
                                         .italic()
                                 }
                             }
+                            .padding(.top, 3)
 
                             HStack {
                                 // if state.insulinRequired > 0 {
@@ -396,9 +398,8 @@ extension Bolus {
                                     .italic()
                                 // }
                             }
+                            .padding(.bottom, 3)
                         }
-                        .padding(.top, 3)
-                        .padding(.bottom, 3)
                         Divider()
                         Group {
                             HStack {
