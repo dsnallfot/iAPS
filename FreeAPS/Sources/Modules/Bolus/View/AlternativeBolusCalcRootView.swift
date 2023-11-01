@@ -6,6 +6,7 @@ extension Bolus {
     struct AlternativeBolusCalcRootView: BaseView {
         let resolver: Resolver
         let waitForSuggestion: Bool
+        let meal: [CarbsEntry]?
         @ObservedObject var state: StateModel
 
         @State private var showInfo = false
@@ -40,12 +41,63 @@ extension Bolus {
 
         var body: some View {
             Form {
+                if changed {
+                    Section {
+                        VStack {
+                            if let mealEntry = meal {
+                                if (mealEntry.first?.carbs ?? 0) > 0 {
+                                    HStack {
+                                        Text("Carbs")
+                                        Spacer()
+                                        Text((mealEntry.first?.carbs ?? 0).formatted())
+                                        Text("g")
+                                    }.foregroundColor(.secondary)
+                                }
+                                if (mealEntry.first?.fat ?? 0) > 0 {
+                                    HStack {
+                                        Text("Fat")
+                                        Spacer()
+                                        Text((mealEntry.first?.fat ?? 0).formatted())
+                                        Text("g")
+                                    }.foregroundColor(.secondary)
+                                }
+                                if (mealEntry.first?.protein ?? 0) > 0 {
+                                    HStack {
+                                        Text("Protein")
+                                        Spacer()
+                                        Text((mealEntry.first?.protein ?? 0).formatted())
+                                        Text("g")
+                                    }.foregroundColor(.secondary)
+                                }
+                                if (mealEntry.first?.note ?? "") != "" {
+                                    HStack {
+                                        Text("Note")
+                                        Spacer()
+                                        Text(mealEntry.first?.note ?? "")
+                                    }.foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    } header: { Text("Meal Summary") }
+                }
+
+                if changed {
+                    Section {
+                        Button {
+                            if let exists = meal {
+                                state.backToCarbsView(exists, hasFatOrProtein)
+                            }
+                        }
+                        label: { Text("Edit Meal") }.frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+
                 Section {
                     if state.waitForSuggestion {
                         HStack {
                             Text("Wait please").foregroundColor(.secondary)
                             Spacer()
-                            ActivityIndicator(isAnimating: .constant(true), style: .medium) // fix iOS 15 bug
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
                         }
                     } else {
                         HStack {
@@ -287,11 +339,29 @@ extension Bolus {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
+                    insulinCalculated = state.calculateInsulin()
                 }
             }
             .sheet(isPresented: $showInfo) {
                 bolusInfoAlternativeCalculator
             }
+        }
+
+        var changed: Bool {
+            if let exists = meal {
+                return (
+                    (exists.first?.carbs ?? 0) > 0 || (exists.first?.fat ?? 0) > 0 ||
+                        (exists.first?.protein ?? 0) > 0
+                )
+            }
+            return false
+        }
+
+        var hasFatOrProtein: Bool {
+            if let exists = meal {
+                return ((exists.first?.fat ?? 0) > 0 || (exists.first?.protein ?? 0) > 0)
+            }
+            return false
         }
 
         // calculation showed in popup
@@ -311,6 +381,44 @@ extension Bolus {
                                     // .font(.title2)
                                     // .fontWeight(.semibold)
                                     Spacer()
+                                }
+                                if changed {
+                                    VStack(spacing: 3) {
+                                        if let mealEntry = meal {
+                                            if (mealEntry.first?.note ?? "") != "" {
+                                                HStack {
+                                                    Text("Note")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text(mealEntry.first?.note ?? "").foregroundColor(.secondary)
+                                                }
+                                            }
+                                            if (mealEntry.first?.carbs ?? 0) > 0 {
+                                                HStack {
+                                                    Text("Carbs")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text((mealEntry.first?.carbs ?? 0).formatted())
+                                                }
+                                            }
+                                            if (mealEntry.first?.protein ?? 0) > 0 {
+                                                HStack {
+                                                    Text("Protein")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text((mealEntry.first?.protein ?? 0).formatted())
+                                                }
+                                            }
+                                            if (mealEntry.first?.fat ?? 0) > 0 {
+                                                HStack {
+                                                    Text("Fat")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text((mealEntry.first?.fat ?? 0).formatted())
+                                                }
+                                            }
+                                        }
+                                    }.padding(.bottom, 20)
                                 }
                                 Group {
                                     HStack {

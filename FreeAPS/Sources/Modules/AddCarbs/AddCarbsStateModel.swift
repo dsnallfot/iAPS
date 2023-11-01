@@ -18,6 +18,8 @@ extension AddCarbs {
         @Published var summation: [String] = []
         @Published var maxCarbs: Decimal = 0
         @Published var note: String = ""
+        @Published var id_: String = ""
+        @Published var summary: String = ""
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -34,25 +36,36 @@ extension AddCarbs {
             }
             carbs = min(carbs, maxCarbs)
 
+            id_ = UUID().uuidString
+
+            let carbsToStore = [CarbsEntry(
+                id: id_,
+                createdAt: date,
+                carbs: carbs,
+                fat: fat,
+                protein: protein,
+                note: note,
+                enteredBy: CarbsEntry.manual,
+                isFPU: false, fpuID: nil
+            )]
+
             carbsStorage.storeCarbs(
-                [CarbsEntry(
-                    id: UUID().uuidString,
-                    createdAt: date,
-                    carbs: carbs,
-                    fat: fat,
-                    protein: protein,
-                    note: note,
-                    enteredBy: CarbsEntry.manual,
-                    isFPU: false, fpuID: nil
-                )]
+                carbsToStore
             )
+
+            /*
+             let entries = Meals(
+             carbs: carbs, protein: protein, fat: fat, note: note, summary: waitersNotepad(), id: id_, date: date,
+             enteredBy: CarbsEntry.manual, isFPU: false, fpuID: nil
+             )
+             */
 
             if settingsManager.settings.skipBolusScreenAfterCarbs {
                 apsManager.determineBasalSync()
                 showModal(for: nil)
             } else {
-                showModal(for: .bolus(waitForSuggestion: true))
-                apsManager.determineBasalSync()
+                showModal(for: .bolus(waitForSuggestion: true, meal: carbsToStore))
+                // apsManager.determineBasalSync()
             }
         }
 
@@ -160,6 +173,18 @@ extension AddCarbs {
                 }
             }
             return waitersNotepadString
+        }
+
+        func loadEntries(_ editMode: Bool, _ meal: [CarbsEntry]?) {
+            if editMode {
+                if let entries = meal {
+                    carbs = entries.first?.carbs ?? 0
+                    fat = entries.first?.fat ?? 0
+                    protein = entries.first?.protein ?? 0
+                    note = entries.first?.note ?? ""
+                    id_ = entries.first?.id ?? ""
+                }
+            }
         }
     }
 }
