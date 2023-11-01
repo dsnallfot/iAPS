@@ -63,8 +63,8 @@ extension Bolus {
                                     Spacer()
                                     Text(carbs.formatted())
                                     Text("g")
-                                }.foregroundColor(.secondary)
-                                    .font(.callout)
+                                } // .foregroundColor(.secondary)
+                                // .font(.callout)
                             }
                             if let fat = meal.first?.fat, fat > 0 {
                                 HStack {
@@ -72,8 +72,8 @@ extension Bolus {
                                     Spacer()
                                     Text(fat.formatted())
                                     Text("g")
-                                }.foregroundColor(.secondary)
-                                    .font(.callout)
+                                } // .foregroundColor(.secondary)
+                                // .font(.callout)
                             }
                             if let protein = meal.first?.protein, protein > 0 {
                                 HStack {
@@ -81,49 +81,37 @@ extension Bolus {
                                     Spacer()
                                     Text(protein.formatted())
                                     Text("g")
-                                }.foregroundColor(.secondary)
-                                    .font(.callout)
+                                } // .foregroundColor(.secondary)
+                                // .font(.callout)
                             }
                             if let note = meal.first?.note, note != "" {
                                 HStack {
                                     Text("Note")
                                     Spacer()
                                     Text(note)
-                                }.foregroundColor(.secondary)
-                                    .font(.callout)
+                                } // .foregroundColor(.secondary)
+                                // .font(.callout)
                             }
                         }
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
                     } else {
                         Text("Ingen måltid registrerad")
                             .foregroundColor(.secondary)
-                            .font(.callout)
+                            .font(.subheadline)
                             .italic()
                     }
-                } header: { Text("Registrerad måltid") }
-
-                Section {
-                    Button {
-                        let id_ = meal.first?.id ?? ""
-                        state.backToCarbsView(complexEntry: fetch, id_)
-                    }
-                    label: { Text("Ändra / Lägg till måltid") }.frame(maxWidth: .infinity, alignment: .center)
-                }
-
-                Section {
                     HStack {
-                        Button(action: {
-                            showInfo.toggle()
-                            state.calculateInsulin()
-                        }, label: {
-                            Image(systemName: "info.circle")
-                            Text("Visa beräkningar")
-                        })
-                            .foregroundStyle(.blue)
-                            .font(.footnote)
-                            .buttonStyle(PlainButtonStyle())
+                        Button {
+                            let id_ = meal.first?.id ?? ""
+                            state.backToCarbsView(complexEntry: fetch, id_)
+                        }
+                        label: { Text("Ändra / Lägg till måltid") }
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.footnote)
+                            .buttonStyle(BorderlessButtonStyle())
+                        Spacer()
                         if state.fattyMeals {
-                            Spacer()
                             Text("Fettrik måltid")
                                 .foregroundColor(.brown)
                                 .font(.footnote)
@@ -137,6 +125,45 @@ extension Bolus {
                                 }
                         }
                     }
+                }
+                header: { Text("Registrerad måltid") }
+
+                /* Section {
+                     Button {
+                         let id_ = meal.first?.id ?? ""
+                         state.backToCarbsView(complexEntry: fetch, id_)
+                     }
+                     label: { Text("Ändra / Lägg till måltid") }.frame(maxWidth: .infinity, alignment: .center)
+                 }*/
+
+                Section {
+                    /* HStack {
+                         Button(action: {
+                             showInfo.toggle()
+                             state.calculateInsulin()
+                         }, label: {
+                             Image(systemName: "info.circle")
+                             Text("Visa beräkningar")
+                         })
+                             .foregroundStyle(.blue)
+                             .font(.footnote)
+                             .buttonStyle(PlainButtonStyle())
+                             .frame(maxWidth: .infinity, alignment: .leading)
+                         if state.fattyMeals {
+                             Spacer()
+                             Text("Fettrik måltid")
+                                 .foregroundColor(.brown)
+                                 .font(.footnote)
+
+                             Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
+                                 .toggleStyle(CheckboxToggleStyle())
+                                 .font(.footnote)
+                                 .foregroundColor(.brown)
+                                 .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                     state.calculateInsulin()
+                                 }
+                         }
+                     } */
 
                     HStack {
                         if state.error && state.insulinCalculated > 0 {
@@ -258,7 +285,7 @@ extension Bolus {
                             }
                         }
                     }
-                } header: { Text("Bolus Summary") }
+                } header: { Text("Bolusberäkning") }
 
                 Section {
                     if state.amount == 0, waitForSuggestion {
@@ -290,10 +317,17 @@ extension Bolus {
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
-            /* .navigationBarItems(trailing: Button("Beräkningar", action: {
-                 state.calculateInsulin()
-                 showInfo.toggle()
-             })) */
+            .navigationBarItems(
+                trailing: Button(action: {
+                    state.calculateInsulin()
+                    showInfo.toggle()
+                }) {
+                    HStack {
+                        Text("")
+                        Image(systemName: "info.circle.fill")
+                    }
+                }
+            )
 
             .onAppear {
                 configureView {
@@ -333,12 +367,13 @@ extension Bolus {
                     VStack {
                         VStack {
                             VStack(spacing: 2) {
-                                /* HStack {
-                                     Text("Indata")
-                                     // .font(.title2)
-                                     // .fontWeight(.semibold)
-                                     Spacer()
-                                 } */
+                                HStack {
+                                    Text("Variabler")
+                                        // .font(.title2)
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                }
+                                .padding(.bottom, 2)
                                 if fetch {
                                     VStack {
                                         if let note = meal.first?.note, note != "" {
@@ -347,6 +382,7 @@ extension Bolus {
                                                     .foregroundColor(.secondary)
                                                 Spacer()
                                                 Text(note)
+                                                    .font(.caption)
                                             }
                                         }
                                         if let carbs = meal.first?.carbs, carbs > 0 {
@@ -528,9 +564,9 @@ extension Bolus {
                             VStack(spacing: 2) {
                                 // Group {
                                 HStack {
-                                    Text("Boluskalkylering").foregroundColor(.primary) // .fontWeight(.semibold)
+                                    Text("Boluskalkyl").foregroundColor(.primary).fontWeight(.semibold)
                                     Spacer()
-                                    Text("Behov +/-  E").foregroundColor(.primary) // .fontWeight(.semibold)
+                                    Text("Behov +/-  E").foregroundColor(.primary).fontWeight(.semibold)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 2)
@@ -788,7 +824,7 @@ extension Bolus {
 
                     .font(.footnote)
                 }
-                .navigationTitle("Beräkningar")
+                .navigationTitle("Bolusberäkning")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Close", action: { showInfo.toggle()
                 }))
