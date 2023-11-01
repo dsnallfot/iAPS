@@ -146,7 +146,7 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    func deleteCarbs(at date: String) -> AnyPublisher<Void, Swift.Error> {
+    func deleteCarbs(at uniqueID: String) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
         components.scheme = url.scheme
         components.host = url.host
@@ -156,7 +156,7 @@ extension NightscoutAPI {
             URLQueryItem(name: "find[carbs][$exists]", value: "true"),
             URLQueryItem(
                 name: "find[id][$eq]",
-                value: date
+                value: uniqueID
             )
         ]
 

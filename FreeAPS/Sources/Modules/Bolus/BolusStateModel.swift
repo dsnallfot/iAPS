@@ -31,13 +31,13 @@ extension Bolus {
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
-        @Published var waitForSuggestion: Bool = false {
-            didSet {
-                if !waitForSuggestion, !oldValue {
-                    calculateInsulin() // Calculate insulin when waitForSuggestion becomes false
-                }
-            }
-        }
+        @Published var waitForSuggestion: Bool = false /* {
+             didSet {
+                 if !waitForSuggestion, !oldValue {
+                     calculateInsulin() // Calculate insulin when waitForSuggestion becomes false
+                 }
+             }
+         } */
 
         @Published var maxCarbs: Decimal = 0
         @Published var carbRatio: Decimal = 0
@@ -45,7 +45,7 @@ extension Bolus {
         var waitForSuggestionInitial: Bool = false
 
         // added for bolus calculator
-        @Published var glucose: [BloodGlucose] = []
+        // @Published var glucose: [BloodGlucose] = []
         @Published var recentGlucose: BloodGlucose?
         @Published var target: Decimal = 0
         @Published var cob: Decimal = 0
@@ -61,14 +61,20 @@ extension Bolus {
         @Published var roundedWholeCalc: Decimal = 0
         @Published var insulinCalculated: Decimal = 0
         @Published var roundedInsulinCalculated: Decimal = 0
-        @Published var enteredCarbs: Decimal = 0
+        // @Published var enteredCarbs: Decimal = 0
         @Published var fraction: Decimal = 0
         @Published var useCalc: Bool = false
         @Published var basal: Decimal = 0
         @Published var fattyMeals: Bool = false
         @Published var fattyMealFactor: Decimal = 0
         @Published var useFattyMealCorrectionFactor: Bool = false
-        @Published var currentTime: String = ""
+        @Published var eventualBG: Int = 0
+
+        @Published var meal: [CarbsEntry]?
+        @Published var carbs: Decimal = 0
+        @Published var fat: Decimal = 0
+        @Published var protein: Decimal = 0
+        @Published var note: String = ""
         @Published var viewDetails: Bool = false
 
         override func subscribe() {
@@ -113,7 +119,7 @@ extension Bolus {
         }
 
         // CALCULATIONS FOR THE BOLUS CALCULATOR
-        func calculateInsulin() -> Decimal {
+        func calculateInsulin() {
             // for mmol conversion
             var conversion: Decimal = 1.0
             if units == .mmolL {
@@ -127,8 +133,8 @@ extension Bolus {
             fifteenMinInsulin = (deltaBG * conversion) / isf
 
             // determine whole COB for which we want to dose insulin for and then determine insulin for wholeCOB
-            let wholeCOB = cob + enteredCarbs
-            wholeCobInsulin = wholeCOB / carbRatio
+            let wholeCOB = cob // + enteredCarbs
+            wholeCobInsulin = cob / carbRatio
 
             // determine how much the calculator reduces/ increases the bolus because of IOB
             iobInsulinReduction = (-1) * iob
@@ -160,7 +166,7 @@ extension Bolus {
                 insulinCalculated = result
             }
 
-            // Check if insulinCalculated exceeds state.maxBolus and limit it if necessary
+            // DANIEL: Check if insulinCalculated exceeds state.maxBolus and limit it if necessary
             if insulinCalculated > maxBolus {
                 insulinCalculated = maxBolus
             }
@@ -173,7 +179,8 @@ extension Bolus {
             // Rounding insulinCalculated to the nearest even 0.05
             insulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05).rounded(.toNearestOrEven) * 0.05)
 
-            return insulinCalculated
+            // return insulinCalculated
+            insulinRecommended = min(insulinCalculated, maxBolus)
         }
 
         func add() {
@@ -214,9 +221,11 @@ extension Bolus {
                 self.basal = self.provider.suggestion?.rate ?? 0 // dont seems to work for some reason
                 self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
 
-                if self.settingsManager.settings.insulinReqPercentage != 100 {
-                    self.insulinRecommended = self.insulin * (self.settingsManager.settings.insulinReqPercentage / 100)
-                } else { self.insulinRecommended = self.insulin }
+                if !self.useCalc {
+                    if self.settingsManager.settings.insulinReqPercentage != 100 {
+                        self.insulinRecommended = self.insulin * (self.settingsManager.settings.insulinReqPercentage / 100)
+                    } else { self.insulinRecommended = self.insulin }
+                }
 
                 self.errorString = self.provider.suggestion?.manualBolusErrorString ?? 0
                 if self.errorString != 0 {
@@ -227,20 +236,23 @@ extension Bolus {
                     self.minPredBG = (self.provider.suggestion?.minPredBG ?? 0) * conversion
                 } else { self.error = false }
 
-                self.insulinRecommended = self.apsManager
-                    .roundBolus(amount: max(self.insulinRecommended, 0))
+                if !self.useCalc {
+                    self.insulinRecommended = self.apsManager
+                        .roundBolus(amount: max(self.insulinRecommended, 0))
+                }
 
                 self.getDeltaBG()
             }
         }
 
-        func backToCarbsView(_ meal: [CarbsEntry], _ complexEntry: Bool) {
-            debug(.apsManager, "Start deleting carbs")
-            nsManager.deleteCarbs(
-                at: meal.first?.id ?? "", isFPU: nil, fpuID: nil, syncID: meal.first?.id ?? "",
-                complex: complexEntry
-            )
-            showModal(for: .addCarbs(editMode: true, meal: meal))
+        func backToCarbsView(complexEntry: Bool, _ id: String) {
+            if complexEntry {
+                nsManager.deleteCarbs(
+                    at: id, isFPU: nil, fpuID: nil, syncID: id,
+                    complex: complexEntry
+                )
+            }
+            showModal(for: .addCarbs(editMode: complexEntry))
         }
     }
 }
@@ -251,5 +263,6 @@ extension Bolus.StateModel: SuggestionObserver {
             self.waitForSuggestion = false
         }
         setupInsulinRequired()
+        if useCalc { calculateInsulin() }
     }
 }

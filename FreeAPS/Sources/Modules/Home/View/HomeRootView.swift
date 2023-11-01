@@ -587,7 +587,7 @@ extension Home {
 
                    */
                 HStack {
-                    Button { state.showModal(for: .addCarbs(editMode: false, meal: nil)) }
+                    Button { state.showModal(for: .addCarbs(editMode: false)) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("carbs")
@@ -634,7 +634,7 @@ extension Home {
                     Button {
                         state.showModal(for: .bolus(
                             waitForSuggestion: true,
-                            meal: nil
+                            fetch: false
                         ))
                         // state.apsManager.determineBasalSync()
                     } label: {

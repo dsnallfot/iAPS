@@ -6,7 +6,6 @@ extension AddCarbs {
     struct RootView: BaseView {
         let resolver: Resolver
         let editMode: Bool
-        let meal: [CarbsEntry]?
         @StateObject var state = StateModel()
         @State var dish: String = ""
         @State var isPromptPresented = false
@@ -120,8 +119,13 @@ extension AddCarbs {
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                !(state.carbs > state.maxCarbs) ? "Save and continue" :
-                                    "Inställd maxgräns: \(formattedMaxAmountCarbs)g   "
+                                state.carbs > 0 ?
+                                    (
+                                        state.carbs < state.maxCarbs ?
+                                            "Save and continue" :
+                                            "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
+                                    ) :
+                                    "Save"
                             )
                             .font(.title3.weight(.semibold))
                         }
@@ -136,7 +140,7 @@ extension AddCarbs {
             }
             .onAppear {
                 configureView {
-                    state.loadEntries(editMode, meal)
+                    state.loadEntries(editMode)
                 }
             }
             .navigationTitle("Registrera måltid")

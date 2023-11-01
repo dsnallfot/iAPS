@@ -1,21 +1,26 @@
+import Charts
+import CoreData
 import SwiftUI
 import Swinject
 
 extension Bolus {
-    // alternative bolus calc
     struct AlternativeBolusCalcRootView: BaseView {
         let resolver: Resolver
         let waitForSuggestion: Bool
-        let meal: [CarbsEntry]?
-        @ObservedObject var state: StateModel
-
+        let fetch: Bool
+        @StateObject var state: StateModel
         @State private var showInfo = false
+        @State private var exceededMaxBolus = false
         @State private var carbsWarning = false
         @State var insulinCalculated: Decimal = 0
         @State private var displayError = false
         @State private var presentInfo = false
-
         @Environment(\.colorScheme) var colorScheme
+
+        @FetchRequest(
+            entity: Meals.entity(),
+            sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]
+        ) var meal: FetchedResults<Meals>
 
         private var formatter: NumberFormatter {
             let formatter = NumberFormatter()
@@ -41,305 +46,241 @@ extension Bolus {
 
         var body: some View {
             Form {
-                if changed {
-                    Section {
-                        VStack {
-                            if let mealEntry = meal {
-                                if (mealEntry.first?.carbs ?? 0) > 0 {
-                                    HStack {
-                                        Text("Carbs")
-                                        Spacer()
-                                        Text((mealEntry.first?.carbs ?? 0).formatted())
-                                        Text("g")
-                                    }.foregroundColor(.secondary)
-                                }
-                                if (mealEntry.first?.fat ?? 0) > 0 {
-                                    HStack {
-                                        Text("Fat")
-                                        Spacer()
-                                        Text((mealEntry.first?.fat ?? 0).formatted())
-                                        Text("g")
-                                    }.foregroundColor(.secondary)
-                                }
-                                if (mealEntry.first?.protein ?? 0) > 0 {
-                                    HStack {
-                                        Text("Protein")
-                                        Spacer()
-                                        Text((mealEntry.first?.protein ?? 0).formatted())
-                                        Text("g")
-                                    }.foregroundColor(.secondary)
-                                }
-                                if (mealEntry.first?.note ?? "") != "" {
-                                    HStack {
-                                        Text("Note")
-                                        Spacer()
-                                        Text(mealEntry.first?.note ?? "")
-                                    }.foregroundColor(.secondary)
-                                }
-                            }
-                        }
-                    } header: { Text("Meal Summary") }
-                }
-
-                if changed {
-                    Section {
-                        Button {
-                            if let exists = meal {
-                                state.backToCarbsView(exists, hasFatOrProtein)
-                            }
-                        }
-                        label: { Text("Edit Meal") }.frame(maxWidth: .infinity, alignment: .center)
+                if state.waitForSuggestion {
+                    HStack {
+                        Text("Wait please").foregroundColor(.secondary)
+                        Spacer()
+                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
                     }
                 }
-
                 Section {
-                    if state.waitForSuggestion {
-                        HStack {
-                            Text("Wait please").foregroundColor(.secondary)
-                            Spacer()
-                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                    if fetch {
+                        VStack {
+                            if let carbs = meal.first?.carbs, carbs > 0 {
+                                HStack {
+                                    Text("Carbs")
+                                    Spacer()
+                                    Text(carbs.formatted())
+                                    Text("g")
+                                }.foregroundColor(.secondary)
+                            }
+                            if let fat = meal.first?.fat, fat > 0 {
+                                HStack {
+                                    Text("Fat")
+                                    Spacer()
+                                    Text(fat.formatted())
+                                    Text("g")
+                                }.foregroundColor(.secondary)
+                            }
+                            if let protein = meal.first?.protein, protein > 0 {
+                                HStack {
+                                    Text("Protein")
+                                    Spacer()
+                                    Text(protein.formatted())
+                                    Text("g")
+                                }.foregroundColor(.secondary)
+                            }
+                            if let note = meal.first?.note, note != "" {
+                                HStack {
+                                    Text("Note")
+                                    Spacer()
+                                    Text(note)
+                                }.foregroundColor(.secondary)
+                            }
                         }
                     } else {
-                        HStack {
-                            if state.error && state.insulinCalculated > 0 {
-                                // Image(systemName: "exclamationmark.triangle.fill")
-                                Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.orange)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                                Text("Vänta med att ge bolus")
-                                    .foregroundColor(.orange)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                            } else if state.insulinCalculated <= 0 {
-                                // Image(systemName: "x.circle.fill")
-                                Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.loopRed)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                                Text("Ingen bolus rekommenderas")
-                                    .foregroundColor(.loopRed)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                            } else {
-                                // Image(systemName: "checkmark.circle.fill")
-                                Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.green)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                                Text("Förslag bolusdos")
-                                    .foregroundColor(.green)
-                                    .onTapGesture {
-                                        showInfo.toggle()
-                                    }
-                            }
+                        Text("No Meal")
+                    }
+                } header: { Text("Meal Summary") }
+
+                Section {
+                    Button {
+                        let id_ = meal.first?.id ?? ""
+                        state.backToCarbsView(complexEntry: fetch, id_)
+                    }
+                    label: { Text("Edit Meal / Add Meal") }.frame(maxWidth: .infinity, alignment: .center)
+                }
+
+                Section {
+                    HStack {
+                        Button(action: {
+                            showInfo.toggle()
+                            state.calculateInsulin()
+                        }, label: {
+                            Image(systemName: "info.circle")
+                            Text("Calculations")
+                        })
+                            .foregroundStyle(.blue)
+                            .font(.footnote)
+                            .buttonStyle(PlainButtonStyle())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        if state.fattyMeals {
                             Spacer()
-
-                            if state.error && state.insulinCalculated > 0 {
-                                // Visa önskat innehåll för "Vänta med att ge bolus"
-                                Text(
-                                    formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
-                                        NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.orange)
-                            } else if state.insulinCalculated <= 0 {
-                                // Visa önskat innehåll för "Ingen bolus rekommenderas"
-                                Text(
-                                    formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
-                                        NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.loopRed)
-                            } else {
-                                // Visa önskat innehåll för "Rekommenderad bolus"
-                                Text(
-                                    formatter
-                                        .string(from: state.insulinCalculated as NSNumber)! +
-                                        NSLocalizedString(" U", comment: "Insulin unit")
-                                ).foregroundColor(.green)
+                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {
+                                Text("Fatty Meal")
                             }
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if state.error, state.insulinCalculated > 0 {
-                                displayError = true
-                            } else if state.insulinCalculated <= 0 {
-                                showInfo.toggle()
-                            } else {
-                                state.amount = state.insulinCalculated
-                            }
-                        }
-                        .alert(isPresented: $displayError) {
-                            Alert(
-                                title: Text("Varning!"),
-                                message: Text("\n" + alertString() + "\n"),
-                                primaryButton: .destructive(
-                                    Text("Add"),
-                                    action: {
-                                        state.amount = state.insulinCalculated
-                                        displayError = false
-                                    }
-                                ),
-                                secondaryButton: .cancel()
-                            )
-                        }
-
-                        if !state.waitForSuggestion {
-                            HStack {
-                                Text("Bolus Amount").fontWeight(.semibold)
-                                Spacer()
-                                DecimalTextField(
-                                    "0,00",
-                                    value: $state.amount,
-                                    formatter: formatter,
-                                    autofocus: true,
-                                    cleanInput: true
-                                )
-                                Text(!(state.amount > state.maxBolus * 3) ? "U" : "☠️").fontWeight(.semibold)
+                            .toggleStyle(CheckboxToggleStyle())
+                            .font(.footnote)
+                            .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                state.calculateInsulin()
                             }
                         }
                     }
-                }
-                Section {
+
+                    HStack {
+                        if state.error && state.insulinCalculated > 0 {
+                            // Image(systemName: "exclamationmark.triangle.fill")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.orange)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                            Text("Vänta med att ge bolus")
+                                .foregroundColor(.orange)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                        } else if state.insulinCalculated <= 0 {
+                            // Image(systemName: "x.circle.fill")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.loopRed)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                            Text("Ingen bolus rekommenderas")
+                                .foregroundColor(.loopRed)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                        } else {
+                            // Image(systemName: "checkmark.circle.fill")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.green)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                            Text("Förslag bolusdos")
+                                .foregroundColor(.green)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                    state.calculateInsulin()
+                                }
+                        }
+                        Spacer()
+
+                        if state.error && state.insulinCalculated > 0 {
+                            // Visa önskat innehåll för "Vänta med att ge bolus"
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.orange)
+                        } else if state.insulinCalculated <= 0 {
+                            // Visa önskat innehåll för "Ingen bolus rekommenderas"
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.loopRed)
+                        } else {
+                            // Visa önskat innehåll för "Rekommenderad bolus"
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.green)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        if state.error, state.insulinCalculated > 0 {
+                            displayError = true
+                        } else if state.insulinCalculated <= 0 {
+                            showInfo.toggle()
+                            state.calculateInsulin()
+                        } else {
+                            state.amount = state.insulinRecommended
+                        }
+                    }
+                    .alert(isPresented: $displayError) {
+                        Alert(
+                            title: Text("Varning!"),
+                            message: Text("\n" + alertString() + "\n"),
+                            primaryButton: .destructive(
+                                Text("Add"),
+                                action: {
+                                    state.amount = state.insulinRecommended
+                                    displayError = false
+                                }
+                            ),
+                            secondaryButton: .cancel()
+                        )
+                    }
+
                     if !state.waitForSuggestion {
+                        HStack {
+                            Text("Bolus Amount").fontWeight(.semibold)
+                            Spacer()
+                            DecimalTextField(
+                                "0,00",
+                                value: $state.amount,
+                                formatter: formatter,
+                                autofocus: true,
+                                cleanInput: true
+                            )
+                            Text(exceededMaxBolus ? "☠️" : "U").fontWeight(.semibold)
+                        }
+                        .onChange(of: state.amount) { newValue in
+                            if newValue > state.maxBolus {
+                                exceededMaxBolus = true
+                            } else {
+                                exceededMaxBolus = false
+                            }
+                        }
+                    }
+                } header: { Text("Bolus Summary") }
+
+                Section {
+                    if state.amount == 0, waitForSuggestion {
+                        Button { state.showModal(for: nil) }
+                        label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
+                    } else {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
 
-                        Button {
-                            state.add()
-                        } label: {
+                        Button { state.add() }
+                        label: {
                             HStack {
-                                if state.amount > state.maxBolus + 0.02 {
+                                if exceededMaxBolus {
                                     Image(systemName: "x.circle.fill")
                                         .foregroundColor(.loopRed)
                                 }
-
-                                Text(
-                                    !(state.amount > state.maxBolus + 0.02) ? "Ge bolusdos" :
-                                        "Inställd maxgräns: \(formattedMaxAmountBolus)E   "
-                                )
+                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos") }
+                                .frame(maxWidth: .infinity, alignment: .center)
                                 .font(.title3.weight(.semibold))
-                            }
-                        }
-                        .disabled(
-                            state.amount <= 0 || state.amount > state.maxBolus + 0.02
-                        )
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
-                Section {
-                    if waitForSuggestion {
-                        Button { state.showModal(for: nil) }
-                        label: { Text("Continue without bolus").font(.title3) }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
-                // Transparent section to add space between enact bolus buttons and additional settings
-                Section {
-                    Text(" \n ")
-                }
-                .listRowBackground(Color.clear)
-                Section(header: Text("Extra inställningar")) {
-                    HStack {
-                        if state.fattyMeals {
-                            Text("Fettrik måltid?")
-                                .foregroundColor(.brown)
-                            // .font(.footnote)
-                            Spacer()
-                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
-                                .toggleStyle(CheckboxToggleStyle())
-                                .foregroundColor(.brown)
-                                // .font(.footnote)
-                                .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                    insulinCalculated = state.calculateInsulin()
-                                }
-                        }
-                    }
-                    HStack {
-                        Text("Blodsocker")
-                        DecimalTextField(
-                            "0",
-                            value: Binding(
-                                get: {
-                                    if state.units == .mmolL {
-                                        return state.currentBG.asMmolL
-                                    } else {
-                                        return state.currentBG
-                                    }
-                                },
-                                set: { newValue in
-                                    if state.units == .mmolL {
-                                        state.currentBG = newValue.asMmolL
-                                    } else {
-                                        state.currentBG = newValue
-                                    }
-                                }
-                            ),
-                            formatter: glucoseFormatter,
-                            autofocus: false,
-                            cleanInput: true
-                        )
-                        .onChange(of: state.currentBG) { newValue in
-                            if newValue > 500 {
-                                state.currentBG = 500 // ensure that user can not input more than 500 mg/dL
-                            }
-                            insulinCalculated = state.calculateInsulin()
-                        }
-                        Text(state.units.rawValue)
-                            .foregroundColor(.secondary)
-                    }
-
-                    // maybe remove this hstack or display entered carbs from carbs entry
-                    HStack {
-                        let maxamountcarbs = Double(state.maxCarbs)
-                        let formattedMaxAmountCarbs = String(maxamountcarbs)
-                        Text("Nya Kolhydrater \n(Utöver COB)")
-                        Spacer()
-                        DecimalTextField(
-                            "0",
-                            value: $state.enteredCarbs,
-                            formatter: formatter,
-                            autofocus: false,
-                            cleanInput: true
-                        )
-                        .onChange(of: state.enteredCarbs) { newValue in
-                            if newValue > state.maxCarbs {
-                                state.enteredCarbs = state
-                                    .maxCarbs // ensure that user can not input more than maxcarbs accidentally
-                                carbsWarning.toggle()
-                            }
-                            insulinCalculated = state.calculateInsulin()
-                        }
-                        Text(
-                            NSLocalizedString("g", comment: "grams")
-                        )
-                        .foregroundColor(.secondary)
-                        .alert(
-                            "Varning! \nInställd maxgräns är \(formattedMaxAmountCarbs)g kh!",
-                            isPresented: $carbsWarning
-                        ) {
-                            Button("OK", role: .cancel) {}
+                                .foregroundColor(exceededMaxBolus ? .loopRed : .accentColor)
+                                .disabled(
+                                    state.amount <= 0 || state.amount > state.maxBolus
+                                )
                         }
                     }
                 }
             }
-
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .navigationBarItems(trailing: Button("Beräkningar", action: { showInfo.toggle() }))
-            // .popup(isPresented: showInfo) {
-            // bolusInfoAlternativeCalculator
-            // }
+
             .onAppear {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
-                    insulinCalculated = state.calculateInsulin()
+                    state.calculateInsulin()
                 }
             }
             .sheet(isPresented: $showInfo) {
@@ -348,31 +289,18 @@ extension Bolus {
         }
 
         var changed: Bool {
-            if let exists = meal {
-                return (
-                    (exists.first?.carbs ?? 0) > 0 || (exists.first?.fat ?? 0) > 0 ||
-                        (exists.first?.protein ?? 0) > 0
-                )
-            }
-            return false
+            ((meal.first?.carbs ?? 0) > 0) || ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
 
         var hasFatOrProtein: Bool {
-            if let exists = meal {
-                return ((exists.first?.fat ?? 0) > 0 || (exists.first?.protein ?? 0) > 0)
-            }
-            return false
+            ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
 
-        // calculation showed in popup
+        // calculation showed in sheet
         var bolusInfoAlternativeCalculator: some View {
             NavigationView {
-                let unit = NSLocalizedString(
-                    " U",
-                    comment: "Unit in number of units delivered (keep the space character!)"
-                )
-
-                return VStack {
+                VStack {
+                    let unit = NSLocalizedString(" U", comment: "Unit in number of units delivered (keep the space character!)")
                     VStack {
                         VStack {
                             VStack(spacing: 3) {
@@ -382,43 +310,45 @@ extension Bolus {
                                     // .fontWeight(.semibold)
                                     Spacer()
                                 }
-                                if changed {
-                                    VStack(spacing: 3) {
-                                        if let mealEntry = meal {
-                                            if (mealEntry.first?.note ?? "") != "" {
-                                                HStack {
-                                                    Text("Note")
-                                                        .foregroundColor(.secondary)
-                                                    Spacer()
-                                                    Text(mealEntry.first?.note ?? "").foregroundColor(.secondary)
-                                                }
-                                            }
-                                            if (mealEntry.first?.carbs ?? 0) > 0 {
-                                                HStack {
-                                                    Text("Carbs")
-                                                        .foregroundColor(.secondary)
-                                                    Spacer()
-                                                    Text((mealEntry.first?.carbs ?? 0).formatted())
-                                                }
-                                            }
-                                            if (mealEntry.first?.protein ?? 0) > 0 {
-                                                HStack {
-                                                    Text("Protein")
-                                                        .foregroundColor(.secondary)
-                                                    Spacer()
-                                                    Text((mealEntry.first?.protein ?? 0).formatted())
-                                                }
-                                            }
-                                            if (mealEntry.first?.fat ?? 0) > 0 {
-                                                HStack {
-                                                    Text("Fat")
-                                                        .foregroundColor(.secondary)
-                                                    Spacer()
-                                                    Text((mealEntry.first?.fat ?? 0).formatted())
-                                                }
+                                if fetch {
+                                    VStack {
+                                        if let note = meal.first?.note, note != "" {
+                                            HStack {
+                                                Text("Note")
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text(note)
                                             }
                                         }
-                                    }.padding(.bottom, 20)
+                                        if let carbs = meal.first?.carbs, carbs > 0 {
+                                            HStack {
+                                                Text("Carbs")
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text(carbs.formatted())
+                                                Text("g").foregroundColor(.secondary)
+                                            }
+                                        }
+                                        if let protein = meal.first?.protein, protein > 0 {
+                                            HStack {
+                                                Text("Protein")
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text(protein.formatted())
+                                                Text("g").foregroundColor(.secondary)
+                                            }
+                                        }
+                                        if let fat = meal.first?.fat, fat > 0 {
+                                            HStack {
+                                                Text("Fat")
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text(fat.formatted()).foregroundColor(.orange)
+                                                Text("g").foregroundColor(.secondary)
+                                            }
+                                        }
+                                    }
+                                    Divider().fontWeight(.bold).padding(10)
                                 }
                                 Group {
                                     HStack {
@@ -447,15 +377,15 @@ extension Bolus {
                                             .foregroundColor(.secondary)
                                     }
                                     // Basal dont update for some reason. needs to check. not crucial info in the calc view however
-                                    /* HStack {
-                                     Text("Aktuell basal:")
-                                     .foregroundColor(.secondary)
-                                     Spacer()
-                                     let basal = state.basal
-                                     Text(basal.formatted())
-                                     Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                                     .foregroundColor(.secondary)
-                                     } */
+                                    HStack {
+                                        Text("Aktuell basal:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let basal = state.basal
+                                        Text(basal.formatted())
+                                        Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                                            .foregroundColor(.secondary)
+                                    }
                                     HStack {
                                         Text("Aktuell insulinkvot:")
                                             .foregroundColor(.secondary)
@@ -567,153 +497,128 @@ extension Bolus {
 
                             Divider()
                             VStack(spacing: 3) {
-                                Group {
-                                    HStack {
-                                        Text("Boluskalkylering").foregroundColor(.primary) // .fontWeight(.semibold)
-                                        Spacer()
-                                        Text("Behov +/-  E").foregroundColor(.primary) // .fontWeight(.semibold)
-                                    }
-                                    .padding(.top, 3)
-                                    .padding(.bottom, 3)
-                                    if state.enteredCarbs > 0 {
-                                        HStack(alignment: .center, spacing: nil) {
-                                            Text("Nya kolhydrater:")
-                                                .foregroundColor(.secondary)
-                                                .frame(minWidth: 105, alignment: .leading)
-
-                                            let carbs = state.enteredCarbs
-                                            Text(carbs.formatted())
-                                                .frame(minWidth: 50, alignment: .trailing)
-
-                                            let unitGrams = NSLocalizedString("g", comment: "grams")
-                                            Text(unitGrams).foregroundColor(.secondary)
-                                                .frame(minWidth: 50, alignment: .leading)
-
-                                            Image(systemName: "arrow.right")
-                                                .frame(minWidth: 15, alignment: .trailing)
-                                            Spacer()
-                                            let insulinCarbs = state.enteredCarbs / state.carbRatio
-                                            // rounding
-                                            let insulinCarbsAsDouble = NSDecimalNumber(decimal: insulinCarbs).doubleValue
-                                            let roundedInsulinCarbs = Decimal(round(100 * insulinCarbsAsDouble) / 100)
-                                            Text(roundedInsulinCarbs.formatted())
-                                            Text(unit)
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
-                                    HStack(alignment: .center, spacing: nil) {
-                                        Text("COB:")
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 105, alignment: .leading)
-
-                                        let cob = state.cob
-                                        Text(cob.formatted())
-                                            .frame(minWidth: 50, alignment: .trailing)
-
-                                        let unitGrams = NSLocalizedString("g", comment: "grams")
-                                        Text(unitGrams).foregroundColor(.secondary)
-                                            .frame(minWidth: 50, alignment: .leading)
-
-                                        Image(systemName: "arrow.right")
-                                            .frame(minWidth: 15, alignment: .trailing)
-                                        Spacer()
-                                        let insulinCob = state.wholeCobInsulin - state.enteredCarbs / state.carbRatio
-                                        // rounding
-                                        let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
-                                        let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
-                                        Text(roundedInsulinCob.formatted())
-                                        Text(unit)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    HStack(alignment: .center, spacing: nil) {
-                                        Text("IOB:")
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 105, alignment: .leading)
-
-                                        let iob = state.iob
-                                        // rounding
-                                        let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
-                                        let roundedIob = Decimal(round(2 * iobAsDouble) / 2)
-                                        Text(roundedIob.formatted())
-                                            .frame(minWidth: 50, alignment: .trailing)
-
-                                        Text(unit)
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 50, alignment: .leading)
-
-                                        Image(systemName: "arrow.right")
-                                            .frame(minWidth: 15, alignment: .trailing)
-                                        Spacer()
-                                        let iobCalc = state.iobInsulinReduction
-                                        // rounding
-                                        let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
-                                        let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
-                                        Text(roundedIobCalc.formatted())
-                                        Text(unit).foregroundColor(.secondary)
-                                    }
-                                    HStack(alignment: .center, spacing: nil) {
-                                        Text("Blodsocker:")
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 105, alignment: .leading)
-
-                                        let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
-                                        Text(
-                                            glucose
-                                                .formatted(
-                                                    .number.grouping(.never).rounded()
-                                                        .precision(.fractionLength(fractionDigits))
-                                                )
-                                        )
-                                        .frame(minWidth: 50, alignment: .trailing)
-                                        Text(state.units.rawValue)
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 50, alignment: .leading)
-
-                                        Image(systemName: "arrow.right")
-                                            .frame(minWidth: 15, alignment: .trailing)
-                                        Spacer()
-                                        let targetDifferenceInsulin = state.targetDifferenceInsulin
-                                        // rounding
-                                        let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin)
-                                            .doubleValue
-                                        let roundedTargetDifferenceInsulin =
-                                            Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
-
-                                        Text(roundedTargetDifferenceInsulin.formatted())
-
-                                        Text(unit)
-
-                                            .foregroundColor(.secondary)
-                                    }
-                                    HStack(alignment: .center, spacing: nil) {
-                                        Text("15 min trend:")
-                                            .foregroundColor(.secondary)
-                                            .frame(minWidth: 105, alignment: .leading)
-
-                                        let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
-                                        Text(
-                                            trend
-                                                .formatted(
-                                                    .number.grouping(.never).rounded()
-                                                        .precision(.fractionLength(fractionDigits))
-                                                )
-                                        )
-                                        .frame(minWidth: 50, alignment: .trailing)
-                                        Text(state.units.rawValue).foregroundColor(.secondary)
-                                            .frame(minWidth: 50, alignment: .leading)
-
-                                        Image(systemName: "arrow.right")
-                                            .frame(minWidth: 15, alignment: .trailing)
-                                        Spacer()
-                                        let trendInsulin = state.fifteenMinInsulin
-                                        // rounding
-                                        let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
-                                        let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
-                                        Text(roundedTrendInsulin.formatted())
-                                        Text(unit)
-                                            .foregroundColor(.secondary)
-                                    }
+                                // Group {
+                                HStack {
+                                    Text("Boluskalkylering").foregroundColor(.primary) // .fontWeight(.semibold)
+                                    Spacer()
+                                    Text("Behov +/-  E").foregroundColor(.primary) // .fontWeight(.semibold)
                                 }
+                                .padding(.top, 3)
+                                .padding(.bottom, 3)
+
+                                HStack(alignment: .center, spacing: nil) {
+                                    Text("COB:")
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 105, alignment: .leading)
+
+                                    let cob = state.cob
+                                    Text(cob.formatted())
+                                        .frame(minWidth: 50, alignment: .trailing)
+
+                                    let unitGrams = NSLocalizedString("g", comment: "grams")
+                                    Text(unitGrams).foregroundColor(.secondary)
+                                        .frame(minWidth: 50, alignment: .leading)
+
+                                    Image(systemName: "arrow.right")
+                                        .frame(minWidth: 15, alignment: .trailing)
+                                    Spacer()
+                                    let insulinCob = state.wholeCobInsulin
+                                    // rounding
+                                    let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
+                                    let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
+                                    Text(roundedInsulinCob.formatted())
+                                    Text(unit)
+                                        .foregroundColor(.secondary)
+                                }
+                                HStack(alignment: .center, spacing: nil) {
+                                    Text("IOB:")
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 105, alignment: .leading)
+
+                                    let iob = state.iob
+                                    // rounding
+                                    let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
+                                    let roundedIob = Decimal(round(2 * iobAsDouble) / 2)
+                                    Text(roundedIob.formatted())
+                                        .frame(minWidth: 50, alignment: .trailing)
+
+                                    Text(unit)
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 50, alignment: .leading)
+
+                                    Image(systemName: "arrow.right")
+                                        .frame(minWidth: 15, alignment: .trailing)
+                                    Spacer()
+                                    let iobCalc = state.iobInsulinReduction
+                                    // rounding
+                                    let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
+                                    let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
+                                    Text(roundedIobCalc.formatted())
+                                    Text(unit).foregroundColor(.secondary)
+                                }
+                                HStack(alignment: .center, spacing: nil) {
+                                    Text("Blodsocker:")
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 105, alignment: .leading)
+
+                                    let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
+                                    Text(
+                                        glucose
+                                            .formatted(
+                                                .number.grouping(.never).rounded()
+                                                    .precision(.fractionLength(fractionDigits))
+                                            )
+                                    )
+                                    .frame(minWidth: 50, alignment: .trailing)
+                                    Text(state.units.rawValue)
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 50, alignment: .leading)
+
+                                    Image(systemName: "arrow.right")
+                                        .frame(minWidth: 15, alignment: .trailing)
+                                    Spacer()
+                                    let targetDifferenceInsulin = state.targetDifferenceInsulin
+                                    // rounding
+                                    let targetDifferenceInsulinAsDouble = NSDecimalNumber(decimal: targetDifferenceInsulin)
+                                        .doubleValue
+                                    let roundedTargetDifferenceInsulin =
+                                        Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
+
+                                    Text(roundedTargetDifferenceInsulin.formatted())
+
+                                    Text(unit)
+
+                                        .foregroundColor(.secondary)
+                                }
+                                HStack(alignment: .center, spacing: nil) {
+                                    Text("15 min trend:")
+                                        .foregroundColor(.secondary)
+                                        .frame(minWidth: 105, alignment: .leading)
+
+                                    let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
+                                    Text(
+                                        trend
+                                            .formatted(
+                                                .number.grouping(.never).rounded()
+                                                    .precision(.fractionLength(fractionDigits))
+                                            )
+                                    )
+                                    .frame(minWidth: 50, alignment: .trailing)
+                                    Text(state.units.rawValue).foregroundColor(.secondary)
+                                        .frame(minWidth: 50, alignment: .leading)
+
+                                    Image(systemName: "arrow.right")
+                                        .frame(minWidth: 15, alignment: .trailing)
+                                    Spacer()
+                                    let trendInsulin = state.fifteenMinInsulin
+                                    // rounding
+                                    let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
+                                    let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
+                                    Text(roundedTrendInsulin.formatted())
+                                    Text(unit)
+                                        .foregroundColor(.secondary)
+                                }
+                                // }
                             }
                             Divider()
                                 .fontWeight(.bold)
@@ -810,6 +715,7 @@ extension Bolus {
                             // .padding(.trailing, 16)
                             .padding(.top, 15)
                             .padding(.bottom, 5)
+
                             let maxamountbolus = Double(state.maxBolus)
                             let formattedMaxAmountBolus = String(maxamountbolus)
                             // if state.insulinCalculated == state.maxBolus {
@@ -852,10 +758,6 @@ extension Bolus {
                     }
 
                     .font(.footnote)
-                    /* .background(
-                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                     .fill(Color(colorScheme == .dark ? UIColor.systemGray4 : UIColor.systemGray4).opacity(0))
-                     ) */
                 }
                 .navigationTitle("Beräkningar")
                 .navigationBarTitleDisplayMode(.automatic)
