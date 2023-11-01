@@ -11,6 +11,7 @@ extension Bolus {
         @StateObject var state: StateModel
         @State private var showInfo = false
         @State private var exceededMaxBolus = false
+        @State private var exceededMaxBolus3 = false
         @State private var carbsWarning = false
         @State var insulinCalculated: Decimal = 0
         @State private var displayError = false
@@ -63,6 +64,7 @@ extension Bolus {
                                     Text(carbs.formatted())
                                     Text("g")
                                 }.foregroundColor(.secondary)
+                                    .font(.callout)
                             }
                             if let fat = meal.first?.fat, fat > 0 {
                                 HStack {
@@ -71,6 +73,7 @@ extension Bolus {
                                     Text(fat.formatted())
                                     Text("g")
                                 }.foregroundColor(.secondary)
+                                    .font(.callout)
                             }
                             if let protein = meal.first?.protein, protein > 0 {
                                 HStack {
@@ -79,6 +82,7 @@ extension Bolus {
                                     Text(protein.formatted())
                                     Text("g")
                                 }.foregroundColor(.secondary)
+                                    .font(.callout)
                             }
                             if let note = meal.first?.note, note != "" {
                                 HStack {
@@ -86,19 +90,23 @@ extension Bolus {
                                     Spacer()
                                     Text(note)
                                 }.foregroundColor(.secondary)
+                                    .font(.callout)
                             }
                         }
                     } else {
-                        Text("No Meal")
+                        Text("Ingen måltid registrerad")
+                            .foregroundColor(.secondary)
+                            .font(.callout)
+                            .italic()
                     }
-                } header: { Text("Meal Summary") }
+                } header: { Text("Registrerad måltid") }
 
                 Section {
                     Button {
                         let id_ = meal.first?.id ?? ""
                         state.backToCarbsView(complexEntry: fetch, id_)
                     }
-                    label: { Text("Edit Meal / Add Meal") }.frame(maxWidth: .infinity, alignment: .center)
+                    label: { Text("Ändra/Lägg till måltid") }.frame(maxWidth: .infinity, alignment: .center)
                 }
 
                 Section {
@@ -108,7 +116,7 @@ extension Bolus {
                             state.calculateInsulin()
                         }, label: {
                             Image(systemName: "info.circle")
-                            Text("Calculations")
+                            Text("Visa beräkningar")
                         })
                             .foregroundStyle(.blue)
                             .font(.footnote)
@@ -116,21 +124,23 @@ extension Bolus {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if state.fattyMeals {
                             Spacer()
-                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {
-                                Text("Fatty Meal")
-                            }
-                            .toggleStyle(CheckboxToggleStyle())
-                            .font(.footnote)
-                            .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                state.calculateInsulin()
-                            }
+                            Text("Fettrik måltid?")
+                                .foregroundColor(.brown)
+                                .font(.footnote)
+                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
+                                .toggleStyle(CheckboxToggleStyle())
+                                .font(.footnote)
+                                .foregroundColor(.brown)
+                                .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                    state.calculateInsulin()
+                                }
                         }
                     }
 
                     HStack {
                         if state.error && state.insulinCalculated > 0 {
-                            // Image(systemName: "exclamationmark.triangle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -143,8 +153,8 @@ extension Bolus {
                                     state.calculateInsulin()
                                 }
                         } else if state.insulinCalculated <= 0 {
-                            // Image(systemName: "x.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "x.circle.fill")
+                                // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -157,8 +167,8 @@ extension Bolus {
                                     state.calculateInsulin()
                                 }
                         } else {
-                            // Image(systemName: "checkmark.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "checkmark.circle.fill")
+                                // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -233,13 +243,17 @@ extension Bolus {
                                 autofocus: true,
                                 cleanInput: true
                             )
-                            Text(exceededMaxBolus ? "☠️" : "U").fontWeight(.semibold)
+                            Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
                         }
                         .onChange(of: state.amount) { newValue in
-                            if newValue > state.maxBolus {
+                            if newValue > state.maxBolus * 3 {
+                                exceededMaxBolus3 = true
+                                exceededMaxBolus = true
+                            } else if newValue > state.maxBolus {
                                 exceededMaxBolus = true
                             } else {
                                 exceededMaxBolus = false
+                                exceededMaxBolus3 = false
                             }
                         }
                     }
@@ -274,7 +288,10 @@ extension Bolus {
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
-            .navigationBarItems(trailing: Button("Beräkningar", action: { showInfo.toggle() }))
+            /* .navigationBarItems(trailing: Button("Beräkningar", action: {
+                 state.calculateInsulin()
+                 showInfo.toggle()
+             })) */
 
             .onAppear {
                 configureView {
@@ -303,13 +320,13 @@ extension Bolus {
                     let unit = NSLocalizedString(" U", comment: "Unit in number of units delivered (keep the space character!)")
                     VStack {
                         VStack {
-                            VStack(spacing: 3) {
-                                HStack {
-                                    Text("Indata")
-                                    // .font(.title2)
-                                    // .fontWeight(.semibold)
-                                    Spacer()
-                                }
+                            VStack(spacing: 2) {
+                                /* HStack {
+                                     Text("Indata")
+                                     // .font(.title2)
+                                     // .fontWeight(.semibold)
+                                     Spacer()
+                                 } */
                                 if fetch {
                                     VStack {
                                         if let note = meal.first?.note, note != "" {
@@ -343,12 +360,12 @@ extension Bolus {
                                                 Text("Fat")
                                                     .foregroundColor(.secondary)
                                                 Spacer()
-                                                Text(fat.formatted()).foregroundColor(.orange)
+                                                Text(fat.formatted()).foregroundColor(.primary)
                                                 Text("g").foregroundColor(.secondary)
                                             }
                                         }
                                     }
-                                    Divider().fontWeight(.bold).padding(10)
+                                    Divider().fontWeight(.bold).padding(2)
                                 }
                                 Group {
                                     HStack {
@@ -360,7 +377,7 @@ extension Bolus {
                                         Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
                                             .foregroundColor(.secondary)
                                     }
-                                    .padding(.top, 3)
+                                    .padding(.top, 2)
                                     HStack {
                                         Text("Målvärde:")
                                             .foregroundColor(.secondary)
@@ -395,7 +412,7 @@ extension Bolus {
                                         Text(NSLocalizedString("g/E", comment: " grams per Unit"))
                                             .foregroundColor(.secondary)
                                     }
-                                    .padding(.bottom, 3)
+                                    .padding(.bottom, 2)
                                 }
 
                                 Divider()
@@ -421,7 +438,7 @@ extension Bolus {
                                                 .italic()
                                         }
                                     }
-                                    .padding(.top, 3)
+                                    .padding(.top, 2)
 
                                     HStack {
                                         // if state.insulinRequired > 0 {
@@ -437,7 +454,7 @@ extension Bolus {
                                             .italic()
                                         // }
                                     }
-                                    .padding(.bottom, 3)
+                                    .padding(.bottom, 2)
                                 }
                                 Divider()
                                 Group {
@@ -461,7 +478,7 @@ extension Bolus {
                                                 .foregroundColor(.secondary)
                                         }
                                     }
-                                    .padding(.top, 3)
+                                    .padding(.top, 2)
                                     HStack {
                                         Text("Inställd max kolhydrater:")
                                             .foregroundColor(.secondary)
@@ -496,15 +513,15 @@ extension Bolus {
                             }
 
                             Divider()
-                            VStack(spacing: 3) {
+                            VStack(spacing: 2) {
                                 // Group {
                                 HStack {
                                     Text("Boluskalkylering").foregroundColor(.primary) // .fontWeight(.semibold)
                                     Spacer()
                                     Text("Behov +/-  E").foregroundColor(.primary) // .fontWeight(.semibold)
                                 }
-                                .padding(.top, 3)
-                                .padding(.bottom, 3)
+                                .padding(.top, 2)
+                                .padding(.bottom, 2)
 
                                 HStack(alignment: .center, spacing: nil) {
                                     Text("COB:")
@@ -633,8 +650,8 @@ extension Bolus {
                                 Text(unit)
                                     .foregroundColor(.primary)
                             }
-                            .padding(.top, 5)
-                            .padding(.bottom, 5)
+                            .padding(.top, 3)
+                            .padding(.bottom, 3)
 
                             Divider()
                                 .fontWeight(.bold)
@@ -713,8 +730,8 @@ extension Bolus {
                             }
                             // .padding(.leading, 16)
                             // .padding(.trailing, 16)
-                            .padding(.top, 15)
-                            .padding(.bottom, 5)
+                            .padding(.top, 4)
+                            .padding(.bottom, 2)
 
                             let maxamountbolus = Double(state.maxBolus)
                             let formattedMaxAmountBolus = String(maxamountbolus)
@@ -729,7 +746,7 @@ extension Bolus {
                             if state.error, state.insulinCalculated > 0 {
                                 VStack {
                                     Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
-                                        .padding(.bottom, 3)
+                                        .padding(.bottom, 2)
                                     Text(alertString())
                                         .foregroundColor(.secondary)
                                         .italic()
@@ -743,24 +760,24 @@ extension Bolus {
                         .padding(.trailing, 16)
 
                         // Hide sheet
-                        VStack {
-                            Button { showInfo = false }
-                            label: {
-                                Text("OK")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .font(.system(size: 20))
-                            .fontWeight(.semibold)
-                            .foregroundColor(.blue)
-                        }
-                        .padding(.top, 20)
-                        .padding(.bottom, 20)
+                        /* VStack {
+                             Button { showInfo = false }
+                             label: {
+                                 Text("OK")
+                             }
+                             .frame(maxWidth: .infinity, alignment: .center)
+                             .font(.system(size: 20))
+                             .fontWeight(.semibold)
+                             .foregroundColor(.blue)
+                         }*/
+                        .padding(.top, 15)
+                        .padding(.bottom, 15)
                     }
 
                     .font(.footnote)
                 }
                 .navigationTitle("Beräkningar")
-                .navigationBarTitleDisplayMode(.automatic)
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Close", action: { showInfo.toggle()
                 }))
             }

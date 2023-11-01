@@ -114,14 +114,14 @@ extension AddCarbs {
                         }
                     } label: {
                         HStack {
-                            if state.carbs > state.maxCarbs {
+                            if state.carbs > state.maxCarbs + 0.09 {
                                 Image(systemName: "x.circle.fill")
                                     .foregroundColor(.loopRed)
                             }
                             Text(
                                 state.carbs > 0 ?
                                     (
-                                        state.carbs < state.maxCarbs ?
+                                        state.carbs < state.maxCarbs + 0.1 ?
                                             "Save and continue" :
                                             "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
                                     ) :
@@ -130,7 +130,7 @@ extension AddCarbs {
                             .font(.title3.weight(.semibold))
                         }
                     }
-                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
+                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs + 0.1)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
                 Section { mealPresets
