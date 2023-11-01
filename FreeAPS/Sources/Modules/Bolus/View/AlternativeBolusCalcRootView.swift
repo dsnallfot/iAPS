@@ -106,15 +106,15 @@ extension Bolus {
                             let id_ = meal.first?.id ?? ""
                             state.backToCarbsView(complexEntry: fetch, id_)
                         }
-                        label: { Text("Ändra / Lägg till måltid") }
+                        label: { Text("Ändra/Lägg till måltid") }
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.footnote)
+                            .font(.subheadline)
                             .buttonStyle(BorderlessButtonStyle())
                         Spacer()
                         if state.fattyMeals {
                             Text("Fettrik måltid")
                                 .foregroundColor(.brown)
-                                .font(.footnote)
+                                .font(.subheadline)
 
                             Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                                 .toggleStyle(CheckboxToggleStyle())
@@ -128,43 +128,7 @@ extension Bolus {
                 }
                 header: { Text("Registrerad måltid") }
 
-                /* Section {
-                     Button {
-                         let id_ = meal.first?.id ?? ""
-                         state.backToCarbsView(complexEntry: fetch, id_)
-                     }
-                     label: { Text("Ändra / Lägg till måltid") }.frame(maxWidth: .infinity, alignment: .center)
-                 }*/
-
                 Section {
-                    /* HStack {
-                         Button(action: {
-                             showInfo.toggle()
-                             state.calculateInsulin()
-                         }, label: {
-                             Image(systemName: "info.circle")
-                             Text("Visa beräkningar")
-                         })
-                             .foregroundStyle(.blue)
-                             .font(.footnote)
-                             .buttonStyle(PlainButtonStyle())
-                             .frame(maxWidth: .infinity, alignment: .leading)
-                         if state.fattyMeals {
-                             Spacer()
-                             Text("Fettrik måltid")
-                                 .foregroundColor(.brown)
-                                 .font(.footnote)
-
-                             Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
-                                 .toggleStyle(CheckboxToggleStyle())
-                                 .font(.footnote)
-                                 .foregroundColor(.brown)
-                                 .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                     state.calculateInsulin()
-                                 }
-                         }
-                     } */
-
                     HStack {
                         if state.error && state.insulinCalculated > 0 {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -367,15 +331,14 @@ extension Bolus {
                     VStack {
                         VStack {
                             VStack(spacing: 2) {
-                                HStack {
-                                    Text("Variabler")
-                                        // .font(.title2)
-                                        .fontWeight(.semibold)
-                                    Spacer()
-                                }
-                                .padding(.bottom, 2)
                                 if fetch {
                                     VStack {
+                                        HStack {
+                                            Text("Registrerad måltid")
+                                                .fontWeight(.semibold)
+                                            Spacer()
+                                        }
+                                        .padding(.bottom, 1)
                                         if let note = meal.first?.note, note != "" {
                                             HStack {
                                                 Text("Note")
@@ -417,6 +380,13 @@ extension Bolus {
                                 }
                                 Group {
                                     HStack {
+                                        Text("Variabler")
+                                            .fontWeight(.semibold)
+                                        Spacer()
+                                    }
+                                    .padding(.bottom, 1)
+
+                                    HStack {
                                         Text("Aktuell ISF:")
                                             .foregroundColor(.secondary)
                                         Spacer()
@@ -425,7 +395,7 @@ extension Bolus {
                                         Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
                                             .foregroundColor(.secondary)
                                     }
-                                    .padding(.top, 2)
+
                                     HStack {
                                         Text("Målvärde:")
                                             .foregroundColor(.secondary)
@@ -442,15 +412,15 @@ extension Bolus {
                                             .foregroundColor(.secondary)
                                     }
                                     // Basal dont update for some reason. needs to check. not crucial info in the calc view however
-                                    HStack {
-                                        Text("Aktuell basal:")
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        let basal = state.basal
-                                        Text(basal.formatted())
-                                        Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                                            .foregroundColor(.secondary)
-                                    }
+                                    /* HStack {
+                                         Text("Aktuell basal:")
+                                             .foregroundColor(.secondary)
+                                         Spacer()
+                                         let basal = state.basal
+                                         Text(basal.formatted())
+                                         Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                                             .foregroundColor(.secondary)
+                                     } */
                                     HStack {
                                         Text("Aktuell insulinkvot:")
                                             .foregroundColor(.secondary)
@@ -463,7 +433,7 @@ extension Bolus {
                                     .padding(.bottom, 2)
                                 }
 
-                                Divider()
+                                Divider().fontWeight(.bold).padding(2)
 
                                 Group {
                                     HStack {
@@ -486,7 +456,6 @@ extension Bolus {
                                                 .italic()
                                         }
                                     }
-                                    .padding(.top, 2)
 
                                     HStack {
                                         // if state.insulinRequired > 0 {
@@ -502,9 +471,8 @@ extension Bolus {
                                             .italic()
                                         // }
                                     }
-                                    .padding(.bottom, 2)
                                 }
-                                Divider()
+                                Divider().fontWeight(.bold).padding(2)
                                 Group {
                                     HStack {
                                         if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
@@ -526,7 +494,6 @@ extension Bolus {
                                                 .foregroundColor(.secondary)
                                         }
                                     }
-                                    .padding(.top, 2)
                                     HStack {
                                         Text("Inställd max kolhydrater:")
                                             .foregroundColor(.secondary)
@@ -560,14 +527,15 @@ extension Bolus {
                                 }
                             }
 
-                            Divider()
+                            Divider().fontWeight(.bold).padding(2)
                             VStack(spacing: 2) {
                                 // Group {
                                 HStack {
-                                    Text("Boluskalkyl").foregroundColor(.primary).fontWeight(.semibold)
+                                    Text("Boluskalkyl")
                                     Spacer()
-                                    Text("Behov +/-  E").foregroundColor(.primary).fontWeight(.semibold)
+                                    Text("Behov +/-  E")
                                 }
+                                .foregroundColor(.primary).fontWeight(.semibold)
                                 .padding(.top, 2)
                                 .padding(.bottom, 2)
 
@@ -685,8 +653,7 @@ extension Bolus {
                                 }
                                 // }
                             }
-                            Divider()
-                                .fontWeight(.bold)
+                            Divider().fontWeight(.bold).padding(2)
 
                             HStack {
                                 Text("Summa beräknat bolusbehov:")
@@ -698,11 +665,11 @@ extension Bolus {
                                 Text(unit)
                                     .foregroundColor(.primary)
                             }
-                            .padding(.top, 3)
-                            .padding(.bottom, 3)
+                            .fontWeight(.semibold)
+                            .padding(.top, 1)
+                            .padding(.bottom, 1)
 
-                            Divider()
-                                .fontWeight(.bold)
+                            Divider().fontWeight(.bold).padding(2)
 
                             HStack {
                                 if state.error && state.insulinCalculated > 0 {
@@ -752,6 +719,7 @@ extension Bolus {
                                         .font(.system(size: 16))
                                         .foregroundColor(.orange)
                                     Text(unit)
+                                        .fontWeight(.semibold)
                                         .foregroundColor(.orange)
                                         .font(.system(size: 16))
                                 } else if state.insulinCalculated <= 0 {
@@ -760,6 +728,7 @@ extension Bolus {
                                         .font(.system(size: 16))
                                         .foregroundColor(.loopRed)
                                     Text(unit)
+                                        .fontWeight(.semibold)
                                         .foregroundColor(.loopRed)
                                         .font(.system(size: 16))
                                 } else {
@@ -768,6 +737,7 @@ extension Bolus {
                                         .font(.system(size: 16))
                                         .foregroundColor(.green)
                                     Text(unit)
+                                        .fontWeight(.semibold)
                                         .foregroundColor(.green)
                                         .font(.system(size: 16))
                                 }
@@ -776,10 +746,7 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                                 showInfo.toggle()
                             }
-                            // .padding(.leading, 16)
-                            // .padding(.trailing, 16)
-                            .padding(.top, 4)
-                            .padding(.bottom, 2)
+                            .padding(.top, 2)
 
                             let maxamountbolus = Double(state.maxBolus)
                             let formattedMaxAmountBolus = String(maxamountbolus)
@@ -788,9 +755,9 @@ extension Bolus {
                                 Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
                                     // .font(.system(size: 12))
                                     .foregroundColor(.purple).italic()
+                                    .padding(.top, 2)
                             }
-                            Divider()
-                            // Warning
+                            Divider().fontWeight(.bold).padding(2) // Warning
                             if state.error, state.insulinCalculated > 0 {
                                 VStack {
                                     Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
@@ -798,35 +765,35 @@ extension Bolus {
                                     Text(alertString())
                                         .foregroundColor(.secondary)
                                         .italic()
-                                    Divider()
+                                    Divider().fontWeight(.bold).padding(2)
                                 }
                             }
                         }
                         .padding(.top, 10)
                         .padding(.bottom, 15)
-                        .padding(.leading, 16)
-                        .padding(.trailing, 16)
+                        .padding(.leading, 15)
+                        .padding(.trailing, 15)
 
                         // Hide sheet
                         /* VStack {
-                             Button { showInfo = false }
-                             label: {
-                                 Text("OK")
-                             }
-                             .frame(maxWidth: .infinity, alignment: .center)
-                             .font(.system(size: 20))
-                             .fontWeight(.semibold)
-                             .foregroundColor(.blue)
-                         }*/
-                        .padding(.top, 15)
-                        .padding(.bottom, 15)
+                              Button { showInfo = false }
+                              label: {
+                                  Text("OK")
+                              }
+                              .frame(maxWidth: .infinity, alignment: .center)
+                              .font(.system(size: 20))
+                              .fontWeight(.semibold)
+                              .foregroundColor(.blue)
+                          }
+                         .padding(.top, 15)
+                         .padding(.bottom, 15)*/
                     }
 
                     .font(.footnote)
                 }
                 .navigationTitle("Bolusberäkning")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: Button("Close", action: { showInfo.toggle()
+                .navigationBarItems(leading: Button("Tillbaka", action: { showInfo.toggle()
                 }))
             }
         }
