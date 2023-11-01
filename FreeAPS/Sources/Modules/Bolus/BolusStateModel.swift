@@ -133,7 +133,7 @@ extension Bolus {
             fifteenMinInsulin = (deltaBG * conversion) / isf
 
             // determine whole COB for which we want to dose insulin for and then determine insulin for wholeCOB
-            let wholeCOB = cob // + enteredCarbs
+            // let wholeCOB = cob // + enteredCarbs
             wholeCobInsulin = cob / carbRatio
 
             // determine how much the calculator reduces/ increases the bolus because of IOB
