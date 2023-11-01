@@ -124,9 +124,10 @@ extension Bolus {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if state.fattyMeals {
                             Spacer()
-                            Text("Fettrik måltid?")
+                            Text("Fettrik måltid")
                                 .foregroundColor(.brown)
                                 .font(.footnote)
+
                             Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                                 .toggleStyle(CheckboxToggleStyle())
                                 .font(.footnote)
@@ -263,6 +264,7 @@ extension Bolus {
                     if state.amount == 0, waitForSuggestion {
                         Button { state.showModal(for: nil) }
                         label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3.weight(.semibold))
                     } else {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
@@ -298,6 +300,16 @@ extension Bolus {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
                     state.calculateInsulin()
+                }
+                // Additional code to automatically check the checkbox
+                if let carbs = meal.first?.carbs,
+                   let fat = meal.first?.fat,
+                   let protein = meal.first?.protein
+                {
+                    let fatPercentage = fat / (carbs + fat + protein)
+                    if fatPercentage > 0.3 {
+                        state.useFattyMealCorrectionFactor = true
+                    }
                 }
             }
             .sheet(isPresented: $showInfo) {
