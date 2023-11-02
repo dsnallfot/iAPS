@@ -636,7 +636,8 @@ extension Home {
                             waitForSuggestion: true,
                             fetch: false
                         ))
-                        // state.apsManager.determineBasalSync()
+                        // Daniel: Add determinebasalsync to force update before entering bolusview
+                        state.apsManager.determineBasalSync()
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("bolus")

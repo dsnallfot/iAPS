@@ -55,7 +55,8 @@ extension AddCarbs {
             } else if carbs > 0 {
                 saveToCoreData(carbsToStore)
                 showModal(for: .bolus(waitForSuggestion: true, fetch: true))
-                // apsManager.determineBasalSync()
+                // Daniel: Add determinebasalsync to force update before entering bolusview
+                apsManager.determineBasalSync()
             } else { hideModal() }
         }
 
