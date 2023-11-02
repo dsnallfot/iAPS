@@ -274,7 +274,7 @@ extension BaseWatchManager: WCSessionDelegate {
         {
             carbsStorage.storeCarbs(
                 [CarbsEntry(
-                    id: UUID().uuidString,
+                    collectionID: UUID().uuidString,
                     createdAt: Date(),
                     carbs: Decimal(carbs),
                     fat: Decimal(fat),

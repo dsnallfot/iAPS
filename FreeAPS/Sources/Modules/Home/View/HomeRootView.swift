@@ -587,7 +587,7 @@ extension Home {
 
                    */
                 HStack {
-                    Button { state.showModal(for: .addCarbs) }
+                    Button { state.showModal(for: .addCarbs(editMode: false)) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("carbs")
@@ -632,8 +632,12 @@ extension Home {
                     }.buttonStyle(.plain)
                     Spacer()
                     Button {
-                        state.showModal(for: .bolus(waitForSuggestion: true))
-                        // state.apsManager.determineBasalSync()
+                        state.showModal(for: .bolus(
+                            waitForSuggestion: true,
+                            fetch: false
+                        ))
+                        // Daniel: Add determinebasalsync to force update before entering bolusview
+                        state.apsManager.determineBasalSync()
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("bolus")

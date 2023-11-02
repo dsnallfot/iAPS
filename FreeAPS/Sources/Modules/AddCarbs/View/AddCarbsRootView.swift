@@ -5,6 +5,7 @@ import Swinject
 extension AddCarbs {
     struct RootView: BaseView {
         let resolver: Resolver
+        let editMode: Bool
         @StateObject var state = StateModel()
         @State var dish: String = ""
         @State var isPromptPresented = false
@@ -113,18 +114,23 @@ extension AddCarbs {
                         }
                     } label: {
                         HStack {
-                            if state.carbs > state.maxCarbs {
+                            if state.carbs > state.maxCarbs + 0.09 {
                                 Image(systemName: "x.circle.fill")
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                !(state.carbs > state.maxCarbs) ? "Save and continue" :
-                                    "Inställd maxgräns: \(formattedMaxAmountCarbs)g   "
+                                state.carbs > 0 ?
+                                    (
+                                        state.carbs < state.maxCarbs + 0.1 ?
+                                            "Save and continue" :
+                                            "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
+                                    ) :
+                                    "Save"
                             )
                             .font(.title3.weight(.semibold))
                         }
                     }
-                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)
+                    .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs + 0.1)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
                 Section { mealPresets
@@ -132,7 +138,11 @@ extension AddCarbs {
 
                 footer: { Text(state.waitersNotepad().description) }
             }
-            .onAppear(perform: configureView)
+            .onAppear {
+                configureView {
+                    state.loadEntries(editMode)
+                }
+            }
             .navigationTitle("Registrera måltid")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
