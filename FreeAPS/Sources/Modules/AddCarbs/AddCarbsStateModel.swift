@@ -38,7 +38,7 @@ extension AddCarbs {
             id_ = UUID().uuidString
 
             let carbsToStore = [CarbsEntry(
-                id: id_,
+                collectionID: id_,
                 createdAt: date,
                 carbs: carbs,
                 fat: fat,
@@ -57,7 +57,9 @@ extension AddCarbs {
                 showModal(for: .bolus(waitForSuggestion: true, fetch: true))
                 // Daniel: Add determinebasalsync to force update before entering bolusview
                 apsManager.determineBasalSync()
-            } else { hideModal() }
+            } else {
+                hideModal()
+            }
         }
 
         func deletePreset() {
@@ -187,9 +189,8 @@ extension AddCarbs {
 
         func saveToCoreData(_ stored: [CarbsEntry]) {
             let save = Meals(context: coredataContext)
-            save.id = stored.first?.id ?? ""
             save.createdAt = stored.first?.createdAt ?? .distantPast
-            save.id = stored.first?.id ?? ""
+            save.id = stored.first?.collectionID ?? ""
             save.carbs = Double(stored.first?.carbs ?? 0)
             save.fat = Double(stored.first?.fat ?? 0)
             save.protein = Double(stored.first?.protein ?? 0)
