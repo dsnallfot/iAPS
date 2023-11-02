@@ -47,13 +47,6 @@ extension Bolus {
 
         var body: some View {
             Form {
-                if state.waitForSuggestion {
-                    HStack {
-                        Text("Beräknar...").foregroundColor(.secondary)
-                        Spacer()
-                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                    }
-                }
                 Section {
                     if fetch {
                         VStack {
@@ -131,7 +124,10 @@ extension Bolus {
 
                 Section {
                     HStack {
-                        if state.error && state.insulinRecommended > 0 {
+                        if state.waitForSuggestion {
+                            Text("Beräknar...").foregroundColor(.secondary)
+
+                        } else if state.error && state.insulinRecommended > 0 {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.orange)
@@ -176,7 +172,10 @@ extension Bolus {
                         }
                         Spacer()
 
-                        if state.error && state.insulinRecommended > 0 {
+                        if state.waitForSuggestion {
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+
+                        } else if state.error && state.insulinRecommended > 0 {
                             // Visa önskat innehåll för "Vänta med att ge bolus"
                             Text(
                                 formatter
@@ -199,6 +198,7 @@ extension Bolus {
                             ).foregroundColor(.green)
                         }
                     }
+
                     .contentShape(Rectangle())
                     .onTapGesture {
                         if state.error, state.insulinRecommended > 0 {
