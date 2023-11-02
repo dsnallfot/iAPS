@@ -119,7 +119,7 @@ extension Bolus {
         }
 
         // CALCULATIONS FOR THE BOLUS CALCULATOR
-        func calculateInsulin() {
+        func calculateInsulin() -> Decimal {
             // for mmol conversion
             var conversion: Decimal = 1.0
             if units == .mmolL {
@@ -180,7 +180,9 @@ extension Bolus {
             insulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05).rounded(.toNearestOrEven) * 0.05)
 
             // return insulinCalculated
-            insulinRecommended = min(insulinCalculated, maxBolus)
+            insulinCalculated = min(insulinCalculated, maxBolus)
+
+            return insulinCalculated
         }
 
         func add() {
@@ -221,11 +223,10 @@ extension Bolus {
                 self.basal = self.provider.suggestion?.rate ?? 0 // dont seems to work for some reason
                 self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
 
-                if !self.useCalc {
-                    if self.settingsManager.settings.insulinReqPercentage != 100 {
-                        self.insulinRecommended = self.insulin * (self.settingsManager.settings.insulinReqPercentage / 100)
-                    } else { self.insulinRecommended = self.insulin }
-                }
+                if self.settingsManager.settings.insulinReqPercentage != 100 {
+                    self.insulinRecommended = self
+                        .insulin * (self.settingsManager.settings.insulinReqPercentage / 100)
+                } else { self.insulinRecommended = self.insulin }
 
                 self.errorString = self.provider.suggestion?.manualBolusErrorString ?? 0
                 if self.errorString != 0 {
@@ -236,9 +237,12 @@ extension Bolus {
                     self.minPredBG = (self.provider.suggestion?.minPredBG ?? 0) * conversion
                 } else { self.error = false }
 
-                if !self.useCalc {
-                    self.insulinRecommended = self.apsManager
-                        .roundBolus(amount: max(self.insulinRecommended, 0))
+                self.insulinRecommended = self.apsManager
+                    .roundBolus(amount: max(self.insulinRecommended, 0))
+
+                if self.useCalc {
+                    self.getDeltaBG()
+                    self.insulinCalculated = self.calculateInsulin()
                 }
 
                 self.getDeltaBG()
@@ -271,6 +275,5 @@ extension Bolus.StateModel: SuggestionObserver {
             self.waitForSuggestion = false
         }
         setupInsulinRequired()
-        if useCalc { calculateInsulin() }
     }
 }
