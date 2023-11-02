@@ -298,7 +298,7 @@ extension Bolus {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button { state.hideModal() }
-                label: { Text("Close") }
+                label: { Text("Cancel") }
             )
             .navigationBarItems(
                 trailing: Button(action: {
