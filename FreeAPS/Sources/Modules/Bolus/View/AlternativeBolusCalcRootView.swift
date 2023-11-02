@@ -108,11 +108,13 @@ extension Bolus {
                             state.backToCarbsView(complexEntry: fetch, id_)
                         }
                         label: {
-                            Image(systemName: "plusminus")
-                            Text("Ändra") }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.subheadline)
-                            .buttonStyle(BorderlessButtonStyle())
+                            Image(systemName: fetch ? "plusminus" : "plus")
+
+                            Text(fetch ? "Ändra" : "Lägg till")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                        .buttonStyle(BorderlessButtonStyle())
                         Spacer()
                         if state.fattyMeals {
                             Text("Fettrik")
