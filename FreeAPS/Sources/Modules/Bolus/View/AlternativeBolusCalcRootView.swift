@@ -49,7 +49,7 @@ extension Bolus {
             Form {
                 if state.waitForSuggestion {
                     HStack {
-                        Text("Wait please").foregroundColor(.secondary)
+                        Text("Beräknar...").foregroundColor(.secondary)
                         Spacer()
                         ActivityIndicator(isAnimating: .constant(true), style: .medium)
                     }
@@ -89,6 +89,7 @@ extension Bolus {
                                     Text("Note")
                                     Spacer()
                                     Text(note)
+                                    Text("")
                                 } // .foregroundColor(.secondary)
                                 // .font(.callout)
                             }
