@@ -106,8 +106,8 @@ extension Bolus {
                             state.backToCarbsView(complexEntry: fetch, id_)
                         }
                         label: {
-                            Image(systemName: fetch ? "plusminus" : "plus")
-                            Text(fetch ? "Ändra" : "Lägg till")
+                            // Image(systemName: fetch ? "plusminus" : "plus")
+                            Text(fetch ? "Ändra måltid" : "Lägg till måltid")
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
@@ -562,7 +562,7 @@ extension Bolus {
                                     Text("Behov +/-  E")
                                 }
                                 .foregroundColor(.primary).fontWeight(.semibold)
-                                .padding(.top, 2)
+                                .padding(.top, 4)
                                 .padding(.bottom, 2)
 
                                 let carbs = meal.first?.carbs
