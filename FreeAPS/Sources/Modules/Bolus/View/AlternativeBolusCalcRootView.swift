@@ -280,10 +280,10 @@ extension Bolus {
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .font(.title3.weight(.semibold))
                                 .foregroundColor(exceededMaxBolus ? .loopRed : .accentColor)
-                                .disabled(
-                                    state.amount <= 0 || state.amount > state.maxBolus
-                                )
                         }
+                        .disabled(
+                            state.amount <= 0 || state.amount > state.maxBolus
+                        )
                     }
                 }
             }
