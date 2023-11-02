@@ -30,6 +30,13 @@ extension Bolus {
             return formatter
         }
 
+        private var mealFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 1
+            return formatter
+        }
+
         private var glucoseFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -115,7 +122,7 @@ extension Bolus {
                                 .font(.footnote)
                                 .foregroundColor(.brown)
                                 .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                         }
                     }
@@ -134,13 +141,13 @@ extension Bolus {
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                             Text("Vänta med att ge bolus")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                         } else if state.insulinRecommended <= 0 {
                             Image(systemName: "x.circle.fill")
@@ -148,13 +155,13 @@ extension Bolus {
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                             Text("Ingen bolus rekommenderas")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                         } else {
                             Image(systemName: "checkmark.circle.fill")
@@ -162,13 +169,13 @@ extension Bolus {
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                             Text("Förslag bolusdos")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin()
+                                    state.insulinCalculated = state.calculateInsulin()
                                 }
                         }
                         Spacer()
@@ -206,7 +213,7 @@ extension Bolus {
                             displayError = true
                         } else if state.insulinRecommended <= 0 {
                             showInfo.toggle()
-                            state.calculateInsulin()
+                            state.insulinCalculated = state.calculateInsulin()
                         } else {
                             state.amount = state.insulinRecommended
                         }
@@ -285,7 +292,7 @@ extension Bolus {
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .navigationBarItems(
                 trailing: Button(action: {
-                    state.calculateInsulin()
+                    state.insulinCalculated = state.calculateInsulin()
                     showInfo.toggle()
                 }) {
                     HStack {
@@ -301,7 +308,7 @@ extension Bolus {
                     state.waitForSuggestion = waitForSuggestion
 
                     if !state.waitForSuggestion {
-                        state.calculateInsulin()
+                        state.insulinCalculated = state.calculateInsulin()
                     }
                 }
                 // Additional code to automatically check the checkbox
@@ -348,7 +355,7 @@ extension Bolus {
                                                 Text("Carbs")
                                                     .foregroundColor(.secondary)
                                                 Spacer()
-                                                Text(carbs.formatted())
+                                                Text(mealFormatter.string(from: carbs as NSNumber) ?? "")
                                                 Text("g").foregroundColor(.secondary)
                                             }
                                         }
@@ -357,7 +364,8 @@ extension Bolus {
                                                 Text("Protein")
                                                     .foregroundColor(.brown)
                                                 Spacer()
-                                                Text(protein.formatted()).foregroundColor(.brown)
+                                                Text(mealFormatter.string(from: protein as NSNumber) ?? "")
+                                                    .foregroundColor(.brown)
                                                 Text("g").foregroundColor(.brown)
                                             }
                                         }
@@ -366,7 +374,7 @@ extension Bolus {
                                                 Text("Fat")
                                                     .foregroundColor(.brown)
                                                 Spacer()
-                                                Text(fat.formatted()).foregroundColor(.brown)
+                                                Text(mealFormatter.string(from: fat as NSNumber) ?? "").foregroundColor(.brown)
                                                 Text("g").foregroundColor(.brown)
                                             }
                                         }
@@ -380,7 +388,7 @@ extension Bolus {
                                             }
                                         }
                                     }
-                                    Divider().fontWeight(.bold).padding(2)
+                                    if fetch { Divider().fontWeight(.bold).padding(2) }
                                 }
                                 Group {
                                     HStack {
