@@ -1,3 +1,4 @@
+// import Foundation
 import LoopKit
 import SwiftUI
 import Swinject
@@ -106,12 +107,13 @@ extension Bolus {
 
         func getDeltaBG() {
             let glucose = glucoseStorage.recent()
-            guard glucose.count >= 3 else { return }
+            guard glucose.count >= 4 else { return } // Daniel: Change to 4 instead of 3 to capture 15min before the last value
 
             let lastGlucose = glucose.last!
 
-            let thirdLastGlucose = glucose[glucose.count - 3]
-            let delta = Decimal(lastGlucose.glucose!) - Decimal(thirdLastGlucose.glucose!)
+            let fourthLastGlucose =
+                glucose[glucose.count - 4] // Daniel: Change to 4 instead of 3 to capture 15min before the last value
+            let delta = Decimal(lastGlucose.glucose!) - Decimal(fourthLastGlucose.glucose!)
 
             deltaBG = delta
         }
@@ -127,7 +129,7 @@ extension Bolus {
             let targetDifference = (currentBG - target) * conversion
             targetDifferenceInsulin = targetDifference / isf
 
-            // more or less insulin because of bg trend in the last 15 minutes
+            // more or less insulin because of bg trend in the last 15 minutes (last value minus 4th last value)
             fifteenMinInsulin = (deltaBG * conversion) / isf
 
             // determine whole COB for which we want to dose insulin for and then determine insulin for wholeCOB
@@ -167,6 +169,9 @@ extension Bolus {
             // display no negative insulinCalculated
             insulinCalculated = max(insulinCalculated, 0)
 
+            /* let insulinCalculatedAsDouble = Double(insulinCalculated)
+             roundedInsulinCalculated = Decimal(round(100 * insulinCalculatedAsDouble) / 100) */
+
             // return insulinCalculated
             insulinCalculated = min(insulinCalculated, maxBolus)
 
@@ -176,6 +181,8 @@ extension Bolus {
             insulinCalculated = roundedInsulinCalculated
 
             return insulinCalculated
+            /* return apsManager
+             .roundBolus(amount: max(insulinCalculated, 0)) */ // Jons addition commit 58064ba
         }
 
         func add() {
@@ -249,14 +256,14 @@ extension Bolus {
 
         func delete(deleteTwice: Bool, id: String) {
             if deleteTwice {
-                // DispatchQueue.safeMainSync {
-                nsManager.deleteCarbs(
-                    at: id, isFPU: nil, fpuID: nil, syncID: id
-                )
-                nsManager.deleteCarbs(
-                    at: id + ".fpu", isFPU: nil, fpuID: nil, syncID: id
-                )
-                // }
+                DispatchQueue.safeMainSync {
+                    nsManager.deleteCarbs(
+                        at: id, isFPU: nil, fpuID: nil, syncID: id
+                    )
+                    nsManager.deleteCarbs(
+                        at: id + ".fpu", isFPU: nil, fpuID: nil, syncID: id
+                    )
+                }
             } else {
                 nsManager.deleteCarbs(
                     at: id, isFPU: nil, fpuID: nil, syncID: id
