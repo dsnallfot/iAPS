@@ -107,13 +107,15 @@ extension Bolus {
                             let id_ = meal.first?.id ?? ""
                             state.backToCarbsView(complexEntry: fetch, id_)
                         }
-                        label: { Text("Ändra/Lägg till måltid") }
+                        label: {
+                            Image(systemName: "plusminus")
+                            Text("Ändra") }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.subheadline)
                             .buttonStyle(BorderlessButtonStyle())
                         Spacer()
                         if state.fattyMeals {
-                            Text("Fet måltid")
+                            Text("Fettrik")
                                 .foregroundColor(.brown)
                                 .font(.subheadline)
 
@@ -743,14 +745,17 @@ extension Bolus {
                                     Text("Vänta med bolus:")
                                         .fontWeight(.bold)
                                         .foregroundColor(.orange)
+                                        .font(.system(size: 16))
                                 } else if state.insulinRecommended <= 0 {
                                     Text("Ingen bolus rek:")
                                         .fontWeight(.bold)
                                         .foregroundColor(.loopRed)
+                                        .font(.system(size: 16))
                                 } else {
                                     Text("Förslag bolusdos:")
                                         .fontWeight(.bold)
                                         .foregroundColor(.green)
+                                        .font(.system(size: 16))
                                 }
 
                                 Spacer()
