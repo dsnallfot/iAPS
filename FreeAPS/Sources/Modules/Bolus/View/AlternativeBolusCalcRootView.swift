@@ -13,7 +13,7 @@ extension Bolus {
         @State private var exceededMaxBolus = false
         @State private var exceededMaxBolus3 = false
         @State private var carbsWarning = false
-        @State var insulinCalculated: Decimal = 0
+        // @State var insulinCalculated: Decimal = 0
         @State private var displayError = false
         @State private var presentInfo = false
         @Environment(\.colorScheme) var colorScheme
@@ -63,8 +63,7 @@ extension Bolus {
                                     Spacer()
                                     Text(carbs.formatted())
                                     Text("g")
-                                } // .foregroundColor(.secondary)
-                                // .font(.callout)
+                                }
                             }
                             if let fat = meal.first?.fat, fat > 0 {
                                 HStack {
@@ -72,8 +71,7 @@ extension Bolus {
                                     Spacer()
                                     Text(fat.formatted())
                                     Text("g")
-                                } // .foregroundColor(.secondary)
-                                // .font(.callout)
+                                }
                             }
                             if let protein = meal.first?.protein, protein > 0 {
                                 HStack {
@@ -81,8 +79,7 @@ extension Bolus {
                                     Spacer()
                                     Text(protein.formatted())
                                     Text("g")
-                                } // .foregroundColor(.secondary)
-                                // .font(.callout)
+                                }
                             }
                             if let note = meal.first?.note, note != "" {
                                 HStack {
@@ -90,8 +87,7 @@ extension Bolus {
                                     Spacer()
                                     Text(note)
                                     Text("")
-                                } // .foregroundColor(.secondary)
-                                // .font(.callout)
+                                }
                             }
                         }
                         .foregroundColor(.secondary)
@@ -126,7 +122,7 @@ extension Bolus {
                                 .font(.footnote)
                                 .foregroundColor(.brown)
                                 .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         }
                     }
@@ -139,33 +135,33 @@ extension Bolus {
                             Image(systemName: "timer").foregroundColor(.secondary)
                             Text("Beräknar...").foregroundColor(.secondary)
 
-                        } else if state.error && state.insulinRecommended > 0 {
+                        } else if state.error && state.insulinCalculated > 0 {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Vänta med att ge bolus")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
-                        } else if state.insulinRecommended <= 0 {
+                        } else if state.insulinCalculated <= 0 {
                             Image(systemName: "x.circle.fill")
                                 // Image(systemName: "info.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Ingen bolus rekommenderas")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         } else {
                             Image(systemName: "checkmark.circle.fill")
@@ -173,13 +169,13 @@ extension Bolus {
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Förslag bolusdos")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.insulinCalculated = state.calculateInsulin()
+                                    state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         }
                         Spacer()
@@ -187,25 +183,25 @@ extension Bolus {
                         if state.waitForSuggestion {
                             ActivityIndicator(isAnimating: .constant(true), style: .medium)
 
-                        } else if state.error && state.insulinRecommended > 0 {
+                        } else if state.error && state.insulinCalculated > 0 {
                             // Visa önskat innehåll för "Vänta med att ge bolus"
                             Text(
                                 formatter
-                                    .string(from: state.insulinRecommended as NSNumber)! +
+                                    .string(from: state.insulinCalculated as NSNumber)! +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.orange)
-                        } else if state.insulinRecommended <= 0 {
+                        } else if state.insulinCalculated <= 0 {
                             // Visa önskat innehåll för "Ingen bolus rekommenderas"
                             Text(
                                 formatter
-                                    .string(from: state.insulinRecommended as NSNumber)! +
+                                    .string(from: state.insulinCalculated as NSNumber)! +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         } else {
                             // Visa önskat innehåll för "Rekommenderad bolus"
                             Text(
                                 formatter
-                                    .string(from: state.insulinRecommended as NSNumber)! +
+                                    .string(from: state.insulinCalculated as NSNumber)! +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.green)
                         }
@@ -213,13 +209,13 @@ extension Bolus {
 
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        if state.error, state.insulinRecommended > 0 {
+                        if state.error, state.insulinCalculated > 0 {
                             displayError = true
-                        } else if state.insulinRecommended <= 0 {
+                        } else if state.insulinCalculated <= 0 {
                             showInfo.toggle()
-                            state.insulinCalculated = state.calculateInsulin()
+                            state.calculateInsulin() // Call the calculateInsulin function
                         } else {
-                            state.amount = state.insulinRecommended
+                            state.amount = state.insulinCalculated
                         }
                     }
                     .alert(isPresented: $displayError) {
@@ -229,7 +225,7 @@ extension Bolus {
                             primaryButton: .destructive(
                                 Text("Add"),
                                 action: {
-                                    state.amount = state.insulinRecommended
+                                    state.amount = state.insulinCalculated
                                     displayError = false
                                 }
                             ),
@@ -296,7 +292,7 @@ extension Bolus {
             .navigationBarItems(leading: Button("Close", action: state.hideModal))
             .navigationBarItems(
                 trailing: Button(action: {
-                    state.insulinCalculated = state.calculateInsulin()
+                    state.calculateInsulin() // Call the calculateInsulin function
                     showInfo.toggle()
                 }) {
                     HStack {
@@ -310,10 +306,7 @@ extension Bolus {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
-
-                    if !state.waitForSuggestion {
-                        state.insulinCalculated = state.calculateInsulin()
-                    }
+                    state.insulinCalculated = state.calculateInsulin()
                 }
                 // Additional code to automatically check the checkbox
                 if let carbs = meal.first?.carbs,
@@ -491,8 +484,7 @@ extension Bolus {
                                 Divider().fontWeight(.bold).padding(2)
                                 Group {
                                     HStack {
-                                        // if abs(state.maxBolus - state.insulinRecommended) < 0 {
-                                        if state.insulinRecommended == state.maxBolus {
+                                        if state.insulinCalculated == state.maxBolus {
                                             Text("Inställd maxbolus:")
                                                 .foregroundColor(.purple)
                                             Spacer()
@@ -743,12 +735,12 @@ extension Bolus {
                             Divider().fontWeight(.bold).padding(2)
 
                             HStack {
-                                if state.error && state.insulinRecommended > 0 {
+                                if state.error && state.insulinCalculated > 0 {
                                     Text("Vänta med bolus:")
                                         .fontWeight(.bold)
                                         .foregroundColor(.orange)
                                         .font(.system(size: 16))
-                                } else if state.insulinRecommended <= 0 {
+                                } else if state.insulinCalculated <= 0 {
                                     Text("Ingen bolus rek:")
                                         .fontWeight(.bold)
                                         .foregroundColor(.loopRed)
@@ -783,11 +775,11 @@ extension Bolus {
                                 Text(" = ")
                                     .foregroundColor(.secondary)
 
-                                let result = state.insulinRecommended
+                                let result = state.insulinCalculated
                                 // rounding
                                 let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
                                 let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
-                                if state.error && state.insulinRecommended > 0 {
+                                if state.error && state.insulinCalculated > 0 {
                                     Text(roundedResult.formatted())
                                         .fontWeight(.bold)
                                         .font(.system(size: 16))
@@ -796,7 +788,7 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.orange)
                                         .font(.system(size: 16))
-                                } else if state.insulinRecommended <= 0 {
+                                } else if state.insulinCalculated <= 0 {
                                     Text(roundedResult.formatted())
                                         .fontWeight(.bold)
                                         .font(.system(size: 16))
@@ -817,22 +809,21 @@ extension Bolus {
                                 }
                             }
                             .onTapGesture {
-                                state.amount = state.insulinRecommended
+                                state.amount = state.insulinCalculated
                                 showInfo.toggle()
                             }
                             .padding(.top, 2)
 
                             let maxamountbolus = Double(state.maxBolus)
                             let formattedMaxAmountBolus = String(maxamountbolus)
-                            if state.insulinRecommended == state.maxBolus {
-                                // if abs(state.maxBolus - state.insulinCalculated) < 0.02 {
+                            if state.insulinCalculated == state.maxBolus {
                                 Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
                                     // .font(.system(size: 12))
                                     .foregroundColor(.purple).italic()
                                     .padding(.top, 2)
                             }
                             Divider().fontWeight(.bold).padding(2) // Warning
-                            if state.error, state.insulinRecommended > 0 {
+                            if state.error, state.insulinCalculated > 0 {
                                 VStack {
                                     Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
                                         .padding(.bottom, 2)
