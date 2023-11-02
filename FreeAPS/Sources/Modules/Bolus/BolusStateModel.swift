@@ -31,13 +31,13 @@ extension Bolus {
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
-        @Published var waitForSuggestion: Bool = false {
-            didSet {
-                if !waitForSuggestion, !oldValue {
-                    calculateInsulin() // Daniel: Re-calculate insulin when waitForSuggestion becomes false
-                }
-            }
-        }
+        @Published var waitForSuggestion: Bool = false /* {
+             didSet {
+                 if !waitForSuggestion, !oldValue {
+                     calculateInsulin() // Daniel: Re-calculate insulin when waitForSuggestion becomes false
+                 }
+             }
+         } */
 
         @Published var maxCarbs: Decimal = 0
         @Published var carbRatio: Decimal = 0

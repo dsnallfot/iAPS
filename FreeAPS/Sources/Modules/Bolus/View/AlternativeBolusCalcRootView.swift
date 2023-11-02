@@ -125,6 +125,7 @@ extension Bolus {
                 Section {
                     HStack {
                         if state.waitForSuggestion {
+                            Image(systemName: "timer").foregroundColor(.secondary)
                             Text("Beräknar...").foregroundColor(.secondary)
 
                         } else if state.error && state.insulinRecommended > 0 {
@@ -298,7 +299,10 @@ extension Bolus {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
-                    state.calculateInsulin()
+
+                    if !state.waitForSuggestion {
+                        state.calculateInsulin()
+                    }
                 }
                 // Additional code to automatically check the checkbox
                 if let carbs = meal.first?.carbs,
