@@ -256,14 +256,14 @@ extension Bolus {
 
         func delete(deleteTwice: Bool, id: String) {
             if deleteTwice {
-                // DispatchQueue.safeMainSync {
-                nsManager.deleteCarbs(
-                    at: id, isFPU: nil, fpuID: nil, syncID: id
-                )
-                nsManager.deleteCarbs(
-                    at: id + ".fpu", isFPU: nil, fpuID: nil, syncID: id
-                )
-                // }
+                DispatchQueue.safeMainSync {
+                    nsManager.deleteCarbs(
+                        at: id, isFPU: nil, fpuID: nil, syncID: id
+                    )
+                    nsManager.deleteCarbs(
+                        at: id + ".fpu", isFPU: nil, fpuID: nil, syncID: id
+                    )
+                }
             } else {
                 nsManager.deleteCarbs(
                     at: id, isFPU: nil, fpuID: nil, syncID: id

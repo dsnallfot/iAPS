@@ -102,8 +102,12 @@ extension Bolus {
                     HStack {
                         Button {
                             let id_ = meal.first?.id ?? ""
-                            keepForNextWiew = true
-                            state.backToCarbsView(complexEntry: fetch, id_)
+                            if fetch {
+                                keepForNextWiew = true
+                                state.backToCarbsView(complexEntry: fetch, id_)
+                            } else {
+                                state.showModal(for: .addCarbs(editMode: false))
+                            }
                         }
                         label: {
                             // Image(systemName: fetch ? "plusminus" : "plus")
