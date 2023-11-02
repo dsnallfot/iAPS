@@ -173,14 +173,14 @@ extension Bolus {
 
             // display no negative insulinCalculated
             insulinCalculated = max(insulinCalculated, 0)
-            let insulinCalculatedAsDouble = Double(insulinCalculated)
-            roundedInsulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05) * 0.05)
-
-            // Rounding insulinCalculated to the nearest even 0.05
-            insulinCalculated = Decimal((insulinCalculatedAsDouble / 0.05).rounded(.toNearestOrEven) * 0.05)
 
             // return insulinCalculated
             insulinCalculated = min(insulinCalculated, maxBolus)
+
+            // Rounding to the nearest 0.05
+            let insulinCalculatedAsDouble = NSDecimalNumber(decimal: insulinCalculated).doubleValue
+            let roundedInsulinCalculated = Decimal((insulinCalculatedAsDouble * 20).rounded() / 20)
+            insulinCalculated = roundedInsulinCalculated
 
             return insulinCalculated
         }
