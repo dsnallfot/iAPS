@@ -12,6 +12,7 @@ extension Bolus {
         @State private var showInfo = false
         @State private var exceededMaxBolus = false
         @State private var exceededMaxBolus3 = false
+        @State private var keepForNextWiew: Bool = false
         @State private var carbsWarning = false
         // @State var insulinCalculated: Decimal = 0
         @State private var displayError = false
@@ -101,11 +102,11 @@ extension Bolus {
                     HStack {
                         Button {
                             let id_ = meal.first?.id ?? ""
+                            keepForNextWiew = true
                             state.backToCarbsView(complexEntry: fetch, id_)
                         }
                         label: {
                             Image(systemName: fetch ? "plusminus" : "plus")
-
                             Text(fetch ? "Ändra" : "Lägg till")
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -262,14 +263,20 @@ extension Bolus {
 
                 Section {
                     if state.amount == 0, waitForSuggestion {
-                        Button { state.showModal(for: nil) }
+                        Button {
+                            keepForNextWiew = true
+                            state.showModal(for: nil)
+                        }
                         label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
                             .font(.title3.weight(.semibold))
                     } else {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
 
-                        Button { state.add() }
+                        Button {
+                            keepForNextWiew = true
+                            state.add()
+                        }
                         label: {
                             HStack {
                                 if exceededMaxBolus {
@@ -289,7 +296,10 @@ extension Bolus {
             }
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: Button("Close", action: state.hideModal))
+            .navigationBarItems(
+                leading: Button { state.hideModal() }
+                label: { Text("Close") }
+            )
             .navigationBarItems(
                 trailing: Button(action: {
                     state.calculateInsulin() // Call the calculateInsulin function
@@ -317,6 +327,13 @@ extension Bolus {
                     if fatPercentage > 0.3 {
                         state.useFattyMealCorrectionFactor = true
                     }
+                }
+            }
+            .onDisappear {
+                if fetch, hasFatOrProtein, !keepForNextWiew {
+                    state.delete(deleteTwice: true, id: meal.first?.id ?? "")
+                } else if fetch, !keepForNextWiew {
+                    state.delete(deleteTwice: false, id: meal.first?.id ?? "")
                 }
             }
             .sheet(isPresented: $showInfo) {
