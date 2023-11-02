@@ -122,7 +122,7 @@ extension AddCarbs {
                                 state.carbs > 0 ?
                                     (
                                         state.carbs < state.maxCarbs + 0.1 ?
-                                            "Save and continue" :
+                                            "Fortsätt" :
                                             "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
                                     ) :
                                     "Save"
