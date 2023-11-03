@@ -1,4 +1,3 @@
-import Charts
 import CoreData
 import SwiftUI
 import Swinject
@@ -67,6 +66,7 @@ extension Bolus {
                                         Text("g")
                                     }
                                     .foregroundColor(.primary)
+                                    .padding(.bottom, 0.1)
                                 }
                                 if let fat = meal.first?.fat, fat > 0 {
                                     HStack {
@@ -76,6 +76,7 @@ extension Bolus {
                                         Text("g")
                                     }
                                     .foregroundColor(.brown)
+                                    .padding(.bottom, 0.1)
                                 }
                                 if let protein = meal.first?.protein, protein > 0 {
                                     HStack {
@@ -85,6 +86,7 @@ extension Bolus {
                                         Text("g")
                                     }
                                     .foregroundColor(.brown)
+                                    .padding(.bottom, 0.1)
                                 }
                                 if let note = meal.first?.note, note != "" {
                                     HStack {
@@ -149,7 +151,7 @@ extension Bolus {
                         }
                     }
                 }
-                header: { Text("Aktuell måltid") }
+                // header: { Text("Aktuell måltid") }
 
                 Section {
                     HStack {
@@ -280,7 +282,7 @@ extension Bolus {
                         }
                     }
                     // }
-                } header: { Text("Bolusberäkning") }
+                } // header: { Text("Bolusberäkning") }
 
                 if state.amount > 0 {
                     Section {
