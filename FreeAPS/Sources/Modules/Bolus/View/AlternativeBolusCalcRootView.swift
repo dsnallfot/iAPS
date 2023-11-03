@@ -274,8 +274,8 @@ extension Bolus {
                     }
                 } header: { Text("Bolusberäkning") }
 
-                Section {
-                    if state.amount > 0 {
+                if state.amount > 0 {
+                    Section {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
 
@@ -289,23 +289,25 @@ extension Bolus {
                                     Image(systemName: "x.circle.fill")
                                         .foregroundColor(.loopRed)
                                 }
-                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos") }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .font(.title2.weight(.semibold))
-                                .foregroundColor(exceededMaxBolus ? .loopRed : .accentColor)
+                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
+                                    .font(.title2.weight(.semibold))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .disabled(
                             state.amount <= 0 || state.amount > state.maxBolus
                         )
                     }
-                }
-                Section {
+                } else {
                     Button {
                         keepForNextWiew = true
                         state.showModal(for: nil)
+                    } label: {
+                        Text("Continue without bolus")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3)
+                        // .foregroundColor(state.amount > 0 ? .secondary : .accentColor)
                     }
-                    label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
-                        .font(.title3)
                 }
             }
             .navigationTitle("Enact Bolus")

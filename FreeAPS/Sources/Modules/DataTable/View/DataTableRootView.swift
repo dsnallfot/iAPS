@@ -203,10 +203,9 @@ extension DataTable {
                                         Text(
                                             !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
-                                        )
+                                        ).font(.title2.weight(.semibold))
                                     }
 
-                                    .font(.title2.weight(.semibold))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .disabled(
                                         state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
