@@ -247,31 +247,31 @@ extension Bolus {
                         )
                     }
 
-                    if !state.waitForSuggestion {
-                        HStack {
-                            Text("Bolus Amount").fontWeight(.semibold)
-                            Spacer()
-                            DecimalTextField(
-                                "0,00",
-                                value: $state.amount,
-                                formatter: formatter,
-                                autofocus: true,
-                                cleanInput: true
-                            )
-                            Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
-                        }
-                        .onChange(of: state.amount) { newValue in
-                            if newValue > state.maxBolus * 3 {
-                                exceededMaxBolus3 = true
-                                exceededMaxBolus = true
-                            } else if newValue > state.maxBolus {
-                                exceededMaxBolus = true
-                            } else {
-                                exceededMaxBolus = false
-                                exceededMaxBolus3 = false
-                            }
+                    // if !state.waitForSuggestion {
+                    HStack {
+                        Text("Bolus Amount").fontWeight(.semibold)
+                        Spacer()
+                        DecimalTextField(
+                            "0,00",
+                            value: $state.amount,
+                            formatter: formatter,
+                            autofocus: true,
+                            cleanInput: true
+                        )
+                        Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
+                    }
+                    .onChange(of: state.amount) { newValue in
+                        if newValue > state.maxBolus * 3 {
+                            exceededMaxBolus3 = true
+                            exceededMaxBolus = true
+                        } else if newValue > state.maxBolus {
+                            exceededMaxBolus = true
+                        } else {
+                            exceededMaxBolus = false
+                            exceededMaxBolus3 = false
                         }
                     }
+                    // }
                 } header: { Text("Bolusberäkning") }
 
                 if state.amount > 0 {
