@@ -1,4 +1,4 @@
-// import Foundation
+import CoreData
 import LoopKit
 import SwiftUI
 import Swinject
@@ -10,10 +10,11 @@ extension Bolus {
         @Injected() var broadcaster: Broadcaster!
         @Injected() var pumpHistoryStorage: PumpHistoryStorage!
 
-        // added for bolus calculator
         @Injected() var glucoseStorage: GlucoseStorage!
         @Injected() var settings: SettingsManager!
         @Injected() var nsManager: NightscoutManager!
+
+        let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         @Published var suggestion: Suggestion?
         @Published var amount: Decimal = 0
@@ -106,14 +107,14 @@ extension Bolus {
         }
 
         func getDeltaBG() {
-            let glucose = glucoseStorage.recent()
+            let glucose = provider.fetchGlucose()
             guard glucose.count >= 4 else { return } // Daniel: Change to 4 instead of 3 to capture 15min before the last value
 
-            let lastGlucose = glucose.last!
+            let lastGlucose = glucose.last?.glucose ?? 0
 
             let fourthLastGlucose =
                 glucose[glucose.count - 4] // Daniel: Change to 4 instead of 3 to capture 15min before the last value
-            let delta = Decimal(lastGlucose.glucose!) - Decimal(fourthLastGlucose.glucose!)
+            let delta = Decimal(lastGlucose) - Decimal(fourthLastGlucose.glucose)
 
             deltaBG = delta
         }
