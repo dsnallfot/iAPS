@@ -57,44 +57,52 @@ extension Bolus {
             Form {
                 Section {
                     if fetch {
-                        VStack {
-                            if let carbs = meal.first?.carbs, carbs > 0 {
-                                HStack {
-                                    Text("Carbs")
-                                    Spacer()
-                                    Text(carbs.formatted())
-                                    Text("g")
+                        ZStack {
+                            VStack {
+                                if let carbs = meal.first?.carbs, carbs > 0 {
+                                    HStack {
+                                        Text("Carbs")
+                                        Spacer()
+                                        Text(carbs.formatted())
+                                        Text("g")
+                                    }
+                                    .foregroundColor(.primary)
                                 }
-                                .foregroundColor(.primary)
+                                if let fat = meal.first?.fat, fat > 0 {
+                                    HStack {
+                                        Text("Fat")
+                                        Spacer()
+                                        Text(fat.formatted())
+                                        Text("g")
+                                    }
+                                    .foregroundColor(.brown)
+                                }
+                                if let protein = meal.first?.protein, protein > 0 {
+                                    HStack {
+                                        Text("Protein")
+                                        Spacer()
+                                        Text(protein.formatted())
+                                        Text("g")
+                                    }
+                                    .foregroundColor(.brown)
+                                }
+                                if let note = meal.first?.note, note != "" {
+                                    HStack {
+                                        Text("Note")
+                                        Spacer()
+                                        Text(note)
+                                        Text("")
+                                    }
+                                    .foregroundColor(.secondary)
+                                }
                             }
-                            if let fat = meal.first?.fat, fat > 0 {
-                                HStack {
-                                    Text("Fat")
-                                    Spacer()
-                                    Text(fat.formatted())
-                                    Text("g")
-                                }
-                                .foregroundColor(.brown)
-                            }
-                            if let protein = meal.first?.protein, protein > 0 {
-                                HStack {
-                                    Text("Protein")
-                                    Spacer()
-                                    Text(protein.formatted())
-                                    Text("g")
-                                }
-                                .foregroundColor(.brown)
-                            }
-                            if let note = meal.first?.note, note != "" {
-                                HStack {
-                                    Text("Note")
-                                    Spacer()
-                                    Text(note)
-                                    Text("")
-                                }
-                                .foregroundColor(.secondary)
+                            .onTapGesture {
+                                let id_ = meal.first?.id ?? ""
+                                keepForNextWiew = true
+                                state.backToCarbsView(complexEntry: fetch, id_)
                             }
                         }
+
                         .font(.subheadline)
                         HStack {
                             Button {
