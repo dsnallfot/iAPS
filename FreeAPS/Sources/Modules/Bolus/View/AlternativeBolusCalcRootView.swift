@@ -93,42 +93,48 @@ extension Bolus {
                         }
                         .foregroundColor(.secondary)
                         .font(.subheadline)
-                    } else {
-                        Text("Ingen måltid registrerad...")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-                            .italic()
-                    }
-                    HStack {
-                        Button {
-                            let id_ = meal.first?.id ?? ""
-                            if fetch {
+                        HStack {
+                            Button {
+                                let id_ = meal.first?.id ?? ""
                                 keepForNextWiew = true
                                 state.backToCarbsView(complexEntry: fetch, id_)
-                            } else {
-                                state.showModal(for: .addCarbs(editMode: false))
+                            }
+                            label: {
+                                // Image(systemName: "plus")
+                                Text("Ändra måltid")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.subheadline)
+                            .buttonStyle(BorderlessButtonStyle())
+                            Spacer()
+                            if state.fattyMeals {
+                                Text("Fettrik")
+                                    .foregroundColor(.brown)
+                                    .font(.subheadline)
+
+                                Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
+                                    .toggleStyle(CheckboxToggleStyle())
+                                    .font(.subheadline)
+                                    .foregroundColor(.brown)
+                                    .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                        state.calculateInsulin() // Call the calculateInsulin function
+                                    }
                             }
                         }
-                        label: {
-                            // Image(systemName: fetch ? "plusminus" : "plus")
-                            Text(fetch ? "Ändra måltid" : "Lägg till måltid")
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                        .buttonStyle(BorderlessButtonStyle())
-                        Spacer()
-                        if state.fattyMeals {
-                            Text("Fettrik")
-                                .foregroundColor(.brown)
-                                .font(.subheadline)
 
-                            Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
-                                .toggleStyle(CheckboxToggleStyle())
-                                .font(.footnote)
-                                .foregroundColor(.brown)
-                                .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                    state.calculateInsulin() // Call the calculateInsulin function
-                                }
+                    } else {
+                        HStack {
+                            Button {
+                                state.showModal(for: .addCarbs(editMode: false))
+                            }
+                            label: {
+                                // Image(systemName: "plus")
+                                Text("Lägg till måltid")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3)
+                            .buttonStyle(BorderlessButtonStyle())
+                            Spacer()
                         }
                     }
                 }
