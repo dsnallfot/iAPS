@@ -65,6 +65,7 @@ extension Bolus {
                                     Text(carbs.formatted())
                                     Text("g")
                                 }
+                                .foregroundColor(.primary)
                             }
                             if let fat = meal.first?.fat, fat > 0 {
                                 HStack {
@@ -73,6 +74,7 @@ extension Bolus {
                                     Text(fat.formatted())
                                     Text("g")
                                 }
+                                .foregroundColor(.brown)
                             }
                             if let protein = meal.first?.protein, protein > 0 {
                                 HStack {
@@ -81,6 +83,7 @@ extension Bolus {
                                     Text(protein.formatted())
                                     Text("g")
                                 }
+                                .foregroundColor(.brown)
                             }
                             if let note = meal.first?.note, note != "" {
                                 HStack {
@@ -89,9 +92,9 @@ extension Bolus {
                                     Text(note)
                                     Text("")
                                 }
+                                .foregroundColor(.secondary)
                             }
                         }
-                        .foregroundColor(.secondary)
                         .font(.subheadline)
                         HStack {
                             Button {
@@ -108,7 +111,7 @@ extension Bolus {
                             .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             if state.fattyMeals {
-                                Text("Fettrik")
+                                Text("Hög fett/protein %")
                                     .foregroundColor(.brown)
                                     .font(.subheadline)
 
@@ -271,15 +274,8 @@ extension Bolus {
                     }
                 } header: { Text("Bolusberäkning") }
 
-                Section {
-                    if state.amount == 0, waitForSuggestion {
-                        Button {
-                            keepForNextWiew = true
-                            state.showModal(for: nil)
-                        }
-                        label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
-                            .font(.title3.weight(.semibold))
-                    } else {
+                if state.amount > 0 {
+                    Section {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
 
@@ -293,14 +289,24 @@ extension Bolus {
                                     Image(systemName: "x.circle.fill")
                                         .foregroundColor(.loopRed)
                                 }
-                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos") }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .font(.title3.weight(.semibold))
-                                .foregroundColor(exceededMaxBolus ? .loopRed : .accentColor)
+                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
+                                    .font(.title2.weight(.semibold))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .disabled(
                             state.amount <= 0 || state.amount > state.maxBolus
                         )
+                    }
+                } else {
+                    Button {
+                        keepForNextWiew = true
+                        state.showModal(for: nil)
+                    } label: {
+                        Text("Continue without bolus")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.title3)
+                        // .foregroundColor(state.amount > 0 ? .secondary : .accentColor)
                     }
                 }
             }
@@ -333,8 +339,8 @@ extension Bolus {
                    let fat = meal.first?.fat,
                    let protein = meal.first?.protein
                 {
-                    let fatPercentage = fat / (carbs + fat + protein)
-                    if fatPercentage > 0.3 {
+                    let fatPercentage = (fat + protein) / (carbs + fat + protein)
+                    if fatPercentage > 0.5 {
                         state.useFattyMealCorrectionFactor = true
                     }
                 }

@@ -127,7 +127,7 @@ extension AddCarbs {
                                     ) :
                                     "Save"
                             )
-                            .font(.title3.weight(.semibold))
+                            .font(.title2.weight(.semibold))
                         }
                     }
                     .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs + 0.1)
@@ -273,7 +273,7 @@ extension AddCarbs {
 
         @ViewBuilder private func proteinAndFat() -> some View {
             HStack {
-                Text("Fat").foregroundColor(.orange) // .fontWeight(.thin)
+                Text("Fat") // .fontWeight(.thin)
                 Spacer()
                 DecimalTextField(
                     "0",
@@ -283,9 +283,9 @@ extension AddCarbs {
                     cleanInput: true
                 )
                 Text("grams")
-            }
+            }.foregroundColor(.brown)
             HStack {
-                Text("Protein").foregroundColor(.red) // .fontWeight(.thin)
+                Text("Protein") // .fontWeight(.thin)
                 Spacer()
                 DecimalTextField(
                     "0",
@@ -293,10 +293,9 @@ extension AddCarbs {
                     formatter: formatter,
                     autofocus: false,
                     cleanInput: true
-                ).foregroundColor(.loopRed)
-
+                )
                 Text("grams")
-            }
+            }.foregroundColor(.brown)
             HStack {
                 Text("Notering").foregroundColor(.primary)
                 TextField("Emoji eller kort text", text: $state.note).multilineTextAlignment(.trailing)

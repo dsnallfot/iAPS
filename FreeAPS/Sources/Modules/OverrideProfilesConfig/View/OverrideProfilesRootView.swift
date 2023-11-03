@@ -71,7 +71,7 @@ extension OverrideProfilesConfig {
                         HStack {
                             Image(systemName: "arrow.uturn.backward")
                             Text("Återgå till normal profil")
-                                .font(.title3)
+                                .font(.title2)
                                 .fontWeight(.semibold)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)

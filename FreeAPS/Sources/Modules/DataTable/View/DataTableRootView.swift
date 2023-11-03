@@ -108,15 +108,15 @@ extension DataTable {
                         Section {
                             HStack {
                                 Text("Blodsocker")
-                                    .font(.title3.weight(.semibold))
+                                    .fontWeight(.semibold)
                                 DecimalTextField(
                                     " ... ",
                                     value: $state.manualGlucose,
                                     formatter: glucoseFormatter,
                                     autofocus: true
                                 )
-                                Text(state.units.rawValue).foregroundStyle(.secondary)
-                                    .font(.title3.weight(.semibold))
+                                Text(state.units.rawValue).foregroundStyle(.primary)
+                                    .fontWeight(.semibold)
                             }
                         }
 
@@ -130,8 +130,8 @@ extension DataTable {
 
                         Section {
                             HStack {
-                                let limitLow: Decimal = state.units == .mmolL ? 2.2 : 40
-                                let limitHigh: Decimal = state.units == .mmolL ? 22 : 400
+                                let limitLow: Decimal = state.units == .mmolL ? 1 : 18
+                                let limitHigh: Decimal = state.units == .mmolL ? 40 : 720
 
                                 Button {
                                     state.addManualGlucose()
@@ -140,7 +140,7 @@ extension DataTable {
                                 }
                                 label: { Text("Logga värde från fingerstick") }
                                     .frame(maxWidth: .infinity, alignment: .center)
-                                    .font(.title3.weight(.semibold))
+                                    .font(.title2.weight(.semibold))
                                     .disabled(
                                         state.manualGlucose < limitLow || state
                                             .manualGlucose > limitHigh
@@ -164,7 +164,7 @@ extension DataTable {
                         Section {
                             HStack {
                                 Text("Dos")
-                                    .font(.title3.weight(.semibold))
+                                    .fontWeight(.semibold)
                                 Spacer()
                                 DecimalTextField(
                                     "0,0",
@@ -203,10 +203,9 @@ extension DataTable {
                                         Text(
                                             !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
-                                        )
+                                        ).font(.title2.weight(.semibold))
                                     }
 
-                                    .font(.title3.weight(.semibold))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .disabled(
                                         state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
