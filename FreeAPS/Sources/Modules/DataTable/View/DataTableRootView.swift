@@ -130,8 +130,8 @@ extension DataTable {
 
                         Section {
                             HStack {
-                                let limitLow: Decimal = state.units == .mmolL ? 1 : 40
-                                let limitHigh: Decimal = state.units == .mmolL ? 18 : 720
+                                let limitLow: Decimal = state.units == .mmolL ? 1 : 18
+                                let limitHigh: Decimal = state.units == .mmolL ? 40 : 720
 
                                 Button {
                                     state.addManualGlucose()
