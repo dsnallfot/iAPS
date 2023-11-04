@@ -121,7 +121,7 @@ extension AddCarbs {
                             Text(
                                 state.skipBolus ? "Save" :
                                     (
-                                        state.carbs < state.maxCarbs ?
+                                        state.carbs <= state.maxCarbs ?
                                             "Fortsätt" :
                                             "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
                                     )
