@@ -140,7 +140,7 @@ extension DataTable {
                                 }
                                 label: { Text("Logga värde från fingerstick") }
                                     .frame(maxWidth: .infinity, alignment: .center)
-                                    .font(.title2.weight(.semibold))
+                                    .font(.title3.weight(.semibold))
                                     .disabled(
                                         state.manualGlucose < limitLow || state
                                             .manualGlucose > limitHigh
@@ -151,7 +151,7 @@ extension DataTable {
                 }
                 .onAppear(perform: configureView)
                 .navigationTitle("Fingerstick")
-                .navigationBarTitleDisplayMode(.automatic)
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Close", action: { showManualGlucose = false
                     state.manualGlucose = 0 }))
             }
@@ -203,7 +203,7 @@ extension DataTable {
                                         Text(
                                             !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
-                                        ).font(.title2.weight(.semibold))
+                                        ).font(.title3.weight(.semibold))
                                     }
 
                                     .frame(maxWidth: .infinity, alignment: .center)
@@ -218,7 +218,7 @@ extension DataTable {
                 }
                 .onAppear(perform: configureView)
                 .navigationTitle("Insulinpenna")
-                .navigationBarTitleDisplayMode(.automatic)
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Close", action: { showNonPumpInsulin = false
                     state.nonPumpInsulinAmount = 0 }))
             }
@@ -237,30 +237,30 @@ extension DataTable {
         private var treatmentsList: some View {
             List {
                 HStack {
+                    Button(action: { showNonPumpInsulin = true }, label: {
+                        Image(systemName: "plus.circle.fill")
+                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                        Text("Insulin")
+                            // .foregroundColor(colorScheme == .dark ? .primary : .primary)
+                            .font(.subheadline)
+                    })
+                        .buttonStyle(.borderless)
+
+                    Spacer()
+
                     if state.treatments.contains(where: { $0.date > Date() }) {
                         Button(action: { showFutureEntries.toggle() }, label: {
+                            Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
+                                .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                                .font(.subheadline)
                             Image(
                                 systemName: showFutureEntries ? "chevron.down.circle" : "chevron.right.circle"
                             )
                             .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
 
-                            Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
-                                .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
-                                .font(.subheadline)
                         })
                             .buttonStyle(.borderless)
                     }
-                    Spacer() // Add a spacer to push the next button to the right
-
-                    Button(action: { showNonPumpInsulin = true }, label: {
-                        Text("Insulin")
-                            // .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                            .font(.subheadline)
-
-                        Image(systemName: "plus.circle.fill")
-                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
-                    })
-                        .buttonStyle(.borderless)
                 }
                 .listRowBackground(Color(.tertiarySystemBackground))
 
@@ -316,14 +316,12 @@ extension DataTable {
         private var glucoseList: some View {
             List {
                 HStack {
-                    Spacer() // Add a spacer to push the next button to the right
                     Button(action: { showManualGlucose = true }, label: {
+                        Image(systemName: "plus.circle.fill")
+                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
                         Text("Fingerstick")
                             // .foregroundColor(colorScheme == .dark ? .primary : .primary)
                             .font(.subheadline)
-
-                        Image(systemName: "plus.circle.fill")
-                        // .foregroundColor(colorScheme == .dark ? .primary : .primary)
                     })
                         .buttonStyle(.borderless)
                 }

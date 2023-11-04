@@ -121,7 +121,7 @@ extension Bolus {
                             .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             if state.fattyMeals {
-                                Text("Hög fett/protein %")
+                                Text("Hög fett+protein %")
                                     .foregroundColor(.brown)
                                     .font(.subheadline)
 
@@ -142,7 +142,7 @@ extension Bolus {
                             }
                             label: {
                                 // Image(systemName: "plus")
-                                Text("Lägg till måltid")
+                                Text("Lägg till måltid?")
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .font(.title3)
@@ -300,7 +300,7 @@ extension Bolus {
                                         .foregroundColor(.loopRed)
                                 }
                                 Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
-                                    .font(.title2.weight(.semibold))
+                                    .font(.title3.weight(.semibold))
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                         }
@@ -323,7 +323,9 @@ extension Bolus {
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
-                leading: Button { state.hideModal() }
+                leading: Button {
+                    state.hideModal()
+                }
                 label: { Text("Cancel") }
             )
             .navigationBarItems(
@@ -345,17 +347,24 @@ extension Bolus {
                     state.insulinCalculated = state.calculateInsulin()
                 }
                 // Additional code to automatically check the checkbox
-                if let carbs = meal.first?.carbs,
-                   let fat = meal.first?.fat,
-                   let protein = meal.first?.protein
-                {
-                    let fatPercentage = (fat + protein) / (carbs + fat + protein)
-                    if fatPercentage > 0.5 {
-                        state.useFattyMealCorrectionFactor = true
+                if fetch {
+                    if let carbs = meal.first?.carbs,
+                       let fat = meal.first?.fat,
+                       let protein = meal.first?.protein
+                    {
+                        let fatPercentage = (fat + protein) / (carbs + fat + protein)
+
+                        // Convert state.fattyMealTrigger to a Double
+                        let fattyMealTriggerDouble = NSDecimalNumber(decimal: state.fattyMealTrigger).doubleValue
+
+                        if fatPercentage > fattyMealTriggerDouble {
+                            state.useFattyMealCorrectionFactor = true
+                        }
                     }
                 }
             }
             .onDisappear {
+                state.useFattyMealCorrectionFactor = false
                 if fetch, hasFatOrProtein, !keepForNextWiew {
                     state.delete(deleteTwice: true, id: meal.first?.id ?? "")
                 } else if fetch, !keepForNextWiew {
@@ -474,7 +483,7 @@ extension Bolus {
                                              .foregroundColor(.secondary)
                                      } */
                                     HStack {
-                                        Text("Aktuell insulinkvot:")
+                                        Text("Aktuell CR (insulinkvot):")
                                             .foregroundColor(.secondary)
                                         Spacer()
 
@@ -547,7 +556,7 @@ extension Bolus {
                                         }
                                     }
                                     HStack {
-                                        Text("Inställd max kolhydrater:")
+                                        Text("Inställda max kolhydrater:")
                                             .foregroundColor(.secondary)
                                         Spacer()
                                         let maxCarbs = state.maxCarbs
@@ -566,7 +575,7 @@ extension Bolus {
                                     }
                                     if state.useFattyMealCorrectionFactor {
                                         HStack {
-                                            Text("Inställd faktor fet måltid :")
+                                            Text("Inställd faktor fet/proteinrik måltid :")
                                                 .foregroundColor(.brown)
                                             Spacer()
                                             let fraction = state.fattyMealFactor * 100
@@ -899,7 +908,7 @@ extension Bolus {
 
                     .font(.footnote)
                 }
-                .navigationTitle("Bolusberäkning")
+                .navigationTitle("Boluskalkylator")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Tillbaka", action: { showInfo.toggle()
                 }))

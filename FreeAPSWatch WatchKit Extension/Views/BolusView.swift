@@ -32,7 +32,7 @@ struct BolusView: View {
 
                     Spacer()
                     Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " E")
-                        .font(.title2)
+                        .font(.title3)
                         .focusable(true)
                         .digitalCrownRotation(
                             $steps,

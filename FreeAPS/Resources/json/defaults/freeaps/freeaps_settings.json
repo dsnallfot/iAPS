@@ -46,4 +46,5 @@
   "useCalc": false,
   "fattyMeals": false,
   "fattyMealFactor": 0.7
+  "fattyMealTrigger": 0.5
 }
