@@ -30,20 +30,22 @@ extension Settings {
                         Text("Apple Health").navigationLink(to: .healthkit, from: self)
                     }
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
-                    Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
-                    Text("App Icons").navigationLink(to: .iconConfig, from: self)
-                    Text("Statistics and Home View").navigationLink(to: .statisticsConfig, from: self)
+                }
+                Section(header: Text("Appfunktioner")) {
+                    Text("App ikoner").navigationLink(to: .iconConfig, from: self)
+                    Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
+                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
                 }
 
-                Section(header: Text("Configuration")) {
-                    Text("Preferences").navigationLink(to: .preferencesEditor, from: self)
+                Section(header: Text("Behandlingsinställningar")) {
+                    Text("iAPS").navigationLink(to: .preferencesEditor, from: self)
                     Text("Pump Settings").navigationLink(to: .pumpSettingsEditor, from: self)
                     Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
                     Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
-                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
+                    Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
                 }
 
                 Section(header: Text("Developer")) {

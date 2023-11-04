@@ -26,8 +26,7 @@ extension StatConfig {
 
         var body: some View {
             Form {
-                Section(header: Text("Settings")) {
-                    Toggle("Change HbA1c Unit", isOn: $state.overrideHbA1cUnit)
+                Section {
                     Toggle("Display Chart X - Grid lines", isOn: $state.xGridLines)
                     Toggle("Display Chart Y - Grid lines", isOn: $state.yGridLines)
                     Toggle("Display Chart Threshold lines for Low and High", isOn: $state.rulerMarks)
@@ -39,7 +38,9 @@ extension StatConfig {
                         DecimalTextField("6", value: $state.hours, formatter: carbsFormatter)
                         Text("hours").foregroundColor(.secondary)
                     }
+                } header: { Text("Grafer hemvy") }
 
+                Section {
                     HStack {
                         Text("Low")
                         Spacer()
@@ -53,10 +54,16 @@ extension StatConfig {
                         DecimalTextField("0", value: $state.high, formatter: glucoseFormatter)
                         Text(state.units.rawValue).foregroundColor(.secondary)
                     }
-                }
+                    Toggle("Change HbA1c Unit", isOn: $state.overrideHbA1cUnit)
+
+                } header: { Text("Statistics settings ") }
+
+                Section {
+                    Toggle("Skip Bolus screen after carbs", isOn: $state.skipBolusScreenAfterCarbs)
+                } header: { Text("Vy för måltider") }
             }
             .onAppear(perform: configureView)
-            .navigationBarTitle("Statistics")
+            .navigationBarTitle("Anpassa utseende")
             .navigationBarTitleDisplayMode(.automatic)
         }
     }
