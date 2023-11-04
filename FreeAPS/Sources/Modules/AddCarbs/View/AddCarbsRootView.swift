@@ -130,7 +130,7 @@ extension AddCarbs {
                                             "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
                                     )
                             )
-                            .font(.title2.weight(.semibold))
+                            .font(.title3.weight(.semibold))
                         }
                     }
                     .disabled(state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs)

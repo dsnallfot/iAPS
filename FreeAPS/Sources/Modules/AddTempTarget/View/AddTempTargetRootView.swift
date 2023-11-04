@@ -31,7 +31,7 @@ extension AddTempTarget {
                             Image(systemName: "x.circle")
                                 .tint(.loopRed)
                             Text("Avbryt tillfälligt mål")
-                                .font(.title2)
+                                .font(.title3)
                                 .fontWeight(.semibold)
                                 .tint(.loopRed)
                         }

@@ -142,7 +142,7 @@ extension Bolus {
                             }
                             label: {
                                 // Image(systemName: "plus")
-                                Text("Lägg till måltid")
+                                Text("Lägg till måltid?")
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .font(.title3)
@@ -300,7 +300,7 @@ extension Bolus {
                                         .foregroundColor(.loopRed)
                                 }
                                 Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
-                                    .font(.title2.weight(.semibold))
+                                    .font(.title3.weight(.semibold))
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                         }
@@ -474,7 +474,7 @@ extension Bolus {
                                              .foregroundColor(.secondary)
                                      } */
                                     HStack {
-                                        Text("Aktuell insulinkvot:")
+                                        Text("Aktuell CR (insulinkvot):")
                                             .foregroundColor(.secondary)
                                         Spacer()
 
@@ -547,7 +547,7 @@ extension Bolus {
                                         }
                                     }
                                     HStack {
-                                        Text("Inställd max kolhydrater:")
+                                        Text("Inställda max kolhydrater:")
                                             .foregroundColor(.secondary)
                                         Spacer()
                                         let maxCarbs = state.maxCarbs
