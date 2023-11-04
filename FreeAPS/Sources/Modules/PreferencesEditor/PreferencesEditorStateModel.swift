@@ -5,16 +5,16 @@ extension PreferencesEditor {
     final class StateModel: BaseStateModel<Provider>, PreferencesSettable { private(set) var preferences = Preferences()
         @Published var unitsIndex = 1
         @Published var allowAnnouncements = false
-        @Published var insulinReqPercentage: Decimal = 70
         @Published var skipBolusScreenAfterCarbs = false
         @Published var sections: [FieldSection] = []
         @Published var useAlternativeBolusCalc: Bool = false
+        @Published var units: GlucoseUnits = .mmolL
 
         override func subscribe() {
             preferences = provider.preferences
             useAlternativeBolusCalc = settingsManager.settings.useCalc
+            units = settingsManager.settings.units
             subscribeSetting(\.allowAnnouncements, on: $allowAnnouncements) { allowAnnouncements = $0 }
-            subscribeSetting(\.insulinReqPercentage, on: $insulinReqPercentage) { insulinReqPercentage = $0 }
 
             subscribeSetting(\.units, on: $unitsIndex.map { $0 == 0 ? GlucoseUnits.mgdL : .mmolL }) {
                 unitsIndex = $0 == .mgdL ? 0 : 1
@@ -160,15 +160,6 @@ extension PreferencesEditor {
                     settable: self
                 ),
                 Field(
-                    displayName: NSLocalizedString("Max Delta-BG Threshold SMB", comment: "Max Delta-BG Threshold"),
-                    type: .decimal(keypath: \.maxDeltaBGthreshold),
-                    infoText: NSLocalizedString(
-                        "Defaults to 0.2 (20%). Maximum positive percentual change of BG level to use SMB, above that will disable SMB. Hardcoded cap of 40%. For UAM fully-closed-loop 30% is advisable. Observe in log and popup (maxDelta 27 > 20% of BG 100 - disabling SMB!).",
-                        comment: "Max Delta-BG Threshold"
-                    ),
-                    settable: self
-                ),
-                Field(
                     displayName: NSLocalizedString("Enable SMB With COB", comment: "Enable SMB With COB"),
                     type: .boolean(keypath: \.enableSMBWithCOB),
                     infoText: NSLocalizedString(
@@ -255,6 +246,16 @@ extension PreferencesEditor {
                     ),
                     settable: self
                 ),
+                Field(
+                    displayName: NSLocalizedString("Max Delta-BG Threshold SMB", comment: "Max Delta-BG Threshold"),
+                    type: .decimal(keypath: \.maxDeltaBGthreshold),
+                    infoText: NSLocalizedString(
+                        "Defaults to 0.2 (20%). Maximum positive percentual change of BG level to use SMB, above that will disable SMB. Hardcoded cap of 40%. For UAM fully-closed-loop 30% is advisable. Observe in log and popup (maxDelta 27 > 20% of BG 100 - disabling SMB!).",
+                        comment: "Max Delta-BG Threshold"
+                    ),
+                    settable: self
+                ),
+
                 Field(
                     displayName: NSLocalizedString("SMB DeliveryRatio", comment: "SMB DeliveryRatio"),
                     type: .decimal(keypath: \.smbDeliveryRatio),
