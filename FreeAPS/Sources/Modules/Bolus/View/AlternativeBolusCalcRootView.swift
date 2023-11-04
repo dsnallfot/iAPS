@@ -121,16 +121,36 @@ extension Bolus {
                             .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             if state.fattyMeals {
-                                Text("Hög fett+protein %")
+                                Text("Hög FP%")
                                     .foregroundColor(.brown)
-                                    .font(.subheadline)
+                                    .font(.footnote)
 
                                 Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                                     .toggleStyle(CheckboxToggleStyle())
-                                    .font(.subheadline)
+                                    .font(.footnote)
                                     .foregroundColor(.brown)
                                     .onChange(of: state.useFattyMealCorrectionFactor) { _ in
                                         state.calculateInsulin() // Call the calculateInsulin function
+                                        if state.useFattyMealCorrectionFactor {
+                                            state.useSuperBolus = false
+                                        }
+                                    }
+                            }
+                            if state.sweetMeals {
+                                Spacer()
+                                Text(" Superbolus")
+                                    .foregroundColor(.cyan)
+                                    .font(.footnote)
+
+                                Toggle(isOn: $state.useSuperBolus) {}
+                                    .toggleStyle(CheckboxToggleStyle())
+                                    .font(.footnote)
+                                    .foregroundColor(.cyan)
+                                    .onChange(of: state.useSuperBolus) { _ in
+                                        state.calculateInsulin()
+                                        if state.useSuperBolus {
+                                            state.useFattyMealCorrectionFactor = false
+                                        }
                                     }
                             }
                         }
@@ -237,7 +257,7 @@ extension Bolus {
                             displayError = true
                         } else if state.insulinCalculated <= 0 {
                             showInfo.toggle()
-                            state.calculateInsulin() // Call the calculateInsulin function
+                            state.insulinCalculated = state.calculateInsulin() // Call the calculateInsulin function
                         } else {
                             state.amount = state.insulinCalculated
                         }
@@ -344,7 +364,7 @@ extension Bolus {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
-                    state.insulinCalculated = state.calculateInsulin()
+                    state.calculateInsulin()
                 }
                 // Additional code to automatically check the checkbox
                 if fetch {
@@ -472,16 +492,16 @@ extension Bolus {
                                         Text(state.units.rawValue)
                                             .foregroundColor(.secondary)
                                     }
-                                    // Basal dont update for some reason. needs to check. not crucial info in the calc view however
-                                    /* HStack {
-                                         Text("Aktuell basal:")
-                                             .foregroundColor(.secondary)
-                                         Spacer()
-                                         let basal = state.basal
-                                         Text(basal.formatted())
-                                         Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                                             .foregroundColor(.secondary)
-                                     } */
+                                    // Basal dont update for some reason. needs to check. not crucial info in the calc view right now
+                                    HStack {
+                                        Text("Aktuell basal:")
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        let basal = state.currentBasal
+                                        Text(basal.formatted())
+                                        Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                                            .foregroundColor(.secondary)
+                                    }
                                     HStack {
                                         Text("Aktuell CR (insulinkvot):")
                                             .foregroundColor(.secondary)
@@ -583,6 +603,18 @@ extension Bolus {
                                                 .foregroundColor(.brown)
                                             Text("%")
                                                 .foregroundColor(.brown)
+                                        }
+                                    }
+                                    if state.useSuperBolus {
+                                        HStack {
+                                            Text("Superbolus")
+                                                .foregroundColor(.cyan)
+                                            Spacer()
+                                            let superBolusInsulin = state.superBolusInsulin
+                                            Text(superBolusInsulin.formatted())
+                                                .foregroundColor(.cyan)
+                                            Text(" U")
+                                                .foregroundColor(.cyan)
                                         }
                                     }
                                 }
@@ -805,27 +837,51 @@ extension Bolus {
                                 }
 
                                 Spacer()
-                                let fraction = state.fraction * 100
-                                Text(fraction.formatted())
-                                Text("%  x ")
-                                    .foregroundColor(.secondary)
 
-                                // if fatty meal is chosen
-                                if state.useFattyMealCorrectionFactor {
-                                    let fattyMealFactor = state.fattyMealFactor * 100
-                                    Text(fattyMealFactor.formatted())
-                                        .foregroundColor(.brown)
+                                if !state.useSuperBolus {
+                                    let fraction = state.fraction * 100
+                                    Text(fraction.formatted())
                                     Text("%  x ")
                                         .foregroundColor(.secondary)
-                                }
 
-                                let insulin = state.roundedWholeCalc
-                                Text(insulin.formatted())
-                                    .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                                Text(unit)
-                                    .foregroundColor(.secondary)
-                                Text(" = ")
-                                    .foregroundColor(.secondary)
+                                    /* let fraction = state.fraction * 100
+                                     Text(fraction.formatted())
+                                     Text("%  x ")
+                                     .foregroundColor(.secondary) */
+
+                                    // if fatty meal is chosen
+                                    if state.useFattyMealCorrectionFactor {
+                                        let fattyMealFactor = state.fattyMealFactor * 100
+                                        Text(fattyMealFactor.formatted())
+                                            .foregroundColor(.brown)
+                                        Text("%  x ")
+                                            .foregroundColor(.secondary)
+                                    }
+                                    let insulin = state.roundedWholeCalc
+                                    Text(insulin.formatted())
+                                        .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                                    Text(unit)
+                                        .foregroundColor(.secondary)
+                                    Text(" = ")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    // roundedWholeCalc
+                                    let insulin = state.roundedWholeCalc
+                                    Text(insulin.formatted())
+                                        .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                                    Text(" U")
+                                    // plus
+                                    Text(" + ")
+                                        .foregroundColor(.secondary)
+                                    // superBolusInsulin
+                                    let superBolusInsulin = state.superBolusInsulin
+                                    Text(superBolusInsulin.formatted())
+                                        .foregroundColor(.cyan)
+                                    Text(" U")
+                                        .foregroundColor(.cyan)
+                                    Text(" = ")
+                                        .foregroundColor(.secondary)
+                                }
 
                                 let result = state.insulinCalculated
                                 // rounding

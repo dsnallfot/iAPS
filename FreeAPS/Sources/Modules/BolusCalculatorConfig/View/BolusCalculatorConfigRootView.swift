@@ -59,6 +59,17 @@ extension BolusCalculatorConfig {
                     } header: { Text("Fett/proteinrika måltider") }
                 }
 
+                Section {
+                    HStack {
+                        Toggle("Aktivera superbolus", isOn: $state.sweetMeals)
+                    }
+                    HStack {
+                        Text("Antal timmar basal i superbolus")
+                        Spacer()
+                        DecimalTextField("2", value: $state.sweetMealFactor, formatter: conversionFormatter)
+                    }
+                } header: { Text("Söta måltider") }
+
                 Section(
                     footer: Text(
                         "Här kan du välja att använda den nya boluskalkylatorn istället för iAPS ordinarie bolusberäkningar. \n\nDen manuella bolusfaktorn (default 0.8) används för att begränsa hur stor andel av kalkylatorns totalt framräknade insulinbehov som ska rekommenderas  som bolus.\n\nFaktorn för fettrika måltider (default 0.7) lägger till ytterligare en begränsning till bolusrekommendationen för att ta hänsyn till en längre absorbtionstid.\n\n Avslutningvis kan en faktor för vilken andel fett+protein i en registrerad måltid som ska trigga att faktorn för fettrika måltider aktiveras (default 0.5)."
