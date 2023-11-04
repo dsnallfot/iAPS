@@ -21,25 +21,30 @@ extension BolusCalculatorConfig {
                         Toggle("Använd alternativ boluskalkylator", isOn: $state.useCalc)
                     }
                     HStack {
-                        Text("Override With A Factor Of ")
+                        Text("Manuell bolus faktor")
                         Spacer()
                         DecimalTextField("0.8", value: $state.overrideFactor, formatter: conversionFormatter)
                     }
                 }
-                Section(header: Text("Fettrika måltider")) {
+                Section(header: Text("Fett/proteinrika måltider")) {
                     HStack {
                         Toggle("Använd faktor för fettrika måltider", isOn: $state.fattyMeals)
                     }
                     HStack {
-                        Text("Override With A Factor Of ")
+                        Text("Justera bolus med faktor")
                         Spacer()
                         DecimalTextField("0.7", value: $state.fattyMealFactor, formatter: conversionFormatter)
+                    }
+                    HStack {
+                        Text("Använd automatiskt om fett & protein i måltiden utgör mer än")
+                        Spacer()
+                        DecimalTextField("0.5", value: $state.fattyMealTrigger, formatter: conversionFormatter)
                     }
                 }
 
                 Section(
                     footer: Text(
-                        "This is another approach to the bolus calculator integrated in iAPS. If the toggle is on you use this bolus calculator and not the original iAPS calculator. At the end of the calculation a custom factor is applied as it is supposed to be when using smbs (default 0.8).\n\nYou can also add the option in your bolus calculator to apply another (!) customizable factor at the end of the calculation which could be useful for fatty meals, e.g Pizza (default 0.7)."
+                        "Här kan du välja att använda den nya boluskalkylatorn istället för iAPS ordinarie bolusberäkningar. \n\nDen manuella bolusfaktorn (default 0.8) används för att begränsa hur stor andel av kalkylatorns totalt framräknade insulinbehov som ska rekommenderas  som bolus.\n\n Faktorn för fettrika måltider (default 0.7) lägger till ytterligare en begränsning till bolusrekommendationen för att ta hänsyn till en längre absorbtionstid.\n\n Avslutningvis kan en faktor för vilken andel fett+protein i en registrerad måltid som ska trigga att faktorn för fettrika måltider aktiveras (default 0.5)."
                     )
                 )
                     {}

@@ -121,7 +121,7 @@ extension Bolus {
                             .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             if state.fattyMeals {
-                                Text("Hög fett/protein %")
+                                Text("Hög fett+protein %")
                                     .foregroundColor(.brown)
                                     .font(.subheadline)
 
@@ -353,7 +353,11 @@ extension Bolus {
                        let protein = meal.first?.protein
                     {
                         let fatPercentage = (fat + protein) / (carbs + fat + protein)
-                        if fatPercentage > 0.5 {
+
+                        // Convert state.fattyMealTrigger to a Double
+                        let fattyMealTriggerDouble = NSDecimalNumber(decimal: state.fattyMealTrigger).doubleValue
+
+                        if fatPercentage > fattyMealTriggerDouble {
                             state.useFattyMealCorrectionFactor = true
                         }
                     }
@@ -571,7 +575,7 @@ extension Bolus {
                                     }
                                     if state.useFattyMealCorrectionFactor {
                                         HStack {
-                                            Text("Inställd faktor fet måltid :")
+                                            Text("Inställd faktor fet/proteinrik måltid :")
                                                 .foregroundColor(.brown)
                                             Spacer()
                                             let fraction = state.fattyMealFactor * 100

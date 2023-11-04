@@ -67,6 +67,7 @@ extension Bolus {
         @Published var basal: Decimal = 0
         @Published var fattyMeals: Bool = false
         @Published var fattyMealFactor: Decimal = 0
+        @Published var fattyMealTrigger: Decimal = 0
         @Published var useFattyMealCorrectionFactor: Bool = false
         @Published var eventualBG: Int = 0
 
@@ -90,6 +91,7 @@ extension Bolus {
             useCalc = settings.settings.useCalc
             fattyMeals = settings.settings.fattyMeals
             fattyMealFactor = settings.settings.fattyMealFactor
+            fattyMealTrigger = settings.settings.fattyMealTrigger
             maxCarbs = settings.settings.maxCarbs
 
             if waitForSuggestionInitial {
