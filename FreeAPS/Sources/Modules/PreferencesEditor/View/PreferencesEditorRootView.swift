@@ -22,20 +22,13 @@ extension PreferencesEditor {
 
         var body: some View {
             Form {
-                Section(header: Text("iAPS").textCase(nil)) {
+                Section(header: Text("OpenAPS").textCase(nil)) {
                     Picker("Glucose units", selection: $state.unitsIndex) {
                         Text("mg/dL").tag(0)
                         Text("mmol/L").tag(1)
                     }
 
                     Toggle("Remote control", isOn: $state.allowAnnouncements)
-
-                    if !state.useAlternativeBolusCalc {
-                        HStack {
-                            Text("Recommended Bolus Percentage")
-                            DecimalTextField("", value: $state.insulinReqPercentage, formatter: formatter)
-                        }
-                    }
                 }
 
                 ForEach(state.sections.indexed(), id: \.1.id) { sectionIndex, section in

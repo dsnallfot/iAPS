@@ -10,45 +10,50 @@ extension Settings {
 
         var body: some View {
             Form {
-                Section(
-                    header: Text(
+                Section {
+                    Toggle("Closed loop", isOn: $state.closedLoop)
+                } header: {
+                    Text(
                         "iAPS v\(state.versionNumber) - \(state.buildNumber) \nBranch: \(state.branch) \(state.copyrightNotice) "
                     ).textCase(nil)
-                ) {
-                    Toggle("Closed loop", isOn: $state.closedLoop)
                 }
 
-                Section(header: Text("Devices")) {
+                Section {
                     Text("Pump").navigationLink(to: .pumpConfig, from: self)
                     Text("CGM").navigationLink(to: .cgm, from: self)
                     Text("Watch").navigationLink(to: .watch, from: self)
-                }
+                } header: { Text("Devices") }
 
-                Section(header: Text("Services")) {
+                Section {
                     Text("Nightscout").navigationLink(to: .nighscoutConfig, from: self)
                     if HKHealthStore.isHealthDataAvailable() {
                         Text("Apple Health").navigationLink(to: .healthkit, from: self)
                     }
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
-                }
-                Section(header: Text("Appfunktioner")) {
-                    Text("App ikoner").navigationLink(to: .iconConfig, from: self)
-                    Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
-                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
-                }
+                } header: { Text("Services") }
 
-                Section(header: Text("Behandlingsinställningar")) {
-                    Text("iAPS").navigationLink(to: .preferencesEditor, from: self)
+                Section {
                     Text("Pump Settings").navigationLink(to: .pumpSettingsEditor, from: self)
                     Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
-                    Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
-                    Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
-                }
+                } header: { Text("Konfigurera") }
 
-                Section(header: Text("Developer")) {
+                Section {
+                    Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
+                    Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
+                } header: { Text("OpenAPS") }
+
+                Section {
+                    Text("App ikoner").navigationLink(to: .iconConfig, from: self)
+                    Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
+                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
+                    Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
+                    Toggle("Animated Background", isOn: $state.animatedBackground)
+                } header: { Text("Extra funktioner") }
+
+                Section {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
                         Group {
@@ -117,11 +122,10 @@ extension Settings {
                             }
                         }
                     }
-                }
+                } header: { Text("Utvecklare") }
 
-                Section {
-                    Toggle("Animated Background", isOn: $state.animatedBackground)
-                }
+                // Section {
+                // }
 
                 Section {
                     Text("Share logs")
