@@ -323,7 +323,9 @@ extension Bolus {
             .navigationTitle("Enact Bolus")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
-                leading: Button { state.hideModal() }
+                leading: Button {
+                    state.hideModal()
+                }
                 label: { Text("Cancel") }
             )
             .navigationBarItems(
@@ -345,17 +347,20 @@ extension Bolus {
                     state.insulinCalculated = state.calculateInsulin()
                 }
                 // Additional code to automatically check the checkbox
-                if let carbs = meal.first?.carbs,
-                   let fat = meal.first?.fat,
-                   let protein = meal.first?.protein
-                {
-                    let fatPercentage = (fat + protein) / (carbs + fat + protein)
-                    if fatPercentage > 0.5 {
-                        state.useFattyMealCorrectionFactor = true
+                if fetch {
+                    if let carbs = meal.first?.carbs,
+                       let fat = meal.first?.fat,
+                       let protein = meal.first?.protein
+                    {
+                        let fatPercentage = (fat + protein) / (carbs + fat + protein)
+                        if fatPercentage > 0.5 {
+                            state.useFattyMealCorrectionFactor = true
+                        }
                     }
                 }
             }
             .onDisappear {
+                state.useFattyMealCorrectionFactor = false
                 if fetch, hasFatOrProtein, !keepForNextWiew {
                     state.delete(deleteTwice: true, id: meal.first?.id ?? "")
                 } else if fetch, !keepForNextWiew {
@@ -899,7 +904,7 @@ extension Bolus {
 
                     .font(.footnote)
                 }
-                .navigationTitle("Bolusberäkning")
+                .navigationTitle("Boluskalkylator")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: Button("Tillbaka", action: { showInfo.toggle()
                 }))
