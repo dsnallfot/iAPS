@@ -106,52 +106,45 @@ extension Bolus {
                         }
 
                         .font(.subheadline)
-                        HStack {
-                            Button {
-                                let id_ = meal.first?.id ?? ""
-                                keepForNextWiew = true
-                                state.backToCarbsView(complexEntry: fetch, id_)
-                            }
-                            label: {
-                                // Image(systemName: "plus")
-                                Text("Ändra måltid")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.subheadline)
-                            .buttonStyle(BorderlessButtonStyle())
-                            Spacer()
-                            if state.fattyMeals {
-                                Text("Hög FP%")
-                                    .foregroundColor(.brown)
-                                    .font(.footnote)
-
-                                Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
-                                    .toggleStyle(CheckboxToggleStyle())
-                                    .font(.footnote)
-                                    .foregroundColor(.brown)
-                                    .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                        state.insulinCalculated = state.calculateInsulin()
-                                        if state.useFattyMealCorrectionFactor {
-                                            state.useSuperBolus = false
-                                        }
-                                    }
-                            }
-                            if state.sweetMeals {
+                        if state.sweetMeals || state.fattyMeals {
+                            HStack {
+                                Text("Anpassa dos:")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.secondary)
+                                    .font(.subheadline)
                                 Spacer()
-                                Text(" Superbolus")
-                                    .foregroundColor(.cyan)
-                                    .font(.footnote)
+                                if state.fattyMeals {
+                                    Text("Hög FP%")
+                                        .foregroundColor(.brown)
+                                        .font(.footnote)
 
-                                Toggle(isOn: $state.useSuperBolus) {}
-                                    .toggleStyle(CheckboxToggleStyle())
-                                    .font(.footnote)
-                                    .foregroundColor(.cyan)
-                                    .onChange(of: state.useSuperBolus) { _ in
-                                        state.insulinCalculated = state.calculateInsulin()
-                                        if state.useSuperBolus {
-                                            state.useFattyMealCorrectionFactor = false
+                                    Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
+                                        .toggleStyle(CheckboxToggleStyle())
+                                        .font(.footnote)
+                                        .foregroundColor(.brown)
+                                        .onChange(of: state.useFattyMealCorrectionFactor) { _ in
+                                            state.insulinCalculated = state.calculateInsulin()
+                                            if state.useFattyMealCorrectionFactor {
+                                                state.useSuperBolus = false
+                                            }
                                         }
-                                    }
+                                }
+                                if state.sweetMeals {
+                                    Text(" Superbolus")
+                                        .foregroundColor(.cyan)
+                                        .font(.footnote)
+
+                                    Toggle(isOn: $state.useSuperBolus) {}
+                                        .toggleStyle(CheckboxToggleStyle())
+                                        .font(.footnote)
+                                        .foregroundColor(.cyan)
+                                        .onChange(of: state.useSuperBolus) { _ in
+                                            state.insulinCalculated = state.calculateInsulin()
+                                            if state.useSuperBolus {
+                                                state.useFattyMealCorrectionFactor = false
+                                            }
+                                        }
+                                }
                             }
                         }
 
@@ -162,7 +155,7 @@ extension Bolus {
                             }
                             label: {
                                 Image(systemName: "plus")
-                                Text("Lägg till måltid?")
+                                Text("Lägg till måltid")
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .font(.title3)
@@ -340,17 +333,28 @@ extension Bolus {
                     }
                 }
             }
-            .navigationTitle("Enact Bolus")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
-                leading: Button {
-                    state.hideModal()
-                }
-                label: { Text("Cancel") }
-            )
-            .navigationBarItems(
+                leading:
+                Group {
+                    if fetch {
+                        HStack {
+                            Button(action: {
+                                let id_ = meal.first?.id ?? ""
+                                keepForNextWiew = true
+                                state.backToCarbsView(complexEntry: fetch, id_)
+                            }) {
+                                Image(systemName: "chevron.left")
+                                Text("Måltid")
+                            }
+                        }
+                    } else {
+                        Button(action: { state.hideModal() }) {
+                            Text("Cancel")
+                        }
+                    }
+                },
                 trailing: Button(action: {
-                    // state.calculateInsulin() // Call the calculateInsulin function
                     showInfo.toggle()
                 }) {
                     HStack {
@@ -949,15 +953,15 @@ extension Bolus {
 
                         // Hide sheet
                         /* VStack {
-                              Button { showInfo = false }
-                              label: {
-                                  Text("OK")
-                              }
-                              .frame(maxWidth: .infinity, alignment: .center)
-                              .font(.system(size: 20))
-                              .fontWeight(.semibold)
-                              .foregroundColor(.blue)
-                          }
+                         Button { showInfo = false }
+                         label: {
+                         Text("OK")
+                         }
+                         .frame(maxWidth: .infinity, alignment: .center)
+                         .font(.system(size: 20))
+                         .fontWeight(.semibold)
+                         .foregroundColor(.blue)
+                         }
                          .padding(.top, 15)
                          .padding(.bottom, 15)*/
                     }
@@ -966,8 +970,17 @@ extension Bolus {
                 }
                 .navigationTitle("Boluskalkylator")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: Button("Tillbaka", action: { showInfo.toggle()
-                }))
+                .navigationBarItems(
+                    leading:
+                    HStack {
+                        Button(action: {
+                            showInfo.toggle()
+                        }) {
+                            Image(systemName: "chevron.left")
+                            Text("Tillbaka")
+                        }
+                    }
+                )
             }
         }
 
