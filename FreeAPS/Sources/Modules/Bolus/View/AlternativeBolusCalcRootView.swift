@@ -161,7 +161,7 @@ extension Bolus {
                                 state.showModal(for: .addCarbs(editMode: false))
                             }
                             label: {
-                                // Image(systemName: "plus")
+                                Image(systemName: "plus")
                                 Text("Lägg till måltid?")
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -171,7 +171,7 @@ extension Bolus {
                         }
                     }
                 }
-                // header: { Text("Aktuell måltid") }
+                header: { Text("Aktuell måltid") }
 
                 Section {
                     HStack {
@@ -302,7 +302,7 @@ extension Bolus {
                         }
                     }
                     // }
-                } // header: { Text("Bolusberäkning") }
+                } header: { Text("Bolusberäkning") }
 
                 if state.amount > 0 {
                     Section {

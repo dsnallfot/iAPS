@@ -61,7 +61,7 @@ extension BolusCalculatorConfig {
 
                 Section {
                     HStack {
-                        Toggle("Aktivera superbolus", isOn: $state.sweetMeals)
+                        Toggle("Använd superbolus", isOn: $state.sweetMeals)
                     }
                     HStack {
                         Text("Antal timmar basal i superbolus")

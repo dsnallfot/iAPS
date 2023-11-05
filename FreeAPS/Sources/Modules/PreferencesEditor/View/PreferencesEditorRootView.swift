@@ -22,13 +22,11 @@ extension PreferencesEditor {
 
         var body: some View {
             Form {
-                Section(header: Text("OpenAPS").textCase(nil)) {
+                Section {
                     Picker("Glucose units", selection: $state.unitsIndex) {
                         Text("mg/dL").tag(0)
                         Text("mmol/L").tag(1)
                     }
-
-                    Toggle("Remote control", isOn: $state.allowAnnouncements)
                 }
 
                 ForEach(state.sections.indexed(), id: \.1.id) { sectionIndex, section in
@@ -79,7 +77,7 @@ extension PreferencesEditor {
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("iAPS")
+            .navigationTitle("OpenAPS")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(
                 trailing:

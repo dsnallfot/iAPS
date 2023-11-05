@@ -56,7 +56,7 @@ extension StatConfig {
                     }
                     Toggle("Change HbA1c Unit", isOn: $state.overrideHbA1cUnit)
 
-                } header: { Text("Statistics settings ") }
+                } header: { Text("Målintervall") }
 
                 Section {
                     Toggle("Skip Bolus screen after carbs", isOn: $state.skipBolusScreenAfterCarbs)

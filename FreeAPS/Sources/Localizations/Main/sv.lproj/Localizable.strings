@@ -1081,13 +1081,13 @@ Enact a temp Basal or a temp target */
 
 
 /* Headers for settings ----------------------- */
-"OpenAPS main settings" = "iAPS huvudsakliga inställningar";
+"OpenAPS main settings" = "OpenAPS huvudinställningar";
 
-"OpenAPS SMB settings" = "iAPS SMB-inställningar";
+"OpenAPS SMB settings" = "OpenAPS SMB-inställningar";
 
-"OpenAPS targets settings" = "iAPS målvärdesinställningar";
+"OpenAPS targets settings" = "OpenAPS målvärdesinställningar";
 
-"OpenAPS other settings" = "iAPS andra inställningar";
+"OpenAPS other settings" = "OpenAPS övriga inställningar";
 
 /* Glucose Simulator CGM */
 "Glucose Simulator" = "Glukossimulator";
