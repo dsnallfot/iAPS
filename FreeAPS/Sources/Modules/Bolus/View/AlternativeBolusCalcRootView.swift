@@ -130,7 +130,7 @@ extension Bolus {
                                     .font(.footnote)
                                     .foregroundColor(.brown)
                                     .onChange(of: state.useFattyMealCorrectionFactor) { _ in
-                                        state.calculateInsulin() // Call the calculateInsulin function
+                                        state.insulinCalculated = state.calculateInsulin()
                                         if state.useFattyMealCorrectionFactor {
                                             state.useSuperBolus = false
                                         }
@@ -147,7 +147,7 @@ extension Bolus {
                                     .font(.footnote)
                                     .foregroundColor(.cyan)
                                     .onChange(of: state.useSuperBolus) { _ in
-                                        state.calculateInsulin()
+                                        state.insulinCalculated = state.calculateInsulin()
                                         if state.useSuperBolus {
                                             state.useFattyMealCorrectionFactor = false
                                         }
@@ -185,13 +185,13 @@ extension Bolus {
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Vänta med att ge bolus")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         } else if state.insulinCalculated <= 0 {
                             Image(systemName: "x.circle.fill")
@@ -199,13 +199,13 @@ extension Bolus {
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Ingen bolus rekommenderas")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         } else {
                             Image(systemName: "checkmark.circle.fill")
@@ -213,13 +213,13 @@ extension Bolus {
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                             Text("Förslag bolusdos")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
-                                    state.calculateInsulin() // Call the calculateInsulin function
+                                    // state.calculateInsulin() // Call the calculateInsulin function
                                 }
                         }
                         Spacer()
@@ -350,7 +350,7 @@ extension Bolus {
             )
             .navigationBarItems(
                 trailing: Button(action: {
-                    state.calculateInsulin() // Call the calculateInsulin function
+                    // state.calculateInsulin() // Call the calculateInsulin function
                     showInfo.toggle()
                 }) {
                     HStack {
@@ -364,7 +364,7 @@ extension Bolus {
                 configureView {
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
-                    state.calculateInsulin()
+                    state.insulinCalculated = state.calculateInsulin()
                 }
                 // Additional code to automatically check the checkbox
                 if fetch {
