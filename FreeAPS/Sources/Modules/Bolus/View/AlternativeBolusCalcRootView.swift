@@ -108,6 +108,8 @@ extension Bolus {
                         HStack {
                             Image(systemName: "timer").foregroundColor(.secondary)
                             Text("Beräknar...").foregroundColor(.secondary)
+                            Spacer()
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
                         }
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
@@ -121,6 +123,12 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.orange)
                         }
                     } else if state.insulinCalculated > state.insulinRecommended {
                         HStack {
@@ -134,6 +142,12 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinRecommended as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.orange)
                         }
                     } else if state.insulinCalculated <= 0 {
                         HStack {
@@ -147,6 +161,12 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.loopRed)
                         }
                     } else {
                         HStack {
@@ -160,40 +180,15 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.green)
                         }
                     }
-                    Spacer()
-
-                    if state.waitForSuggestion {
-                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
-
-                    } else if state.error && state.insulinCalculated > 0 {
-                        Text(
-                            formatter
-                                .string(from: state.insulinCalculated as NSNumber)! +
-                                NSLocalizedString(" U", comment: "Insulin unit")
-                        ).foregroundColor(.orange)
-                    } else if state.insulinCalculated > state.insulinRecommended {
-                        Text(
-                            formatter
-                                .string(from: state.insulinRecommended as NSNumber)! +
-                                NSLocalizedString(" U", comment: "Insulin unit")
-                        ).foregroundColor(.orange)
-                    } else if state.insulinCalculated <= 0 {
-                        Text(
-                            formatter
-                                .string(from: state.insulinCalculated as NSNumber)! +
-                                NSLocalizedString(" U", comment: "Insulin unit")
-                        ).foregroundColor(.loopRed)
-                    } else {
-                        Text(
-                            formatter
-                                .string(from: state.insulinCalculated as NSNumber)! +
-                                NSLocalizedString(" U", comment: "Insulin unit")
-                        ).foregroundColor(.green)
-                    }
                 }
-
                 .contentShape(Rectangle())
                 .onTapGesture {
                     if state.error, state.insulinCalculated > 0 {
@@ -401,60 +396,7 @@ extension Bolus {
                                     mealParts
                                     if fetch { Divider().fontWeight(.bold).padding(2) }
                                 }
-                                Group {
-                                    HStack {
-                                        Text("Variabler")
-                                            .fontWeight(.semibold)
-                                        Spacer()
-                                    }
-                                    .padding(.bottom, 1)
-
-                                    HStack {
-                                        Text("Aktuell ISF:")
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        let isf = state.isf
-                                        Text(isf.formatted())
-                                        Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
-                                            .foregroundColor(.secondary)
-                                    }
-
-                                    HStack {
-                                        Text("Målvärde:")
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        let target = state.units == .mmolL ? state.target.asMmolL : state.target
-                                        Text(
-                                            target
-                                                .formatted(
-                                                    .number.grouping(.never).rounded()
-                                                        .precision(.fractionLength(fractionDigits))
-                                                )
-                                        )
-                                        Text(state.units.rawValue)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    // Basal dont update for some reason. needs to check. not crucial info in the calc view right now
-                                    HStack {
-                                        Text("Aktuell basal:")
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        let basal = state.currentBasal
-                                        Text(basal.formatted())
-                                        Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                                            .foregroundColor(.secondary)
-                                    }
-                                    HStack {
-                                        Text("Aktuell CR (insulinkvot):")
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-
-                                        Text(state.carbRatio.formatted())
-                                        Text(NSLocalizedString("g/E", comment: " grams per Unit"))
-                                            .foregroundColor(.secondary)
-                                    }
-                                    .padding(.bottom, 2)
-                                }
+                                variableParts
 
                                 Divider().fontWeight(.bold).padding(2)
 
@@ -504,7 +446,6 @@ extension Bolus {
                                             Text(NSLocalizedString("E", comment: " grams per Unit"))
                                                 .foregroundColor(.secondary)
                                                 .italic()
-                                            // }
                                         }
                                     }
                                     Divider().fontWeight(.bold).padding(2)
@@ -531,7 +472,6 @@ extension Bolus {
                                         }
                                     }
                                 }
-                                .padding(.top, 2)
                                 guardRailParts
 
                                 Divider().fontWeight(.bold).padding(2)
@@ -636,6 +576,63 @@ extension Bolus {
                 state.backToCarbsView(complexEntry: fetch, id_)
             } else {
                 state.showModal(for: .addCarbs(editMode: false))
+            }
+        }
+
+        var variableParts: some View {
+            VStack {
+                HStack {
+                    Text("Variabler")
+                        .fontWeight(.semibold)
+                    Spacer()
+                }
+                .padding(.bottom, 1)
+
+                HStack {
+                    Text("Aktuell ISF:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let isf = state.isf
+                    Text(isf.formatted())
+                    Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
+                        .foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Text("Målvärde:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let target = state.units == .mmolL ? state.target.asMmolL : state.target
+                    Text(
+                        target
+                            .formatted(
+                                .number.grouping(.never).rounded()
+                                    .precision(.fractionLength(fractionDigits))
+                            )
+                    )
+                    Text(state.units.rawValue)
+                        .foregroundColor(.secondary)
+                }
+                // Basal dont update for some reason. needs to check. not crucial info in the calc view right now
+                HStack {
+                    Text("Aktuell basal:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let basal = state.currentBasal
+                    Text(basal.formatted())
+                    Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("Aktuell CR (insulinkvot):")
+                        .foregroundColor(.secondary)
+                    Spacer()
+
+                    Text(state.carbRatio.formatted())
+                    Text(NSLocalizedString("g/E", comment: " grams per Unit"))
+                        .foregroundColor(.secondary)
+                }
+                .padding(.bottom, 2)
             }
         }
 
