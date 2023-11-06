@@ -409,46 +409,49 @@ extension Bolus {
                             VStack(spacing: 2) {
                                 if fetch {
                                     VStack {
-                                        HStack {
-                                            Text("Aktuell måltid")
-                                                .fontWeight(.semibold)
-                                            Spacer()
-                                        }
-                                        if let carbs = meal.first?.carbs, carbs > 0 {
+                                        Group {
                                             HStack {
-                                                Text("Carbs")
-                                                    .foregroundColor(.secondary)
+                                                Text("Aktuell måltid")
+                                                    .fontWeight(.semibold)
                                                 Spacer()
-                                                Text(mealFormatter.string(from: carbs as NSNumber) ?? "")
-                                                Text("g").foregroundColor(.secondary)
                                             }
-                                        }
-                                        if let protein = meal.first?.protein, protein > 0 {
-                                            HStack {
-                                                Text("Protein")
-                                                    .foregroundColor(.brown)
-                                                Spacer()
-                                                Text(mealFormatter.string(from: protein as NSNumber) ?? "")
-                                                    .foregroundColor(.brown)
-                                                Text("g").foregroundColor(.brown)
+                                            if let carbs = meal.first?.carbs, carbs > 0 {
+                                                HStack {
+                                                    Text("Carbs")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text(mealFormatter.string(from: carbs as NSNumber) ?? "")
+                                                    Text("g").foregroundColor(.secondary)
+                                                }
                                             }
-                                        }
-                                        if let fat = meal.first?.fat, fat > 0 {
-                                            HStack {
-                                                Text("Fat")
-                                                    .foregroundColor(.brown)
-                                                Spacer()
-                                                Text(mealFormatter.string(from: fat as NSNumber) ?? "").foregroundColor(.brown)
-                                                Text("g").foregroundColor(.brown)
+                                            if let protein = meal.first?.protein, protein > 0 {
+                                                HStack {
+                                                    Text("Protein")
+                                                        .foregroundColor(.brown)
+                                                    Spacer()
+                                                    Text(mealFormatter.string(from: protein as NSNumber) ?? "")
+                                                        .foregroundColor(.brown)
+                                                    Text("g").foregroundColor(.brown)
+                                                }
                                             }
-                                        }
-                                        if let note = meal.first?.note, note != "" {
-                                            HStack {
-                                                Text("Note")
-                                                    .foregroundColor(.secondary)
-                                                Spacer()
-                                                Text(note)
-                                                    .font(.caption)
+                                            if let fat = meal.first?.fat, fat > 0 {
+                                                HStack {
+                                                    Text("Fat")
+                                                        .foregroundColor(.brown)
+                                                    Spacer()
+                                                    Text(mealFormatter.string(from: fat as NSNumber) ?? "")
+                                                        .foregroundColor(.brown)
+                                                    Text("g").foregroundColor(.brown)
+                                                }
+                                            }
+                                            if let note = meal.first?.note, note != "" {
+                                                HStack {
+                                                    Text("Note")
+                                                        .foregroundColor(.secondary)
+                                                    Spacer()
+                                                    Text(note)
+                                                        .font(.caption)
+                                                }
                                             }
                                         }
                                     }
