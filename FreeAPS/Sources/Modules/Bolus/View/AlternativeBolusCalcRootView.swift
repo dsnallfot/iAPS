@@ -332,13 +332,13 @@ extension Bolus {
                     Group {
                         if fetch {
                             Image(systemName: "chevron.left").fontWeight(.semibold)
-                        }
+                        } else { Image(systemName: "plus.circle.fill") }
                         Text(fetch ? "Tillbaka" : "Måltid")
                     }
                 },
 
-                trailing: Button { state.hideModal() }
-                label: { Text("Cancel") }
+                trailing: Button { showInfo.toggle() }
+                label: { Image(systemName: "info.circle.fill") }
             )
             .onAppear {
                 configureView {
@@ -838,13 +838,7 @@ extension Bolus {
                                     Text(fraction.formatted())
                                     Text("%  x ")
                                         .foregroundColor(.secondary)
-
-                                    /* let fraction = state.fraction * 100
-                                     Text(fraction.formatted())
-                                     Text("%  x ")
-                                     .foregroundColor(.secondary) */
-
-                                    // if fatty meal is chosen
+                                    
                                     if state.useFattyMealCorrectionFactor {
                                         let fattyMealFactor = state.fattyMealFactor * 100
                                         Text(fattyMealFactor.formatted())
@@ -930,12 +924,20 @@ extension Bolus {
                             let formattedMaxAmountBolus = String(maxamountbolus)
                             if state.insulinCalculated == state.maxBolus {
                                 Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
-                                    // .font(.system(size: 12))
                                     .foregroundColor(.purple).italic()
                                     .padding(.top, 2)
                             }
                             Divider().fontWeight(.bold).padding(2) // Warning
                             if state.error, state.insulinCalculated > 0 {
+                                VStack {
+                                    Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
+                                        .padding(.bottom, 2)
+                                    Text(alertString())
+                                        .foregroundColor(.secondary)
+                                        .italic()
+                                    Divider().fontWeight(.bold).padding(2)
+                                }
+                            } else if state.insulinCalculated > state.insulinRecommended {
                                 VStack {
                                     Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
                                         .padding(.bottom, 2)
@@ -950,20 +952,6 @@ extension Bolus {
                         .padding(.bottom, 15)
                         .padding(.leading, 15)
                         .padding(.trailing, 15)
-
-                        // Hide sheet
-                        /* VStack {
-                         Button { showInfo = false }
-                         label: {
-                         Text("OK")
-                         }
-                         .frame(maxWidth: .infinity, alignment: .center)
-                         .font(.system(size: 20))
-                         .fontWeight(.semibold)
-                         .foregroundColor(.blue)
-                         }
-                         .padding(.top, 15)
-                         .padding(.bottom, 15)*/
                     }
 
                     .font(.footnote)
@@ -976,7 +964,7 @@ extension Bolus {
                         Button(action: {
                             showInfo.toggle()
                         }) {
-                            Image(systemName: "chevron.left")
+                            Image(systemName: "chevron.left").fontWeight(.semibold)
                             Text("Tillbaka")
                         }
                     }
