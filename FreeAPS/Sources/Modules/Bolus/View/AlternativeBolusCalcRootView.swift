@@ -679,6 +679,27 @@ extension Bolus {
                     }
                 }
 
+                /* HStack {
+                     if state.minGuardBG >= 0 {
+                         Text("(Oref) Lägsta förväntade BG:")
+                             .foregroundColor(.secondary)
+                             .italic()
+                         Spacer()
+                         let minGuardBG = state.minGuardBG  * 0.0555
+                         Text(
+                             minGuardBG
+                                 .formatted(
+                                     .number.grouping(.never).rounded()
+                                         .precision(.fractionLength(fractionDigits))
+                                 )
+                         )
+                         .italic()
+                         Text("mmol/L")
+                             .foregroundColor(.secondary)
+                             .italic()
+                     }
+                 } */
+
                 HStack {
                     if state.insulinCalculated > roundedOrefInsulin {
                         Text("(Oref) Insulinbehov:")
@@ -978,7 +999,7 @@ extension Bolus {
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
                             .font(.system(size: 16))
-                    } else if state.insulinCalculated >= roundedOrefInsulin {
+                    } else if state.insulinCalculated > roundedOrefInsulin {
                         Text("Vänta med bolus:")
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
@@ -1144,7 +1165,7 @@ extension Bolus {
                 let maxamountbolus = Double(state.maxBolus)
                 let formattedMaxAmountBolus = String(maxamountbolus)
                 let orefamountbolus = Double(roundedOrefInsulin)
-                let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus)
+                let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus).replacingOccurrences(of: ".", with: ",")
 
                 VStack {
                     if state.insulinCalculated > roundedOrefInsulin {
