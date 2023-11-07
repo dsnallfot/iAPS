@@ -705,7 +705,7 @@ extension Bolus {
         var guardRailParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    if state.insulinCalculated >= state.maxBolus && state.maxBolus == state.insulinRecommended {
+                    if state.insulinCalculated >= state.maxBolus && state.maxBolus <= state.insulinRecommended {
                         Text("Inställd maxbolus:")
                             .foregroundColor(.purple)
                         Spacer()
@@ -973,11 +973,11 @@ extension Bolus {
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
                             .font(.system(size: 16))
-                    } else if state.insulinCalculated >= state.insulinRecommended {
-                        Text("Vänta med bolus:")
-                            .fontWeight(.bold)
-                            .foregroundColor(.orange)
-                            .font(.system(size: 16))
+                        /* } else if state.insulinCalculated >= state.insulinRecommended {
+                         Text("Vänta med bolus:")
+                             .fontWeight(.bold)
+                             .foregroundColor(.orange)
+                             .font(.system(size: 16)) */
                     } else {
                         Text("Förslag bolusdos:")
                             .fontWeight(.bold)
@@ -1150,7 +1150,7 @@ extension Bolus {
                             .foregroundColor(.insulin).italic()
                             .padding(.top, 1)
                             .padding(.bottom, 2)
-                    } else if state.insulinCalculated >= state.maxBolus {
+                    } else if state.insulinRecommended >= state.maxBolus {
                         Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
                             .foregroundColor(.purple).italic()
                             .padding(.top, 1)
