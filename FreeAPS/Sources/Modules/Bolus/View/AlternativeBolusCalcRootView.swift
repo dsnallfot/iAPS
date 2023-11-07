@@ -16,26 +16,26 @@ extension Bolus {
         @State private var displayError = false
         @State private var presentInfo = false
         @Environment(\.colorScheme) var colorScheme
-
+        
         @FetchRequest(
             entity: Meals.entity(),
             sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]
         ) var meal: FetchedResults<Meals>
-
+        
         private var formatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 2
             return formatter
         }
-
+        
         private var mealFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 1
             return formatter
         }
-
+        
         private var glucoseFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -44,13 +44,13 @@ extension Bolus {
             } else { formatter.maximumFractionDigits = 0 }
             return formatter
         }
-
+        
         private var fractionDigits: Int {
             if state.units == .mmolL {
                 return 1
             } else { return 0 }
         }
-
+        
         var body: some View {
             Form {
                 if fetch {
@@ -76,7 +76,7 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
-
+                    
                     if !state.waitForSuggestion {
                         HStack {
                             Text("Bolus Amount").fontWeight(.semibold)
@@ -103,33 +103,33 @@ extension Bolus {
                         }
                     }
                 } header: { Text("Bolus") }
-
+                
                 if state.amount > 0 {
                     Section {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
-
+                        
                         Button {
                             keepForNextWiew = true
                             state.add()
                         }
-                        label: {
-                            HStack {
-                                if exceededMaxBolus {
-                                    Image(systemName: "x.circle.fill")
-                                        .foregroundColor(.loopRed)
-                                }
-                                Text(
-                                    exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
-                                        "Ge bolusdos"
-                                )
-                                .font(.title3.weight(.semibold))
+                    label: {
+                        HStack {
+                            if exceededMaxBolus {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.loopRed)
                             }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .disabled(
-                                state.amount <= 0 || state.amount > state.maxBolus
+                            Text(
+                                exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
+                                    "Ge bolusdos"
                             )
+                            .font(.title3.weight(.semibold))
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .disabled(
+                            state.amount <= 0 || state.amount > state.maxBolus
+                        )
+                    }
                     }
                 }
                 if state.amount <= 0 {
@@ -148,28 +148,28 @@ extension Bolus {
                         Section {
                             let maxamountbolus = Double(state.maxBolus)
                             let formattedMaxAmountBolus = String(maxamountbolus)
-
+                            
                             Button {
                                 keepForNextWiew = true
                                 state.add()
                             }
-                            label: {
-                                HStack {
-                                    if exceededMaxBolus {
-                                        Image(systemName: "x.circle.fill")
-                                            .foregroundColor(.loopRed)
-                                    }
-                                    Text(
-                                        exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
-                                            "Ge bolusdos"
-                                    )
-                                    .font(.title3.weight(.semibold))
+                        label: {
+                            HStack {
+                                if exceededMaxBolus {
+                                    Image(systemName: "x.circle.fill")
+                                        .foregroundColor(.loopRed)
                                 }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .disabled(
-                                    state.amount <= 0 || state.amount > state.maxBolus
+                                Text(
+                                    exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
+                                        "Ge bolusdos"
                                 )
+                                .font(.title3.weight(.semibold))
                             }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .disabled(
+                                state.amount <= 0 || state.amount > state.maxBolus
+                            )
+                        }
                         }
                         if state.amount <= 0 {
                             Section {
@@ -177,7 +177,7 @@ extension Bolus {
                                     keepForNextWiew = true
                                     state.showModal(for: nil)
                                 }
-                                label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
+                            label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
                             }
                         }
                     }
@@ -202,7 +202,7 @@ extension Bolus {
                     secondaryButton: .cancel()
                 )
             }
-
+            
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
@@ -216,7 +216,7 @@ extension Bolus {
                         Text(fetch ? "Tillbaka" : "Måltid")
                     }
                 },
-
+                
                 trailing: Button { showInfo.toggle() }
                 label: { Image(systemName: "info.circle.fill") }
             )
@@ -233,10 +233,10 @@ extension Bolus {
                        let protein = meal.first?.protein
                     {
                         let fatPercentage = (fat + protein) / (carbs + fat + protein)
-
+                        
                         // Convert state.fattyMealTrigger to a Double
                         let fattyMealTriggerDouble = NSDecimalNumber(decimal: state.fattyMealTrigger).doubleValue
-
+                        
                         if fatPercentage > fattyMealTriggerDouble {
                             state.useFattyMealCorrectionFactor = true
                         }
@@ -255,7 +255,7 @@ extension Bolus {
                 bolusInfoAlternativeCalculator
             }
         }
-
+        
         // calculation showed in sheet
         var bolusInfoAlternativeCalculator: some View {
             NavigationView {
@@ -274,22 +274,25 @@ extension Bolus {
                                             Divider().fontWeight(.bold) // .padding(1)
                                         }
                                     }
-
-                                    variableParts
-
-                                    Divider().fontWeight(.bold) // .padding(1)
-
-                                    guardRailParts
-
-                                    Divider().fontWeight(.bold) // .padding(1)
-
-                                    orefParts
-
-                                    Divider().fontWeight(.bold) // .padding(1)
-
-                                    calculationParts
-
-                                    Divider().fontWeight(.bold) // .padding(1)
+                                    
+                                    VStack{
+                                        variableParts
+                                        
+                                        Divider().fontWeight(.bold) // .padding(1)
+                                        
+                                        guardRailParts
+                                        
+                                        Divider().fontWeight(.bold) // .padding(1)
+                                    }
+                                    VStack{
+                                        orefParts
+                                        
+                                        Divider().fontWeight(.bold) // .padding(1)
+                                        
+                                        calculationParts
+                                        
+                                        Divider().fontWeight(.bold) // .padding(1)
+                                    }
                                     VStack {
                                         HStack {
                                             Text("Summa beräknat bolusbehov:")
@@ -306,10 +309,11 @@ extension Bolus {
                                         .padding(.bottom, 1)
                                     }
                                     Divider().fontWeight(.bold) // .padding(1)
-
-                                    resultsPart
-
-                                    warningParts
+                                    VStack{
+                                        resultsPart
+                                        
+                                        warningParts
+                                    }
                                 }
                             }
                             .padding(.top, 10)
@@ -317,34 +321,34 @@ extension Bolus {
                             .padding(.leading, 15)
                             .padding(.trailing, 15)
                         }
-
+                        
                         .font(.footnote)
                     }
                     .navigationTitle("Boluskalkylator")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(
                         leading:
-                        HStack {
-                            Button(action: {
-                                showInfo.toggle()
-                            }) {
-                                Image(systemName: "chevron.left").fontWeight(.semibold)
-                                Text("Tillbaka")
+                            HStack {
+                                Button(action: {
+                                    showInfo.toggle()
+                                }) {
+                                    Image(systemName: "chevron.left").fontWeight(.semibold)
+                                    Text("Tillbaka")
+                                }
                             }
-                        }
                     )
                 }
             }
         }
-
+        
         var changed: Bool {
             ((meal.first?.carbs ?? 0) > 0) || ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
-
+        
         var hasFatOrProtein: Bool {
             ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
-
+        
         func carbssView() {
             let id_ = meal.first?.id ?? ""
             if fetch {
@@ -354,7 +358,7 @@ extension Bolus {
                 state.showModal(for: .addCarbs(editMode: false))
             }
         }
-
+        
         var mealEntries: some View {
             VStack {
                 VStack {
@@ -375,7 +379,7 @@ extension Bolus {
                             Text(fat.formatted())
                             Text("g")
                         }
-
+                        
                         .foregroundColor(.brown)
                         .padding(.bottom, 0.1)
                     }
@@ -407,7 +411,7 @@ extension Bolus {
                 state.backToCarbsView(complexEntry: fetch, id_)
             }
         }
-
+        
         var checkboxParts: some View {
             VStack {
                 HStack {
@@ -420,7 +424,7 @@ extension Bolus {
                         Text("Hög FP%")
                             .foregroundColor(.brown)
                             .font(.footnote)
-
+                        
                         Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                             .toggleStyle(CheckboxToggleStyle())
                             .font(.footnote)
@@ -436,7 +440,7 @@ extension Bolus {
                         Text(" Superbolus")
                             .foregroundColor(.cyan)
                             .font(.footnote)
-
+                        
                         Toggle(isOn: $state.useSuperBolus) {}
                             .toggleStyle(CheckboxToggleStyle())
                             .font(.footnote)
@@ -451,7 +455,7 @@ extension Bolus {
                 }
             }
         }
-
+        
         var bolusSuggestion: some View {
             VStack {
                 HStack {
@@ -478,10 +482,10 @@ extension Bolus {
                             Text(
                                 formatter
                                     .string(from: state.insulinRecommended as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
+                                NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.orange)
                         }
-
+                        
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -498,7 +502,7 @@ extension Bolus {
                             Text(
                                 formatter
                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
+                                NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.orange)
                         }
                     } else if state.insulinCalculated <= 0 {
@@ -517,7 +521,7 @@ extension Bolus {
                             Text(
                                 formatter
                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
+                                NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         }
                     } else {
@@ -536,14 +540,14 @@ extension Bolus {
                             Text(
                                 formatter
                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
+                                NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.green)
                         }
                     }
                 }
             }
         }
-
+        
         var mealParts: some View {
             VStack {
                 HStack {
@@ -591,7 +595,7 @@ extension Bolus {
                 }
             }
         }
-
+        
         var variableParts: some View {
             VStack(spacing: 2) {
                 HStack {
@@ -599,7 +603,7 @@ extension Bolus {
                         .fontWeight(.semibold)
                     Spacer()
                 }
-
+                
                 HStack {
                     Text("Aktuell ISF:")
                         .foregroundColor(.secondary)
@@ -609,7 +613,7 @@ extension Bolus {
                     Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
                         .foregroundColor(.secondary)
                 }
-
+                
                 HStack {
                     Text("Målvärde:")
                         .foregroundColor(.secondary)
@@ -619,7 +623,7 @@ extension Bolus {
                         target
                             .formatted(
                                 .number.grouping(.never).rounded()
-                                    .precision(.fractionLength(fractionDigits))
+                                .precision(.fractionLength(fractionDigits))
                             )
                     )
                     Text(state.units.rawValue)
@@ -639,14 +643,14 @@ extension Bolus {
                     Text("Aktuell CR (insulinkvot):")
                         .foregroundColor(.secondary)
                     Spacer()
-
+                    
                     Text(state.carbRatio.formatted())
                     Text(NSLocalizedString("g/E", comment: " grams per Unit"))
                         .foregroundColor(.secondary)
                 }
             }
         }
-
+        
         var orefParts: some View {
             VStack(spacing: 2) {
                 HStack {
@@ -660,7 +664,7 @@ extension Bolus {
                             eventualBG
                                 .formatted(
                                     .number.grouping(.never).rounded()
-                                        .precision(.fractionLength(fractionDigits))
+                                    .precision(.fractionLength(fractionDigits))
                                 )
                         )
                         .italic()
@@ -669,7 +673,7 @@ extension Bolus {
                             .italic()
                     }
                 }
-
+                
                 HStack {
                     if state.insulinCalculated > state.insulinRecommended {
                         Text("(Oref) Insulinrekommendation:")
@@ -679,7 +683,7 @@ extension Bolus {
                         Text(state.insulinRecommended.formatted())
                             .foregroundColor(.insulin)
                             .italic()
-
+                        
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.insulin)
                             .italic()
@@ -690,7 +694,7 @@ extension Bolus {
                         Spacer()
                         Text(state.insulinRecommended.formatted())
                             .italic()
-
+                        
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.secondary)
                             .italic()
@@ -698,7 +702,7 @@ extension Bolus {
                 }
             }
         }
-
+        
         var guardRailParts: some View {
             VStack(spacing: 2) {
                 HStack {
@@ -721,7 +725,7 @@ extension Bolus {
                             .foregroundColor(.secondary)
                     }
                 }
-
+                
                 HStack {
                     Text("Inställda max kolhydrater:")
                         .foregroundColor(.secondary)
@@ -766,7 +770,7 @@ extension Bolus {
                 }
             }
         }
-
+        
         var calculationParts: some View {
             VStack(spacing: 2) {
                 let unit = NSLocalizedString(
@@ -781,23 +785,23 @@ extension Bolus {
                 .foregroundColor(.primary).fontWeight(.semibold)
                 .padding(.top, 2)
                 .padding(.bottom, 2)
-
+                
                 let carbs = meal.first?.carbs
                 let formattedCarbs = Decimal(carbs!)
-
+                
                 if fetch {
                     if let carbs = meal.first?.carbs, carbs > 0 {
                         HStack(alignment: .center, spacing: nil) {
                             Text("Kh aktuell måltid:")
                                 .foregroundColor(.secondary)
                                 .frame(minWidth: 105, alignment: .leading)
-
+                            
                             Text(formattedCarbs.formatted())
                                 .frame(minWidth: 50, alignment: .trailing)
-
+                            
                             Text("g").foregroundColor(.secondary)
                                 .frame(minWidth: 50, alignment: .leading)
-
+                            
                             Image(systemName: "arrow.right")
                                 .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
@@ -814,15 +818,15 @@ extension Bolus {
                             Text("COB:")
                                 .foregroundColor(.secondary)
                                 .frame(minWidth: 105, alignment: .leading)
-
+                            
                             let cob = state.cob - formattedCarbs
                             Text(cob.formatted())
                                 .frame(minWidth: 50, alignment: .trailing)
-
+                            
                             let unitGrams = NSLocalizedString("g", comment: "grams")
                             Text(unitGrams).foregroundColor(.secondary)
                                 .frame(minWidth: 50, alignment: .leading)
-
+                            
                             Image(systemName: "arrow.right")
                                 .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
@@ -840,15 +844,15 @@ extension Bolus {
                         Text("COB:")
                             .foregroundColor(.secondary)
                             .frame(minWidth: 105, alignment: .leading)
-
+                        
                         let cob = state.cob
                         Text(cob.formatted())
                             .frame(minWidth: 50, alignment: .trailing)
-
+                        
                         let unitGrams = NSLocalizedString("g", comment: "grams")
                         Text(unitGrams).foregroundColor(.secondary)
                             .frame(minWidth: 50, alignment: .leading)
-
+                        
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 15, alignment: .trailing)
                         Spacer()
@@ -865,18 +869,18 @@ extension Bolus {
                     Text("IOB:")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 105, alignment: .leading)
-
+                    
                     let iob = state.iob
                     // rounding
                     let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
                     let roundedIob = Decimal(round(100 * iobAsDouble) / 100)
                     Text(roundedIob.formatted())
                         .frame(minWidth: 50, alignment: .trailing)
-
+                    
                     Text(unit)
                         .foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
-
+                    
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
                     Spacer()
@@ -891,54 +895,54 @@ extension Bolus {
                     Text("Blodsocker:")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 105, alignment: .leading)
-
+                    
                     let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
                     Text(
                         glucose
                             .formatted(
                                 .number.grouping(.never).rounded()
-                                    .precision(.fractionLength(fractionDigits))
+                                .precision(.fractionLength(fractionDigits))
                             )
                     )
                     .frame(minWidth: 50, alignment: .trailing)
                     Text(state.units.rawValue)
                         .foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
-
+                    
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
                     Spacer()
                     let targetDifferenceInsulin = state.targetDifferenceInsulin
                     // rounding
                     let targetDifferenceInsulinAsDouble =
-                        NSDecimalNumber(decimal: targetDifferenceInsulin)
-                            .doubleValue
+                    NSDecimalNumber(decimal: targetDifferenceInsulin)
+                        .doubleValue
                     let roundedTargetDifferenceInsulin =
-                        Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
-
+                    Decimal(round(100 * targetDifferenceInsulinAsDouble) / 100)
+                    
                     Text(roundedTargetDifferenceInsulin.formatted())
-
+                    
                     Text(unit)
-
+                    
                         .foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
                     Text("15 min trend:")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 105, alignment: .leading)
-
+                    
                     let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
                     Text(
                         trend
                             .formatted(
                                 .number.grouping(.never).rounded()
-                                    .precision(.fractionLength(fractionDigits))
+                                .precision(.fractionLength(fractionDigits))
                             )
                     )
                     .frame(minWidth: 50, alignment: .trailing)
                     Text(state.units.rawValue).foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
-
+                    
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
                     Spacer()
@@ -952,7 +956,7 @@ extension Bolus {
                 }
             }
         }
-
+        
         var resultsPart: some View {
             VStack {
                 let unit = NSLocalizedString(
@@ -981,9 +985,9 @@ extension Bolus {
                             .foregroundColor(.green)
                             .font(.system(size: 16))
                     }
-
+                    
                     Spacer()
-
+                    
                     if !state.useSuperBolus {
                         let fraction = state.fraction * 100
                         HStack {
@@ -991,7 +995,7 @@ extension Bolus {
                             Text("%  x ")
                                 .foregroundColor(.secondary)
                         }
-
+                        
                         if state.useFattyMealCorrectionFactor {
                             let fattyMealFactor = state.fattyMealFactor * 100
                             HStack {
@@ -1141,18 +1145,18 @@ extension Bolus {
                 }
                 showInfo.toggle()
             }
-
+            
             .padding(.top, 2)
             .padding(.bottom, 2)
         }
-
+        
         var warningParts: some View {
             VStack {
                 let maxamountbolus = Double(state.maxBolus)
                 let formattedMaxAmountBolus = String(maxamountbolus)
                 let orefamountbolus = Double(state.insulinRecommended)
                 let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus)
-
+                
                 VStack {
                     if state.insulinCalculated == state.maxBolus {
                         Text("Obs! Förslaget begränsas av inställd maxbolus: \(formattedMaxAmountBolus) E")
@@ -1192,22 +1196,22 @@ extension Bolus {
                 }
             }
         }
-
+        
         private func alertString() -> String {
             switch state.errorString {
             case 1,
-                 2:
+                2:
                 return NSLocalizedString(
                     "Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to ",
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) + state.minGuardBG
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
-                    state.units
+                state.units
                     .rawValue + ", " +
-                    NSLocalizedString(
-                        "which is below your Threshold (",
-                        comment: "Bolus pop-up / Alert string. Make translations concise!"
-                    ) + state
+                NSLocalizedString(
+                    "which is below your Threshold (",
+                    comment: "Bolus pop-up / Alert string. Make translations concise!"
+                ) + state
                     .threshold
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + ")"
             case 3:
@@ -1215,30 +1219,30 @@ extension Bolus {
                     "Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: ",
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) +
-                    state.expectedDelta
+                state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Climbing: ", comment: "Bolus pop-up / Alert string. Make translatons concise!") +
-                    state
+                NSLocalizedString(". Climbing: ", comment: "Bolus pop-up / Alert string. Make translatons concise!") +
+                state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 4:
                 return NSLocalizedString(
                     "Eventual Glucose > Target Glucose, but glucose is falling faster than expected. Expected: ",
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) +
-                    state.expectedDelta
+                state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Falling: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
-                    state
+                NSLocalizedString(". Falling: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
+                state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 5:
                 return NSLocalizedString(
                     "Eventual Glucose > Target Glucose, but glucose is changing faster than expected. Expected: ",
                     comment: "Bolus pop-up / Alert string. Make translations concise!"
                 ) +
-                    state.expectedDelta
+                state.expectedDelta
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                    NSLocalizedString(". Changing: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
-                    state
+                NSLocalizedString(". Changing: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
+                state
                     .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 6:
                 return NSLocalizedString(
@@ -1247,12 +1251,12 @@ extension Bolus {
                 ) + state
                     .minPredBG
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
-                    state
+                state
                     .units
                     .rawValue
             default:
                 return "Boluskalkylatorns förslag har justerats till en säkrare dos baserat på aktuell blodsockerprognos och blodsockerkurvans utveckling."
-
+                
                 /* private func alertString() -> String {
                  switch state.errorString {
                  case 1,
@@ -1312,7 +1316,7 @@ extension Bolus {
                  .rawValue
                  default:
                  return "Ignore Warning..."*/
-
+                
                 /* private func alertString() -> String {
                  switch state.errorString {
                  case 1,
