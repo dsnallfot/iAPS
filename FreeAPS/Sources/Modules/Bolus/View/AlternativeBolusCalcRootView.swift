@@ -357,42 +357,47 @@ extension Bolus {
 
         var mealEntries: some View {
             VStack {
-                if let carbs = meal.first?.carbs, carbs > 0 {
-                    HStack {
-                        Text("Carbs")
-                        Spacer()
-                        Text(carbs.formatted())
-                        Text("g")
+                VStack {
+                    if let carbs = meal.first?.carbs, carbs > 0 {
+                        HStack {
+                            Text("Carbs")
+                            Spacer()
+                            Text(carbs.formatted())
+                            Text("g")
+                        }
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 0.1)
                     }
-                    .foregroundColor(.primary)
-                    .padding(.bottom, 0.1)
-                }
-                if let fat = meal.first?.fat, fat > 0 {
-                    HStack {
-                        Text("Fat")
-                        Spacer()
-                        Text(fat.formatted())
-                        Text("g")
+                    if let fat = meal.first?.fat, fat > 0 {
+                        HStack {
+                            Text("Fat")
+                            Spacer()
+                            Text(fat.formatted())
+                            Text("g")
+                        }
+
+                        .foregroundColor(.brown)
+                        .padding(.bottom, 0.1)
                     }
-                    .foregroundColor(.brown)
-                    .padding(.bottom, 0.1)
                 }
-                if let protein = meal.first?.protein, protein > 0 {
-                    HStack {
-                        Text("Protein")
-                        Spacer()
-                        Text(protein.formatted())
-                        Text("g")
+                VStack {
+                    if let protein = meal.first?.protein, protein > 0 {
+                        HStack {
+                            Text("Protein")
+                            Spacer()
+                            Text(protein.formatted())
+                            Text("g")
+                        }
+                        .foregroundColor(.brown)
+                        .padding(.bottom, 0.1)
                     }
-                    .foregroundColor(.brown)
-                    .padding(.bottom, 0.1)
-                }
-                if let note = meal.first?.note, note != "" {
-                    HStack {
-                        Text("Note")
-                        Spacer()
-                        Text(note)
-                        Text("")
+                    if let note = meal.first?.note, note != "" {
+                        HStack {
+                            Text("Note")
+                            Spacer()
+                            Text(note)
+                            Text("")
+                        }
                     }
                 }
             }
