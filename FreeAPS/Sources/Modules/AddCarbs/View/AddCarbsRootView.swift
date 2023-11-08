@@ -130,13 +130,18 @@ extension AddCarbs {
                                             "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
                                     )
                             )
-                            .font(.title3.weight(.semibold))
+                            .fontWeight(.semibold)
                         }
                     }
                     .disabled(
                         state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs || state
                             .fat > state.maxCarbs || state.protein > state.maxCarbs
                     )
+                    .listRowBackground(
+                        state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs || state
+                            .fat > state.maxCarbs || state.protein > state.maxCarbs ? Color(.systemGray4) : Color(.systemBlue)
+                    )
+                    .tint(.white)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
                 footer: { Text(state.waitersNotepad().description) }

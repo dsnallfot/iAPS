@@ -114,7 +114,6 @@ extension Bolus {
                     Section {
                         let maxamountbolus = Double(state.maxBolus)
                         let formattedMaxAmountBolus = String(maxamountbolus)
-
                         Button {
                             keepForNextWiew = true
                             state.add()
@@ -125,17 +124,17 @@ extension Bolus {
                                     Image(systemName: "x.circle.fill")
                                         .foregroundColor(.loopRed)
                                 }
-                                Text(
-                                    exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
-                                        "Ge bolusdos"
-                                )
-                                .font(.title3.weight(.semibold))
+                                Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
+                                    .fontWeight(.semibold)
                             }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .disabled(
-                                state.amount <= 0 || state.amount > state.maxBolus
-                            )
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .disabled(state.amount <= 0 || state.amount > state.maxBolus)
+                        .listRowBackground(
+                            state.amount <= 0 || state.amount > state
+                                .maxBolus ? Color(.systemGray4) : Color(.systemBlue)
+                        )
+                        .tint(.white)
                     }
                 }
                 if state.amount <= 0 {
@@ -143,49 +142,8 @@ extension Bolus {
                         Button {
                             keepForNextWiew = true
                             state.showModal(for: nil)
-                        } label: {
-                            Text("Continue without bolus")
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .font(.title3)
-                        // .foregroundColor(state.amount > 0 ? .secondary : .accentColor)
-                    }
-                    if state.amount > 0 {
-                        Section {
-                            let maxamountbolus = Double(state.maxBolus)
-                            let formattedMaxAmountBolus = String(maxamountbolus)
-
-                            Button {
-                                keepForNextWiew = true
-                                state.add()
-                            }
-                            label: {
-                                HStack {
-                                    if exceededMaxBolus {
-                                        Image(systemName: "x.circle.fill")
-                                            .foregroundColor(.loopRed)
-                                    }
-                                    Text(
-                                        exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " :
-                                            "Ge bolusdos"
-                                    )
-                                    .font(.title3.weight(.semibold))
-                                }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .disabled(
-                                    state.amount <= 0 || state.amount > state.maxBolus
-                                )
-                            }
-                        }
-                        if state.amount <= 0 {
-                            Section {
-                                Button {
-                                    keepForNextWiew = true
-                                    state.showModal(for: nil)
-                                }
-                                label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
-                            }
-                        }
+                        label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
             }

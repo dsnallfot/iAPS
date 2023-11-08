@@ -67,18 +67,23 @@ extension OverrideProfilesConfig {
                     Button(action: {
                         state.cancelProfile()
                         dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.uturn.backward")
-                            Text("Återgå till normal profil")
-                                .font(.title3)
-                                .fontWeight(.semibold)
+                    })
+                        {
+                            HStack {
+                                Image(systemName: "arrow.uturn.backward")
+                                Text("Återgå till normal profil")
+                                    // .font(.title3)
+                                    .fontWeight(.semibold)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         .buttonStyle(BorderlessButtonStyle())
                         .disabled(!state.isEnabled)
-                        .tint(state.isEnabled ? .loopRed : Color(.systemGray2))
-                    }
+                        // .tint(state.isEnabled ? .loopRed : Color(.systemGray2))
+                        .listRowBackground(
+                            !state.isEnabled ? Color(.systemGray4) : Color(.loopRed)
+                        )
+                        .tint(.white)
 
                     Section {
                         ForEach(fetchedProfiles) { preset in

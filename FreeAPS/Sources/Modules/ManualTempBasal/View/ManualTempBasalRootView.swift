@@ -19,14 +19,17 @@ extension ManualTempBasal {
                     Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                             Text("Avbryt temp basal")
-                                .font(.title3)
+                                // .font(.title3)
                                 .fontWeight(.semibold)
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .buttonStyle(BorderlessButtonStyle())
+                    .listRowBackground(Color(.loopRed))
+                    .tint(.white)
                 }
 
                 Section {

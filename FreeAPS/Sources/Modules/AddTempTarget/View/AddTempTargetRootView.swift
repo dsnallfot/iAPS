@@ -29,15 +29,19 @@ extension AddTempTarget {
                     Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                             Text("Avbryt tillfälligt mål")
-                                .font(.title3)
+                                // .font(.title3)
                                 .fontWeight(.semibold)
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .disabled(state.tempTarget == nil)
+                    .listRowBackground(
+                        state.tempTarget == nil ? Color(.systemGray4) : Color(.loopRed)
+                    )
+                    .tint(.white)
                 }
                 if !state.presets.isEmpty {
                     Section(header: Text("Aktivera favorit")) {
