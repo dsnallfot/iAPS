@@ -10,6 +10,7 @@ extension AddCarbs {
         @State var dish: String = ""
         @State var isPromptPresented = false
         @State var saved = false
+        @State var pushed = false
         @State private var showAlert = false
         @FocusState private var isFocused: Bool
 
@@ -102,10 +103,6 @@ extension AddCarbs {
                     .popover(isPresented: $isPromptPresented) {
                         presetPopover
                     }
-                }
-
-                Section {
-                    DatePicker("Date", selection: $state.date)
                 }
 
                 Section {
@@ -313,6 +310,34 @@ extension AddCarbs {
                         .controlSize(.mini)
                 }
             }.focused($isFocused)
+            // Time
+            HStack {
+                let now = Date.now
+                Text("Tid")
+                Spacer()
+                if !pushed {
+                    Button {
+                        pushed = true
+                    } label: { Text("Nu") }.buttonStyle(.borderless).foregroundColor(.secondary)
+                        .padding(.trailing, 5)
+                } else {
+                    Button { state.date = state.date.addingTimeInterval(-10.minutes.timeInterval) }
+                    label: { Image(systemName: "minus.circle") }.tint(.blue).buttonStyle(.borderless)
+                    DatePicker(
+                        "Tid",
+                        selection: $state.date,
+                        in: ...now,
+                        displayedComponents: [.hourAndMinute]
+                    ).controlSize(.mini)
+                        .labelsHidden()
+                    Button {
+                        if state.date.addingTimeInterval(5.minutes.timeInterval) < now {
+                            state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
+                        }
+                    }
+                    label: { Image(systemName: "plus.circle") }.tint(.blue).buttonStyle(.borderless)
+                }
+            }
         }
     }
 }
