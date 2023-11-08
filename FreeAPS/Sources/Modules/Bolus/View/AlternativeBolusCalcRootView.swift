@@ -197,6 +197,13 @@ extension Bolus {
                         Text("Add"),
                         action: {
                             if state.insulinCalculated > roundedOrefInsulin {
+                                if roundedOrefInsulin <= 0 {
+                                    state.amount = 0
+                                    displayError = false
+                                } else {
+                                    state.amount = roundedOrefInsulin
+                                    displayError = false
+                                }
                                 state.amount = roundedOrefInsulin
                                 displayError = false
                             } else {
@@ -701,7 +708,7 @@ extension Bolus {
                  } */
 
                 HStack {
-                    if state.insulinCalculated > roundedOrefInsulin {
+                    if state.insulinCalculated > roundedOrefInsulin && state.insulinCalculated > 0 && roundedOrefInsulin > 0 {
                         Text("(Oref) Insulinbehov:")
                             .foregroundColor(.insulin)
                             .italic()
@@ -1070,6 +1077,19 @@ extension Bolus {
                                     .foregroundColor(.purple)
                                     .font(.system(size: 16))
                             }
+                        } else if roundedOrefInsulin <= 0 {
+                            HStack {
+                                Text(" ≠ ")
+                                    .foregroundColor(.secondary)
+                                Text("0")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.loopRed)
+                                Text(unit)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.loopRed)
+                                    .font(.system(size: 16))
+                            }
                         } else {
                             HStack {
                                 Text(" ≠ ")
@@ -1106,9 +1126,9 @@ extension Bolus {
                             }
                         } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
                             HStack {
-                                Text(" = ")
+                                Text(" ≠ ")
                                     .foregroundColor(.secondary)
-                                Text(roundedResult.formatted())
+                                Text("0")
                                     .fontWeight(.bold)
                                     .font(.system(size: 16))
                                     .foregroundColor(.loopRed)
@@ -1149,7 +1169,11 @@ extension Bolus {
             }
             .onTapGesture {
                 if state.insulinCalculated > roundedOrefInsulin {
-                    state.amount = roundedOrefInsulin
+                    if roundedOrefInsulin <= 0 {
+                        state.amount = 0
+                    } else {
+                        state.amount = roundedOrefInsulin
+                    }
                 } else {
                     state.amount = state.insulinCalculated
                 }
@@ -1168,7 +1192,7 @@ extension Bolus {
                 let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus).replacingOccurrences(of: ".", with: ",")
 
                 VStack {
-                    if state.insulinCalculated > roundedOrefInsulin {
+                    if state.insulinCalculated > roundedOrefInsulin && state.insulinCalculated > 0 && roundedOrefInsulin > 0 {
                         Text("Obs! Förslaget begränsas av (Oref) insulinbehov: \(formattedOrefAmountBolus) E")
                             .foregroundColor(.insulin).italic()
                             .padding(.top, 1)
