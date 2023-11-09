@@ -40,7 +40,7 @@ extension Home {
         private var numberFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 2
+            formatter.maximumFractionDigits = 1
             return formatter
         }
 
@@ -521,7 +521,7 @@ extension Home {
                                      .font(.caption)
                                      .foregroundColor(.white)
                                      .padding(3)
-                                     .background(Capsule().fill(Color.red))
+                                     .background(Capsule().fill(Color.loopRed))
                              }
                          }
                      }.buttonStyle(.plain)
@@ -540,7 +540,7 @@ extension Home {
                                      .font(.caption)
                                      .foregroundColor(.white)
                                      .padding(3)
-                                     .background(Capsule().fill(Color.red))
+                                     .background(Capsule().fill(Color.loopRed))
                              }
                          }
                      }.buttonStyle(.plain)
@@ -587,7 +587,7 @@ extension Home {
 
                    */
                 HStack {
-                    Button { state.showModal(for: .addCarbs) }
+                    Button { state.showModal(for: .addCarbs(editMode: false)) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("carbs")
@@ -596,15 +596,15 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
                                 .padding(.top, 15)
-                                .padding(.bottom, 5)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
                                     .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .padding(2)
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -615,24 +615,29 @@ extension Home {
                             Image("target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 27, height: 27)
+                                .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 15)
-                                .padding(.bottom, 5)
+                                .padding(.top, 12)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.trailing, 6)
                             if state.tempTarget != nil {
                                 Image(systemName: "timer")
                                     .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .padding(2)
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button {
-                        state.showModal(for: .bolus(waitForSuggestion: false))
+                        state.showModal(for: .bolus(
+                            waitForSuggestion: true,
+                            fetch: false
+                        ))
+                        // Daniel: Add determinebasalsync to force update before entering bolusview
+                        state.apsManager.determineBasalSync()
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("bolus")
@@ -641,17 +646,18 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
                                 .padding(.top, 15)
-                                .padding(.bottom, 5)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
-                            if let insulinRequested = state.suggestion?.insulinForManualBolus, insulinRequested > 0.3 {
-                                let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
-                                Text(formattedInsulin)
+                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
+                                // let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
+                                // Text(formattedInsulin)
+                                Image(systemName: "plus.circle")
                                     .font(.caption2)
                                     .foregroundColor(.white)
-                                    .padding(3)
-                                    .background(Capsule().fill(Color.red))
+                                    .padding(2)
+                                    .background(Capsule().fill(Color.loopRed))
                             }
                         }
                     }
@@ -664,7 +670,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .padding(.top, 15)
-                                .padding(.bottom, 5)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
@@ -678,7 +684,7 @@ extension Home {
                             .resizable()
                             .frame(width: 27, height: 27)
                             .padding(.top, 15)
-                            .padding(.bottom, 5)
+                            .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.purple)
@@ -690,7 +696,7 @@ extension Home {
                             .resizable()
                             .frame(width: 27, height: 27)
                             .padding(.top, 15)
-                            .padding(.bottom, 5)
+                            .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.gray)

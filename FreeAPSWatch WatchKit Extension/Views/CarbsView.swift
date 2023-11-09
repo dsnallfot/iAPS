@@ -69,10 +69,10 @@ struct CarbsView: View {
                     .tint(selection == .carbs ? .blue : .none)
             }
             Spacer()
-            Text("Kh").font(selection == .carbs ? .title2 : .headline)
+            Text("Kh").font(selection == .carbs ? .title3 : .headline)
             Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
-                .font(selection == .carbs ? .title2 : .headline)
+                .font(selection == .carbs ? .title3 : .headline)
                 .focusable(selection == .carbs)
                 .digitalCrownRotation(
                     $carbAmount,
@@ -114,11 +114,11 @@ struct CarbsView: View {
                     .tint(selection == .protein ? .blue : .none)
             }
             Spacer()
-            Text("🍗").font(selection == .protein ? .title2 : .headline)
+            Text("🍗").font(selection == .protein ? .title3 : .headline)
             Spacer()
             Text(numberFormatter.string(from: proteinAmount as NSNumber)! + " g")
-                .font(selection == .protein ? .title2 : .headline)
-                .foregroundStyle(.red)
+                .font(selection == .protein ? .title3 : .headline)
+                .foregroundStyle(.brown)
                 .focusable(selection == .protein)
                 .digitalCrownRotation(
                     $proteinAmount,
@@ -157,11 +157,11 @@ struct CarbsView: View {
                     .tint(selection == .fat ? .blue : .none)
             }
             Spacer()
-            Text("🧀").font(selection == .fat ? .title2 : .headline)
+            Text("🧀").font(selection == .fat ? .title3 : .headline)
             Spacer()
             Text(numberFormatter.string(from: fatAmount as NSNumber)! + " g")
-                .font(selection == .fat ? .title2 : .headline)
-                .foregroundColor(.loopYellow)
+                .font(selection == .fat ? .title3 : .headline)
+                .foregroundColor(.brown)
                 .focusable(selection == .fat)
                 .digitalCrownRotation(
                     $fatAmount,

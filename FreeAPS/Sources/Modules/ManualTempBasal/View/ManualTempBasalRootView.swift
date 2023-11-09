@@ -19,11 +19,11 @@ extension ManualTempBasal {
                     Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                                .tint(.red)
+                                .tint(.loopRed)
                             Text("Avbryt temp basal")
                                 .font(.title3)
                                 .fontWeight(.semibold)
-                                .tint(.red)
+                                .tint(.loopRed)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
@@ -57,7 +57,7 @@ extension ManualTempBasal {
                         HStack {
                             if state.rate > state.maxBasal {
                                 Image(systemName: "x.circle.fill")
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.loopRed)
                             }
 
                             Text(

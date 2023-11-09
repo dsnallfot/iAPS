@@ -8,6 +8,7 @@ extension DataTable {
         @Injected() private var storage: FileStorage!
         @Injected() var healthKitManager: HealthKitManager!
         @Injected() var pumpHistoryStorage: PumpHistoryStorage!
+        @Injected() var apsManager: APSManager!
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -42,7 +43,7 @@ extension DataTable {
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }
                     .map {
-                        if let id = $0.id {
+                        if let id = $0.collectionID {
                             return Treatment(
                                 units: units,
                                 type: .carbs,
@@ -64,7 +65,7 @@ extension DataTable {
                             type: .fpus,
                             date: $0.createdAt,
                             amount: $0.carbs,
-                            id: $0.id,
+                            id: $0.collectionID,
                             isFPU: $0.isFPU,
                             fpuID: $0.fpuID,
                             note: $0.note
@@ -145,6 +146,7 @@ extension DataTable {
 
         func deleteCarbs(_ treatment: Treatment) {
             provider.deleteCarbs(treatment)
+            apsManager.determineBasalSync()
         }
 
         func deleteInsulin(_ treatment: Treatment) {
@@ -152,6 +154,7 @@ extension DataTable {
                 .sink { _ in } receiveValue: { [weak self] _ in
                     guard let self = self else { return }
                     self.provider.deleteInsulin(treatment)
+                    apsManager.determineBasalSync()
                 }
                 .store(in: &lifetime)
         }
