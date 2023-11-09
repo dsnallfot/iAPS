@@ -677,7 +677,6 @@ extension Bolus {
                             .italic()
                         Spacer()
                         Text(roundedMinBG.formatted())
-                            .foregroundColor(.secondary)
                             .italic()
                         Text("mmol/L")
                             .foregroundColor(.secondary)
@@ -802,9 +801,9 @@ extension Bolus {
                 if fetch {
                     if let carbs = meal.first?.carbs, carbs > 0 {
                         HStack(alignment: .center, spacing: nil) {
-                            Text("Aktuell måltid (Kh):")
+                            Text("Aktuell måltid Kh:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, alignment: .leading)
+                                .frame(minWidth: 110, alignment: .leading)
 
                             Text(formattedCarbs.formatted())
                                 .frame(minWidth: 50, alignment: .trailing)
@@ -827,7 +826,7 @@ extension Bolus {
                         HStack(alignment: .center, spacing: nil) {
                             Text("COB:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 105, alignment: .leading)
+                                .frame(minWidth: 110, alignment: .leading)
 
                             let cob = state.cob - formattedCarbs
                             Text(cob.formatted())
@@ -853,7 +852,7 @@ extension Bolus {
                     HStack(alignment: .center, spacing: nil) {
                         Text("COB:")
                             .foregroundColor(.secondary)
-                            .frame(minWidth: 105, alignment: .leading)
+                            .frame(minWidth: 110, alignment: .leading)
 
                         let cob = state.cob
                         Text(cob.formatted())
@@ -878,7 +877,7 @@ extension Bolus {
                 HStack(alignment: .center, spacing: nil) {
                     Text("IOB:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 105, alignment: .leading)
+                        .frame(minWidth: 110, alignment: .leading)
 
                     let iob = state.iob
                     // rounding
@@ -904,7 +903,7 @@ extension Bolus {
                 HStack(alignment: .center, spacing: nil) {
                     Text("Blodsocker:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 105, alignment: .leading)
+                        .frame(minWidth: 110, alignment: .leading)
 
                     let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
                     Text(
@@ -939,7 +938,7 @@ extension Bolus {
                 HStack(alignment: .center, spacing: nil) {
                     Text("15 min trend:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 105, alignment: .leading)
+                        .frame(minWidth: 110, alignment: .leading)
 
                     let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
                     Text(
@@ -1267,7 +1266,7 @@ extension Bolus {
                     .units
                     .rawValue
             default:
-                return "Boluskalkylatorns förslag har justerats till en säkrare dos baserat på aktuell blodsockerprognos och blodsockerkurvans utveckling."
+                return "Boluskalkylatorns förslag har justerats till en lägre dos baserat på aktuell blodsockerprognos och blodsockerkurvans trend."
 
                 /* private func alertString() -> String {
                  switch state.errorString {
