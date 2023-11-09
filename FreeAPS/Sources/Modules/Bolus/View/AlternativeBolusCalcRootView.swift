@@ -691,7 +691,7 @@ extension Bolus {
                             .italic()
                         Spacer()
                         Text(roundedOrefInsulin.formatted())
-
+                            .foregroundColor(.insulin)
                             .italic()
 
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
@@ -1170,7 +1170,7 @@ extension Bolus {
 
                 VStack {
                     if state.insulinCalculated > roundedOrefInsulin && state.insulinCalculated > 0 && roundedOrefInsulin > 0 {
-                        Text("Obs! Förslaget begränsas av (Oref) insulinbehov: \(formattedOrefAmountBolus) E")
+                        Text("Obs! Förslaget begränsas av insulinbehov (oref): \(formattedOrefAmountBolus) E")
                             .foregroundColor(.insulin).italic()
                             .padding(.top, 1)
                             .padding(.bottom, 2)
