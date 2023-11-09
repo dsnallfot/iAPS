@@ -50,6 +50,9 @@ struct FreeAPSSettings: JSON, Equatable {
     var fattyMeals: Bool = false
     var fattyMealFactor: Decimal = 0.7
     var fattyMealTrigger: Decimal = 0.5
+    var sweetMeals: Bool = false
+    var sweetMealFactor: Decimal = 2
+    var advancedCalc: Bool = false
 }
 
 extension FreeAPSSettings: Decodable {
@@ -156,8 +159,20 @@ extension FreeAPSSettings: Decodable {
             settings.fattyMealFactor = fattyMealFactor
         }
 
+        if let sweetMeals = try? container.decode(Bool.self, forKey: .sweetMeals) {
+            settings.sweetMeals = sweetMeals
+        }
+
+        if let sweetMealFactor = try? container.decode(Decimal.self, forKey: .sweetMealFactor) {
+            settings.sweetMealFactor = sweetMealFactor
+        }
+
         if let fattyMealTrigger = try? container.decode(Decimal.self, forKey: .fattyMealTrigger) {
             settings.fattyMealTrigger = fattyMealTrigger
+        }
+
+        if let advancedCalc = try? container.decode(Bool.self, forKey: .advancedCalc) {
+            settings.advancedCalc = advancedCalc
         }
 
         if let overrideFactor = try? container.decode(Decimal.self, forKey: .overrideFactor) {

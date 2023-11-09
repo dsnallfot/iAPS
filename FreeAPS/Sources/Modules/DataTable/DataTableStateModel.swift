@@ -146,7 +146,7 @@ extension DataTable {
 
         func deleteCarbs(_ treatment: Treatment) {
             provider.deleteCarbs(treatment)
-            apsManager.determineBasalSync()
+            // apsManager.determineBasalSync()
         }
 
         func deleteInsulin(_ treatment: Treatment) {
@@ -154,7 +154,7 @@ extension DataTable {
                 .sink { _ in } receiveValue: { [weak self] _ in
                     guard let self = self else { return }
                     self.provider.deleteInsulin(treatment)
-                    apsManager.determineBasalSync()
+                    // apsManager.determineBasalSync()
                 }
                 .store(in: &lifetime)
         }

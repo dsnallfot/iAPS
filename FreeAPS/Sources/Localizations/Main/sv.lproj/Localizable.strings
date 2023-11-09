@@ -1081,13 +1081,13 @@ Enact a temp Basal or a temp target */
 
 
 /* Headers for settings ----------------------- */
-"OpenAPS main settings" = "iAPS huvudsakliga inställningar";
+"OpenAPS main settings" = "OpenAPS huvudinställningar";
 
-"OpenAPS SMB settings" = "iAPS SMB-inställningar";
+"OpenAPS SMB settings" = "OpenAPS SMB-inställningar";
 
-"OpenAPS targets settings" = "iAPS målvärdesinställningar";
+"OpenAPS targets settings" = "OpenAPS målvärdesinställningar";
 
-"OpenAPS other settings" = "iAPS andra inställningar";
+"OpenAPS other settings" = "OpenAPS övriga inställningar";
 
 /* Glucose Simulator CGM */
 "Glucose Simulator" = "Glukossimulator";
@@ -1421,25 +1421,25 @@ Enact a temp Basal or a temp target */
 "Hide" = "Göm";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to " = "Blodsockerprognos är över målvärde, men ditt blodsocker väntas först sjunka ner till ";
+"Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to " = "Prognosen visar att blodsockret väntas sjunka ner till ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"which is below your Threshold (" = "vilket är lägre än ditt tröskelvärde (";
+"which is below your Threshold (" = " som lägst, vilket är under ditt tröskelvärde ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: " = "Prognos > Målvärde, men ditt blodsocker stiger långsammare än väntat. Förväntat: ";
+"Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: " = "Prognos > Målvärde, men blodsockret stiger långsammare än väntat. Förväntat: ";
 
 //* Bolus pop-up / Alert string. Make translations concise! */
 ". Climbing: " = ". Stiger: ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"Eventual Glucose > Target Glucose, but glucose is falling faster than expected. Expected: " = "Prognos > målvärde, men blodsocker sjunker snabbare än väntat. Förväntat: ";
+"Eventual Glucose > Target Glucose, but glucose is falling faster than expected. Expected: " = "Prognos > målvärde, men blodsockret sjunker snabbare än väntat. Förväntat: ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
 ". Falling: " = ". Sjunker: ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
-"Eventual Glucose > Target Glucose, but glucose is changing faster than expected. Expected: " = "Prognos > målvärde, men blodsocker ändras snabbare än väntat. Förväntat: ";
+"Eventual Glucose > Target Glucose, but glucose is changing faster than expected. Expected: " = "Prognos > målvärde, men blodsockret förändras snabbare än väntat. Förväntat: ";
 
 /* Bolus pop-up / Alert string. Make translations concise! */
 ". Changing: " = ". Ändras: ";

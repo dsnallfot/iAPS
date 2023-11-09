@@ -47,4 +47,7 @@
   "fattyMeals": false,
   "fattyMealFactor": 0.7
   "fattyMealTrigger": 0.5
+  "sweetMeals": false,
+  "sweetMealFactor": 2,
+  "advancedCalc": false
 }

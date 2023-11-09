@@ -49,6 +49,7 @@ extension Settings {
                     Text("App ikoner").navigationLink(to: .iconConfig, from: self)
                     Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
                     Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
+                    Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
                     Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
                     Toggle("Animated Background", isOn: $state.animatedBackground)
                 } header: { Text("Extra funktioner") }

@@ -119,6 +119,10 @@ extension NightscoutConfig {
                     Button("Backfill glucose") { state.backfillGlucose() }
                         .disabled(state.url.isEmpty || state.connecting || state.backfilling)
                 }
+
+                Section {
+                    Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
+                } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
             .navigationBarTitle("Nightscout Config")

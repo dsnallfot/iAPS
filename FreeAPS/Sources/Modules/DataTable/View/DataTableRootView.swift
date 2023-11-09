@@ -66,6 +66,8 @@ extension DataTable {
                 historyContentView
             }
             .onAppear(perform: configureView)
+            .onDisappear { state.apsManager.determineBasalSync()
+            }
 
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
@@ -129,23 +131,27 @@ extension DataTable {
                         }
 
                         Section {
+                            let limitLow: Decimal = state.units == .mmolL ? 1 : 18
+                            let limitHigh: Decimal = state.units == .mmolL ? 40 : 720
                             HStack {
-                                let limitLow: Decimal = state.units == .mmolL ? 1 : 18
-                                let limitHigh: Decimal = state.units == .mmolL ? 40 : 720
-
                                 Button {
                                     state.addManualGlucose()
                                     isAmountUnconfirmed = false
                                     showManualGlucose = false
                                 }
                                 label: { Text("Logga värde från fingerstick") }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .font(.title3.weight(.semibold))
-                                    .disabled(
-                                        state.manualGlucose < limitLow || state
-                                            .manualGlucose > limitHigh
-                                    )
                             }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fontWeight(.semibold)
+                            .listRowBackground(
+                                state.manualGlucose < limitLow || state
+                                    .manualGlucose > limitHigh ? Color(.systemGray4) : Color(.systemBlue)
+                            )
+                            .tint(.white)
+                            .disabled(
+                                state.manualGlucose < limitLow || state
+                                    .manualGlucose > limitHigh
+                            )
                         }
                     }
                 }
@@ -203,16 +209,21 @@ extension DataTable {
                                         Text(
                                             !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
-                                        ).font(.title3.weight(.semibold))
+                                        )
+                                        .fontWeight(.semibold)
                                     }
-
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .disabled(
-                                        state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
-                                            .maxBolus * 3
-                                    )
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .disabled(
+                                state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
+                                    .maxBolus * 3
+                            )
+                            .listRowBackground(
+                                state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
+                                    .maxBolus * 3 ? Color(.systemGray4) : Color(.systemBlue)
+                            )
+                            .tint(.white)
                         }
                     }
                 }

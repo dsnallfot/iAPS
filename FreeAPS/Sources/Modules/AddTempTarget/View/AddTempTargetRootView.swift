@@ -167,12 +167,6 @@ extension AddTempTarget {
                         }
                     }
                 }
-
-                /* Section {
-                     Button { state.enact() }
-                     label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
-                         .frame(maxWidth: .infinity, alignment: .center)
-                 } */
             }
             .popover(isPresented: $isPromptPresented) {
                 Form {
@@ -242,16 +236,16 @@ extension AddTempTarget {
                  .contentShape(Rectangle())
                  .padding(.vertical)
                  .onTapGesture {
-                     removeAlert = Alert(
-                         title: Text("Are you sure?"),
-                         message: Text("Delete preset \"\(preset.displayName)\""),
-                         primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
-                         secondaryButton: .cancel()
-                     )
-                     isRemoveAlertPresented = true
+                 removeAlert = Alert(
+                 title: Text("Are you sure?"),
+                 message: Text("Delete preset \"\(preset.displayName)\""),
+                 primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
+                 secondaryButton: .cancel()
+                 )
+                 isRemoveAlertPresented = true
                  }
                  .alert(isPresented: $isRemoveAlertPresented) {
-                     removeAlert!
+                 removeAlert!
                  } */
             }
         }

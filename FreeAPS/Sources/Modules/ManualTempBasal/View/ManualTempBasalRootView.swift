@@ -64,12 +64,15 @@ extension ManualTempBasal {
                                 !(state.rate > state.maxBasal) ? "Aktivera temp basal" :
                                     "Inställd maxgräns: \(formattedMaxAmountBasal)E/h"
                             )
-                            .font(.title3.weight(.semibold))
+                            .fontWeight(.semibold)
                         }
-                    }.disabled(
-                        state.rate <= 0 || state.rate > state.maxBasal
-                    )
+                    }
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .disabled(state.rate <= 0 || state.rate > state.maxBasal)
+                    .listRowBackground(
+                        state.rate <= 0 || state.rate > state.maxBasal ? Color(.systemGray4) : Color(.systemBlue)
+                    )
+                    .tint(.white)
                 }
             }
             .onAppear(perform: configureView)
