@@ -26,22 +26,18 @@ extension AddTempTarget {
         var body: some View {
             Form {
                 Section {
-                    Button { state.cancel() }
-                    label: {
+                    Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                            // .tint(.loopRed)
+                                .tint(.loopRed)
                             Text("Avbryt tillfälligt mål")
+                                .font(.title3)
                                 .fontWeight(.semibold)
-                            // .tint(.loopRed)
+                                .tint(.loopRed)
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .disabled(state.tempTarget == nil)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(
-                        state.tempTarget == nil ? Color(.systemGray4) : Color(.loopRed)
-                    )
-                    .tint(.white)
                 }
                 if !state.presets.isEmpty {
                     Section(header: Text("Aktivera favorit")) {
@@ -240,16 +236,16 @@ extension AddTempTarget {
                  .contentShape(Rectangle())
                  .padding(.vertical)
                  .onTapGesture {
-                     removeAlert = Alert(
-                         title: Text("Are you sure?"),
-                         message: Text("Delete preset \"\(preset.displayName)\""),
-                         primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
-                         secondaryButton: .cancel()
-                     )
-                     isRemoveAlertPresented = true
+                 removeAlert = Alert(
+                 title: Text("Are you sure?"),
+                 message: Text("Delete preset \"\(preset.displayName)\""),
+                 primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
+                 secondaryButton: .cancel()
+                 )
+                 isRemoveAlertPresented = true
                  }
                  .alert(isPresented: $isRemoveAlertPresented) {
-                     removeAlert!
+                 removeAlert!
                  } */
             }
         }

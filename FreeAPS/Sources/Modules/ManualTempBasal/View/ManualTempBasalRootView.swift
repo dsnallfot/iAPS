@@ -16,22 +16,17 @@ extension ManualTempBasal {
         var body: some View {
             Form {
                 Section {
-                    Button { state.cancel() }
-                    label: {
+                    Button(action: state.cancel) {
                         HStack {
                             Image(systemName: "x.circle")
-                            // .tint(.loopRed)
+                                .tint(.loopRed)
                             Text("Avbryt temp basal")
+                                .font(.title3)
                                 .fontWeight(.semibold)
-                            // .tint(.loopRed)
+                                .tint(.loopRed)
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
-
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(
-                        Color(.loopRed)
-                    )
-                    .tint(.white)
                 }
 
                 Section {
@@ -69,12 +64,15 @@ extension ManualTempBasal {
                                 !(state.rate > state.maxBasal) ? "Aktivera temp basal" :
                                     "Inställd maxgräns: \(formattedMaxAmountBasal)E/h"
                             )
-                            .font(.title3.weight(.semibold))
+                            .fontWeight(.semibold)
                         }
-                    }.disabled(
-                        state.rate <= 0 || state.rate > state.maxBasal
-                    )
+                    }
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .disabled(state.rate <= 0 || state.rate > state.maxBasal)
+                    .listRowBackground(
+                        state.rate <= 0 || state.rate > state.maxBasal ? Color(.systemGray4) : Color(.systemBlue)
+                    )
+                    .tint(.white)
                 }
             }
             .onAppear(perform: configureView)
