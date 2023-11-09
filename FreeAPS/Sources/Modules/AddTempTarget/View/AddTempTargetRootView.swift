@@ -26,18 +26,22 @@ extension AddTempTarget {
         var body: some View {
             Form {
                 Section {
-                    Button(action: state.cancel) {
+                    Button { state.cancel() }
+                    label: {
                         HStack {
                             Image(systemName: "x.circle")
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                             Text("Avbryt tillfälligt mål")
-                                .font(.title3)
                                 .fontWeight(.semibold)
-                                .tint(.loopRed)
+                            // .tint(.loopRed)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .disabled(state.tempTarget == nil)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(
+                        state.tempTarget == nil ? Color(.systemGray4) : Color(.loopRed)
+                    )
+                    .tint(.white)
                 }
                 if !state.presets.isEmpty {
                     Section(header: Text("Aktivera favorit")) {
