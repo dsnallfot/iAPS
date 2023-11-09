@@ -16,15 +16,12 @@ extension ManualTempBasal {
         var body: some View {
             Form {
                 Section {
-                    Button(action: state.cancel) {
-                        HStack {
+                    HStack {
+                        Button(action: { state.cancel() }, label: {
                             Image(systemName: "x.circle")
-                            // .tint(.loopRed)
                             Text("Avbryt temp basal")
-                                // .font(.title3)
                                 .fontWeight(.semibold)
-                            // .tint(.loopRed)
-                        }
+                        })
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                     .buttonStyle(BorderlessButtonStyle())

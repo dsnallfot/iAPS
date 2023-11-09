@@ -26,16 +26,18 @@ extension AddTempTarget {
         var body: some View {
             Form {
                 Section {
-                    Button(action: state.cancel) {
-                        HStack {
-                            Image(systemName: "x.circle")
-                            // .tint(.loopRed)
-                            Text("Avbryt tillfälligt mål")
-                                // .font(.title3)
-                                .fontWeight(.semibold)
-                            // .tint(.loopRed)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    HStack {
+                        Button(action: { state.cancel() }, label: {
+                            HStack {
+                                Image(systemName: "x.circle")
+                                // .tint(.loopRed)
+                                Text("Avbryt tillfälligt mål")
+                                    // .font(.title3)
+                                    .fontWeight(.semibold)
+                                // .tint(.loopRed)
+                            }
+                        })
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .disabled(state.tempTarget == nil)
                     .listRowBackground(
@@ -171,12 +173,6 @@ extension AddTempTarget {
                         }
                     }
                 }
-
-                /* Section {
-                     Button { state.enact() }
-                     label: { Text("Aktivera anpassat målvärde").font(.title3.weight(.semibold)) }
-                         .frame(maxWidth: .infinity, alignment: .center)
-                 } */
             }
             .popover(isPresented: $isPromptPresented) {
                 Form {
