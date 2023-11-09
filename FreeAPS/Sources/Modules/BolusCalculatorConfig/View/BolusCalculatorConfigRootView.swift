@@ -28,6 +28,9 @@ extension BolusCalculatorConfig {
                     }
                     if state.useCalc {
                         HStack {
+                            Toggle("Visa utökade beräkningar", isOn: $state.advancedCalc)
+                        }
+                        HStack {
                             Text("Manuell bolus faktor")
                             Spacer()
                             DecimalTextField("0.8", value: $state.overrideFactor, formatter: conversionFormatter)
@@ -59,16 +62,18 @@ extension BolusCalculatorConfig {
                     } header: { Text("Fett/proteinrika måltider") }
                 }
 
-                Section {
-                    HStack {
-                        Toggle("Använd superbolus", isOn: $state.sweetMeals)
-                    }
-                    HStack {
-                        Text("Antal timmar basal i superbolus")
-                        Spacer()
-                        DecimalTextField("2", value: $state.sweetMealFactor, formatter: conversionFormatter)
-                    }
-                } header: { Text("Superbolus") }
+                if state.useCalc {
+                    Section {
+                        HStack {
+                            Toggle("Använd superbolus", isOn: $state.sweetMeals)
+                        }
+                        HStack {
+                            Text("Antal timmar basal i superbolus")
+                            Spacer()
+                            DecimalTextField("2", value: $state.sweetMealFactor, formatter: conversionFormatter)
+                        }
+                    } header: { Text("Superbolus") }
+                }
 
                 Section(
                     footer: Text(

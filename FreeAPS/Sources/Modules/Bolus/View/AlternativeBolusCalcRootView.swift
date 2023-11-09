@@ -23,6 +23,12 @@ extension Bolus {
             return Decimal(roundedInsulinAsDouble)
         }
 
+        var roundedMinBGInsulin: Decimal {
+            let minBGAsDouble = NSDecimalNumber(decimal: state.minGuardBG).doubleValue
+            let roundedMinBGAsDouble = (minBGAsDouble / 0.05).rounded() * 0.05
+            return Decimal(roundedMinBGAsDouble)
+        }
+
         @FetchRequest(
             entity: Meals.entity(),
             sortDescriptors: [NSSortDescriptor(key: "createdAt", ascending: false)]
@@ -256,9 +262,11 @@ extension Bolus {
                                         Divider().fontWeight(.bold) // .padding(1)
                                     }
                                     VStack {
-                                        orefParts
+                                        if state.advancedCalc {
+                                            orefParts
 
-                                        Divider().fontWeight(.bold) // .padding(1)
+                                            Divider().fontWeight(.bold) // .padding(1)
+                                        }
 
                                         calculationParts
 
@@ -624,8 +632,13 @@ extension Bolus {
         var orefParts: some View {
             VStack(spacing: 2) {
                 HStack {
+                    Text("Prognos (oref)")
+                        .fontWeight(.semibold)
+                    Spacer()
+                }
+                HStack {
                     if state.evBG > 0 {
-                        Text("(Oref) Blodsockerprognos:")
+                        Text("Blodsockerprognos:")
                             .foregroundColor(.secondary)
                             .italic()
                         Spacer()
@@ -644,30 +657,35 @@ extension Bolus {
                     }
                 }
 
-                /* HStack {
-                     if state.minGuardBG >= 0 {
-                         Text("(Oref) Lägsta förväntade BG:")
-                             .foregroundColor(.secondary)
-                             .italic()
-                         Spacer()
-                         let minGuardBG = state.minGuardBG  * 0.0555
-                         Text(
-                             minGuardBG
-                                 .formatted(
-                                     .number.grouping(.never).rounded()
-                                         .precision(.fractionLength(fractionDigits))
-                                 )
-                         )
-                         .italic()
-                         Text("mmol/L")
-                             .foregroundColor(.secondary)
-                             .italic()
-                     }
-                 } */
+                HStack {
+                    if state.minGuardBG < state.threshold {
+                        Text("Lägsta förväntade BG:")
+                            .foregroundColor(.loopRed)
+                            .italic()
+                        Spacer()
+                        Text(roundedMinBGInsulin.formatted())
+                            .foregroundColor(.loopRed)
+                            .italic()
+                        Text("mmol/L")
+                            .foregroundColor(.loopRed)
+                            .italic()
+                    } else {
+                        Text("Lägsta förväntade BG:")
+                            .foregroundColor(.secondary)
+                            .italic()
+                        Spacer()
+                        Text(roundedMinBGInsulin.formatted())
+                            .foregroundColor(.secondary)
+                            .italic()
+                        Text("mmol/L")
+                            .foregroundColor(.secondary)
+                            .italic()
+                    }
+                }
 
                 HStack {
                     if state.insulinCalculated > roundedOrefInsulin && state.insulinCalculated > 0 && roundedOrefInsulin > 0 {
-                        Text("(Oref) Insulinbehov:")
+                        Text("Insulinbehov:")
                             .foregroundColor(.insulin)
                             .italic()
                         Spacer()
@@ -679,7 +697,7 @@ extension Bolus {
                             .foregroundColor(.insulin)
                             .italic()
                     } else {
-                        Text("(Oref) Insulinbehov:")
+                        Text("Insulinbehov:")
                             .foregroundColor(.secondary)
                             .italic()
                         Spacer()
@@ -782,7 +800,7 @@ extension Bolus {
                 if fetch {
                     if let carbs = meal.first?.carbs, carbs > 0 {
                         HStack(alignment: .center, spacing: nil) {
-                            Text("Kh aktuell måltid:")
+                            Text("Aktuell måltid (Kh):")
                                 .foregroundColor(.secondary)
                                 .frame(minWidth: 105, alignment: .leading)
 
@@ -1166,7 +1184,7 @@ extension Bolus {
                 VStack {
                     if state.error, state.insulinCalculated > 0 {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
+                            Text("VARNING!").font(.callout).bold().foregroundColor(.loopRed)
                                 .padding(.bottom, 1)
                                 .padding(.top, 2)
                             Text(alertString())
@@ -1176,7 +1194,7 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
+                            Text("VARNING!").font(.callout).bold().foregroundColor(.loopRed)
                                 .padding(.bottom, 1)
                                 .padding(.top, 2)
                             Text(alertString())
@@ -1199,13 +1217,13 @@ extension Bolus {
                 ) + state.minGuardBG
                     .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
                     state.units
-                    .rawValue + ", " +
+                    .rawValue +
                     NSLocalizedString(
                         "which is below your Threshold (",
                         comment: "Bolus pop-up / Alert string. Make translations concise!"
                     ) + state
                     .threshold
-                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + ")"
+                    .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
             case 3:
                 return NSLocalizedString(
                     "Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: ",

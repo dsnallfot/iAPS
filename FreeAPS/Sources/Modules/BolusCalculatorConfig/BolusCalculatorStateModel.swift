@@ -10,6 +10,7 @@ extension BolusCalculatorConfig {
         @Published var sweetMeals: Bool = false
         @Published var sweetMealFactor: Decimal = 0
         @Published var insulinReqPercentage: Decimal = 70
+        @Published var advancedCalc: Bool = false
 
         override func subscribe() {
             subscribeSetting(\.overrideFactor, on: $overrideFactor, initial: {
@@ -40,6 +41,7 @@ extension BolusCalculatorConfig {
                 $0
             })
             subscribeSetting(\.insulinReqPercentage, on: $insulinReqPercentage) { insulinReqPercentage = $0 }
+            subscribeSetting(\.advancedCalc, on: $advancedCalc) { advancedCalc = $0 }
         }
     }
 }

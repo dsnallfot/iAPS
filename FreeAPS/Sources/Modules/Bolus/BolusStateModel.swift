@@ -76,6 +76,7 @@ extension Bolus {
         @Published var sweetMealFactor: Decimal = 0
         @Published var useSuperBolus: Bool = false
         @Published var superBolusInsulin: Decimal = 0
+        @Published var advancedCalc: Bool = false
 
         @Published var meal: [CarbsEntry]?
         @Published var carbs: Decimal = 0
@@ -100,6 +101,7 @@ extension Bolus {
             fattyMealTrigger = settings.settings.fattyMealTrigger
             sweetMeals = settings.settings.sweetMeals
             sweetMealFactor = settings.settings.sweetMealFactor
+            advancedCalc = settings.settings.advancedCalc
             maxCarbs = settings.settings.maxCarbs
 
             if waitForSuggestionInitial {
@@ -272,6 +274,7 @@ extension Bolus {
                 self.cob = self.provider.suggestion?.cob ?? 0
                 self.basal = self.provider.suggestion?.rate ?? 0 // dont seems to work for some reason
                 self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
+                self.minPredBG = (self.provider.suggestion?.minPredBG ?? 0)
 
                 if self.settingsManager.settings.insulinReqPercentage != 100 {
                     self.insulinRecommended = self
