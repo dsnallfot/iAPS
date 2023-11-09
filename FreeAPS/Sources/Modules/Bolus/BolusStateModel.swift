@@ -92,6 +92,7 @@ extension Bolus {
             percentage = settingsManager.settings.insulinReqPercentage
             threshold = provider.suggestion?.threshold ?? 0
             maxBolus = provider.pumpSettings().maxBolus
+            minGuardBG = provider.suggestion?.minGuardBG ?? 0
 
             // added
             fraction = settings.settings.overrideFactor
@@ -274,7 +275,6 @@ extension Bolus {
                 self.cob = self.provider.suggestion?.cob ?? 0
                 self.basal = self.provider.suggestion?.rate ?? 0 // dont seems to work for some reason
                 self.carbRatio = self.provider.suggestion?.carbRatio ?? 0
-                self.minPredBG = (self.provider.suggestion?.minPredBG ?? 0)
 
                 if self.settingsManager.settings.insulinReqPercentage != 100 {
                     self.insulinRecommended = self

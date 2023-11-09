@@ -23,9 +23,9 @@ extension Bolus {
             return Decimal(roundedInsulinAsDouble)
         }
 
-        var roundedMinBGInsulin: Decimal {
+        var roundedMinBG: Decimal {
             let minBGAsDouble = NSDecimalNumber(decimal: state.minGuardBG).doubleValue
-            let roundedMinBGAsDouble = (minBGAsDouble / 0.05).rounded() * 0.05
+            let roundedMinBGAsDouble = (minBGAsDouble / 0.1).rounded() * 0.1
             return Decimal(roundedMinBGAsDouble)
         }
 
@@ -203,6 +203,8 @@ extension Bolus {
                     state.waitForSuggestion = waitForSuggestion
                     state.insulinCalculated = state.calculateInsulin()
                 }
+                // force update of calculations
+                state.getCurrentBasal()
                 // Additional code to automatically check the checkbox
                 if fetch {
                     if let carbs = meal.first?.carbs,
@@ -637,7 +639,7 @@ extension Bolus {
                     Spacer()
                 }
                 HStack {
-                    if state.evBG > 0 {
+                    if state.evBG != 0 {
                         Text("Blodsockerprognos:")
                             .foregroundColor(.secondary)
                             .italic()
@@ -658,23 +660,23 @@ extension Bolus {
                 }
 
                 HStack {
-                    if state.minGuardBG < state.threshold {
+                    if state.minGuardBG < state.threshold && state.minGuardBG != 0 {
                         Text("Lägsta förväntade BG:")
                             .foregroundColor(.loopRed)
                             .italic()
                         Spacer()
-                        Text(roundedMinBGInsulin.formatted())
+                        Text(roundedMinBG.formatted())
                             .foregroundColor(.loopRed)
                             .italic()
                         Text("mmol/L")
                             .foregroundColor(.loopRed)
                             .italic()
-                    } else {
+                    } else if state.minGuardBG != 0 {
                         Text("Lägsta förväntade BG:")
                             .foregroundColor(.secondary)
                             .italic()
                         Spacer()
-                        Text(roundedMinBGInsulin.formatted())
+                        Text(roundedMinBG.formatted())
                             .foregroundColor(.secondary)
                             .italic()
                         Text("mmol/L")
@@ -690,13 +692,13 @@ extension Bolus {
                             .italic()
                         Spacer()
                         Text(roundedOrefInsulin.formatted())
-                            .foregroundColor(.insulin)
+
                             .italic()
 
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.insulin)
                             .italic()
-                    } else {
+                    } else if roundedOrefInsulin != 0 {
                         Text("Insulinbehov:")
                             .foregroundColor(.secondary)
                             .italic()
