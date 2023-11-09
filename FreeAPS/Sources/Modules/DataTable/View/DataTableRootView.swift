@@ -66,6 +66,8 @@ extension DataTable {
                 historyContentView
             }
             .onAppear(perform: configureView)
+            .onDisappear { state.apsManager.determineBasalSync()
+            }
 
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
