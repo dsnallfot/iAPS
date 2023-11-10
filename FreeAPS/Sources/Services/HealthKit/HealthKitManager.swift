@@ -569,40 +569,24 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
     // - MARK Carbs function
 
-func deleteCarbs(syncID: String, isFPU: Bool?, fpuID: String?) {
-    guard settingsManager.settings.useAppleHealth,
-          let sampleType = Config.healthCarbObject,
-          checkAvailabilitySave(objectTypeToHealthStore: sampleType)
-    else { return }
+    func deleteCarbs(syncID: String, isFPU _: Bool?, fpuID _: String?) {
+        guard settingsManager.settings.useAppleHealth,
+              let sampleType = Config.healthCarbObject,
+              checkAvailabilitySave(objectTypeToHealthStore: sampleType)
+        else { return }
 
-    processQueue.async {
-        var predicate: NSPredicate
-
-        if let isFPU = isFPU, let fpuID = fpuID {
-            let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-            let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.collectionID)
-            predicate = HKQuery.predicateForObjects(
-                withMetadataKey: HKMetadataKeySyncIdentifier,
-                allowedValues: ids
-            )
-        } else {
-            // Handle the case where isFPU is nil or false
-            predicate = HKQuery.predicateForObjects(
+        processQueue.async {
+            let predicate = HKQuery.predicateForObjects(
                 withMetadataKey: HKMetadataKeySyncIdentifier,
                 operatorType: .equalTo,
                 value: syncID
             )
-        }
-
-        self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-            if let error = error {
-                warning(.service, "Cannot delete sample", error: error)
+            self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                guard let error = error else { return }
+                warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
             }
         }
     }
-}
-
-
 
     func carbsDidUpdate(_ carbs: [CarbsEntry]) {
         saveIfNeeded(carbs: carbs)
