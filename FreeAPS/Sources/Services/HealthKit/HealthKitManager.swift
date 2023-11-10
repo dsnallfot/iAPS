@@ -569,7 +569,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
     // - MARK Carbs function
 
-    func deleteCarbs(syncID: String, isFPU: Bool?, fpuID: String?) {
+func deleteCarbs(syncID: String, isFPU: Bool?, fpuID: String?) {
     guard settingsManager.settings.useAppleHealth,
           let sampleType = Config.healthCarbObject,
           checkAvailabilitySave(objectTypeToHealthStore: sampleType)
@@ -578,22 +578,19 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
     processQueue.async {
         var predicate: NSPredicate
 
-        if let isFPU = isFPU, isFPU, let fpuID = fpuID {
-            // Case where isFPU is true
-            predicate = HKQuery.predicateForObjects(
-                withMetadataKey: HKMetadataKeySyncIdentifier,
-                operatorType: .equalTo,
-                value: syncID
-            )
-        } else {
-            // Case where isFPU is false or nil
-            guard let fpuID = fpuID else { return }
-
+        if let isFPU = isFPU, let fpuID = fpuID {
             let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
             let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.collectionID)
             predicate = HKQuery.predicateForObjects(
                 withMetadataKey: HKMetadataKeySyncIdentifier,
                 allowedValues: ids
+            )
+        } else {
+            // Handle the case where isFPU is nil or false
+            predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeySyncIdentifier,
+                operatorType: .equalTo,
+                value: syncID
             )
         }
 
@@ -604,6 +601,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
         }
     }
 }
+
 
 
     func carbsDidUpdate(_ carbs: [CarbsEntry]) {
