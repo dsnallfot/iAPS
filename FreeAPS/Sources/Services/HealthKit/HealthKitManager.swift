@@ -26,7 +26,7 @@ protocol HealthKitManager: GlucoseSource {
     /// Delete glucose with syncID
     func deleteGlucose(syncID: String)
     /// delete carbs with syncID
-    func deleteCarbs(syncID: String, isFPU: Bool?, fpuID: String?)
+    func deleteCarbs(syncID: String)
     /// delete insulin with syncID
     func deleteInsulin(syncID: String)
 }
@@ -179,46 +179,44 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
     }
 
     func saveIfNeeded(carbs: [CarbsEntry]) {
-        guard settingsManager.settings.useAppleHealth,
-              let sampleType = Config.healthCarbObject,
-              checkAvailabilitySave(objectTypeToHealthStore: sampleType),
-              carbs.isNotEmpty
-        else { return }
+    guard settingsManager.settings.useAppleHealth,
+          let sampleType = Config.healthCarbObject,
+          checkAvailabilitySave(objectTypeToHealthStore: sampleType),
+          carbs.isNotEmpty
+    else { return }
 
-        let carbsWithId = carbs.filter { c in
-            guard c.collectionID != nil else { return false }
-            return true
-        }
+    let carbsToSave = carbs.filter { $0.collectionID != nil }
 
-        func save(samples: [HKSample]) {
-            let sampleIDs = samples.compactMap(\.syncIdentifier)
-            let sampleDates = samples.map(\.startDate)
-            let samplesToSave = carbsWithId
-                .filter { !sampleIDs.contains($0.collectionID!) } // id existing in AH
-                .filter { !sampleDates.contains($0.createdAt) } // not id but exaclty the same datetime
-                .map {
-                    HKQuantitySample(
-                        type: sampleType,
-                        quantity: HKQuantity(unit: .gram(), doubleValue: Double($0.carbs)),
-                        start: $0.createdAt,
-                        end: $0.createdAt,
-                        metadata: [
-                            HKMetadataKeyExternalUUID: $0.collectionID ?? "_id",
-                            HKMetadataKeySyncIdentifier: $0.collectionID ?? "_id",
-                            HKMetadataKeySyncVersion: 1,
-                            Config.freeAPSMetaKey: true
-                        ]
-                    )
-                }
+    func save(samples: [HKSample]) {
+        let sampleIDs = samples.compactMap(\.syncIdentifier)
+        let sampleDates = samples.map(\.startDate)
+        let samplesToSave = carbsToSave
+            .filter { !sampleIDs.contains($0.collectionID!) }
+            .filter { !sampleDates.contains($0.createdAt) }
+            .map {
+                HKQuantitySample(
+                    type: sampleType,
+                    quantity: HKQuantity(unit: .gram(), doubleValue: Double($0.carbs)),
+                    start: $0.createdAt,
+                    end: $0.createdAt,
+                    metadata: [
+                        HKMetadataKeyExternalUUID: $0.collectionID ?? "_id",
+                        HKMetadataKeySyncIdentifier: $0.collectionID ?? "_id",
+                        HKMetadataKeySyncVersion: 1,
+                        Config.freeAPSMetaKey: true
+                    ]
+                )
+            }
 
-            healthKitStore.save(samplesToSave) { _, _ in }
-        }
-
-        loadSamplesFromHealth(sampleType: sampleType)
-            .receive(on: processQueue)
-            .sink(receiveValue: save)
-            .store(in: &lifetime)
+        healthKitStore.save(samplesToSave) { _, _ in }
     }
+
+    loadSamplesFromHealth(sampleType: sampleType)
+        .receive(on: processQueue)
+        .sink(receiveValue: save)
+        .store(in: &lifetime)
+}
+
 
     func saveIfNeeded(pumpEvents events: [PumpHistoryEvent]) {
         guard settingsManager.settings.useAppleHealth,
@@ -569,43 +567,29 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
     // - MARK Carbs function
 
-    func deleteCarbs(syncID: String, isFPU: Bool?, fpuID: String?) {
+    func deleteCarbs(syncID: String) {
         guard settingsManager.settings.useAppleHealth,
               let sampleType = Config.healthCarbObject,
               checkAvailabilitySave(objectTypeToHealthStore: sampleType)
         else { return }
-
-        if let isFPU = isFPU, !isFPU {
-            processQueue.async {
-                let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeySyncIdentifier,
-                    operatorType: .equalTo,
-                    value: syncID
-                )
-                self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                    guard let error = error else { return }
-                    warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
-                }
-            }
-        } else {
-            // need to find all syncID
-            guard let fpuID = fpuID else { return }
-
-            processQueue.async {
-                let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
-                let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeySyncIdentifier,
-                    allowedValues: ids
-                )
-
-                self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                    guard let error = error else { return }
-                    warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
+    
+        processQueue.async {
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeySyncIdentifier,
+                operatorType: .equalTo,
+                value: syncID
+            )
+    
+            self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                if let error = error {
+                    warning(.service, "Cannot delete sample", error: error)
                 }
             }
         }
     }
+
+
+
 
     func carbsDidUpdate(_ carbs: [CarbsEntry]) {
         saveIfNeeded(carbs: carbs)
