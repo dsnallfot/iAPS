@@ -16,6 +16,7 @@ extension DataTable {
         @State private var showNonPumpInsulin: Bool = false
         @State private var showFutureEntries: Bool = false
         @State private var isAmountUnconfirmed: Bool = true
+        @State private var alertIsShown = false
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -285,7 +286,7 @@ extension DataTable {
                                     item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
                                 )
                         }
-                        .onDelete(perform: deleteTreatments)
+                        // .onDelete(perform: deleteTreatments)
                     } else {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
@@ -293,7 +294,7 @@ extension DataTable {
                                     item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
                                 )
                         }
-                        .onDelete(perform: deleteTreatments)
+                        // .onDelete(perform: deleteTreatments)
                     }
                 } else {
                     HStack {
@@ -342,7 +343,7 @@ extension DataTable {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
-                    .onDelete(perform: deleteGlucose)
+                    // .onDelete(perform: deleteGlucose)
                 } else {
                     HStack {
                         Text("Ingen data.")
@@ -377,6 +378,19 @@ extension DataTable {
                 Text(dateFormatter.string(from: item.date))
                     .moveDisabled(true)
             }
+            .swipeActions {
+                Button(
+                    "Delete",
+                    systemImage: "trash.fill",
+                    role: .none,
+                    action: {
+                        if let index = state.treatments.firstIndex(of: item) {
+                            deleteTreatments(at: IndexSet([index]))
+                        }
+                    }
+                )
+                .tint(.red)
+            }
         }
 
         @ViewBuilder private func basalView(_ tempBasal: Treatment) -> some View {
@@ -387,7 +401,6 @@ extension DataTable {
                 if let duration = tempBasal.durationText {
                     Text(duration).foregroundColor(.secondary)
                 }
-
                 Spacer()
 
                 Text(dateFormatter.string(from: tempBasal.date))
@@ -412,6 +425,19 @@ extension DataTable {
                 Spacer()
 
                 Text(dateFormatter.string(from: item.glucose.dateString))
+            }
+            .swipeActions {
+                Button(
+                    "Delete",
+                    systemImage: "trash.fill",
+                    role: .none,
+                    action: {
+                        if let index = state.glucose.firstIndex(of: item) {
+                            deleteGlucose(at: IndexSet([index]))
+                        }
+                    }
+                )
+                .tint(.red)
             }
         }
 

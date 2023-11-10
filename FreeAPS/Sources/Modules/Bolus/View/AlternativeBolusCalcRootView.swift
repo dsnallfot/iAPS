@@ -186,16 +186,18 @@ extension Bolus {
                     carbssView()
                 }
                 label: {
-                    Group {
-                        if fetch {
-                            Image(systemName: "chevron.left").fontWeight(.semibold)
-                        } else { Image(systemName: "plus.circle.fill") }
-                        Text(fetch ? "Tillbaka" : "Måltid")
-                    }
+                    // Group {
+                    // if fetch {
+                    // Image(systemName: "chevron.left").fontWeight(.semibold)
+                    // } else { Image(systemName: "plus.circle.fill") }
+                    Text(fetch ? "Tillbaka" : "Måltid")
+                    // }
                 },
 
-                trailing: Button { showInfo.toggle() }
-                label: { Image(systemName: "info.circle.fill") }
+                // trailing: Button { showInfo.toggle() }
+                // label: { Image(systemName: "info.circle.fill") }
+                trailing: Button { state.hideModal() }
+                label: { Text("Cancel") }
             )
             .onAppear {
                 configureView {
@@ -313,7 +315,7 @@ extension Bolus {
                             Button(action: {
                                 showInfo.toggle()
                             }) {
-                                Image(systemName: "chevron.left").fontWeight(.semibold)
+                                // Image(systemName: "chevron.left").fontWeight(.semibold)
                                 Text("Tillbaka")
                             }
                         }
@@ -449,7 +451,8 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
                         HStack {
-                            Image(systemName: "x.circle.fill")
+                            // Image(systemName: "x.circle.fill")
+                            Image(systemName: "info.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -467,7 +470,8 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
+                            // Image(systemName: "exclamationmark.triangle.fill")
+                            Image(systemName: "info.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -486,7 +490,8 @@ extension Bolus {
                         }
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
+                            // Image(systemName: "exclamationmark.triangle.fill")
+                            Image(systemName: "info.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -506,7 +511,8 @@ extension Bolus {
 
                     } else {
                         HStack {
-                            Image(systemName: "checkmark.circle.fill")
+                            // Image(systemName: "checkmark.circle.fill")
+                            Image(systemName: "info.circle.fill")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()

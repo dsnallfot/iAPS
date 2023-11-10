@@ -74,6 +74,11 @@ extension AddTempTarget {
                 if state.viewPercantage {
                     Section(header: Text("Ställ in en procentuell override")) {
                         VStack {
+                            Text("\(state.percentage.formatted(.number)) % Insulin")
+                                .foregroundColor(isEditing ? .orange : .blue)
+                                .font(.largeTitle)
+                                .padding(.vertical)
+                            Spacer()
                             Slider(
                                 value: $state.percentage,
                                 in: 15 ...
@@ -83,33 +88,26 @@ extension AddTempTarget {
                                     isEditing = editing
                                 }
                             )
-                            HStack {
-                                Text("\(state.percentage.formatted(.number)) % Insulin")
-                                    .foregroundColor(isEditing ? .orange : .blue)
-                                    .font(.largeTitle)
-                            }
+
                             // Only display target slider when not 100 %
                             if state.percentage != 100 {
                                 Divider()
+                                Text(
+                                    (
+                                        state
+                                            .units == .mmolL ?
+                                            "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
+                                            "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
+                                    )
+                                        + NSLocalizedString("  Målvärde", comment: "")
+                                )
+                                .foregroundColor(.green)
 
                                 Slider(
                                     value: $state.hbt,
                                     in: 101 ... 295,
                                     step: 1
                                 ).accentColor(.green)
-
-                                HStack {
-                                    Text(
-                                        (
-                                            state
-                                                .units == .mmolL ?
-                                                "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
-                                                "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
-                                        )
-                                            + NSLocalizedString("  Målvärde", comment: "")
-                                    )
-                                    .foregroundColor(.green)
-                                }
                             }
                         }
                     }
