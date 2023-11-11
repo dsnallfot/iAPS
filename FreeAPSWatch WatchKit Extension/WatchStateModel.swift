@@ -35,6 +35,7 @@ class WatchStateModel: NSObject, ObservableObject {
     @Published var isBolusViewActive = false
     @Published var displayOnWatch: AwConfig = .BGTarget
     @Published var displayFatAndProteinOnWatch = false
+    @Published var useNewCalc = false
     @Published var eventualBG = ""
     @Published var isConfirmationViewActive = false {
         didSet {
@@ -176,6 +177,7 @@ class WatchStateModel: NSObject, ObservableObject {
         eventualBG = state.eventualBG ?? ""
         displayOnWatch = state.displayOnWatch ?? .BGTarget
         displayFatAndProteinOnWatch = state.displayFatAndProteinOnWatch ?? false
+        useNewCalc = state.useNewCalc ?? false
         isf = state.isf
         override = state.override
     }
