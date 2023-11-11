@@ -167,6 +167,9 @@ extension Bolus {
                                 } else if roundedOrefInsulin <= 0, state.useSuperBolus {
                                     state.amount = state.insulinCalculated
                                     displayError = false
+                                } else if state.useSuperBolus {
+                                    state.amount = state.insulinCalculated
+                                    displayError = false
                                 } else {
                                     state.amount = roundedOrefInsulin
                                     displayError = false
@@ -176,6 +179,9 @@ extension Bolus {
                                     state.amount = 0
                                     displayError = false
                                 } else if state.insulinCalculated <= 0, state.useSuperBolus {
+                                    state.amount = state.insulinCalculated
+                                    displayError = false
+                                } else if state.useSuperBolus {
                                     state.amount = state.insulinCalculated
                                     displayError = false
                                 } else {
@@ -473,7 +479,8 @@ extension Bolus {
                                 }
                             Spacer()
                             Text(
-                                "0" +
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         }
@@ -752,7 +759,9 @@ extension Bolus {
         var guardRailParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    if state.insulinCalculated >= state.maxBolus && state.maxBolus <= roundedOrefInsulin {
+                    if state.insulinCalculated >= state.maxBolus && state
+                        .maxBolus <= (roundedOrefInsulin + state.superBolusInsulin)
+                    {
                         Text("Inställd maxbolus:")
                             .foregroundColor(.purple)
                         Spacer()
