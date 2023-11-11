@@ -63,23 +63,27 @@ extension OverrideProfilesConfig {
 
         var body: some View {
             Form {
-                if state.presets.isNotEmpty {
-                    Button(action: {
-                        state.cancelProfile()
-                        dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.uturn.backward")
-                            Text("Återgå till normal profil")
-                                .font(.title3)
-                                .fontWeight(.semibold)
+                if state.isEnabled {
+                    Section {
+                        Button {
+                            state.cancelProfile()
+                            dismiss()
+                        }
+                        label: {
+                            HStack {
+                                Image(systemName: "arrow.uturn.backward")
+                                Text("Återgå till normal profil")
+                                    .fontWeight(.semibold)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .buttonStyle(BorderlessButtonStyle())
-                        .disabled(!state.isEnabled)
-                        .tint(state.isEnabled ? .loopRed : Color(.systemGray2))
+                        .listRowBackground(Color(.loopRed))
+                        // .buttonStyle(BorderlessButtonStyle())
+                        // .disabled(!state.isEnabled)
+                        .tint(.white)
                     }
-
+                }
+                if state.presets.isNotEmpty {
                     Section {
                         ForEach(fetchedProfiles) { preset in
                             profilesView(for: preset)
