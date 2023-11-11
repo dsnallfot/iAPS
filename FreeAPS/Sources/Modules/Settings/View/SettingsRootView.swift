@@ -14,7 +14,7 @@ extension Settings {
                     Toggle("Closed loop", isOn: $state.closedLoop)
                 } header: {
                     Text(
-                        "iAPS v\(state.versionNumber) - \(state.buildNumber) \nBranch: \(state.branch) \(state.copyrightNotice) "
+                        "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice) "
                     ).textCase(nil)
                 }
 
