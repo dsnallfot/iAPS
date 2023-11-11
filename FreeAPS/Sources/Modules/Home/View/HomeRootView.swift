@@ -182,7 +182,8 @@ extension Home {
                 timerDate: $state.timerDate,
                 isLooping: $state.isLooping,
                 lastLoopDate: $state.lastLoopDate,
-                manualTempBasal: $state.manualTempBasal
+                manualTempBasal: $state.manualTempBasal,
+                timeZone: $state.timeZone
             ).onTapGesture {
                 isStatusPopupPresented = true
             }.onLongPressGesture {
