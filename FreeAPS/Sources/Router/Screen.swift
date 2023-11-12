@@ -14,7 +14,7 @@ enum Screen: Identifiable, Hashable {
     case crEditor
     case targetsEditor
     case preferencesEditor
-    case addCarbs(editMode: Bool)
+    case addCarbs(editMode: Bool, override: Bool)
     case addTempTarget
     case bolus(waitForSuggestion: Bool, fetch: Bool)
     case manualTempBasal
@@ -33,6 +33,7 @@ enum Screen: Identifiable, Hashable {
     case watch
     case statisticsConfig
     case bolusCalculatorConfig
+    case dynamicISF
 
     var id: Int { String(reflecting: self).hashValue }
 }
@@ -64,8 +65,8 @@ extension Screen {
             TargetsEditor.RootView(resolver: resolver)
         case .preferencesEditor:
             PreferencesEditor.RootView(resolver: resolver)
-        case let .addCarbs(editMode):
-            AddCarbs.RootView(resolver: resolver, editMode: editMode)
+        case let .addCarbs(editMode, override):
+            AddCarbs.RootView(resolver: resolver, editMode: editMode, override: override)
         case .addTempTarget:
             AddTempTarget.RootView(resolver: resolver)
         case let .bolus(waitForSuggestion, fetch):
@@ -102,6 +103,8 @@ extension Screen {
             StatConfig.RootView(resolver: resolver)
         case .bolusCalculatorConfig:
             BolusCalculatorConfig.RootView(resolver: resolver)
+        case .dynamicISF:
+            Dynamic.RootView(resolver: resolver)
         }
     }
 
