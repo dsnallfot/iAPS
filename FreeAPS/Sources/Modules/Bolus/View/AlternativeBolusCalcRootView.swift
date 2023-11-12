@@ -1276,7 +1276,7 @@ extension Bolus {
                 VStack {
                     if state.error, state.insulinCalculated > 0 {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.loopRed)
+                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
                                 .padding(.bottom, 1)
                                 .padding(.top, 2)
                             Text(alertString())
@@ -1286,7 +1286,7 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.loopRed)
+                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
                                 .padding(.bottom, 1)
                                 .padding(.top, 2)
                             Text(alertString())
