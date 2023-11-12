@@ -73,29 +73,30 @@ extension DataTable {
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
-                leading: HStack {
-                    Button("Close", action: state.hideModal)
-                },
                 trailing: HStack {
-                    /* if state.mode == .treatments {
-                         Button(action: { showNonPumpInsulin = true }) {
-                             Text("Insulin")
-                             Image(systemName: "plus.circle.fill")
-                                 .resizable()
-                                 .frame(width: 24, height: 24)
-                         }
-                     } */
-
-                    /* if state.mode == .glucose {
-                         Button(action: { showManualGlucose = true }) {
-                             Text("Fingerstick")
-                             Image(systemName: "plus.circle.fill")
-                                 .resizable()
-                                 .frame(width: 24, height: 24)
-                         }
-                     } */
+                    Button("Close", action: state.hideModal)
                 }
             )
+            /* trailing: HStack {
+                     /* if state.mode == .treatments {
+                          Button(action: { showNonPumpInsulin = true }) {
+                              Text("Insulin")
+                              Image(systemName: "plus.circle.fill")
+                                  .resizable()
+                                  .frame(width: 24, height: 24)
+                          }
+                      } */
+
+                     /* if state.mode == .glucose {
+                          Button(action: { showManualGlucose = true }) {
+                              Text("Fingerstick")
+                              Image(systemName: "plus.circle.fill")
+                                  .resizable()
+                                  .frame(width: 24, height: 24)
+                          }
+                      } */
+                 /
+             ) */
             .sheet(isPresented: $showManualGlucose, onDismiss: { if isAmountUnconfirmed { state.manualGlucose = 0 } }) {
                 addManualGlucoseView
             }
@@ -159,7 +160,7 @@ extension DataTable {
                 .onAppear(perform: configureView)
                 .navigationTitle("Fingerstick")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: Button("Close", action: { showManualGlucose = false
+                .navigationBarItems(trailing: Button("Close", action: { showManualGlucose = false
                     state.manualGlucose = 0 }))
             }
         }
@@ -231,7 +232,7 @@ extension DataTable {
                 .onAppear(perform: configureView)
                 .navigationTitle("Insulinpenna")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: Button("Close", action: { showNonPumpInsulin = false
+                .navigationBarItems(trailing: Button("Close", action: { showNonPumpInsulin = false
                     state.nonPumpInsulinAmount = 0 }))
             }
         }
