@@ -526,7 +526,7 @@ extension Bolus {
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.orange)
                         }
-                    } else if state.insulinCalculated > roundedOrefInsulin && state.useSuperBolus {
+                    } else if state.roundedWholeCalc > roundedOrefInsulin && state.useSuperBolus {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "info.circle.fill")
