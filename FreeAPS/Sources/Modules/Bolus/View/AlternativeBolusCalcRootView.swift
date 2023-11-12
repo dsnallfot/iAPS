@@ -464,6 +464,28 @@ extension Bolus {
                             Spacer()
                             ActivityIndicator(isAnimating: .constant(true), style: .medium)
                         }
+                    } else if state.insulinCalculated <= 0 && state.useSuperBolus || roundedOrefInsulin <= 0 && state
+                        .useSuperBolus
+                    {
+                        HStack {
+                            // Image(systemName: "x.circle.fill")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.loopRed)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                }
+                            Text("Vänta med superbolus?")
+                                .foregroundColor(.loopRed)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.loopRed)
+                        }
                     } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
                         HStack {
                             // Image(systemName: "x.circle.fill")
@@ -492,7 +514,7 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
-                            Text("Vänta med att ge bolus")
+                            Text("Vänta med att ge bolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -512,7 +534,7 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
-                            Text("Vänta med att ge bolus")
+                            Text("Vänta med superbolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -532,7 +554,7 @@ extension Bolus {
                                 .onTapGesture {
                                     showInfo.toggle()
                                 }
-                            Text("Vänta med att ge bolus")
+                            Text("Vänta med att ge bolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
