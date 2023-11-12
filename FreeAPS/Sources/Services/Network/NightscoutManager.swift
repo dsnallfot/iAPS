@@ -549,7 +549,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         let glucoseWithoutCorrectID = glucose.filter { UUID(uuidString: $0._id) != nil }
 
         processQueue.async {
-            glucose.chunks(ofCount: 100)
+            glucoseWithoutCorrectID.chunks(ofCount: 100)
                 .map { chunk -> AnyPublisher<Void, Error> in
                     nightscout.uploadGlucose(Array(chunk))
                 }
