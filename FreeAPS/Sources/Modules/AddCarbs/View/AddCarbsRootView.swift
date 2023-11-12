@@ -188,6 +188,7 @@ extension AddCarbs {
             Section {
                 HStack {
                     Text("Meal Presets")
+                        .foregroundColor(.secondary)
                     Spacer()
                     Picker("", selection: $state.selection) {
                         Text("Empty").tag(nil as Presets?)
@@ -196,6 +197,7 @@ extension AddCarbs {
                         }
                     }
                     .pickerStyle(.automatic)
+                    .foregroundColor(.secondary)
                     ._onBindingChange($state.selection) { _ in
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
