@@ -55,6 +55,42 @@
 /* Headline in enacted pop up (at: at what time) */
 "Error at" = "Foutmelding op";
 
+/* Bolus View Meal Summary Header */
+"Meal Summary" = "Maaltijd overzicht";
+
+/* Bolus View Meal Edit Meal Button */
+"Edit Meal" = "Wijzig maaltijd";
+
+/* Bolus View Meal Add Meal Button */
+"Add Meal" = "Maaltijd toevoegen";
+
+/* Bolus View Bolus Summary Header */
+"Bolus Summary" = "Bolus overzicht";
+
+/* For the  Bolus View pop-up */
+"Calculations" = "Berekeningen";
+
+/* For the  Bolus View pop-up */
+"Fatty Meal" = "Vette maaltijd";
+
+/* For the  Bolus View pop-up */
+"Full Bolus" = "Volledige bolus";
+
+/* For the  Bolus View pop-up */
+"Fraction" = "Fractie";
+
+/* For the  Bolus View pop-up */
+"Fatty Meal Factor" = "Vette maaltijd factor";
+
+/* For the  Bolus View pop-up */
+"Result" = "Resultaat";
+
+/* For the  Bolus View pop-up */
+"Your entered amount was limited by your max Bolus setting of %d%@" = "Je ingevoerde hoeveelheid is beperkt door je maximale bolusinstelling van %d%@";
+
+/* Bolus View Continue Button */
+"Continue" = "Vervolg";
+
 /* Home title */
 "Home" = "Hoofdmenu";
 
@@ -84,6 +120,9 @@
 
 /*  */
 "Carbs required" = "Koolhydraten benodigd";
+
+/* Saved Food Presets */
+"Saved Food" = "Bewaarde maaltijd";
 
 /* */
 "Are you sure?" = "Weet je het zeker?";
@@ -568,6 +607,9 @@ Enact a temp Basal or a temp target */
 
 /* Automatic delivered treatments */
 "Automatic" = "Automatisch";
+
+/* External insulin treatments */
+"External" = "Extern";
 
 /* */
 "Other" = "Anders";
@@ -1171,6 +1213,9 @@ Enact a temp Basal or a temp target */
 /* An Automatic delivered bolus (SMB) */
 "SMB" = "SMB";
 
+/* A manually entered dose of external insulin */
+"External Insulin" = "Externe insuline";
+
 /* Status highlight when manual temp basal is running. */
 "Manual Basal" = "Handmatige tijdelijke basaal";
 
@@ -1356,6 +1401,12 @@ Enact a temp Basal or a temp target */
 
 /* */
 "Eventual Glucose" = "Voorspelde glucose";
+
+/* */
+"Please wait" = "Even geduld";
+
+/* */
+"Glucose, " = "Glucosewaarde, ";
 
 /* */
 "Target Glucose" = "Doel glucose";
