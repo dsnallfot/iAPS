@@ -1447,6 +1447,11 @@ Enact a temp Basal or a temp target */
 /* */
 "Please wait" = "Vänta...";
 
+
+/* */
+"Target Glucose" = "Målvärden";
+
+
 /* */
 "Glucose, " = "Blodsocker, ";
 
