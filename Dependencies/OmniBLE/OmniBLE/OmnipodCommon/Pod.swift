@@ -85,13 +85,13 @@ public struct Pod {
     public static let defaultExpirationReminderOffset = TimeInterval(hours: 2)
     public static let expirationReminderAlertMinHoursBeforeExpiration = 1
     public static let expirationReminderAlertMaxHoursBeforeExpiration = 24
-    
+
     // Threshold used to display pod end of life warnings
     public static let timeRemainingWarningThreshold = TimeInterval(days: 1)
-    
+
     // Default low reservoir alert limit in Units
     public static let defaultLowReservoirReminder: Double = 10
-    
+
     // Allowed Low Reservoir reminder values
     public static let allowedLowReservoirReminderValues = Array(stride(from: 0, through: 10, by: 1))
 }

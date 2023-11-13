@@ -201,18 +201,16 @@ extension Bolus {
                     carbssView()
                 }
                 label: {
-                    // Group {
-                    // if fetch {
-                    // Image(systemName: "chevron.left").fontWeight(.semibold)
-                    // } else { Image(systemName: "plus.circle.fill") }
-                    Text(fetch ? "Tillbaka" : "Måltid")
-                    // }
-                },
+                    Image(systemName: "chevron.left")
+                        .scaleEffect(0.61)
+                        .font(Font.title.weight(.semibold))
+                        .offset(x: -13, y: 0)
 
-                // trailing: Button { showInfo.toggle() }
-                // label: { Image(systemName: "info.circle.fill") }
+                    Text("Måltid")
+                        .offset(x: -22, y: 0)
+                },
                 trailing: Button { state.hideModal() }
-                label: { Text("Cancel") }
+                label: { Text("Close") }
             )
             .onAppear {
                 configureView {
@@ -330,8 +328,12 @@ extension Bolus {
                             Button(action: {
                                 showInfo.toggle()
                             }) {
-                                // Image(systemName: "chevron.left").fontWeight(.semibold)
+                                Image(systemName: "chevron.left")
+                                    .scaleEffect(0.61)
+                                    .font(Font.title.weight(.semibold))
+                                    .offset(x: -13, y: 0)
                                 Text("Tillbaka")
+                                    .offset(x: -22, y: 0)
                             }
                         }
                     )
@@ -672,9 +674,9 @@ extension Bolus {
                     Text(state.units.rawValue)
                         .foregroundColor(.secondary)
                 }
-                // Basal dont update for some reason. needs to check. not crucial info in the calc view right now
+                // Basal dont update automatic for some reason, only when triggering save to pump. needs to check. not crucial info in the calc view right now
                 HStack {
-                    Text("Aktuell basal:")
+                    Text("Schemalagd basal:")
                         .foregroundColor(.secondary)
                     Spacer()
                     let basal = state.currentBasal

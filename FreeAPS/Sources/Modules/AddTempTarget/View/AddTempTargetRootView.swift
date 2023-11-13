@@ -188,7 +188,7 @@ extension AddTempTarget {
             }
             .navigationTitle("Tillfälliga mål")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: Button("Close", action: state.hideModal))
+            .navigationBarItems(trailing: Button("Close", action: state.hideModal))
         }
 
         private func presetView(for preset: TempTarget) -> some View {
