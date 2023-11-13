@@ -674,9 +674,9 @@ extension Bolus {
                     Text(state.units.rawValue)
                         .foregroundColor(.secondary)
                 }
-                // Basal dont update for some reason. needs to check. not crucial info in the calc view right now
+                // Basal dont update automatic for some reason, only when triggering save to pump. needs to check. not crucial info in the calc view right now
                 HStack {
-                    Text("Aktuell basal:")
+                    Text("Schemalagd basal:")
                         .foregroundColor(.secondary)
                     Spacer()
                     let basal = state.currentBasal
