@@ -568,6 +568,26 @@ extension Bolus {
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.orange)
                         }
+                    } else if state.useSuperBolus {
+                        HStack {
+                            // Image(systemName: "checkmark.circle.fill")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.cyan)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                }
+                            Text("Superbolusdos")
+                                .foregroundColor(.cyan)
+                                .onTapGesture {
+                                    showInfo.toggle()
+                                }
+                            Spacer()
+                            Text(
+                                formatter
+                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                    NSLocalizedString(" U", comment: "Insulin unit")
+                            ).foregroundColor(.cyan)
+                        }
                     } else {
                         HStack {
                             // Image(systemName: "checkmark.circle.fill")
