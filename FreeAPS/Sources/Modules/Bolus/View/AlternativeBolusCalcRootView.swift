@@ -150,7 +150,7 @@ extension Bolus {
                             keepForNextWiew = true
                             state.showModal(for: nil)
                         }
-                        label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center)
+                        label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center).font(.title3)
                     }
                 }
             }
