@@ -142,16 +142,16 @@ extension AddCarbs {
             var addedString = ""
 
             if extracarbs > 0, filteredArray.isNotEmpty {
-                addedString += "Additional carbs: \(extracarbs) "
-            } else if extracarbs < 0 { addedString += "Removed carbs: \(extracarbs) " }
+                addedString += "Extra kh: \(extracarbs) "
+            } else if extracarbs < 0 { addedString += "Raderade kh: \(extracarbs) " }
 
             if extraFat > 0, filteredArray.isNotEmpty {
-                addedString += "Additional fat: \(extraFat) "
-            } else if extraFat < 0 { addedString += "Removed fat: \(extraFat) " }
+                addedString += "Extra fett: \(extraFat) "
+            } else if extraFat < 0 { addedString += "Raderat fett: \(extraFat) " }
 
             if extraProtein > 0, filteredArray.isNotEmpty {
-                addedString += "Additional protein: \(extraProtein) "
-            } else if extraProtein < 0 { addedString += "Removed protein: \(extraProtein) " }
+                addedString += "Extra protein: \(extraProtein) "
+            } else if extraProtein < 0 { addedString += "Raderat protein: \(extraProtein) " }
 
             if addedString != "" {
                 waitersNotepad.append(addedString)
