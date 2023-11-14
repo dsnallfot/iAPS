@@ -82,7 +82,7 @@ struct StatsView: View {
                     Text(intervalAverage.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1))) + " min")
                 }
                 VStack(spacing: 5) {
-                    Text("Duration").font(.subheadline).foregroundColor(headline)
+                    Text("Tid/Loop").font(.subheadline).foregroundColor(headline)
                     Text(
                         (medianDuration * 60)
                             .formatted(.number.grouping(.never).rounded().precision(.fractionLength(1))) + " s"

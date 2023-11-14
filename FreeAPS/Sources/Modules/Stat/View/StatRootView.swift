@@ -137,14 +137,14 @@ extension Stat {
 
         var body: some View {
             VStack(alignment: .center) {
-                chart().padding(.top, 20)
+                chart().padding(.top, 20).padding(.leading, 10).padding(.trailing, 10)
                 Picker("Duration", selection: $selectedDuration) {
                     ForEach(Duration.allCases) { duration in
                         Text(NSLocalizedString(duration.rawValue, comment: "")).tag(Optional(duration))
                     }
                 }
                 .pickerStyle(.segmented).background(.cyan.opacity(0.2))
-                stats()
+                stats().padding(.top, 20).padding(.leading, 10).padding(.trailing, 10)
             }
             .onAppear(perform: configureView)
             .navigationBarTitle("Statistics")
