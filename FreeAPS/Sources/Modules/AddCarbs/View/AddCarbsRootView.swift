@@ -327,7 +327,6 @@ extension AddCarbs {
             }.focused($isFocused)
             // Time
             HStack {
-                let now = Date.now
                 Text("Tid")
                 Spacer()
                 if !pushed {
@@ -341,14 +340,11 @@ extension AddCarbs {
                     DatePicker(
                         "Tid",
                         selection: $state.date,
-                        in: ...now,
                         displayedComponents: [.hourAndMinute]
                     ).controlSize(.mini)
                         .labelsHidden()
                     Button {
-                        if state.date.addingTimeInterval(5.minutes.timeInterval) < now {
-                            state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
-                        }
+                        state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
                     }
                     label: { Image(systemName: "plus.circle") }.tint(.blue).buttonStyle(.borderless)
                 }
