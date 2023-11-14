@@ -66,13 +66,16 @@ extension AddCarbs {
                             state.useFPUconversion.toggle()
                         }
                         label: {
+                            Image(
+                                systemName: state.useFPUconversion ? "chevron.up.circle" : "chevron.down.circle"
+                            )
                             Text(
-                                state
-                                    .useFPUconversion ? NSLocalizedString("Dölj detaljerad vy", comment: "") :
-                                    NSLocalizedString("Visa detaljerad vy", comment: "")
-                            ) }
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
+                                state.useFPUconversion ? NSLocalizedString("Dölj detaljer", comment: "") :
+                                    NSLocalizedString("Visa detaljer", comment: "")
+                            )
+                        }
+                        .controlSize(.mini)
+                        .buttonStyle(BorderlessButtonStyle())
                         Button {
                             isPromptPresented = true
                         }
