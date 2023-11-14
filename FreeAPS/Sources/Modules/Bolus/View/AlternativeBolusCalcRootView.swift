@@ -132,6 +132,7 @@ extension Bolus {
                                 }
                                 Text(exceededMaxBolus ? "Inställd maxgräns: \(formattedMaxAmountBolus)E   " : "Ge bolusdos")
                                     .fontWeight(.semibold)
+                                    .font(.title3)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)

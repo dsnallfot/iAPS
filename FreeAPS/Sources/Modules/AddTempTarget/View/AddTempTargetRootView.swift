@@ -34,6 +34,7 @@ extension AddTempTarget {
                                     .tint(.white)
                                 Text("Avbryt tillfälligt mål")
                                     .fontWeight(.semibold)
+                                    .font(.title3)
                                     .tint(.white)
                             }
                         }

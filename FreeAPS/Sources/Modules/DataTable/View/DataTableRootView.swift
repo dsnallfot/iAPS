@@ -124,6 +124,7 @@ extension DataTable {
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .fontWeight(.semibold)
+                            .font(.title3)
                             .listRowBackground(
                                 state.manualGlucose < limitLow || state
                                     .manualGlucose > limitHigh ? Color(.systemGray4) : Color(.systemBlue)
@@ -192,6 +193,7 @@ extension DataTable {
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
                                         )
                                         .fontWeight(.semibold)
+                                        .font(.title3)
                                     }
                                 }
                             }
