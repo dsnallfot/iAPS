@@ -45,7 +45,7 @@ extension AddCarbs {
                 // Summary when combining presets
                 if state.waitersNotepad() != "" {
                     Section(header: Text("Valda favoriter")) {
-                        VStack {
+                        ScrollView(.horizontal, showsIndicators: false) {
                             let test = state.waitersNotepad().components(separatedBy: ", ").removeDublicates()
                             HStack(spacing: 0) {
                                 ForEach(test, id: \.self) {
