@@ -74,12 +74,11 @@ extension OverrideProfilesConfig {
                                 Image(systemName: "arrow.uturn.backward")
                                 Text("Återgå till normal profil")
                                     .fontWeight(.semibold)
+                                    .font(.title3)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color(.loopRed))
-                        // .buttonStyle(BorderlessButtonStyle())
-                        // .disabled(!state.isEnabled)
                         .tint(.white)
                     }
                 }
@@ -284,7 +283,7 @@ extension OverrideProfilesConfig {
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
             .navigationBarTitle("Profiles")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
         }
 

@@ -131,6 +131,7 @@ extension AddCarbs {
                                     )
                             )
                             .fontWeight(.semibold)
+                            .font(.title3)
                         }
                     }
                     .disabled(
