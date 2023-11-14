@@ -6,7 +6,7 @@ struct WatchState: Codable {
     var trendRaw: String?
     var delta: String?
     var glucoseDate: Date?
-    var glucoseDateInterval: UInt64?
+    // var glucoseDateInterval: UInt64?
     var lastLoopDate: Date?
     var lastLoopDateInterval: UInt64?
     var bolusIncrement: Decimal?
