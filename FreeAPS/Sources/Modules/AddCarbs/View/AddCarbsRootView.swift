@@ -69,10 +69,12 @@ extension AddCarbs {
                             Image(
                                 systemName: state.useFPUconversion ? "chevron.up.circle" : "chevron.down.circle"
                             )
+                            .foregroundColor(.secondary)
                             Text(
                                 state.useFPUconversion ? NSLocalizedString("Dölj detaljer", comment: "") :
                                     NSLocalizedString("Visa detaljer", comment: "")
                             )
+                            .foregroundColor(.secondary)
                         }
                         .controlSize(.mini)
                         .buttonStyle(BorderlessButtonStyle())
@@ -91,7 +93,7 @@ extension AddCarbs {
                                             .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
                                             state
                                             .protein
-                                    ) ? Color(.systemGray2) : Color(.systemBlue)
+                                    ) ? .secondary : Color(.systemBlue)
                             )
                             .disabled(
                                 (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
@@ -192,7 +194,7 @@ extension AddCarbs {
             Section {
                 HStack {
                     Text("Meal Presets")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.primary)
                     Spacer()
                     Picker("", selection: $state.selection) {
                         Text("Empty").tag(nil as Presets?)
@@ -201,7 +203,7 @@ extension AddCarbs {
                         }
                     }
                     .pickerStyle(.automatic)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.primary)
                     ._onBindingChange($state.selection) { _ in
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
