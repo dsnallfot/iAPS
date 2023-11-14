@@ -159,8 +159,10 @@ extension DataTable {
                 .store(in: &lifetime)
         }
 
-        func deleteGlucose(at index: Int) {
-            let id = glucose[index].id
+        // func deleteGlucose(at index: Int) {
+        // let id = glucose[index].id
+        func deleteGlucose(_ glucose: Glucose) {
+            let id = glucose.id
             provider.deleteGlucose(id: id)
 
             // CoreData
@@ -181,8 +183,10 @@ extension DataTable {
                 }
             } catch { /* To do: handle any thrown errors. */ }
             // Manual Glucose
-            if (glucose[index].glucose.type ?? "") == GlucoseType.manual.rawValue {
-                provider.deleteManualGlucose(date: glucose[index].glucose.dateString)
+            // if (glucose[index].glucose.type ?? "") == GlucoseType.manual.rawValue {
+            // provider.deleteManualGlucose(date: glucose[index].glucose.dateString)
+            if (glucose.glucose.type ?? "") == GlucoseType.manual.rawValue {
+                provider.deleteManualGlucose(date: glucose.glucose.dateString)
             }
         }
 
@@ -207,10 +211,10 @@ extension DataTable {
             // Save to Health
             var saveToHealth = [BloodGlucose]()
             saveToHealth.append(saveToJSON)
-            healthKitManager.saveIfNeeded(bloodGlucose: saveToHealth)
+            healthKitManager.saveIfNeeded(bloodGlucose: saveToHealth) // extra kod?
 
             // Reset amount to 0 for next entry.
-            manualGlucose = 0
+            manualGlucose = 0 // extra kod?
         }
 
         func addNonPumpInsulin() {
