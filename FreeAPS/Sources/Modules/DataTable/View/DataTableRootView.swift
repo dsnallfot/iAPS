@@ -244,11 +244,12 @@ extension DataTable {
                         Button(action: { showFutureEntries.toggle() }, label: {
                             Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
                                 .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
-                                .font(.subheadline)
+                                .font(.footnote)
                             Image(
-                                systemName: showFutureEntries ? "chevron.down.circle" : "chevron.right.circle"
+                                systemName: showFutureEntries ? "chevron.up.circle" : "chevron.down.circle"
                             )
                             .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                            .font(.footnote)
 
                         })
                             .buttonStyle(.borderless)
@@ -353,7 +354,7 @@ extension DataTable {
                         alertTreatmentToDelete = item
                         if item.type == .carbs {
                             alertTitle = "Radera kolhydrater?"
-                            alertMessage = dateFormatter.string(from: item.date) + ", " + item.amountText
+                            alertMessage = dateFormatter.string(from: item.date) + " • " + item.amountText
                         } else if item.type == .fpus {
                             alertTitle = "Radera Fett & Protein?"
                             alertMessage = "All registrerad fett och protein i måltiden kommer att raderas."
