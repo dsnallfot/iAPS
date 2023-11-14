@@ -41,6 +41,22 @@ extension AddCarbs {
                         }
                     }
                 }
+
+                // Summary when combining presets
+                if state.waitersNotepad() != "" {
+                    Section(header: Text("Valda favoriter")) {
+                        VStack {
+                            let test = state.waitersNotepad().components(separatedBy: ", ").removeDublicates()
+                            HStack(spacing: 0) {
+                                ForEach(test, id: \.self) {
+                                    Text($0).foregroundStyle(Color.randomGreen()).font(.footnote)
+                                    Text($0 == test[test.count - 1] ? "" : " • ")
+                                }
+                            }.frame(maxWidth: .infinity, alignment: .center)
+                        }
+                    }
+                }
+
                 Section {
                     HStack {
                         Text("Carbs").fontWeight(.semibold)
@@ -63,26 +79,10 @@ extension AddCarbs {
 
                     HStack {
                         Button {
-                            state.useFPUconversion.toggle()
-                        }
-                        label: {
-                            Image(
-                                systemName: state.useFPUconversion ? "chevron.up.circle" : "chevron.down.circle"
-                            )
-                            .foregroundColor(.secondary)
-                            Text(
-                                state.useFPUconversion ? NSLocalizedString("Dölj detaljer", comment: "") :
-                                    NSLocalizedString("Visa detaljer", comment: "")
-                            )
-                            .foregroundColor(.secondary)
-                        }
-                        .controlSize(.mini)
-                        .buttonStyle(BorderlessButtonStyle())
-                        Button {
                             isPromptPresented = true
                         }
-                        label: { Text("Save as Preset") }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        label: { Text("Spara favorit") }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .controlSize(.mini)
                             .buttonStyle(BorderlessButtonStyle())
                             .foregroundColor(
@@ -104,6 +104,23 @@ extension AddCarbs {
                                             .protein
                                     )
                             )
+                        Spacer()
+                        Button {
+                            state.useFPUconversion.toggle()
+                        }
+                        label: {
+                            Text(
+                                state.useFPUconversion ? NSLocalizedString("Mindre", comment: "") :
+                                    NSLocalizedString("Mer", comment: "")
+                            )
+                            .foregroundColor(.accentColor)
+                            Image(
+                                systemName: state.useFPUconversion ? "chevron.up.circle" : "chevron.down.circle"
+                            )
+                            .foregroundColor(.accentColor)
+                        }
+                        .controlSize(.mini)
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                     .popover(isPresented: $isPromptPresented) {
                         presetPopover
@@ -150,7 +167,6 @@ extension AddCarbs {
                     .tint(.white)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
-                footer: { Text(state.waitersNotepad().description) }
             }
             .onAppear {
                 configureView {
@@ -186,32 +202,34 @@ extension AddCarbs {
                         saved = false
                         isPromptPresented = false }
                     label: { Text("Cancel") }
-                } header: { Text("Enter Meal Preset Name") }
+                } header: { Text("Spara ny favorit") }
             }
         }
 
         var mealPresets: some View {
             Section {
                 HStack {
-                    Text("Meal Presets")
-                        .foregroundColor(.primary)
-                    Spacer()
-                    Picker("", selection: $state.selection) {
-                        Text("Empty").tag(nil as Presets?)
+                    Text("")
+                    Picker("Förval", selection: $state.selection) {
+                        Text("Välj favorit").tag(nil as Presets?)
                         ForEach(carbPresets, id: \.self) { (preset: Presets) in
                             Text(preset.dish ?? "").tag(preset as Presets?)
                         }
                     }
-                    .pickerStyle(.automatic)
-                    .foregroundColor(.primary)
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    // .pickerStyle(.automatic)
+                    .foregroundColor(.secondary)
+                    .offset(x: -20, y: 0)
                     ._onBindingChange($state.selection) { _ in
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
                         state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
                         state.addToSummation()
                     }
+                    Spacer()
+
                     if state.selection != nil {
-                        Text(" ")
                         Button {
                             if state.carbs != 0,
                                (state.carbs - (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) as Decimal) >= 0
@@ -240,7 +258,7 @@ extension AddCarbs {
                         }
                         label: {
                             Image(systemName: "minus.circle")
-                            Text(" ")
+                            Text("     ")
                         }
                         .disabled(
                             state
@@ -252,32 +270,17 @@ extension AddCarbs {
                         )
                         .tint(.blue)
                         .buttonStyle(.borderless)
-                        .controlSize(.mini)
-
-                        Button {
-                            state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
-                            state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
-                            state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
-
-                            state.addPresetToNewMeal()
-                        }
-                        label: {
-                            Image(systemName: "plus.circle")
-                            Text(" ") }
-                            .disabled(state.selection == nil)
-                            .tint(.blue)
-                            .buttonStyle(.borderless)
-                            .controlSize(.mini)
 
                         Button { showAlert.toggle() }
 
-                        label: { Image(systemName: "trash") }
+                        label: { Image(systemName: "trash")
+                            Text("    ") }
                             .disabled(state.selection == nil)
                             .accentColor(.red)
                             .buttonStyle(BorderlessButtonStyle())
                             .controlSize(.mini)
                             .alert(
-                                "Delete preset '\(state.selection?.dish ?? "")'?",
+                                "Radera favorit '\(state.selection?.dish ?? "")'?",
                                 isPresented: $showAlert,
                                 actions: {
                                     Button("No", role: .cancel) {}
@@ -292,6 +295,19 @@ extension AddCarbs {
                                     }
                                 }
                             )
+
+                        Button {
+                            state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
+                            state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
+                            state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+
+                            state.addPresetToNewMeal()
+                        }
+                        label: {
+                            Image(systemName: "plus.circle") }
+                            .disabled(state.selection == nil)
+                            .tint(.blue)
+                            .buttonStyle(.borderless)
                     }
                 }
             }
@@ -356,5 +372,16 @@ extension AddCarbs {
                 }
             }
         }
+    }
+}
+
+public extension Color {
+    static func randomGreen(randomOpacity: Bool = false) -> Color {
+        Color(
+            red: .random(in: 0 ... 1),
+            green: .random(in: 0.4 ... 0.7),
+            blue: .random(in: 0.2 ... 1),
+            opacity: randomOpacity ? .random(in: 0.8 ... 1) : 1
+        )
     }
 }
