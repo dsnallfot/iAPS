@@ -425,6 +425,7 @@ extension Bolus {
                         Text("Hög FP%")
                             .foregroundColor(.brown)
                             .font(.footnote)
+                            .offset(x: 3, y: 0)
 
                         Toggle(isOn: $state.useFattyMealCorrectionFactor) {}
                             .toggleStyle(CheckboxToggleStyle())
@@ -441,6 +442,7 @@ extension Bolus {
                         Text(" Superbolus")
                             .foregroundColor(.cyan)
                             .font(.footnote)
+                            .offset(x: 3, y: 0)
 
                         Toggle(isOn: $state.useSuperBolus) {}
                             .toggleStyle(CheckboxToggleStyle())
