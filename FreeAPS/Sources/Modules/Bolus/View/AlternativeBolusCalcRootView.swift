@@ -241,9 +241,9 @@ extension Bolus {
             .onDisappear {
                 state.useFattyMealCorrectionFactor = false
                 if fetch, hasFatOrProtein, !keepForNextWiew {
-                    state.delete(deleteTwice: true, id: meal.first?.id ?? "")
+                    state.delete(deleteTwice: true, meal: meal)
                 } else if fetch, !keepForNextWiew {
-                    state.delete(deleteTwice: false, id: meal.first?.id ?? "")
+                    state.delete(deleteTwice: false, meal: meal)
                 }
             }
             .sheet(isPresented: $showInfo) {
@@ -354,9 +354,9 @@ extension Bolus {
             let id_ = meal.first?.id ?? ""
             if fetch {
                 keepForNextWiew = true
-                state.backToCarbsView(complexEntry: fetch, id_)
+                state.backToCarbsView(complexEntry: fetch, meal, override: false)
             } else {
-                state.showModal(for: .addCarbs(editMode: false))
+                state.backToCarbsView(complexEntry: false, meal, override: true)
             }
         }
 
@@ -409,7 +409,7 @@ extension Bolus {
             .onTapGesture {
                 let id_ = meal.first?.id ?? ""
                 keepForNextWiew = true
-                state.backToCarbsView(complexEntry: fetch, id_)
+                state.backToCarbsView(complexEntry: fetch, meal, override: false)
             }
         }
 
