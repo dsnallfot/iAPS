@@ -1071,12 +1071,12 @@ extension Bolus {
                             .foregroundColor(.loopRed)
                             .font(.system(size: 16))
                     } else if state.error && state.insulinCalculated > 0 && !state.useSuperBolus {
-                        Text("Vänta med bolus:")
+                        Text("Vänta med bolus?")
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
                             .font(.system(size: 16))
                     } else if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
-                        Text("Vänta med bolus:")
+                        Text("Vänta med bolus?:")
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
                             .font(.system(size: 16))
@@ -1136,142 +1136,266 @@ extension Bolus {
                                 .foregroundColor(.cyan)
                         }
                     }
-                    // Result caclulations
+                    // Result calculations
                     if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
                         if roundedOrefInsulin >= state.maxBolus {
-                            HStack {
-                                Text(" ≠ ")
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.purple)
-                                Text(roundedOrefInsulin.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.purple)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.purple)
-                                    .font(.system(size: 16))
+                            Text(" ≠ ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.purple)
+                            Button(action: {
+                                state.amount = roundedOrefInsulin
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(roundedOrefInsulin.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.purple)
+                                )
                             }
                         } else if roundedOrefInsulin <= 0 {
-                            HStack {
-                                Text(" ≠ ")
-                                    .foregroundColor(.secondary)
-                                Text("0")
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.loopRed)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.loopRed)
-                                    .font(.system(size: 16))
+                            Text(" ≠ ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Button(action: {
+                                state.amount = 0
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text("0")
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.loopRed)
+                                )
                             }
                         } else {
-                            HStack {
-                                Text(" ≠ ")
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.insulin)
-                                Text(roundedOrefInsulin.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.insulin)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.insulin)
-                                    .font(.system(size: 16))
+                            Text(" ≠ ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.insulin)
+                            Button(action: {
+                                state.amount = roundedOrefInsulin
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(roundedOrefInsulin.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.insulin)
+                                )
                             }
                         }
-
                     } else {
                         let result = state.insulinCalculated
                         let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
                         let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
                         if state.insulinCalculated >= state.maxBolus {
-                            HStack {
-                                Text(" ≠ ")
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.purple)
-                                Text(roundedResult.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.purple)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.purple)
-                                    .font(.system(size: 16))
+                            Text(" ≠ ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.purple)
+                            Button(action: {
+                                state.amount = Decimal(roundedResult)
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(roundedResult.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.purple)
+                                )
                             }
                         } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 && !state.useSuperBolus {
-                            HStack {
-                                Text(" ≠ ")
-                                    .foregroundColor(.secondary)
-                                Text("0")
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.loopRed)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.loopRed)
-                                    .font(.system(size: 16))
+                            Text(" ≠ ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Button(action: {
+                                state.amount = 0
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text("0")
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.loopRed)
+                                )
                             }
                         } else if state.error && state.insulinCalculated > 0 && !state.useSuperBolus {
-                            HStack {
-                                Text(" = ")
-                                    .foregroundColor(.secondary)
-                                Text(state.insulinCalculated.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.orange)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.orange)
-                                    .font(.system(size: 16))
+                            Text(" = ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Button(action: {
+                                state.amount = state.insulinCalculated
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(state.insulinCalculated.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.orange)
+                                )
                             }
                         } else if state.useSuperBolus {
-                            HStack {
-                                Text(" = ")
-                                    .foregroundColor(.secondary)
-                                Text(state.insulinCalculated.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.cyan)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.cyan)
-                                    .font(.system(size: 16))
+                            Text(" = ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Button(action: {
+                                state.amount = state.insulinCalculated
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(state.insulinCalculated.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.cyan)
+                                )
                             }
                         } else {
-                            HStack {
-                                Text(" = ")
-                                    .foregroundColor(.secondary)
-                                Text(roundedResult.formatted())
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.green)
-                                Text(unit)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.green)
-                                    .font(.system(size: 16))
+                            Text(" = ")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Button(action: {
+                                state.amount = Decimal(roundedResult)
+                                showInfo.toggle()
+                            }) {
+                                HStack {
+                                    Text(roundedResult.formatted())
+                                        .fontWeight(.bold)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .offset(x: 5, y: 0)
+
+                                    Text(unit)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16))
+                                        .offset(x: -2, y: 0)
+                                }
+                                .padding(.top, 2)
+                                .padding(.bottom, 3)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 7)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 3)
+                                        .background(Color.green)
+                                )
                             }
                         }
                     }
                 }
             }
-            .onTapGesture {
-                if state.insulinCalculated > roundedOrefInsulin {
-                    if roundedOrefInsulin <= 0 && !state.useSuperBolus {
-                        state.amount = 0
-                    } else if roundedOrefInsulin <= 0 && state.useSuperBolus {
-                        state.amount = state.insulinCalculated
-                    } else if roundedOrefInsulin > 0 && state.useSuperBolus {
-                        state.amount = state.insulinCalculated
-                    } else {
-                        state.amount = roundedOrefInsulin
-                    }
-                } else {
-                    state.amount = state.insulinCalculated
-                }
-                showInfo.toggle()
-            }
-            .padding(.top, 2)
+            // .padding(.top, 2)
             .padding(.bottom, 2)
         }
 
