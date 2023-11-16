@@ -1157,7 +1157,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1165,7 +1164,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
                             }
@@ -1188,7 +1187,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1196,7 +1194,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
                             }
@@ -1219,7 +1217,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1227,7 +1224,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.insulin)
                                 )
                             }
@@ -1255,7 +1252,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1263,7 +1259,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
                             }
@@ -1286,7 +1282,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1294,7 +1289,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
                             }
@@ -1317,7 +1312,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1325,7 +1319,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.orange)
                                 )
                             }
@@ -1348,7 +1342,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1356,7 +1349,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.cyan)
                                 )
                             }
@@ -1379,7 +1372,6 @@ extension Bolus {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
-                                        .offset(x: -2, y: 0)
                                 }
                                 .padding(.top, 2)
                                 .padding(.bottom, 3)
@@ -1387,7 +1379,7 @@ extension Bolus {
                                 .padding(.trailing, 7)
                                 .background(
                                     RoundedRectangle(cornerRadius: 5)
-                                        .stroke(Color.white, lineWidth: 3)
+                                        .stroke(Color.white, lineWidth: 2)
                                         .background(Color.green)
                                 )
                             }
