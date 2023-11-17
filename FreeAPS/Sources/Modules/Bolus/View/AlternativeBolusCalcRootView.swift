@@ -1162,7 +1162,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
@@ -1192,7 +1192,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
@@ -1222,7 +1222,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.insulin)
                                 )
@@ -1257,7 +1257,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
@@ -1287,7 +1287,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
@@ -1317,7 +1317,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.orange)
                                 )
@@ -1347,7 +1347,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.cyan)
                                 )
@@ -1377,7 +1377,7 @@ extension Bolus {
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 5)
+                                    RoundedRectangle(cornerRadius: 0)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.green)
                                 )
