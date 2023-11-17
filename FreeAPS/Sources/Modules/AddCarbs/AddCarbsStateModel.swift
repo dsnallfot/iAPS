@@ -41,13 +41,13 @@ extension AddCarbs {
 
             let carbsToStore = [CarbsEntry(
                 collectionID: id_,
-                createdAt: date,
+                createdAt: Date.now,
                 carbs: carbs,
                 fat: fat,
                 protein: protein,
                 note: note,
                 enteredBy: CarbsEntry.manual,
-                isFPU: false, fpuID: nil
+                isFPU: false, fpuID: (carbs > 0 || fat > 0) ? UUID().uuidString : nil
             )]
             carbsStorage.storeCarbs(carbsToStore)
 
@@ -191,13 +191,14 @@ extension AddCarbs {
 
         func saveToCoreData(_ stored: [CarbsEntry]) {
             let save = Meals(context: coredataContext)
-            save.createdAt = Date.now
-            save.id = stored.first?.collectionID ?? ""
-            save.carbs = Double(stored.first?.carbs ?? 0)
-            save.fat = Double(stored.first?.fat ?? 0)
-            save.protein = Double(stored.first?.protein ?? 0)
-            save.note = stored.first?.note ?? ""
-            if coredataContext.hasChanges {
+            if let entry = stored.first {
+                save.createdAt = Date.now
+                save.id = entry.collectionID ?? ""
+                save.fpuID = entry.fpuID ?? ""
+                save.carbs = Double(entry.carbs)
+                save.fat = Double(entry.fat ?? 0)
+                save.protein = Double(entry.protein ?? 0)
+                save.note = entry.note
                 try? coredataContext.save()
             }
         }
