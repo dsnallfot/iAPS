@@ -9,6 +9,7 @@ extension AddCarbs {
         @StateObject var state = StateModel()
         @State var dish: String = ""
         @State var isPromptPresented = false
+        @State private var note: String = ""
         @State var saved = false
         @State var pushed = false
         @State private var showAlert = false
@@ -182,6 +183,13 @@ extension AddCarbs {
             Form {
                 Section {
                     TextField("Name Of Dish", text: $dish)
+                        .onAppear {
+                            // Set initial text of the TextField
+                            if !state.note.isEmpty {
+                                dish = state.note
+                            }
+                        }
+
                     Button {
                         saved = true
                         if dish != "", saved {
@@ -190,19 +198,29 @@ extension AddCarbs {
                             preset.fat = state.fat as NSDecimalNumber
                             preset.protein = state.protein as NSDecimalNumber
                             preset.carbs = state.carbs as NSDecimalNumber
+
+                            // Set the note property
+                            preset.note = state.note
+
                             try? moc.save()
                             state.addNewPresetToWaitersNotepad(dish)
                             saved = false
                             isPromptPresented = false
                         }
+                    } label: {
+                        Text("Save")
                     }
-                    label: { Text("Save") }
+
                     Button {
                         dish = ""
                         saved = false
-                        isPromptPresented = false }
-                    label: { Text("Cancel") }
-                } header: { Text("Spara ny favorit") }
+                        isPromptPresented = false
+                    } label: {
+                        Text("Cancel")
+                    }
+                } header: {
+                    Text("Spara ny favorit")
+                }
             }
         }
 
@@ -225,6 +243,7 @@ extension AddCarbs {
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
                         state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+                        state.note = state.selection?.note ?? "" // Set state.note to the selected note
                         state.addToSummation()
                     }
                     Spacer()
@@ -252,6 +271,9 @@ extension AddCarbs {
                             {
                                 state.protein -= (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal)
                             } else { state.protein = 0 }
+
+                            // Handle note removal here
+                            state.note = "" // Reset state.note
 
                             state.removePresetFromNewMeal()
                             if state.carbs == 0, state.fat == 0, state.protein == 0 { state.summation = [] }
@@ -291,6 +313,9 @@ extension AddCarbs {
                                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
                                         state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
 
+                                        // Handle note addition here
+                                        state.note = state.selection?.note ?? "" // Set state.note to the selected note
+
                                         state.addPresetToNewMeal()
                                     }
                                 }
@@ -300,6 +325,9 @@ extension AddCarbs {
                             state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                             state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
                             state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+
+                            // Handle note addition here
+                            state.note = state.selection?.note ?? "" // Set state.note to the selected note
 
                             state.addPresetToNewMeal()
                         }
