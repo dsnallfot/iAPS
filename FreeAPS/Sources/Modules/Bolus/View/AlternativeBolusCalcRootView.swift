@@ -401,7 +401,6 @@ extension Bolus {
                             Text("Note")
                             Spacer()
                             Text(note)
-                            Text("")
                         }
                     }
                 }
