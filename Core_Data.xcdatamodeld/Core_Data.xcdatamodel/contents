@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="22G120" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Autosens_" representedClassName="Autosens_" syncable="YES" codeGenerationType="class">
         <attribute name="newisf" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="ratio" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
@@ -122,6 +122,7 @@
         <attribute name="carbs" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="dish" optional="YES" attributeType="String"/>
         <attribute name="fat" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
         <attribute name="protein" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
     </entity>
     <entity name="Protein" representedClassName="Protein" syncable="YES" codeGenerationType="class">
