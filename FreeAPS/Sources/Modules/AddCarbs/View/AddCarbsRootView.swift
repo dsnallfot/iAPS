@@ -80,43 +80,16 @@ extension AddCarbs {
 
                     HStack {
                         Button {
-                            isPromptPresented = true
-                        }
-                        label: { Text("Spara favorit") }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
-                            .foregroundColor(
-                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
-                                    (
-                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
-                                            state
-                                            .protein
-                                    ) ? .secondary : Color(.systemBlue)
-                            )
-                            .disabled(
-                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
-                                    (
-                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .protein
-                                    )
-                            )
-                        Spacer()
-                        Button {
                             state.useFPUconversion.toggle()
                         }
                         label: {
-                            Text(
-                                state.useFPUconversion ? NSLocalizedString("Mindre", comment: "") :
-                                    NSLocalizedString("Mer", comment: "")
-                            )
-                            .foregroundColor(.accentColor)
                             Image(
                                 systemName: state.useFPUconversion ? "chevron.up.circle" : "chevron.down.circle"
+                            )
+                            .foregroundColor(.accentColor)
+                            Text(
+                                state.useFPUconversion ? NSLocalizedString("Dölj detaljvy", comment: "") :
+                                    NSLocalizedString("Visa detaljvy", comment: "")
                             )
                             .foregroundColor(.accentColor)
                         }
@@ -246,9 +219,37 @@ extension AddCarbs {
                         state.note = state.selection?.note ?? "" // Set state.note to the selected note
                         state.addToSummation()
                     }
-                    Spacer()
 
                     if state.selection != nil {
+                        Button { showAlert.toggle() }
+
+                        label: {
+                            Image(systemName: "trash")
+                            Text("     ")
+                        }
+                        .disabled(state.selection == nil)
+                        .accentColor(.red)
+                        .buttonStyle(BorderlessButtonStyle())
+                        .controlSize(.mini)
+                        .alert(
+                            "Radera favorit '\(state.selection?.dish ?? "")'?",
+                            isPresented: $showAlert,
+                            actions: {
+                                Button("No", role: .cancel) {}
+                                Button("Yes", role: .destructive) {
+                                    state.deletePreset()
+
+                                    state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
+                                    state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
+                                    state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+
+                                    // Handle note addition here
+                                    state.note = state.selection?.note ?? "" // Set state.note to the selected note
+
+                                    state.addPresetToNewMeal()
+                                }
+                            }
+                        )
                         Button {
                             if state.carbs != 0,
                                (state.carbs - (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) as Decimal) >= 0
@@ -280,7 +281,7 @@ extension AddCarbs {
                         }
                         label: {
                             Image(systemName: "minus.circle")
-                            Text("     ")
+                            Text("    ")
                         }
                         .disabled(
                             state
@@ -292,35 +293,6 @@ extension AddCarbs {
                         )
                         .tint(.blue)
                         .buttonStyle(.borderless)
-
-                        Button { showAlert.toggle() }
-
-                        label: { Image(systemName: "trash")
-                            Text("    ") }
-                            .disabled(state.selection == nil)
-                            .accentColor(.red)
-                            .buttonStyle(BorderlessButtonStyle())
-                            .controlSize(.mini)
-                            .alert(
-                                "Radera favorit '\(state.selection?.dish ?? "")'?",
-                                isPresented: $showAlert,
-                                actions: {
-                                    Button("No", role: .cancel) {}
-                                    Button("Yes", role: .destructive) {
-                                        state.deletePreset()
-
-                                        state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
-                                        state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
-                                        state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
-
-                                        // Handle note addition here
-                                        state.note = state.selection?.note ?? "" // Set state.note to the selected note
-
-                                        state.addPresetToNewMeal()
-                                    }
-                                }
-                            )
-
                         Button {
                             state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                             state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
@@ -332,10 +304,40 @@ extension AddCarbs {
                             state.addPresetToNewMeal()
                         }
                         label: {
-                            Image(systemName: "plus.circle") }
-                            .disabled(state.selection == nil)
-                            .tint(.blue)
-                            .buttonStyle(.borderless)
+                            Image(systemName: "plus.circle")
+                        }
+                        .disabled(state.selection == nil)
+                        .tint(.blue)
+                        .buttonStyle(.borderless)
+
+                    } else {
+                        Spacer()
+                        Button {
+                            isPromptPresented = true
+                        }
+                        label: { Text("Spara favorit") }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            // .controlSize(.mini)
+                            .buttonStyle(BorderlessButtonStyle())
+                            .foregroundColor(
+                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                                    (
+                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
+                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
+                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
+                                            state
+                                            .protein
+                                    ) ? .secondary : Color(.systemBlue)
+                            )
+                            .disabled(
+                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                                    (
+                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
+                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
+                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) == state
+                                            .protein
+                                    )
+                            )
                     }
                 }
             }
@@ -368,7 +370,7 @@ extension AddCarbs {
             }.foregroundColor(.brown)
             HStack {
                 Text("Notering").foregroundColor(.primary)
-                TextField("Emoji eller kort text", text: $state.note).multilineTextAlignment(.trailing)
+                TextField("...", text: $state.note).multilineTextAlignment(.trailing)
                 if state.note != "", isFocused {
                     Button { isFocused = false } label: {
                         Image(systemName: "keyboard.chevron.compact.down") }
