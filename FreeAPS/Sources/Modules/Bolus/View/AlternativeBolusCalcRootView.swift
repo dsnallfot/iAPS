@@ -113,6 +113,7 @@ extension Bolus {
                                 exceededMaxBolus3 = false
                             }
                         }
+                        .listRowBackground(Color(.insulin).opacity(0.5))
                     }
                 } header: { Text("Bolus") }
 

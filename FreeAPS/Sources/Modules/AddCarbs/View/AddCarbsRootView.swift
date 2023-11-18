@@ -71,6 +71,7 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
+                    .listRowBackground(Color(.loopYellow).opacity(0.7))
 
                     if state.useFPUconversion {
                         proteinAndFat()
@@ -83,7 +84,7 @@ extension AddCarbs {
                             isPromptPresented = true
                         }
                         label: {
-                            Text("Spara ny favorit") }
+                            Text("Spara ny favorit  ") }
                             // .frame(maxWidth: .infinity, alignment: .leading)
                             .controlSize(.mini)
                             .buttonStyle(BorderlessButtonStyle())
