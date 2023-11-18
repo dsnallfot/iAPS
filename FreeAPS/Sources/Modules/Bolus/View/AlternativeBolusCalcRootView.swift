@@ -351,10 +351,9 @@ extension Bolus {
         }
 
         func carbssView() {
-            let id_ = meal.first?.id ?? ""
             if fetch {
                 keepForNextWiew = true
-                state.backToCarbsView(complexEntry: fetch, meal, override: false)
+                state.backToCarbsView(complexEntry: true, meal, override: false)
             } else {
                 state.backToCarbsView(complexEntry: false, meal, override: true)
             }
@@ -406,9 +405,8 @@ extension Bolus {
                 }
             }
             .onTapGesture {
-                let id_ = meal.first?.id ?? ""
                 keepForNextWiew = true
-                state.backToCarbsView(complexEntry: fetch, meal, override: false)
+                state.backToCarbsView(complexEntry: true, meal, override: false)
             }
         }
 

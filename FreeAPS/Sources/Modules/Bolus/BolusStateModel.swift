@@ -311,10 +311,25 @@ extension Bolus {
             guard let meals = meal.first else {
                 return
             }
+
+            let mealArray = DataTable.Treatment(
+                units: units,
+                type: .carbs,
+                date: meals.createdAt ?? Date(),
+                id: meals.id ?? "",
+                isFPU: deleteTwice ? true : false,
+                fpuID: deleteTwice ? (meals.fpuID ?? "") : ""
+            )
+
+            print(
+                "meals 2: ID: " + (mealArray.id ?? "").description + " FPU ID: " + (mealArray.fpuID ?? "")
+                    .description
+            )
+
             if deleteTwice {
-                nsManager.deleteCarbs(at: meals.id ?? "", fpuID: meals.fpuID ?? "", complex: true)
+                nsManager.deleteCarbs(mealArray, complexMeal: true)
             } else {
-                nsManager.deleteCarbs(at: meals.id ?? "", fpuID: "", complex: false)
+                nsManager.deleteCarbs(mealArray, complexMeal: false)
             }
         }
     }
