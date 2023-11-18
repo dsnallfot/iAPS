@@ -76,6 +76,7 @@ extension Home {
             setupBattery()
             setupReservoir()
             setupAnnouncements()
+            setupCurrentPumpTimezone()
 
             suggestion = provider.suggestion
             uploadStats = settingsManager.settings.uploadStats
@@ -362,6 +363,10 @@ extension Home {
             tempTarget = provider.tempTarget()
         }
 
+        private func setupCurrentPumpTimezone() {
+            timeZone = provider.pumpTimeZone()
+        }
+
         func openCGM() {
             guard var url = nightscoutManager.cgmURL else { return }
 
@@ -399,7 +404,8 @@ extension Home.StateModel:
     CarbsObserver,
     EnactedSuggestionObserver,
     PumpBatteryObserver,
-    PumpReservoirObserver
+    PumpReservoirObserver,
+    PumpTimeZoneObserver
 {
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
@@ -464,6 +470,10 @@ extension Home.StateModel:
 
     func pumpReservoirDidChange(_: Decimal) {
         setupReservoir()
+    }
+
+    func pumpTimeZoneDidChange(_: TimeZone) {
+        setupCurrentPumpTimezone()
     }
 }
 

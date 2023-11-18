@@ -46,7 +46,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
         static let healthInsulinObject = HKObjectType.quantityType(forIdentifier: .insulinDelivery)
 
         // Meta-data key of FreeASPX data in HealthStore
-        static let freeAPSMetaKey = "from_iAPS"
+        static let freeAPSMetaKey = "from iAPS"
     }
 
     @Injected() private var glucoseStorage: GlucoseStorage!
@@ -186,7 +186,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
         else { return }
 
         let carbsWithId = carbs.filter { c in
-            guard c.collectionID != nil else { return false }
+            guard c.id != nil else { return false }
             return true
         }
 
@@ -194,7 +194,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
             let sampleIDs = samples.compactMap(\.syncIdentifier)
             let sampleDates = samples.map(\.startDate)
             let samplesToSave = carbsWithId
-                .filter { !sampleIDs.contains($0.collectionID!) } // id existing in AH
+                .filter { !sampleIDs.contains($0.id ?? "") } // id existing in AH
                 .filter { !sampleDates.contains($0.createdAt) } // not id but exaclty the same datetime
                 .map {
                     HKQuantitySample(
@@ -203,8 +203,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                         start: $0.createdAt,
                         end: $0.createdAt,
                         metadata: [
-                            HKMetadataKeyExternalUUID: $0.collectionID ?? "_id",
-                            HKMetadataKeySyncIdentifier: $0.collectionID ?? "_id",
+                            HKMetadataKeySyncIdentifier: $0.id ?? "_id",
                             HKMetadataKeySyncVersion: 1,
                             Config.freeAPSMetaKey: true
                         ]
@@ -575,30 +574,34 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
               checkAvailabilitySave(objectTypeToHealthStore: sampleType)
         else { return }
 
-        processQueue.async {
-            if fpuID != "" {
+        print("meals 4: ID: " + syncID + " FPU ID: " + fpuID)
+
+        if syncID != "" {
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeyExternalUUID,
+                operatorType: .equalTo,
+                value: syncID
+            )
+
+            healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                guard let error = error else { return }
+                warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
+            }
+        }
+
+        if fpuID != "" {
+            processQueue.async {
                 let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.collectionID)
+                let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
                 let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeySyncIdentifier,
+                    withMetadataKey: HKMetadataKeyExternalUUID,
                     allowedValues: ids
                 )
-
                 print("found IDs: " + ids.description)
-
                 self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
                     guard let error = error else { return }
                     warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
                 }
-            }
-            let predicate = HKQuery.predicateForObjects(
-                withMetadataKey: HKMetadataKeySyncIdentifier,
-                operatorType: .equalTo,
-                value: syncID
-            )
-            self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                guard let error = error else { return }
-                warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
             }
         }
     }

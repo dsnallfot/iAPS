@@ -165,7 +165,8 @@ extension Home {
                 battery: $state.battery,
                 name: $state.pumpName,
                 expiresAtDate: $state.pumpExpiresAtDate,
-                timerDate: $state.timerDate
+                timerDate: $state.timerDate,
+                timeZone: $state.timeZone
             )
             .onTapGesture {
                 if state.pumpDisplayState != nil {

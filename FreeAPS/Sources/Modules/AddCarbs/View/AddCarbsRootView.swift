@@ -71,6 +71,7 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
+                    .listRowBackground(Color(.loopYellow).opacity(0.7))
 
                     if state.useFPUconversion {
                         proteinAndFat()
@@ -82,8 +83,9 @@ extension AddCarbs {
                         Button {
                             isPromptPresented = true
                         }
-                        label: { Text("Spara ny favorit") }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        label: {
+                            Text("Spara ny favorit  ") }
+                            // .frame(maxWidth: .infinity, alignment: .leading)
                             .controlSize(.mini)
                             .buttonStyle(BorderlessButtonStyle())
                             .foregroundColor(
@@ -105,6 +107,41 @@ extension AddCarbs {
                                             .protein
                                     )
                             )
+                        if state.selection != nil && state.useFPUconversion {
+                            Button { showAlert.toggle() }
+
+                            label: {
+                                // Image(systemName: "trash")
+                                // .offset(x: 5, y: 0)
+                                Text("Radera favorit")
+                                    .offset(x: 14, y: 0)
+                            }
+                            // .frame(maxWidth: .infinity, alignment: .leading)
+                            .disabled(state.selection == nil)
+                            .accentColor(.loopRed)
+                            .buttonStyle(BorderlessButtonStyle())
+                            .controlSize(.mini)
+                            .alert(
+                                "Radera favorit '\(state.selection?.dish ?? "")'?",
+                                isPresented: $showAlert,
+                                actions: {
+                                    Button("No", role: .cancel) {}
+                                    Button("Yes", role: .destructive) {
+                                        state.deletePreset()
+
+                                        state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
+                                        state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
+                                        state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
+
+                                        // Handle note addition here
+                                        state.note = state.selection?.note ?? "" // Set state.note to the selected note
+
+                                        state.addPresetToNewMeal()
+                                    }
+                                }
+                            )
+                        }
+                        Spacer()
                         Spacer()
                         Button {
                             state.useFPUconversion.toggle()
@@ -248,35 +285,6 @@ extension AddCarbs {
                     }
 
                     if state.selection != nil {
-                        Button { showAlert.toggle() }
-
-                        label: {
-                            Image(systemName: "trash")
-                            Text("     ")
-                        }
-                        .disabled(state.selection == nil)
-                        .accentColor(.red)
-                        .buttonStyle(BorderlessButtonStyle())
-                        .controlSize(.mini)
-                        .alert(
-                            "Radera favorit '\(state.selection?.dish ?? "")'?",
-                            isPresented: $showAlert,
-                            actions: {
-                                Button("No", role: .cancel) {}
-                                Button("Yes", role: .destructive) {
-                                    state.deletePreset()
-
-                                    state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
-                                    state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
-                                    state.protein += ((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal
-
-                                    // Handle note addition here
-                                    state.note = state.selection?.note ?? "" // Set state.note to the selected note
-
-                                    state.addPresetToNewMeal()
-                                }
-                            }
-                        )
                         Button {
                             if state.carbs != 0,
                                (state.carbs - (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) as Decimal) >= 0
@@ -307,8 +315,7 @@ extension AddCarbs {
                             if state.carbs == 0, state.fat == 0, state.protein == 0 { state.summation = [] }
                         }
                         label: {
-                            Image(systemName: "minus.circle")
-                            Text("    ")
+                            Image(systemName: "minus")
                         }
                         .disabled(
                             state
@@ -320,6 +327,8 @@ extension AddCarbs {
                         )
                         .tint(.blue)
                         .buttonStyle(.borderless)
+                        Text("   Antal    ")
+                            .foregroundColor(.secondary)
                         Button {
                             state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                             state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
@@ -331,7 +340,7 @@ extension AddCarbs {
                             state.addPresetToNewMeal()
                         }
                         label: {
-                            Image(systemName: "plus.circle")
+                            Image(systemName: "plus")
                         }
                         .disabled(state.selection == nil)
                         .tint(.blue)
@@ -386,7 +395,7 @@ extension AddCarbs {
                         .padding(.trailing, 5)
                 } else {
                     Button { state.date = state.date.addingTimeInterval(-10.minutes.timeInterval) }
-                    label: { Image(systemName: "minus.circle") }.tint(.blue).buttonStyle(.borderless)
+                    label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
                     DatePicker(
                         "Tid",
                         selection: $state.date,
@@ -396,7 +405,7 @@ extension AddCarbs {
                     Button {
                         state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
                     }
-                    label: { Image(systemName: "plus.circle") }.tint(.blue).buttonStyle(.borderless)
+                    label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
                 }
             }
         }
