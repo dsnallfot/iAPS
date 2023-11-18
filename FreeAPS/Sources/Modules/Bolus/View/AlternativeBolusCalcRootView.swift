@@ -405,6 +405,7 @@ extension Bolus {
                     }
                 }
             }
+            .listRowBackground(Color(.loopYellow).opacity(0.3))
             .onTapGesture {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)

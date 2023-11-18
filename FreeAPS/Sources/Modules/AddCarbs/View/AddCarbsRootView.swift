@@ -71,7 +71,7 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
-                    .listRowBackground(Color(.loopYellow).opacity(0.7))
+                    .listRowBackground(Color(.loopYellow).opacity(0.3))
 
                     if state.useFPUconversion {
                         proteinAndFat()
