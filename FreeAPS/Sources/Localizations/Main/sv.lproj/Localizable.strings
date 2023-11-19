@@ -1691,10 +1691,10 @@ Enact a temp Basal or a temp target */
 "Hours X-Axis (6 default)" = "Antal timmar att visa för X-axel (6 standard)";
 
 /* */
-"1 hour" = "1 timme";
+"2 hours" = "2 timmar";
 
 /* */
-"3 hours" = "3 timmar";
+"4 hours" = "4 timmar";
 
 /* */
 "6 hours" = "6 timmar";

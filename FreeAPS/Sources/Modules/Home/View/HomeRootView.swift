@@ -21,8 +21,8 @@ extension Home {
         }
 
         @State var timeButtons: [Buttons] = [
-            Buttons(label: "1 hour", number: "1", active: false, hours: 1),
-            Buttons(label: "3 hours", number: "3", active: false, hours: 3),
+            Buttons(label: "2 hours", number: "2", active: false, hours: 2),
+            Buttons(label: "4 hours", number: "4", active: false, hours: 4),
             Buttons(label: "6 hours", number: "6", active: false, hours: 6),
             Buttons(label: "12 hours", number: "12", active: false, hours: 12),
             Buttons(label: "24 hours", number: "24", active: false, hours: 24)
@@ -405,7 +405,7 @@ extension Home {
                     }
             }
             .font(buttonFont)
-            .padding(.top, 10)
+            .padding(.top, 5)
             .padding(.bottom, 20)
         }
 
