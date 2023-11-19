@@ -301,7 +301,7 @@ extension Bolus {
                                             let insulin = state.roundedWholeCalc
                                             Text(insulin.formatted())
                                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                                            Text(unit)
+                                            Text("E")
                                                 .foregroundColor(.primary)
                                         }
                                         .fontWeight(.semibold)
@@ -843,6 +843,7 @@ extension Bolus {
                     Spacer()
                     let fraction = state.fraction * 100
                     Text(fraction.formatted())
+                        .offset(x: 4, y: 0)
                     Text("%")
                         .foregroundColor(.secondary)
                 }
@@ -853,6 +854,7 @@ extension Bolus {
                         Spacer()
                         let fraction = state.fattyMealFactor * 100
                         Text(fraction.formatted())
+                            .offset(x: 4, y: 0)
                             .foregroundColor(.brown)
                         Text("%")
                             .foregroundColor(.brown)
@@ -866,7 +868,7 @@ extension Bolus {
                         let superBolusInsulin = state.superBolusInsulin
                         Text(superBolusInsulin.formatted())
                             .foregroundColor(.cyan)
-                        Text(" U")
+                        Text("E")
                             .foregroundColor(.cyan)
                     }
                 }
@@ -875,10 +877,6 @@ extension Bolus {
 
         var calculationParts: some View {
             VStack(spacing: 2) {
-                let unit = NSLocalizedString(
-                    " U",
-                    comment: "Unit in number of units delivered (keep the space character!)"
-                )
                 HStack {
                     Text("Boluskalkyl")
                     Spacer()
@@ -913,7 +911,7 @@ extension Bolus {
                                 .doubleValue
                             let roundedInsulinMeal = Decimal(round(100 * insulinMealAsDouble) / 100)
                             Text(roundedInsulinMeal.formatted())
-                            Text(unit)
+                            Text("E")
                                 .foregroundColor(.secondary)
                         }
                         HStack(alignment: .center, spacing: nil) {
@@ -937,7 +935,7 @@ extension Bolus {
                             let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
                             let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
                             Text(roundedInsulinCob.formatted())
-                            Text(unit)
+                            Text("E")
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -963,7 +961,7 @@ extension Bolus {
                         let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
                         let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
                         Text(roundedInsulinCob.formatted())
-                        Text(unit)
+                        Text("E")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -979,7 +977,7 @@ extension Bolus {
                     Text(roundedIob.formatted())
                         .frame(minWidth: 50, alignment: .trailing)
 
-                    Text(unit)
+                    Text("E")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
 
@@ -991,7 +989,7 @@ extension Bolus {
                     let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
                     let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
                     Text(roundedIobCalc.formatted())
-                    Text(unit).foregroundColor(.secondary)
+                    Text("E").foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
                     Text("Blodsocker:")
@@ -1024,8 +1022,7 @@ extension Bolus {
 
                     Text(roundedTargetDifferenceInsulin.formatted())
 
-                    Text(unit)
-
+                    Text("E")
                         .foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
@@ -1053,7 +1050,7 @@ extension Bolus {
                     let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
                     let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
                     Text(roundedTrendInsulin.formatted())
-                    Text(unit)
+                    Text("E")
                         .foregroundColor(.secondary)
                 }
             }
@@ -1061,10 +1058,6 @@ extension Bolus {
 
         var resultsPart: some View {
             VStack {
-                let unit = NSLocalizedString(
-                    " U",
-                    comment: "Unit in number of units delivered (keep the space character!)"
-                )
                 HStack {
                     if state.insulinCalculated <= 0 && !state.useSuperBolus || roundedOrefInsulin <= 0 && !state.useSuperBolus {
                         Text("Ingen bolus rek:")
@@ -1116,7 +1109,7 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(unit)
+                            Text(" E")
                                 .foregroundColor(.secondary)
                         }
                     } else {
@@ -1125,7 +1118,7 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(" U")
+                            Text(" E")
                             // plus
                             Text(" + ")
                                 .foregroundColor(.secondary)
@@ -1133,7 +1126,7 @@ extension Bolus {
                             let superBolusInsulin = state.superBolusInsulin
                             Text(superBolusInsulin.formatted())
                                 .foregroundColor(.cyan)
-                            Text(" U")
+                            Text(" E")
                                 .foregroundColor(.cyan)
                         }
                     }
@@ -1154,7 +1147,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1184,7 +1177,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1214,7 +1207,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1249,7 +1242,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1279,7 +1272,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1309,7 +1302,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1339,7 +1332,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1369,7 +1362,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))

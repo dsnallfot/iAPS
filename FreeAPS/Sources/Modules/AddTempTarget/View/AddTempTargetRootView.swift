@@ -137,7 +137,7 @@ extension AddTempTarget {
                                 .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             Button { isPromptPresented = true }
-                            label: { Text("Spara favorit") }
+                            label: { Text("Spara ny favorit") }
                                 .disabled(state.duration == 0)
                                 .controlSize(.mini)
                                 .buttonStyle(BorderlessButtonStyle())
@@ -161,7 +161,7 @@ extension AddTempTarget {
                                 .buttonStyle(BorderlessButtonStyle())
                             Spacer()
                             Button { isPromptPresented = true }
-                            label: { Text("Spara favorit") }
+                            label: { Text("Spara ny favorit") }
                                 .disabled(state.duration == 0)
                                 .controlSize(.mini)
                                 .buttonStyle(BorderlessButtonStyle())
