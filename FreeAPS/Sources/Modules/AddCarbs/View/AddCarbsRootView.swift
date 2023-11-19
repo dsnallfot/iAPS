@@ -76,7 +76,8 @@ extension AddCarbs {
                     if state.useFPUconversion {
                         proteinAndFat()
                     }
-
+                }
+                Section {
                     mealPresets
 
                     HStack {
