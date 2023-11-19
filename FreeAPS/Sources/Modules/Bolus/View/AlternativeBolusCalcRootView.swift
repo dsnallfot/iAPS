@@ -88,7 +88,7 @@ extension Bolus {
                     if state.fattyMeals || state.sweetMeals {
                         checkboxParts
                     }
-                } //header: { Text("Bolus") }
+                } // header: { Text("Bolus") }
 
                 Section {
                     // if !state.waitForSuggestion {
