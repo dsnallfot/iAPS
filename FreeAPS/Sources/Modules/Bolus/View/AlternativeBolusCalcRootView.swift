@@ -85,11 +85,13 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
+                    if state.fattyMeals || state.sweetMeals {
+                        checkboxParts
+                    }
+                } header: { Text("Bolus") }
 
+                Section {
                     if !state.waitForSuggestion {
-                        if state.fattyMeals || state.sweetMeals {
-                            checkboxParts
-                        }
                         HStack {
                             Text("Bolus Amount").fontWeight(.semibold)
                             Spacer()
@@ -113,9 +115,9 @@ extension Bolus {
                                 exceededMaxBolus3 = false
                             }
                         }
-                        .listRowBackground(Color(.insulin).opacity(0.5))
+                        .listRowBackground(Color(.insulin).opacity(1))
                     }
-                } header: { Text("Bolus") }
+                }
 
                 if state.amount > 0 {
                     Section {
@@ -140,7 +142,7 @@ extension Bolus {
                         .disabled(state.amount <= 0 || state.amount > state.maxBolus)
                         .listRowBackground(
                             state.amount <= 0 || state.amount > state
-                                .maxBolus ? Color(.systemGray4) : Color(.systemBlue)
+                                .maxBolus ? Color(.systemGray4) : Color(.insulin)
                         )
                         .tint(.white)
                     }
@@ -381,7 +383,7 @@ extension Bolus {
                             Text("g")
                         }
 
-                        .foregroundColor(.brown)
+                        .foregroundColor(.primary)
                         .padding(.bottom, 0.1)
                     }
                 }
@@ -393,7 +395,7 @@ extension Bolus {
                             Text(protein.formatted())
                             Text("g")
                         }
-                        .foregroundColor(.brown)
+                        .foregroundColor(.primary)
                         .padding(.bottom, 0.1)
                     }
                     if let note = meal.first?.note, note != "" {
@@ -405,7 +407,7 @@ extension Bolus {
                     }
                 }
             }
-            .listRowBackground(Color(.loopYellow).opacity(0.3))
+            .listRowBackground(Color(.loopYellow).opacity(0.8))
             .onTapGesture {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)
