@@ -50,7 +50,7 @@ extension AddCarbs {
                             let test = state.waitersNotepad().components(separatedBy: ", ").removeDublicates()
                             HStack(spacing: 0) {
                                 ForEach(test, id: \.self) {
-                                    Text($0).foregroundStyle(Color.randomGreen()).font(.footnote)
+                                    Text($0).foregroundStyle(Color.randomVibrantColor()).font(.footnote)
                                     Text($0 == test[test.count - 1] ? "" : " • ")
                                 }
                             }.frame(maxWidth: .infinity, alignment: .center)
@@ -421,5 +421,61 @@ public extension Color {
             blue: .random(in: 0.2 ... 1),
             opacity: randomOpacity ? .random(in: 0.8 ... 1) : 1
         )
+    }
+}
+
+import SwiftUI
+
+public extension Color {
+    static func randomVibrantColor(randomOpacity: Bool = false) -> Color {
+        let baseColor = Color(
+            red: Double.random(in: 0.5 ... 1),
+            green: Double.random(in: 0.4 ... 0.6),
+            blue: Double.random(in: 0.4 ... 1),
+            opacity: 1
+        )
+
+        let vibrantColor = baseColor.adjusted(by: 0.2)
+
+        return randomOpacity ? vibrantColor.withRandomOpacity() : vibrantColor
+    }
+}
+
+extension Color {
+    func adjusted(by factor: Double) -> Color {
+        guard let components = UIColor(self).rgbaComponents else {
+            return self
+        }
+
+        return Color(
+            red: min(components.red + CGFloat(factor), 1),
+            green: min(components.green + CGFloat(factor), 1),
+            blue: min(components.blue + CGFloat(factor), 1),
+            opacity: components.alpha
+        )
+    }
+
+    func withRandomOpacity() -> Color {
+        Color(
+            red: Double.random(in: 0 ... 1),
+            green: Double.random(in: 0 ... 1),
+            blue: Double.random(in: 0 ... 1),
+            opacity: Double.random(in: 0.8 ... 1)
+        )
+    }
+}
+
+extension UIColor {
+    var rgbaComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        guard getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+            return nil
+        }
+
+        return (red, green, blue, alpha)
     }
 }
