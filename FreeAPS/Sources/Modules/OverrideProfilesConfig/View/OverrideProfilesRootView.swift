@@ -260,7 +260,7 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Spara profil") }
+                        label: { Text("Spara ny profil") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())

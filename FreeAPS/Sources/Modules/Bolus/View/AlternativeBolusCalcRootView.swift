@@ -85,37 +85,39 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
-
-                    if !state.waitForSuggestion {
-                        if state.fattyMeals || state.sweetMeals {
-                            checkboxParts
-                        }
-                        HStack {
-                            Text("Bolus Amount").fontWeight(.semibold)
-                            Spacer()
-                            DecimalTextField(
-                                "0,00",
-                                value: $state.amount,
-                                formatter: formatter,
-                                autofocus: true,
-                                cleanInput: true
-                            )
-                            Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
-                        }
-                        .onChange(of: state.amount) { newValue in
-                            if newValue > state.maxBolus * 3 {
-                                exceededMaxBolus3 = true
-                                exceededMaxBolus = true
-                            } else if newValue > state.maxBolus {
-                                exceededMaxBolus = true
-                            } else {
-                                exceededMaxBolus = false
-                                exceededMaxBolus3 = false
-                            }
-                        }
-                        .listRowBackground(Color(.insulin).opacity(0.5))
+                    if state.fattyMeals || state.sweetMeals {
+                        checkboxParts
                     }
                 } header: { Text("Bolus") }
+
+                Section {
+                    // if !state.waitForSuggestion {
+                    HStack {
+                        Text("Ange bolusdos").fontWeight(.semibold)
+                        Spacer()
+                        DecimalTextField(
+                            "0,00",
+                            value: $state.amount,
+                            formatter: formatter,
+                            autofocus: true,
+                            cleanInput: true
+                        )
+                        Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
+                    }
+                    .onChange(of: state.amount) { newValue in
+                        if newValue > state.maxBolus * 3 {
+                            exceededMaxBolus3 = true
+                            exceededMaxBolus = true
+                        } else if newValue > state.maxBolus {
+                            exceededMaxBolus = true
+                        } else {
+                            exceededMaxBolus = false
+                            exceededMaxBolus3 = false
+                        }
+                    }
+                    .listRowBackground(Color(.insulin).opacity(1))
+                    // }
+                }
 
                 if state.amount > 0 {
                     Section {
@@ -140,7 +142,7 @@ extension Bolus {
                         .disabled(state.amount <= 0 || state.amount > state.maxBolus)
                         .listRowBackground(
                             state.amount <= 0 || state.amount > state
-                                .maxBolus ? Color(.systemGray4) : Color(.systemBlue)
+                                .maxBolus ? Color(.systemGray4) : Color(.insulin)
                         )
                         .tint(.white)
                     }
@@ -299,7 +301,7 @@ extension Bolus {
                                             let insulin = state.roundedWholeCalc
                                             Text(insulin.formatted())
                                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                                            Text(unit)
+                                            Text("E")
                                                 .foregroundColor(.primary)
                                         }
                                         .fontWeight(.semibold)
@@ -381,7 +383,7 @@ extension Bolus {
                             Text("g")
                         }
 
-                        .foregroundColor(.brown)
+                        .foregroundColor(.primary)
                         .padding(.bottom, 0.1)
                     }
                 }
@@ -393,7 +395,7 @@ extension Bolus {
                             Text(protein.formatted())
                             Text("g")
                         }
-                        .foregroundColor(.brown)
+                        .foregroundColor(.primary)
                         .padding(.bottom, 0.1)
                     }
                     if let note = meal.first?.note, note != "" {
@@ -405,7 +407,7 @@ extension Bolus {
                     }
                 }
             }
-            .listRowBackground(Color(.loopYellow).opacity(0.3))
+            .listRowBackground(Color(.loopYellow).opacity(0.8))
             .onTapGesture {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)
@@ -841,6 +843,7 @@ extension Bolus {
                     Spacer()
                     let fraction = state.fraction * 100
                     Text(fraction.formatted())
+                        .offset(x: 4, y: 0)
                     Text("%")
                         .foregroundColor(.secondary)
                 }
@@ -851,6 +854,7 @@ extension Bolus {
                         Spacer()
                         let fraction = state.fattyMealFactor * 100
                         Text(fraction.formatted())
+                            .offset(x: 4, y: 0)
                             .foregroundColor(.brown)
                         Text("%")
                             .foregroundColor(.brown)
@@ -864,7 +868,7 @@ extension Bolus {
                         let superBolusInsulin = state.superBolusInsulin
                         Text(superBolusInsulin.formatted())
                             .foregroundColor(.cyan)
-                        Text(" U")
+                        Text("E")
                             .foregroundColor(.cyan)
                     }
                 }
@@ -873,10 +877,6 @@ extension Bolus {
 
         var calculationParts: some View {
             VStack(spacing: 2) {
-                let unit = NSLocalizedString(
-                    " U",
-                    comment: "Unit in number of units delivered (keep the space character!)"
-                )
                 HStack {
                     Text("Boluskalkyl")
                     Spacer()
@@ -911,7 +911,7 @@ extension Bolus {
                                 .doubleValue
                             let roundedInsulinMeal = Decimal(round(100 * insulinMealAsDouble) / 100)
                             Text(roundedInsulinMeal.formatted())
-                            Text(unit)
+                            Text("E")
                                 .foregroundColor(.secondary)
                         }
                         HStack(alignment: .center, spacing: nil) {
@@ -935,7 +935,7 @@ extension Bolus {
                             let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
                             let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
                             Text(roundedInsulinCob.formatted())
-                            Text(unit)
+                            Text("E")
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -961,7 +961,7 @@ extension Bolus {
                         let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
                         let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
                         Text(roundedInsulinCob.formatted())
-                        Text(unit)
+                        Text("E")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -977,7 +977,7 @@ extension Bolus {
                     Text(roundedIob.formatted())
                         .frame(minWidth: 50, alignment: .trailing)
 
-                    Text(unit)
+                    Text("E")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
 
@@ -989,7 +989,7 @@ extension Bolus {
                     let iobCalcAsDouble = NSDecimalNumber(decimal: iobCalc).doubleValue
                     let roundedIobCalc = Decimal(round(100 * iobCalcAsDouble) / 100)
                     Text(roundedIobCalc.formatted())
-                    Text(unit).foregroundColor(.secondary)
+                    Text("E").foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
                     Text("Blodsocker:")
@@ -1022,8 +1022,7 @@ extension Bolus {
 
                     Text(roundedTargetDifferenceInsulin.formatted())
 
-                    Text(unit)
-
+                    Text("E")
                         .foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
@@ -1051,7 +1050,7 @@ extension Bolus {
                     let trendInsulinAsDouble = NSDecimalNumber(decimal: trendInsulin).doubleValue
                     let roundedTrendInsulin = Decimal(round(100 * trendInsulinAsDouble) / 100)
                     Text(roundedTrendInsulin.formatted())
-                    Text(unit)
+                    Text("E")
                         .foregroundColor(.secondary)
                 }
             }
@@ -1059,10 +1058,6 @@ extension Bolus {
 
         var resultsPart: some View {
             VStack {
-                let unit = NSLocalizedString(
-                    " U",
-                    comment: "Unit in number of units delivered (keep the space character!)"
-                )
                 HStack {
                     if state.insulinCalculated <= 0 && !state.useSuperBolus || roundedOrefInsulin <= 0 && !state.useSuperBolus {
                         Text("Ingen bolus rek:")
@@ -1114,7 +1109,7 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(unit)
+                            Text(" E")
                                 .foregroundColor(.secondary)
                         }
                     } else {
@@ -1123,7 +1118,7 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(" U")
+                            Text(" E")
                             // plus
                             Text(" + ")
                                 .foregroundColor(.secondary)
@@ -1131,7 +1126,7 @@ extension Bolus {
                             let superBolusInsulin = state.superBolusInsulin
                             Text(superBolusInsulin.formatted())
                                 .foregroundColor(.cyan)
-                            Text(" U")
+                            Text(" E")
                                 .foregroundColor(.cyan)
                         }
                     }
@@ -1152,7 +1147,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1182,7 +1177,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1212,7 +1207,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1247,7 +1242,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1277,7 +1272,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1307,7 +1302,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1337,7 +1332,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))
@@ -1367,7 +1362,7 @@ extension Bolus {
                                         .foregroundColor(.white)
                                         .offset(x: 5, y: 0)
 
-                                    Text(unit)
+                                    Text(" E")
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
                                         .font(.system(size: 16))

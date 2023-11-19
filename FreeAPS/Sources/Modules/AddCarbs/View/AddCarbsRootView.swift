@@ -71,12 +71,13 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
-                    .listRowBackground(Color(.loopYellow).opacity(0.3))
+                    .listRowBackground(Color(.loopYellow).opacity(0.8))
 
                     if state.useFPUconversion {
                         proteinAndFat()
                     }
-
+                }
+                Section {
                     mealPresets
 
                     HStack {
@@ -200,7 +201,7 @@ extension AddCarbs {
                     )
                     .listRowBackground(
                         state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs || state
-                            .fat > state.maxCarbs || state.protein > state.maxCarbs ? Color(.systemGray4) : Color(.systemBlue)
+                            .fat > state.maxCarbs || state.protein > state.maxCarbs ? Color(.systemGray4) : Color(.insulin)
                     )
                     .tint(.white)
                     .frame(maxWidth: .infinity, alignment: .center)

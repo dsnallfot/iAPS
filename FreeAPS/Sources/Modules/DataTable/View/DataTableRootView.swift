@@ -127,7 +127,7 @@ extension DataTable {
                             .font(.title3)
                             .listRowBackground(
                                 state.manualGlucose < limitLow || state
-                                    .manualGlucose > limitHigh ? Color(.systemGray4) : Color(.systemBlue)
+                                    .manualGlucose > limitHigh ? Color(.systemGray4) : Color(.insulin)
                             )
                             .tint(.white)
                             .disabled(
@@ -204,7 +204,7 @@ extension DataTable {
                             )
                             .listRowBackground(
                                 state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
-                                    .maxBolus * 3 ? Color(.systemGray4) : Color(.systemBlue)
+                                    .maxBolus * 3 ? Color(.systemGray4) : Color(.insulin)
                             )
                             .tint(.white)
                         }
