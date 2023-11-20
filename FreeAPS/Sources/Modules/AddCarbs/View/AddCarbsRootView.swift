@@ -398,20 +398,19 @@ extension AddCarbs {
                 } else {
                     state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
                     label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
-                    DatePicker(
-                        "Tid",
-                        selection: $state.date,
-                        displayedComponents: [.hourAndMinute]
-                    ).controlSize(.mini)
-                        .labelsHidden()
-                    Button {
-                        state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
-                    }
-                    label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
+                 DatePicker(
+                    "Tid",
+                    selection: $state.date,
+                    displayedComponents: [.hourAndMinute]
+                ).controlSize(.mini)
+                    .labelsHidden()
+                Button {
+                    state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
                 }
+                label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
             }
         }
-    }
+     }
 }
 
 public extension Color {
