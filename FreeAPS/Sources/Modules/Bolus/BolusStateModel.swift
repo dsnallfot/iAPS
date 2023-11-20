@@ -117,6 +117,12 @@ extension Bolus {
                         }
                     }.store(in: &lifetime)
             }
+            if let notNilSugguestion = provider.suggestion {
+                suggestion = notNilSugguestion
+                if let notNilPredictions = suggestion?.predictions {
+                    predictions = notNilPredictions
+                }
+            }
         }
 
         func getCurrentBasal() {

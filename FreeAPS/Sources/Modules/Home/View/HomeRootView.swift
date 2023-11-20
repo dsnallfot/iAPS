@@ -670,7 +670,7 @@ extension Home {
 
                    */
                 HStack {
-                    Button { state.showModal(for: .addCarbs(editMode: false)) }
+                    Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
                             Image("carbs")

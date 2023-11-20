@@ -34,12 +34,12 @@ extension AddCarbs {
 
         var body: some View {
             Form {
-                if let carbsReq = state.carbsRequired {
+                if let carbsReq = state.carbsRequired, state.carbs < carbsReq {
                     Section {
                         HStack {
                             Text("Carbs required").foregroundColor(.orange)
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.orange)
+                            Text((formatter.string(from: carbsReq as NSNumber) ?? "") + " gram").foregroundColor(.orange)
                         }
                     }
                 }
@@ -173,7 +173,7 @@ extension AddCarbs {
                     Button {
                         if state.carbs <= state.maxCarbs {
                             // Only allow button click if carbs are within maxCarbs
-                            state.add()
+                            Button { state.add(override, fetch: editMode) }
                         }
                     } label: {
                         HStack {
@@ -182,7 +182,7 @@ extension AddCarbs {
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                state.skipBolus ? "Save" :
+                                (state.skipBolus && !override && !editMode) ? "Save" :
                                     (
                                         (
                                             state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state.protein <= state
@@ -263,7 +263,7 @@ extension AddCarbs {
             }
         }
 
-        var mealPresets: some View {
+        private var mealPresets: some View {
             Section {
                 HStack {
                     Text("")
