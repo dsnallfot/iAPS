@@ -202,7 +202,7 @@ extension Bolus {
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
-                    carbssView()
+                    carbsView()
                 }
                 label: {
                     Image(systemName: "chevron.left")
@@ -258,10 +258,6 @@ extension Bolus {
         var bolusInfoAlternativeCalculator: some View {
             NavigationView {
                 VStack {
-                    let unit = NSLocalizedString(
-                        " U",
-                        comment: "Unit in number of units delivered (keep the space character!)"
-                    )
                     VStack {
                         VStack {
                             VStack {
@@ -353,7 +349,7 @@ extension Bolus {
             ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
 
-        func carbssView() {
+        func carbsView() {
             if fetch {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)

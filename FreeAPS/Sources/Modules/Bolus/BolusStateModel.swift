@@ -158,12 +158,9 @@ extension Bolus {
         func getDeltaBG() {
             let glucose = provider.fetchGlucose()
             guard glucose.count >= 4 else { return } // Daniel: Change to 4 instead of 3 to capture 15min before the last value
-
             let lastGlucose = glucose.first?.glucose ?? 0
-            let forthLastGlucose =
-                glucose[2] // Daniel: Change to 4 instead of 3 to capture 15min before the last value
+            let forthLastGlucose = glucose[2] // Daniel: Change to 4 instead of 3 to capture 15min before the last value
             let delta = Decimal(lastGlucose) - Decimal(forthLastGlucose.glucose)
-
             deltaBG = delta
         }
 
@@ -302,9 +299,9 @@ extension Bolus {
             }
         }
 
-        func backToCarbsView(complexEntry: Bool, _ meal: FetchedResults<Meals>, override _: Bool) {
+        func backToCarbsView(complexEntry: Bool, _ meal: FetchedResults<Meals>, override: Bool) {
             delete(deleteTwice: complexEntry, meal: meal)
-            showModal(for: .addCarbs(editMode: complexEntry))
+            showModal(for: .addCarbs(editMode: complexEntry, override: override))
         }
 
         func delete(deleteTwice: Bool, meal: FetchedResults<Meals>) {
@@ -312,17 +309,25 @@ extension Bolus {
                 return
             }
 
+            var date = Date()
+
+            if let mealDate = meals.actualDate {
+                date = mealDate
+            } else if let mealdate = meals.createdAt {
+                date = mealdate
+            }
+
             let mealArray = DataTable.Treatment(
                 units: units,
                 type: .carbs,
-                date: meals.createdAt ?? Date(),
+                date: date,
                 id: meals.id ?? "",
                 isFPU: deleteTwice ? true : false,
                 fpuID: deleteTwice ? (meals.fpuID ?? "") : ""
             )
 
             print(
-                "meals 2: ID: " + (mealArray.id ?? "").description + " FPU ID: " + (mealArray.fpuID ?? "")
+                "meals 2: ID: " + mealArray.id.description + " FPU ID: " + (mealArray.fpuID ?? "")
                     .description
             )
 

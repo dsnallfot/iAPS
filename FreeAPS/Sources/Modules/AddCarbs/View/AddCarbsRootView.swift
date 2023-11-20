@@ -6,6 +6,7 @@ extension AddCarbs {
     struct RootView: BaseView {
         let resolver: Resolver
         let editMode: Bool
+        let override: Bool
         @StateObject var state = StateModel()
         @State var dish: String = ""
         @State var isPromptPresented = false
@@ -33,12 +34,12 @@ extension AddCarbs {
 
         var body: some View {
             Form {
-                if let carbsReq = state.carbsRequired {
+                if let carbsReq = state.carbsRequired, state.carbs < carbsReq {
                     Section {
                         HStack {
                             Text("Carbs required").foregroundColor(.orange)
                             Spacer()
-                            Text(formatter.string(from: carbsReq as NSNumber)! + " gram").foregroundColor(.orange)
+                            Text((formatter.string(from: carbsReq as NSNumber) ?? "") + " gram").foregroundColor(.orange)
                         }
                     }
                 }
@@ -172,7 +173,7 @@ extension AddCarbs {
                     Button {
                         if state.carbs <= state.maxCarbs {
                             // Only allow button click if carbs are within maxCarbs
-                            state.add()
+                            state.add(override, fetch: editMode)
                         }
                     } label: {
                         HStack {
@@ -181,7 +182,7 @@ extension AddCarbs {
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                state.skipBolus ? "Save" :
+                                (state.skipBolus && !override && !editMode) ? "Save" :
                                     (
                                         (
                                             state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state.protein <= state
@@ -262,7 +263,7 @@ extension AddCarbs {
             }
         }
 
-        var mealPresets: some View {
+        private var mealPresets: some View {
             Section {
                 HStack {
                     Text("")
@@ -395,7 +396,7 @@ extension AddCarbs {
                     } label: { Text("Nu") }.buttonStyle(.borderless).foregroundColor(.secondary)
                         .padding(.trailing, 5)
                 } else {
-                    Button { state.date = state.date.addingTimeInterval(-10.minutes.timeInterval) }
+                    Button { state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
                     label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
                     DatePicker(
                         "Tid",
@@ -404,7 +405,7 @@ extension AddCarbs {
                     ).controlSize(.mini)
                         .labelsHidden()
                     Button {
-                        state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
+                        state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
                     }
                     label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
                 }
