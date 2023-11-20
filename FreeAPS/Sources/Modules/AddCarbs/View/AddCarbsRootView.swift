@@ -173,7 +173,7 @@ extension AddCarbs {
                     Button {
                         if state.carbs <= state.maxCarbs {
                             // Only allow button click if carbs are within maxCarbs
-                            Button { state.add(override, fetch: editMode) }
+                            state.add(override, fetch: editMode)
                         }
                     } label: {
                         HStack {
@@ -396,21 +396,22 @@ extension AddCarbs {
                     } label: { Text("Nu") }.buttonStyle(.borderless).foregroundColor(.secondary)
                         .padding(.trailing, 5)
                 } else {
-                    state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
+                    Button { state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
                     label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
-                 DatePicker(
-                    "Tid",
-                    selection: $state.date,
-                    displayedComponents: [.hourAndMinute]
-                ).controlSize(.mini)
-                    .labelsHidden()
-                Button {
-                    state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
+                    DatePicker(
+                        "Tid",
+                        selection: $state.date,
+                        displayedComponents: [.hourAndMinute]
+                    ).controlSize(.mini)
+                        .labelsHidden()
+                    Button {
+                        state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
+                    }
+                    label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
                 }
-                label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
             }
         }
-     }
+    }
 }
 
 public extension Color {

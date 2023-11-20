@@ -69,7 +69,7 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
                 // Only use delay in first loop
                 var firstIndex = true
                 // New date for each carb equivalent
-                vvar useDate = entries.last?.actualDate ?? Date()
+                var useDate = entries.last?.actualDate ?? Date()
                 // Group and Identify all FPUs together
                 let fpuID = entries.last?.fpuID ?? ""
                 // Create an array of all future carb equivalents.
