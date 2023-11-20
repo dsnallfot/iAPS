@@ -6,6 +6,7 @@ extension AddCarbs {
     struct RootView: BaseView {
         let resolver: Resolver
         let editMode: Bool
+        let override: Bool
         @StateObject var state = StateModel()
         @State var dish: String = ""
         @State var isPromptPresented = false
@@ -395,7 +396,7 @@ extension AddCarbs {
                     } label: { Text("Nu") }.buttonStyle(.borderless).foregroundColor(.secondary)
                         .padding(.trailing, 5)
                 } else {
-                    Button { state.date = state.date.addingTimeInterval(-10.minutes.timeInterval) }
+                    state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
                     label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
                     DatePicker(
                         "Tid",
@@ -404,7 +405,7 @@ extension AddCarbs {
                     ).controlSize(.mini)
                         .labelsHidden()
                     Button {
-                        state.date = state.date.addingTimeInterval(10.minutes.timeInterval)
+                        state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
                     }
                     label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
                 }

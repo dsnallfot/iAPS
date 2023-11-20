@@ -335,6 +335,7 @@ extension BaseWatchManager: WCSessionDelegate {
                 [CarbsEntry(
                     id: UUID().uuidString,
                     createdAt: Date(),
+                    actualDate: nil,
                     carbs: Decimal(carbs),
                     fat: Decimal(fat),
                     protein: Decimal(protein), note: nil,
