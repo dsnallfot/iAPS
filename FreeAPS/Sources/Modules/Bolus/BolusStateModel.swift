@@ -299,7 +299,7 @@ extension Bolus {
             }
         }
 
-        func backToCarbsView(complexEntry: Bool, _ meal: FetchedResults<Meals>, override _: Bool) {
+        func backToCarbsView(complexEntry: Bool, _ meal: FetchedResults<Meals>, override: Bool) {
             delete(deleteTwice: complexEntry, meal: meal)
             showModal(for: .addCarbs(editMode: complexEntry, override: override))
         }

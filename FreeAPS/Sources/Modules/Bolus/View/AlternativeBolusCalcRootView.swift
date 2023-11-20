@@ -202,7 +202,7 @@ extension Bolus {
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
-                    carbssView()
+                    carbsView()
                 }
                 label: {
                     Image(systemName: "chevron.left")
@@ -353,7 +353,7 @@ extension Bolus {
             ((meal.first?.fat ?? 0) > 0) || ((meal.first?.protein ?? 0) > 0)
         }
 
-        func carbssView() {
+        func carbsView() {
             if fetch {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)
