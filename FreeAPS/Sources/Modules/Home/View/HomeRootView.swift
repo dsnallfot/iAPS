@@ -28,7 +28,7 @@ extension Home {
             Buttons(label: "24 hours", number: "24", active: false, hours: 24)
         ]
 
-        let buttonFont = Font.custom("TimeButtonFont", size: 14)
+        let buttonFont = Font.custom("TimeButtonFont", size: 12)
 
         @Environment(\.managedObjectContext) var moc
         @Environment(\.colorScheme) var colorScheme
@@ -358,10 +358,13 @@ extension Home {
                 }
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
-                    (Text(Image(systemName: "x.circle")) + Text(" Max IOB: 0!"))
+                    (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
                         .font(.callout)
-                        .foregroundColor(.red)
+                        .foregroundColor(.orange)
                         .padding(.trailing, 8)
+                        .onTapGesture {
+                            state.showModal(for: .preferencesEditor)
+                        }
                 }
 
                 if let progress = state.bolusProgress {
@@ -395,7 +398,7 @@ extension Home {
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color(.systemGray5) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color.gray.opacity(0.22) : .clear, in: .capsule(style: .circular))
                 }
                 Image(systemName: "ellipsis.circle.fill")
                     .foregroundStyle(.secondary)
@@ -406,7 +409,7 @@ extension Home {
             }
             .font(buttonFont)
             .padding(.top, 5)
-            .padding(.bottom, 20)
+            .padding(.bottom, 25)
         }
 
         var legendPanel: some View {

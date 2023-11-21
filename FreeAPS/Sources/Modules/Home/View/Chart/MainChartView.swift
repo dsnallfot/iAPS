@@ -346,7 +346,7 @@ struct MainChartView: View {
             // X time labels
             ForEach(0 ..< hours + hours) { hour in
                 Text(format.string(from: firstHourDate().addingTimeInterval(hour.hours.timeInterval)))
-                    .font(.caption)
+                    .font(.caption2)
                     .position(
                         x: firstHourPosition(viewWidth: fullSize.width) +
                             oneSecondStep(viewWidth: fullSize.width) *
@@ -530,7 +530,7 @@ struct MainChartView: View {
             tempTargetsPath
                 .fill(Color.tempBasal.opacity(0.5))
             tempTargetsPath
-                .stroke(Color.basal.opacity(0.5), lineWidth: 1)
+                .stroke(Color.basal.opacity(0.5), lineWidth: 4)
         }
         .onChange(of: glucose) { _ in
             calculateTempTargetsRects(fullSize: fullSize)
