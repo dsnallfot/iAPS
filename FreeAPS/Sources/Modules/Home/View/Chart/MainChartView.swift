@@ -34,15 +34,17 @@ struct MainChartView: View {
         static let yLinesCount = 5
         static let glucoseScale: CGFloat = 2 // default 2
         static let bolusSize: CGFloat = 8
-        static let bolusScale: CGFloat = 2.5
+        static let bolusScale: CGFloat = 10 // default 2.5 increase due to smaller boluses in our user case
         static let carbsSize: CGFloat = 10
-        static let fpuSize: CGFloat = 5
+        static let fpuSize: CGFloat = 7 // default 5
         static let carbsScale: CGFloat = 0.3
         static let fpuScale: CGFloat = 1
         static let announcementSize: CGFloat = 8
         static let announcementScale: CGFloat = 2.5
         static let owlSeize: CGFloat = 25
         static let owlOffset: CGFloat = 80
+        static let carbsOffset: CGFloat = 55 // added to move carbs dots above glucose line
+        static let bolusOffset: CGFloat = 15 // added to move bolus dots above glucose line
     }
 
     private enum Command {
@@ -474,7 +476,7 @@ struct MainChartView: View {
                 .stroke(Color.primary, lineWidth: 0.5)
 
             ForEach(bolusDots, id: \.rect.minX) { info -> AnyView in
-                let position = CGPoint(x: info.rect.midX, y: info.rect.maxY + 8)
+                let position = CGPoint(x: info.rect.midX, y: info.rect.minY - 8)
                 return Text(bolusFormatter.string(from: info.value as NSNumber)!).font(.caption2)
                     .position(position)
                     .asAny()
@@ -689,7 +691,7 @@ extension MainChartView {
             let dots = boluses.map { value -> DotInfo in
                 let center = timeToInterpolatedPoint(value.timestamp.timeIntervalSince1970, fullSize: fullSize)
                 let size = Config.bolusSize + CGFloat(value.amount ?? 0) * Config.bolusScale
-                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
+                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2 - Config.bolusOffset, width: size, height: size)
                 return DotInfo(rect: rect, value: value.amount ?? 0)
             }
 
@@ -716,7 +718,7 @@ extension MainChartView {
                     fullSize: fullSize
                 )
                 let size = Config.carbsSize + CGFloat(value.carbs) * Config.carbsScale
-                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
+                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2 - Config.carbsOffset, width: size, height: size)
                 return DotInfo(rect: rect, value: value.carbs)
             }
 
@@ -743,7 +745,7 @@ extension MainChartView {
                     fullSize: fullSize
                 )
                 let size = Config.fpuSize + CGFloat(value.carbs) * Config.fpuScale
-                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
+                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2 - Config.carbsOffset, width: size, height: size)
                 return DotInfo(rect: rect, value: value.carbs)
             }
 
