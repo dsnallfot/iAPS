@@ -159,8 +159,9 @@ extension Bolus {
             let glucose = provider.fetchGlucose()
             guard glucose.count >= 4 else { return } // Daniel: Change to 4 instead of 3 to capture 15min before the last value
             let lastGlucose = glucose.first?.glucose ?? 0
-            let forthLastGlucose = glucose[2] // Daniel: Change to 4 instead of 3 to capture 15min before the last value
-            let delta = Decimal(lastGlucose) - Decimal(forthLastGlucose.glucose)
+            let fourthLastGlucose =
+                glucose[3] // Daniel: Change to 3 instead of 2 to capture 15min before the last value (three values before the last)
+            let delta = Decimal(lastGlucose) - Decimal(fourthLastGlucose.glucose)
             deltaBG = delta
         }
 
