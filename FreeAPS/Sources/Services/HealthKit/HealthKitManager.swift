@@ -193,21 +193,28 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
         func save(samples: [HKSample]) {
             let sampleIDs = samples.compactMap(\.syncIdentifier)
             let sampleDates = samples.map(\.startDate)
+
             let samplesToSave = carbsWithId
-                .filter { !sampleIDs.contains($0.id ?? "") } // id existing in AH
-                .filter { !sampleDates.contains($0.actualDate ?? $0.createdAt) } // not id but exaclty the same datetime
+                .filter { !sampleIDs.contains($0.id ?? "") }
+                .filter { !sampleDates.contains($0.actualDate ?? $0.createdAt) }
                 .map {
-                    HKQuantitySample(
+                    var metadata: [String: Any] = [
+                        HKMetadataKeySyncIdentifier: $0.id ?? "_id",
+                        HKMetadataKeySyncVersion: 1,
+                        Config.freeAPSMetaKey: true
+                    ]
+
+                    // Check if fpuID is not empty, then set HKMetadataKeyExternalUUID
+                    if !$0.fpuID!.isEmpty {
+                        metadata[HKMetadataKeyExternalUUID] = $0.fpuID
+                    }
+
+                    return HKQuantitySample(
                         type: sampleType,
                         quantity: HKQuantity(unit: .gram(), doubleValue: Double($0.carbs)),
                         start: $0.actualDate ?? $0.createdAt,
                         end: $0.actualDate ?? $0.createdAt,
-                        metadata: [
-                            HKMetadataKeyExternalUUID: $0.id ?? "_id",
-                            HKMetadataKeySyncIdentifier: $0.id ?? "_id",
-                            HKMetadataKeySyncVersion: 1,
-                            Config.freeAPSMetaKey: true
-                        ]
+                        metadata: metadata
                     )
                 }
 
@@ -579,7 +586,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
         if syncID != "" {
             let predicate = HKQuery.predicateForObjects(
-                withMetadataKey: HKMetadataKeyExternalUUID,
+                withMetadataKey: HKMetadataKeySyncIdentifier,
                 operatorType: .equalTo,
                 value: syncID
             )
@@ -590,12 +597,28 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
             }
         }
 
+        /* if fpuID != "" {
+             processQueue.async {
+                 let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
+                 let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
+                 let predicate = HKQuery.predicateForObjects(
+                     withMetadataKey: HKMetadataKeyExternalUUID,
+                     allowedValues: ids
+                 )
+                 print("found IDs: " + ids.description)
+                 self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                     guard let error = error else { return }
+                     warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
+                 }
+             }
+         } */
+        // I nedan version funkar följande: Raderar alla fpu i HK om man raderad dem i datatable. Raderar Carb + ev fpu om man raderar carbs i data table
         if fpuID != "" {
             processQueue.async {
                 let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
+                let ids = recentCarbs.filter { $0.fpuID != "" }.compactMap(\.fpuID)
                 let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeyExternalUUID,
+                    withMetadataKey: HKMetadataKeyExternalUUID, // OBS! Måste ändra .id till .fpuID på rad 206
                     allowedValues: ids
                 )
                 print("found IDs: " + ids.description)
@@ -603,6 +626,17 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     guard let error = error else { return }
                     warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
                 }
+            }
+        } else if syncID != "" {
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeySyncIdentifier,
+                operatorType: .equalTo,
+                value: syncID
+            )
+
+            healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                guard let error = error else { return }
+                warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
             }
         }
     }
