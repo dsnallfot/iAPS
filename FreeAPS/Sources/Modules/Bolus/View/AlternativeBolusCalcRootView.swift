@@ -658,6 +658,32 @@ extension Bolus {
                             .font(.caption)
                     }
                 }
+                if let carbs = meal.first?.carbs, carbs > 0 {
+                    HStack {
+                        Text("Beräknad effekt på blodsockret:")
+                            .foregroundColor(.secondary)
+                            .italic()
+                        Spacer()
+
+                        let carbImpact = Decimal(carbs) * state.isf / state.carbRatio
+
+                        // Round csf to one decimal place using NSDecimalNumber
+                        let roundedCarbImpact = NSDecimalNumber(decimal: carbImpact)
+                            .rounding(accordingToBehavior: NSDecimalNumberHandler(
+                                roundingMode: .plain,
+                                scale: 1,
+                                raiseOnExactness: false,
+                                raiseOnOverflow: false,
+                                raiseOnUnderflow: false,
+                                raiseOnDivideByZero: false
+                            ))
+
+                        Text("+")
+                        Text("\(roundedCarbImpact)").italic()
+
+                        Text("mmol/L").foregroundColor(.secondary).italic()
+                    }
+                }
             }
         }
 
@@ -667,16 +693,6 @@ extension Bolus {
                     Text("Variabler")
                         .fontWeight(.semibold)
                     Spacer()
-                }
-
-                HStack {
-                    Text("Aktuell ISF:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    let isf = state.isf
-                    Text(isf.formatted())
-                    Text(state.units.rawValue + NSLocalizedString("/E", comment: "/Insulin unit"))
-                        .foregroundColor(.secondary)
                 }
 
                 HStack {
@@ -691,7 +707,7 @@ extension Bolus {
                                     .precision(.fractionLength(fractionDigits))
                             )
                     )
-                    Text(state.units.rawValue)
+                    Text("mmol/L")
                         .foregroundColor(.secondary)
                 }
                 // Basal dont update automatic for some reason, only when triggering save to pump. needs to check. not crucial info in the calc view right now
@@ -711,6 +727,37 @@ extension Bolus {
 
                     Text(state.carbRatio.formatted())
                     Text(NSLocalizedString("g/E", comment: " grams per Unit"))
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("Aktuell CSF (ökning per g kh):")
+                        .foregroundColor(.secondary)
+                    Spacer()
+
+                    let csf = state.isf / state.carbRatio
+
+                    // Round csf to one decimal place using NSDecimalNumber
+                    let roundedCsf = NSDecimalNumber(decimal: csf).rounding(accordingToBehavior: NSDecimalNumberHandler(
+                        roundingMode: .plain,
+                        scale: 1,
+                        raiseOnExactness: false,
+                        raiseOnOverflow: false,
+                        raiseOnUnderflow: false,
+                        raiseOnDivideByZero: false
+                    ))
+
+                    Text("\(roundedCsf)")
+
+                    Text(NSLocalizedString("mmol/L", comment: " grams per Unit"))
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("Aktuell ISF:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let isf = state.isf
+                    Text(isf.formatted())
+                    Text("mmol/l/E")
                         .foregroundColor(.secondary)
                 }
             }
