@@ -137,7 +137,11 @@ extension DataTable {
                         }
                     }
                 }
-                .onAppear(perform: configureView)
+                .onAppear {
+                    // Set the manualGlucoseDate to the current date and time
+                    state.manualGlucoseDate = Date()
+                    configureView()
+                }
                 .navigationTitle("Fingerstick")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button("Close", action: { showManualGlucose = false
@@ -210,7 +214,11 @@ extension DataTable {
                         }
                     }
                 }
-                .onAppear(perform: configureView)
+                .onAppear {
+                    // Set the nonPumpInsulinDate to the current date and time
+                    state.nonPumpInsulinDate = Date()
+                    configureView()
+                }
                 .navigationTitle("Insulinpenna")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button("Close", action: { showNonPumpInsulin = false
@@ -233,7 +241,7 @@ extension DataTable {
                 HStack {
                     Button(action: { showNonPumpInsulin = true }, label: {
                         Image(systemName: "plus.circle.fill")
-                        Text("Insulin")
+                        Text("Insulinpenna")
                             .font(.subheadline)
                     })
                         .buttonStyle(.borderless)
