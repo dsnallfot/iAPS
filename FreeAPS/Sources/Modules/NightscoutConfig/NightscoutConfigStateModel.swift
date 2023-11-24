@@ -61,6 +61,10 @@ extension NightscoutConfig {
         }
 
         func connect() {
+            if let CheckURL = url.last, CheckURL == "/" {
+                let fixedURL = url.dropLast()
+                url = String(fixedURL)
+            }
             guard let url = URL(string: url) else {
                 message = "Invalid URL"
                 return
@@ -171,7 +175,7 @@ extension NightscoutConfig {
                                 }
                                 return CarbRatioEntry(
                                     start: carbratio.time,
-                                    offset: (carbratio.timeAsSeconds ?? self.offset(carbratio.time)) / 60,
+                                    offset: self.offset(carbratio.time) / 60,
                                     ratio: carbratio.value
                                 ) }
                         let carbratiosProfile = CarbRatios(units: CarbUnit.grams, schedule: carbratios)
@@ -192,7 +196,7 @@ extension NightscoutConfig {
                                 }
                                 return BasalProfileEntry(
                                     start: basal.time,
-                                    minutes: (basal.timeAsSeconds ?? self.offset(basal.time)) / 60,
+                                    minutes: self.offset(basal.time) / 60,
                                     rate: basal.value
                                 ) }
                         // DASH pumps can have 0U/h basal rates but don't import if total basals (24 hours) amount to 0 U.
@@ -210,7 +214,7 @@ extension NightscoutConfig {
                         let sensitivities = fetchedProfile.sens.map { sensitivity -> InsulinSensitivityEntry in
                             InsulinSensitivityEntry(
                                 sensitivity: self.units == .mmolL ? sensitivity.value : sensitivity.value.asMgdL,
-                                offset: (sensitivity.timeAsSeconds ?? self.offset(sensitivity.time)) / 60,
+                                offset: self.offset(sensitivity.time) / 60,
                                 start: sensitivity.time
                             )
                         }
@@ -233,7 +237,7 @@ extension NightscoutConfig {
                                     low: self.units == .mmolL ? target.value : target.value.asMgdL,
                                     high: self.units == .mmolL ? target.value : target.value.asMgdL,
                                     start: target.time,
-                                    offset: (target.timeAsSeconds ?? self.offset(target.time)) / 60
+                                    offset: self.offset(target.time) / 60
                                 ) }
                         let targetsProfile = BGTargets(
                             units: self.units,
@@ -305,7 +309,7 @@ extension NightscoutConfig {
         func offset(_ string: String) -> Int {
             let hours = Int(string.prefix(2)) ?? 0
             let minutes = Int(string.suffix(2)) ?? 0
-            return hours * 60 + minutes * 60
+            return ((hours * 60) + minutes) * 60
         }
 
         func saveError(_ string: String) {

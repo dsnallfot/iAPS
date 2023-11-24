@@ -82,33 +82,6 @@ extension AddCarbs {
                     mealPresets
 
                     HStack {
-                        Button {
-                            isPromptPresented = true
-                        }
-                        label: {
-                            Text("Spara ny favorit  ") }
-                            // .frame(maxWidth: .infinity, alignment: .leading)
-                            .controlSize(.mini)
-                            .buttonStyle(BorderlessButtonStyle())
-                            .foregroundColor(
-                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
-                                    (
-                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
-                                            state
-                                            .protein
-                                    ) ? Color(.systemGray2) : Color(.systemBlue)
-                            )
-                            .disabled(
-                                (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
-                                    (
-                                        (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) == state
-                                            .protein
-                                    )
-                            )
                         if state.selection != nil && state.useFPUconversion {
                             Button { showAlert.toggle() }
 
@@ -116,9 +89,8 @@ extension AddCarbs {
                                 // Image(systemName: "trash")
                                 // .offset(x: 5, y: 0)
                                 Text("Radera favorit")
-                                    .offset(x: 14, y: 0)
                             }
-                            // .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(alignment: .leading)
                             .disabled(state.selection == nil)
                             .accentColor(.loopRed)
                             .buttonStyle(BorderlessButtonStyle())
@@ -142,8 +114,36 @@ extension AddCarbs {
                                     }
                                 }
                             )
+                        } else
+                        {
+                            Button {
+                                isPromptPresented = true
+                            }
+                            label: {
+                                Text("Spara ny favorit") }
+                                .frame(alignment: .leading)
+                                .controlSize(.mini)
+                                .buttonStyle(BorderlessButtonStyle())
+                                .foregroundColor(
+                                    (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                                        (
+                                            (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
+                                                state
+                                                .protein
+                                        ) ? Color(.systemGray2) : Color(.systemBlue)
+                                )
+                                .disabled(
+                                    (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                                        (
+                                            (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .protein
+                                        )
+                                )
                         }
-                        Spacer()
                         Spacer()
                         Button {
                             state.useFPUconversion.toggle()
