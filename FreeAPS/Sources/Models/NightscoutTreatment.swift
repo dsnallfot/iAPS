@@ -8,6 +8,7 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     var rate: Decimal?
     var eventType: EventType
     var createdAt: Date?
+    var actualDate: Date? // testar addera till treatments var och case för att se om det löser fetch från NS
     var enteredBy: String?
     var bolus: PumpHistoryEvent?
     var insulin: Decimal?
@@ -47,6 +48,7 @@ extension NigtscoutTreatment {
         case rate
         case eventType
         case createdAt = "created_at"
+        case actualDate = "created_at" // testar addera till treatments var och case för att se om det löser fetch från NS
         case enteredBy
         case bolus
         case insulin
