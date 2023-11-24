@@ -385,20 +385,15 @@ extension Home {
         }
 
         var timeInterval: some View {
-            HStack(alignment: .center) {
-                let saveButton = UXSettings(context: moc)
+            HStack {
                 ForEach(timeButtons) { button in
                     Text(button.active ? NSLocalizedString(button.label, comment: "") : button.number).onTapGesture {
-                        let index = timeButtons.firstIndex(where: { $0.label == button.label }) ?? 0
-                        highlightButtons(index, onAppear: false)
-                        saveButton.hours = button.hours
-                        saveButton.date = Date.now
-                        try? moc.save()
                         state.hours = button.hours
+                        highlightButtons()
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color.gray.opacity(0.22) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color(.systemGray5) : .clear, in: .capsule(style: .circular))
                 }
                 Image(systemName: "ellipsis.circle.fill")
                     .foregroundStyle(.secondary)
@@ -562,28 +557,9 @@ extension Home {
             return (name: profileString, isOn: display)
         }
 
-        func highlightButtons(_ int: Int?, onAppear: Bool) {
-            var index = 0
-            if let integer = int, !onAppear {
-                repeat {
-                    if index == integer {
-                        timeButtons[index].active = true
-                    } else {
-                        timeButtons[index].active = false
-                    }
-                    index += 1
-                } while index < timeButtons.count
-            } else if onAppear {
-                let i = timeButtons.firstIndex(where: { $0.hours == (fetchedSettings.first?.hours ?? 6) }) ?? 2
-                index = 0
-                repeat {
-                    if index == i {
-                        timeButtons[index].active = true
-                    } else {
-                        timeButtons[index].active = false
-                    }
-                    index += 1
-                } while index < timeButtons.count
+        func highlightButtons() {
+            for i in 0 ..< timeButtons.count {
+                timeButtons[i].active = timeButtons[i].hours == state.hours
             }
         }
 
@@ -807,7 +783,7 @@ extension Home {
             }
             .onAppear {
                 configureView {
-                    highlightButtons(nil, onAppear: true)
+                    highlightButtons()
                 }
             }
             .navigationTitle("Home")
