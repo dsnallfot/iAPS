@@ -851,6 +851,11 @@ extension Bolus {
         var guardRailParts: some View {
             VStack(spacing: 2) {
                 HStack {
+                    Text("Säkerhetsinställningar")
+                    Spacer()
+                }
+                .foregroundColor(.primary).fontWeight(.semibold)
+                HStack {
                     if state.insulinCalculated >= state.maxBolus && state
                         .maxBolus <= (roundedOrefInsulin + state.superBolusInsulin)
                     {
@@ -1049,7 +1054,7 @@ extension Bolus {
                             )
                     )
                     .frame(minWidth: 50, alignment: .trailing)
-                    Text(state.units.rawValue)
+                    Text("mmol/l")
                         .foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
 
@@ -1083,7 +1088,7 @@ extension Bolus {
                             )
                     )
                     .frame(minWidth: 50, alignment: .trailing)
-                    Text(state.units.rawValue).foregroundColor(.secondary)
+                    Text("mmol/l").foregroundColor(.secondary)
                         .frame(minWidth: 50, alignment: .leading)
 
                     Image(systemName: "arrow.right")
@@ -1104,7 +1109,7 @@ extension Bolus {
             VStack {
                 HStack {
                     if state.insulinCalculated <= 0 && !state.useSuperBolus || roundedOrefInsulin <= 0 && !state.useSuperBolus {
-                        Text("Ingen bolus rek:")
+                        Text("Ingen bolus rekommenderas:")
                             .fontWeight(.bold)
                             .foregroundColor(.loopRed)
                             .font(.system(size: 16))
@@ -1136,7 +1141,8 @@ extension Bolus {
                         let fraction = state.fraction * 100
                         HStack {
                             Text(fraction.formatted())
-                            Text("%  x ")
+                                .offset(x: 5, y: 0)
+                            Text("% x")
                                 .foregroundColor(.secondary)
                         }
 
@@ -1145,7 +1151,8 @@ extension Bolus {
                             HStack {
                                 Text(fattyMealFactor.formatted())
                                     .foregroundColor(.brown)
-                                Text("%  x ")
+                                    .offset(x: 5, y: 0)
+                                Text("% x")
                                     .foregroundColor(.secondary)
                             }
                         }
@@ -1153,7 +1160,8 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(" E")
+
+                            Text("E")
                                 .foregroundColor(.secondary)
                         }
                     } else {
@@ -1162,22 +1170,22 @@ extension Bolus {
                         HStack {
                             Text(insulin.formatted())
                                 .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                            Text(" E")
+                            Text("E")
                             // plus
-                            Text(" + ")
+                            Text("+")
                                 .foregroundColor(.secondary)
                             // superBolusInsulin
                             let superBolusInsulin = state.superBolusInsulin
                             Text(superBolusInsulin.formatted())
                                 .foregroundColor(.cyan)
-                            Text(" E")
+                            Text("E")
                                 .foregroundColor(.cyan)
                         }
                     }
                     // Result calculations
                     if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
                         if roundedOrefInsulin >= state.maxBolus {
-                            Text(" ≠ ")
+                            Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.purple)
                             Button(action: {
@@ -1197,17 +1205,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
                             }
                         } else if roundedOrefInsulin <= 0 {
-                            Text(" ≠ ")
+                            Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                             Button(action: {
@@ -1227,17 +1235,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
                             }
                         } else {
-                            Text(" ≠ ")
+                            Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.insulin)
                             Button(action: {
@@ -1257,11 +1265,11 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.insulin)
                                 )
@@ -1272,7 +1280,7 @@ extension Bolus {
                         let resultAsDouble = NSDecimalNumber(decimal: result).doubleValue
                         let roundedResult = (resultAsDouble / 0.05).rounded() * 0.05
                         if state.insulinCalculated >= state.maxBolus {
-                            Text(" ≠ ")
+                            Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.purple)
                             Button(action: {
@@ -1292,17 +1300,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.purple)
                                 )
                             }
                         } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 && !state.useSuperBolus {
-                            Text(" ≠ ")
+                            Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                             Button(action: {
@@ -1322,17 +1330,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.loopRed)
                                 )
                             }
                         } else if state.error && state.insulinCalculated > 0 && !state.useSuperBolus {
-                            Text(" = ")
+                            Text("= ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                             Button(action: {
@@ -1352,17 +1360,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.orange)
                                 )
                             }
                         } else if state.useSuperBolus {
-                            Text(" = ")
+                            Text("= ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                             Button(action: {
@@ -1382,17 +1390,17 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.cyan)
                                 )
                             }
                         } else {
-                            Text(" = ")
+                            Text("= ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
                             Button(action: {
@@ -1412,11 +1420,11 @@ extension Bolus {
                                         .font(.system(size: 16))
                                 }
                                 .padding(.top, 2)
-                                .padding(.bottom, 3)
+                                .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 0)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .stroke(Color.white, lineWidth: 2)
                                         .background(Color.green)
                                 )
@@ -1425,8 +1433,7 @@ extension Bolus {
                     }
                 }
             }
-            // .padding(.top, 2)
-            .padding(.bottom, 2)
+            .padding(.bottom, 6)
         }
 
         var warningParts: some View {
@@ -1455,9 +1462,14 @@ extension Bolus {
                 VStack {
                     if state.error, state.insulinCalculated > 0 {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
-                                .padding(.bottom, 1)
-                                .padding(.top, 2)
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle")
+                                Text("VARNING!")
+                                    .offset(x: -4, y: 0)
+                            }
+                            .font(.callout).bold().foregroundColor(.orange)
+                            .padding(.bottom, 1)
+                            .padding(.top, 2)
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
@@ -1465,9 +1477,14 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
-                            Text("VARNING!").font(.callout).bold().foregroundColor(.orange)
-                                .padding(.bottom, 1)
-                                .padding(.top, 2)
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle")
+                                Text("VARNING!")
+                                    .offset(x: -4, y: 0)
+                            }
+                            .font(.callout).bold().foregroundColor(.orange)
+                            .padding(.bottom, 1)
+                            .padding(.top, 2)
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
@@ -1475,6 +1492,8 @@ extension Bolus {
                         }
                     }
                 }
+                .padding(.leading, 10)
+                .padding(.trailing, 10)
             }
         }
 
@@ -1536,83 +1555,7 @@ extension Bolus {
                     .units
                     .rawValue
             default:
-                return "Boluskalkylatorns förslag kan vara för aggressivt med hänsyn till nuvarande blodsockerkurva."
-
-                /* private func alertString() -> String {
-                 switch state.errorString {
-                 case 1,
-                 2:
-                 return NSLocalizedString(
-                 "Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to ",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) + state.minGuardBG
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
-                 state.units
-                 .rawValue + ", " +
-                 NSLocalizedString(
-                 "which is below your Threshold (",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) + state
-                 .threshold
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + ")"
-                 case 3:
-                 return NSLocalizedString(
-                 "Eventual Glucose > Target Glucose, but glucose is climbing slower than expected. Expected: ",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) +
-                 state.expectedDelta
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                 NSLocalizedString(". Climbing: ", comment: "Bolus pop-up / Alert string. Make translatons concise!") +
-                 state
-                 .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
-                 case 4:
-                 return NSLocalizedString(
-                 "Eventual Glucose > Target Glucose, but glucose is falling faster than expected. Expected: ",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) +
-                 state.expectedDelta
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                 NSLocalizedString(". Falling: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
-                 state
-                 .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
-                 case 5:
-                 return NSLocalizedString(
-                 "Eventual Glucose > Target Glucose, but glucose is changing faster than expected. Expected: ",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) +
-                 state.expectedDelta
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) +
-                 NSLocalizedString(". Changing: ", comment: "Bolus pop-up / Alert string. Make translations concise!") +
-                 state
-                 .minDelta.formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits)))
-                 case 6:
-                 return NSLocalizedString(
-                 "Eventual Glucose > Target Glucose, but glucose is predicted to first drop down to ",
-                 comment: "Bolus pop-up / Alert string. Make translations concise!"
-                 ) + state
-                 .minPredBG
-                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(fractionDigits))) + " " +
-                 state
-                 .units
-                 .rawValue
-                 default:
-                 return "Ignore Warning..."*/
-
-                /* private func alertString() -> String {
-                 switch state.errorString {
-                 case 1,
-                 2:
-                 return "Insulin behövs sannolikt inom kort men överväg att avvakta med doseringen till blodsockerkurvan"
-                 case 3:
-                 return ""
-                 case 4:
-                 return ""
-                 case 5:
-                 return ""
-                 case 6:
-                 return ""
-                 default:
-                 return "" */
+                return "Boluskalkylatorns beräkning kan vara för aggressiv med hänsyn till nuvarande blodsockerkurva."
             }
         }
     }
