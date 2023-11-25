@@ -505,8 +505,7 @@ extension Bolus {
                                 }
                             Spacer()
                             Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                "0" +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         }
