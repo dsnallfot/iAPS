@@ -446,7 +446,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
     func uploadProfileAndSettings(_ force: Bool) {
         // These should be modified anyways and not the defaults
-                guard let sensitivities = storage.retrieve(OpenAPS.Settings.insulinSensitivities, as: InsulinSensitivities.self) else {
+        guard let sensitivities = storage.retrieve(OpenAPS.Settings.insulinSensitivities, as: InsulinSensitivities.self)
+        else {
             debug(.nightscout, "NightscoutManager uploadProfile: error loading insulinSensitivities")
             return
         }

@@ -257,86 +257,88 @@ extension Bolus {
         // calculation showed in sheet
         var bolusInfoAlternativeCalculator: some View {
             NavigationView {
-                VStack {
+                ScrollView {
                     VStack {
                         VStack {
                             VStack {
                                 VStack {
-                                    if fetch {
-                                        mealParts
+                                    VStack {
                                         if fetch {
-                                            Divider().fontWeight(.bold) // .padding(1)
+                                            mealParts
+                                            if fetch {
+                                                Divider().fontWeight(.bold) // .padding(1)
+                                            }
                                         }
-                                    }
 
-                                    VStack {
-                                        variableParts
+                                        VStack {
+                                            variableParts
 
-                                        Divider().fontWeight(.bold) // .padding(1)
+                                            Divider().fontWeight(.bold) // .padding(1)
 
-                                        guardRailParts
-
-                                        Divider().fontWeight(.bold) // .padding(1)
-                                    }
-                                    VStack {
-                                        if state.advancedCalc {
-                                            orefParts
+                                            guardRailParts
 
                                             Divider().fontWeight(.bold) // .padding(1)
                                         }
+                                        VStack {
+                                            if state.advancedCalc {
+                                                orefParts
 
-                                        calculationParts
+                                                Divider().fontWeight(.bold) // .padding(1)
+                                            }
 
-                                        Divider().fontWeight(.bold) // .padding(1)
-                                    }
-                                    VStack {
-                                        HStack {
-                                            Text("Summa beräknat bolusbehov:")
-                                                .foregroundColor(.primary)
-                                            Spacer()
-                                            let insulin = state.roundedWholeCalc
-                                            Text(insulin.formatted())
-                                                .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
-                                            Text("E")
-                                                .foregroundColor(.primary)
+                                            calculationParts
+
+                                            Divider().fontWeight(.bold) // .padding(1)
                                         }
-                                        .fontWeight(.semibold)
-                                        .padding(.top, 1)
-                                        .padding(.bottom, 1)
-                                    }
-                                    Divider().fontWeight(.bold) // .padding(1)
-                                    VStack {
-                                        resultsPart
+                                        VStack {
+                                            HStack {
+                                                Text("Summa beräknat bolusbehov:")
+                                                    .foregroundColor(.primary)
+                                                Spacer()
+                                                let insulin = state.roundedWholeCalc
+                                                Text(insulin.formatted())
+                                                    .foregroundStyle(state.roundedWholeCalc < 0 ? Color.loopRed : Color.primary)
+                                                Text("E")
+                                                    .foregroundColor(.primary)
+                                            }
+                                            .fontWeight(.semibold)
+                                            .padding(.top, 1)
+                                            .padding(.bottom, 1)
+                                        }
+                                        Divider().fontWeight(.bold) // .padding(1)
+                                        VStack {
+                                            resultsPart
 
-                                        warningParts
+                                            warningParts
+                                        }
                                     }
                                 }
+                                .padding(.top, 10)
+                                .padding(.bottom, 10)
+                                .padding(.leading, 15)
+                                .padding(.trailing, 15)
                             }
-                            .padding(.top, 10)
-                            .padding(.bottom, 10)
-                            .padding(.leading, 15)
-                            .padding(.trailing, 15)
-                        }
 
-                        .font(.footnote)
-                    }
-                    .navigationTitle("Boluskalkylator")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarItems(
-                        leading:
-                        HStack {
-                            Button(action: {
-                                showInfo.toggle()
-                            }) {
-                                Image(systemName: "chevron.left")
-                                    .scaleEffect(0.61)
-                                    .font(Font.title.weight(.semibold))
-                                    .offset(x: -13, y: 0)
-                                Text("Tillbaka")
-                                    .offset(x: -22, y: 0)
-                            }
+                            .font(.footnote)
                         }
-                    )
+                        .navigationTitle("Boluskalkylator")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationBarItems(
+                            leading:
+                            HStack {
+                                Button(action: {
+                                    showInfo.toggle()
+                                }) {
+                                    Image(systemName: "chevron.left")
+                                        .scaleEffect(0.61)
+                                        .font(Font.title.weight(.semibold))
+                                        .offset(x: -13, y: 0)
+                                    Text("Tillbaka")
+                                        .offset(x: -22, y: 0)
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -503,8 +505,7 @@ extension Bolus {
                                 }
                             Spacer()
                             Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
+                                "0" +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         }
