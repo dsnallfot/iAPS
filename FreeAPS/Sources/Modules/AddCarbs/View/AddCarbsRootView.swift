@@ -267,7 +267,7 @@ extension AddCarbs {
             Section {
                 HStack {
                     Text("")
-                    Picker("Förval", selection: $state.selection) {
+                    Picker("", selection: $state.selection) {
                         Text("Välj favorit").tag(nil as Presets?)
                         ForEach(carbPresets, id: \.self) { (preset: Presets) in
                             Text(preset.dish ?? "").tag(preset as Presets?)
@@ -285,7 +285,12 @@ extension AddCarbs {
                         state.note = state.selection?.note ?? "" // Set state.note to the selected note
                         state.addToSummation()
                     }
-
+                    .onChange(of: state.carbs) { newValue in
+                        // Check if the value is zero and update the selection accordingly
+                        if newValue == 0 {
+                            state.selection = nil
+                        }
+                    }
                     if state.selection != nil {
                         Button {
                             if state.carbs != 0,
