@@ -722,6 +722,18 @@ extension Bolus {
                         .foregroundColor(.secondary)
                 }
                 HStack {
+                    let dynamicRatio = (state.provider.suggestion?.sensitivityRatio)! * 100
+                    Text("Aktuell dynamisk känslighet:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(dynamicRatio.formatted(
+                        .number.grouping(.never).rounded()
+                            .precision(.fractionLength(0))
+                    ))
+                    Text("%")
+                        .foregroundColor(.secondary)
+                }
+                HStack {
                     Text("Aktuell CR (insulinkvot):")
                         .foregroundColor(.secondary)
                     Spacer()
@@ -851,7 +863,7 @@ extension Bolus {
         var guardRailParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    Text("Säkerhetsinställningar")
+                    Text("Säkerhet & begränsningar")
                     Spacer()
                 }
                 .foregroundColor(.primary).fontWeight(.semibold)
