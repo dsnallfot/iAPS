@@ -266,7 +266,6 @@ extension AddCarbs {
         private var mealPresets: some View {
             Section {
                 HStack {
-                    Text("")
                     Picker("", selection: $state.selection) {
                         Text("Välj favorit").tag(nil as Presets?)
                         ForEach(carbPresets, id: \.self) { (preset: Presets) in
@@ -277,7 +276,7 @@ extension AddCarbs {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     // .pickerStyle(.automatic)
                     .foregroundColor(.primary)
-                    .offset(x: -20, y: 0)
+                    .offset(x: -12, y: 0)
                     ._onBindingChange($state.selection) { _ in
                         state.carbs += ((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal
                         state.fat += ((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal
