@@ -73,6 +73,14 @@ extension AddCarbs {
                         Text("grams").fontWeight(.semibold)
                     }
                     .listRowBackground(Color(.loopYellow).opacity(0.8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8) // Adjust the corner radius as needed
+                            .stroke(lineWidth: 3)
+                            .padding(.leading, -14)
+                            .padding(.trailing, -14)
+                            .padding(.top, -2)
+                            .padding(.bottom, -2)
+                    )
 
                     if state.useFPUconversion {
                         proteinAndFat()
