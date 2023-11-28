@@ -215,7 +215,7 @@ extension AddCarbs {
             }
             .navigationTitle("Registrera måltid")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("Close", action: state.hideModal))
+            .navigationBarItems(trailing: Button("Cancel", action: state.hideModal))
         }
 
         var presetPopover: some View {
