@@ -214,7 +214,7 @@ extension Bolus {
                         .offset(x: -22, y: 0)
                 },
                 trailing: Button { state.hideModal() }
-                label: { Text("Close") }
+                label: { Text("Cancel") }
             )
             .onAppear {
                 configureView {

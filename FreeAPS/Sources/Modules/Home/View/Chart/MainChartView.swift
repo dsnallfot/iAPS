@@ -477,7 +477,7 @@ struct MainChartView: View {
 
             ForEach(bolusDots, id: \.rect.minX) { info -> AnyView in
                 let position = CGPoint(x: info.rect.midX, y: info.rect.minY - 8)
-                return Text(bolusFormatter.string(from: info.value as NSNumber)!).font(.caption2)
+                return Text(bolusFormatter.string(from: info.value as NSNumber)!).font(.system(size: 11))
                     .position(position)
                     .asAny()
             }
@@ -499,7 +499,7 @@ struct MainChartView: View {
 
             ForEach(carbsDots, id: \.rect.minX) { info -> AnyView in
                 let position = CGPoint(x: info.rect.midX, y: info.rect.minY - 8)
-                return Text(carbsFormatter.string(from: info.value as NSNumber)!).font(.caption2)
+                return Text(carbsFormatter.string(from: info.value as NSNumber)!).font(.system(size: 11))
                     .position(position)
                     .asAny()
             }
