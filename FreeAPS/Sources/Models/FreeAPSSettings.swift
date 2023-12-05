@@ -53,6 +53,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var sweetMeals: Bool = false
     var sweetMealFactor: Decimal = 2
     var advancedCalc: Bool = false
+    var useLiveActivity: Bool = true
 }
 
 extension FreeAPSSettings: Decodable {
@@ -272,6 +273,10 @@ extension FreeAPSSettings: Decodable {
 
         if let onlyAutotuneBasals = try? container.decode(Bool.self, forKey: .onlyAutotuneBasals) {
             settings.onlyAutotuneBasals = onlyAutotuneBasals
+        }
+
+        if let useLiveActivity = try? container.decode(Bool.self, forKey: .useLiveActivity) {
+            settings.useLiveActivity = useLiveActivity
         }
 
         self = settings

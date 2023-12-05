@@ -55,6 +55,16 @@ extension NotificationsConfig {
                         Text("g").foregroundColor(.secondary)
                     }
                 }
+                if #available(iOS 16.2, *) {
+                    Section(
+                        header: Text("Live-aktivitet"),
+                        footer: Text(
+                            "Live-aktivitet visar blodsocker live på låsskärmen och dynamic island (om tillgängligt på din iPhonemodell)"
+                        )
+                    ) {
+                        Toggle("Visa live-aktivitet", isOn: $state.useLiveActivity)
+                    }
+                }
             }
             .onAppear(perform: configureView)
             .navigationBarTitle("Notifications")
