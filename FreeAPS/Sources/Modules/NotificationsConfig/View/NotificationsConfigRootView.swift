@@ -1,3 +1,5 @@
+import ActivityKit
+import Combineimport 
 import SwiftUI
 import Swinject
 
@@ -5,6 +7,14 @@ extension NotificationsConfig {
     struct RootView: BaseView {
         let resolver: Resolver
         @StateObject var state = StateModel()
+
+        @State private var systemLiveActivitySetting: Bool = {
+            if #available(iOS 16.1, *) {
+                ActivityAuthorizationInfo().areActivitiesEnabled
+            } else {
+                false
+            }
+        }()
 
         private var glucoseFormatter: NumberFormatter {
             let formatter = NumberFormatter()
@@ -22,6 +32,19 @@ extension NotificationsConfig {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 0
             return formatter
+        }
+
+        private func liveActivityFooterText() -> String {
+            var footer =
+                "Live-aktivitet visar blodsocker live på låsskärmen och dynamic island (om tillgängligt på din iPhonemodell)"
+
+            if !systemLiveActivitySetting {
+                footer =
+                    "Live-aktivitet är avstängt i dina systeminställningar. För att aktivera, så till inställningar -> iAPS -> Aktivera live-aktiviteter.\n\n" +
+                    footer
+            }
+
+            return footer
         }
 
         var body: some View {
@@ -59,11 +82,20 @@ extension NotificationsConfig {
                     Section(
                         header: Text("Live-aktivitet"),
                         footer: Text(
-                            "Live-aktivitet visar blodsocker live på låsskärmen och dynamic island (om tillgängligt på din iPhonemodell)"
-                        )
-                    ) {
-                        Toggle("Visa live-aktivitet", isOn: $state.useLiveActivity)
-                    }
+                    liveActivityFooterText()
+                        ),
+                        content: {
+                            if !systemLiveActivitySetting {
+                                Button("Open Settings App") {
+                                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                                }
+                            } else {
+                                Toggle("Visa live-aktivitet", isOn: $state.useLiveActivity) }
+                        }
+                    )
+                    .onReceive(resolver.resolve(LiveActivityBridge.self)!.$systemEnabled, perform: {
+                        self.systemLiveActivitySetting = $0
+                    })
                 }
             }
             .onAppear(perform: configureView)
