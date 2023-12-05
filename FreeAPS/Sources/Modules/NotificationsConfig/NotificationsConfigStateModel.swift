@@ -21,6 +21,7 @@ extension NotificationsConfig {
             subscribeSetting(\.useAlarmSound, on: $useAlarmSound) { useAlarmSound = $0 }
             subscribeSetting(\.addSourceInfoToGlucoseNotifications, on: $addSourceInfoToGlucoseNotifications) {
                 addSourceInfoToGlucoseNotifications = $0 }
+            subscribeSetting(\.useLiveActivity, on: $useLiveActivity) { useLiveActivity = $0 }
 
             subscribeSetting(\.lowGlucose, on: $lowGlucose, initial: {
                 let value = max(min($0, 400), 40)
