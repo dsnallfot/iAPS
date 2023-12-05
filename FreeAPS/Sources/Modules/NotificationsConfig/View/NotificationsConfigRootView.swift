@@ -36,11 +36,11 @@ extension NotificationsConfig {
 
         private func liveActivityFooterText() -> String {
             var footer =
-                "Live-aktivitet visar blodsocker live på låsskärmen och dynamic island (om tillgängligt på din iPhonemodell)"
+                "Liveaktivitet visar blodsocker live på låsskärmen och dynamic island (om tillgängligt på din iPhonemodell)"
 
             if !systemLiveActivitySetting {
                 footer =
-                    "Live-aktivitet är avstängt i dina systeminställningar. För att aktivera, så till inställningar -> iAPS -> Aktivera live-aktiviteter.\n\n" +
+                    "Liveaktivitet är avstängt i dina systeminställningar. För att aktivera, så till inställningar -> iAPS -> Aktivera liveaktiviteter.\n\n" +
                     footer
             }
 
@@ -80,7 +80,7 @@ extension NotificationsConfig {
                 }
                 if #available(iOS 16.2, *) {
                     Section(
-                        header: Text("Live-aktivitet"),
+                        header: Text("Liveaktivitet"),
                         footer: Text(
                             liveActivityFooterText()
                         ),
@@ -90,7 +90,7 @@ extension NotificationsConfig {
                                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                                 }
                             } else {
-                                Toggle("Visa live-aktivitet", isOn: $state.useLiveActivity) }
+                                Toggle("Visa liveaktivitet", isOn: $state.useLiveActivity) }
                         }
                     )
                     .onReceive(resolver.resolve(LiveActivityBridge.self)!.$systemEnabled, perform: {
