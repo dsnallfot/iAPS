@@ -1,5 +1,5 @@
 import ActivityKit
-import Combineimport 
+import Combine
 import SwiftUI
 import Swinject
 
@@ -82,7 +82,7 @@ extension NotificationsConfig {
                     Section(
                         header: Text("Live-aktivitet"),
                         footer: Text(
-                    liveActivityFooterText()
+                            liveActivityFooterText()
                         ),
                         content: {
                             if !systemLiveActivitySetting {
