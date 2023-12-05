@@ -40,7 +40,7 @@ extension NotificationsConfig {
 
             if !systemLiveActivitySetting {
                 footer =
-                    "Liveaktivitet är avstängt i dina systeminställningar. För att aktivera, så till inställningar -> iAPS -> Aktivera liveaktiviteter.\n\n" +
+                    "Liveaktiviteter är avstängda i dina systeminställningar. För att aktivera, gå till inställningar -> iAPS -> Aktivera liveaktiviteter.\n\n" +
                     footer
             }
 
