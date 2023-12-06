@@ -44,34 +44,34 @@ struct PodDiagnosticsView: View  {
             .disabled(self.viewModel.noPod)
 
             NavigationLink(destination: ReadPodInfoView(
-                title: LocalizedString("Read Pulse Log Plus", comment: "Text for read pulse log plus title"),
+                title: LocalizedString("Läs pulslogg plus", comment: "Text for read pulse log plus title"),
                 actionString: LocalizedString("Reading Pulse Log Plus...", comment: "Text for read pulse log plus action"),
-                failedString: LocalizedString("Failed to read pulse log plus.", comment: "Alert title for error when reading pulse log plus"),
+                failedString: LocalizedString("Misslyckades med att läsa pulslogg plus.", comment: "Alert title for error when reading pulse log plus"),
                 toRun: viewModel.readPulseLogPlus))
             {
-                FrameworkLocalText("Read Pulse Log Plus", comment: "Text for read pulse log plus navigation link")
+                FrameworkLocalText("Läs pulslogg plus", comment: "Text for read pulse log plus navigation link")
                     .foregroundColor(Color.primary)
             }
             .disabled(self.viewModel.noPod)
 
             NavigationLink(destination: ReadPodInfoView(
-                title: LocalizedString("Read Activation Time", comment: "Text for read activation time title"),
-                actionString: LocalizedString("Reading Activation Time...", comment: "Text for read activation time action"),
-                failedString: LocalizedString("Failed to read activation time.", comment: "Alert title for error when reading activation time"),
+                title: LocalizedString("Läs aktiveringstid", comment: "Text for read activation time title"),
+                actionString: LocalizedString("Läser aktiveringstid...", comment: "Text for read activation time action"),
+                failedString: LocalizedString("Misslyckades med att läsa aktiveringstid.", comment: "Alert title for error when reading activation time"),
                 toRun: self.viewModel.readActivationTime))
             {
-                FrameworkLocalText("Read Activation Time", comment: "Text for read activation time navigation link")
+                FrameworkLocalText("Läs aktiveringstid", comment: "Text for read activation time navigation link")
                     .foregroundColor(Color.primary)
             }
             .disabled(self.viewModel.noPod)
 
             NavigationLink(destination: ReadPodInfoView(
-                title: LocalizedString("Read Triggered Alerts", comment: "Text for read triggered alerts title"),
-                actionString: LocalizedString("Reading Triggered Alerts...", comment: "Text for read triggered alerts action"),
-                failedString: LocalizedString("Failed to read triggered alerts.", comment: "Alert title for error when reading triggered alerts"),
+                title: LocalizedString("Läs triggade alarm", comment: "Text for read triggered alerts title"),
+                actionString: LocalizedString("Läser triggade alarm...", comment: "Text for read triggered alerts action"),
+                failedString: LocalizedString("Misslyckades med att läsa triggade alarm.", comment: "Alert title for error when reading triggered alerts"),
                 toRun: self.viewModel.readTriggeredAlerts))
             {
-                FrameworkLocalText("Read Triggered Alerts", comment: "Text for read triggered alerts navigation link")
+                FrameworkLocalText("Läs triggade alarm", comment: "Text for read triggered alerts navigation link")
                     .foregroundColor(Color.primary)
             }
             .disabled(self.viewModel.noPod)
