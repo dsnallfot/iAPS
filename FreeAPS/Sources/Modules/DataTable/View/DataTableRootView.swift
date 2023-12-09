@@ -291,7 +291,7 @@ extension DataTable {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
                                 .listRowBackground(
-                                    item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
+                                    item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
                                 )
                         }
                     }
@@ -309,6 +309,7 @@ extension DataTable {
                     ForEach(state.basals) { item in
                         basalView(item)
                     }
+                    .listRowBackground(Color(.secondarySystemBackground))
 
                 } else {
                     HStack {
@@ -334,6 +335,7 @@ extension DataTable {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
+                    .listRowBackground(Color(.secondarySystemBackground))
                 } else {
                     HStack {
                         Text("Ingen data.")
