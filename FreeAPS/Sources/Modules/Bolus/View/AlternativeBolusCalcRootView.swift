@@ -631,7 +631,7 @@ extension Bolus {
                 }
                 if let carbs = meal.first?.carbs, carbs > 0 {
                     HStack {
-                        Text("Carbs")
+                        Text("Kolhydrater:")
                             .foregroundColor(.secondary)
                         Spacer()
                         Text(mealFormatter.string(from: carbs as NSNumber) ?? "")
@@ -640,7 +640,7 @@ extension Bolus {
                 }
                 if let protein = meal.first?.protein, protein > 0 {
                     HStack {
-                        Text("Protein")
+                        Text("Protein:")
                             .foregroundColor(.brown)
                         Spacer()
                         Text(mealFormatter.string(from: protein as NSNumber) ?? "")
@@ -650,7 +650,7 @@ extension Bolus {
                 }
                 if let fat = meal.first?.fat, fat > 0 {
                     HStack {
-                        Text("Fat")
+                        Text("Fett:")
                             .foregroundColor(.brown)
                         Spacer()
                         Text(mealFormatter.string(from: fat as NSNumber) ?? "")
@@ -660,7 +660,7 @@ extension Bolus {
                 }
                 if let note = meal.first?.note, note != "" {
                     HStack {
-                        Text("Note")
+                        Text("Anteckning:")
                             .foregroundColor(.secondary)
                         Spacer()
                         Text(note)
@@ -719,27 +719,29 @@ extension Bolus {
                     Text("mmol/L")
                         .foregroundColor(.secondary)
                 }
-                // Basal dont update automatic for some reason, only when triggering save to pump. needs to check. not crucial info in the calc view right now
-                HStack {
-                    Text("Schemalagd basal:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    let basal = state.currentBasal
-                    Text(basal.formatted())
-                    Text(NSLocalizedString("E/h", comment: " Units per hour"))
-                        .foregroundColor(.secondary)
-                }
-                HStack {
-                    let dynamicRatio = (state.provider.suggestion?.sensitivityRatio)! * 100
-                    Text("Aktuell dynamisk känslighet:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(dynamicRatio.formatted(
-                        .number.grouping(.never).rounded()
-                            .precision(.fractionLength(0))
-                    ))
-                    Text("%")
-                        .foregroundColor(.secondary)
+                if state.advancedCalc {
+                    // Basal dont update automatic for some reason, only when triggering save to pump. needs to check this. not crucial info in the calc view right now, just superbolus calc
+                    HStack {
+                        Text("Schemalagd basal:")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        let basal = state.currentBasal
+                        Text(basal.formatted())
+                        Text(NSLocalizedString("E/h", comment: " Units per hour"))
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        let dynamicRatio = (state.provider.suggestion?.sensitivityRatio)! * 100
+                        Text("Aktuell dynamisk känslighet:")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text(dynamicRatio.formatted(
+                            .number.grouping(.never).rounded()
+                                .precision(.fractionLength(0))
+                        ))
+                        Text("%")
+                            .foregroundColor(.secondary)
+                    }
                 }
                 HStack {
                     Text("Aktuell CR (insulinkvot):")
@@ -750,27 +752,29 @@ extension Bolus {
                     Text(NSLocalizedString("g/E", comment: " grams per Unit"))
                         .foregroundColor(.secondary)
                 }
-                HStack {
-                    Text("Aktuell CSF (ökning per g kh):")
-                        .foregroundColor(.secondary)
-                    Spacer()
+                if state.advancedCalc {
+                    HStack {
+                        Text("Aktuell CSF (ökning per g kh):")
+                            .foregroundColor(.secondary)
+                        Spacer()
 
-                    let csf = state.isf / state.carbRatio
+                        let csf = state.isf / state.carbRatio
 
-                    // Round csf to one decimal place using NSDecimalNumber
-                    let roundedCsf = NSDecimalNumber(decimal: csf).rounding(accordingToBehavior: NSDecimalNumberHandler(
-                        roundingMode: .plain,
-                        scale: 1,
-                        raiseOnExactness: false,
-                        raiseOnOverflow: false,
-                        raiseOnUnderflow: false,
-                        raiseOnDivideByZero: false
-                    ))
+                        // Round csf to one decimal place using NSDecimalNumber
+                        let roundedCsf = NSDecimalNumber(decimal: csf).rounding(accordingToBehavior: NSDecimalNumberHandler(
+                            roundingMode: .plain,
+                            scale: 1,
+                            raiseOnExactness: false,
+                            raiseOnOverflow: false,
+                            raiseOnUnderflow: false,
+                            raiseOnDivideByZero: false
+                        ))
 
-                    Text("\(roundedCsf)")
+                        Text("\(roundedCsf)")
 
-                    Text(NSLocalizedString("mmol/L", comment: " grams per Unit"))
-                        .foregroundColor(.secondary)
+                        Text(NSLocalizedString("mmol/L", comment: " grams per Unit"))
+                            .foregroundColor(.secondary)
+                    }
                 }
                 HStack {
                     Text("Aktuell ISF:")
