@@ -121,7 +121,7 @@ extension Home {
             .padding(.bottom, 0)
             .padding(.leading, 8)
             .padding(.trailing, 8)
-            .background(Color.purple.opacity(0.12))
+            .background(Color.blue.opacity(0.12))
         }
 
         var cobIobView: some View {
@@ -374,7 +374,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
-            .background(Color.purple.opacity(0.12))
+            .background(Color.blue.opacity(0.12))
         }
 
         var timeInterval: some View {
@@ -386,7 +386,7 @@ extension Home {
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color.purple.opacity(0.12) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color.blue.opacity(0.12) : .clear, in: .capsule(style: .circular))
                 }
                 Image(systemName: "chart.xyaxis.line")
                     .foregroundStyle(.purple.opacity(0.5))
@@ -531,7 +531,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.purple.opacity(0.12)).frame(height: 66 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.blue.opacity(0.12)).frame(height: 66 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
