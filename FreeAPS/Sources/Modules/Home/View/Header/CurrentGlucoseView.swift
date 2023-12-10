@@ -54,10 +54,11 @@ struct CurrentGlucoseView: View {
                                 .string(from: Double(units == .mmolL ? $0.asMmolL : Decimal($0)) as NSNumber)! }
                         ?? "--"
                 )
-                .font(.title).fontWeight(.bold)
+                .font(.system(size: 48, weight: .bold))
                 .foregroundColor(alarm == nil ? colorOfGlucose : .loopRed)
+                .padding(.bottom, 3)
 
-                image
+                // image
             }
             HStack {
                 let minutesAgo = -1 * (recentGlucose?.dateString.timeIntervalSinceNow ?? 0) / 60
@@ -68,7 +69,9 @@ struct CurrentGlucoseView: View {
                             NSLocalizedString("min", comment: "Short form for minutes") + " "
                     )
                 )
-                .font(.caption2).foregroundColor(.secondary)
+                .font(.caption).foregroundColor(.secondary)
+
+                image
 
                 Text(
                     delta
@@ -76,7 +79,7 @@ struct CurrentGlucoseView: View {
                             deltaFormatter.string(from: Double(units == .mmolL ? $0.asMmolL : Decimal($0)) as NSNumber)!
                         } ?? "--"
                 )
-                .font(.caption2).foregroundColor(.secondary)
+                .font(.caption).foregroundColor(.secondary)
             }.frame(alignment: .top)
         }
     }

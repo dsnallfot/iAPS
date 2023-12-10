@@ -105,53 +105,58 @@ extension Home {
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
             let colour: Color = colorScheme == .dark ? .black : .white
-            HStack(alignment: .bottom) {
-                Spacer()
-                cobIobView
-                Spacer()
+            VStack(alignment: .center) {
                 glucoseView
-                Spacer()
-                pumpView
-                Spacer()
-                loopView
-                Spacer()
+                    .padding(.bottom, 10)
+                HStack(alignment: .bottom) {
+                    Spacer()
+                    cobIobView
+                    // glucoseView
+                    // Spacer()
+                    // cobIobView
+                    // glucoseView
+                    loopView
+                        .padding(.leading, 8)
+                        .padding(.trailing, 8)
+                    // Spacer()
+                    pumpView
+                    Spacer()
+                    // loopView
+                    // Spacer()
+                }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 10 + geo.safeAreaInsets.top)
+            .padding(.top, 0 + geo.safeAreaInsets.top)
             .padding(.bottom, 10)
-            .background(Color.gray.opacity(0.3))
+            .background(Color.purple.opacity(0.1))
 
             Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         var cobIobView: some View {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("IOB: ")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" U", comment: "Insulin unit")
-                    )
-                    .font(.footnote)
-                    .fontWeight(.bold)
-                }
-                .frame(alignment: .top) // Align the whole HStack to the top
+            // VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("IOB")
+                    .font(.system(size: 12)).foregroundColor(.secondary)
+                Text(
+                    (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
+                        NSLocalizedString(" U", comment: "Insulin unit")
+                )
+                .font(.system(size: 12, weight: .bold)).foregroundColor(.primary)
+                // }
+                // .frame(alignment: .top) // Align the whole HStack to the top
 
-                HStack {
-                    Text("COB:")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" g", comment: "gram of carbs")
-                    )
-                    .font(.footnote)
-                    .fontWeight(.bold)
-                }
-                .frame(alignment: .bottom) // Align the whole HStack to the bottom
+                // HStack {
+                Text("COB")
+                    .font(.system(size: 12)).foregroundColor(.secondary)
+                Text(
+                    (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
+                        NSLocalizedString(" g", comment: "gram of carbs")
+                )
+                .font(.system(size: 12, weight: .bold)).foregroundColor(.primary)
             }
+            // .frame(alignment: .bottom) // Align the whole HStack to the bottom
+            // }
         }
 
         var glucoseView: some View {
@@ -380,8 +385,8 @@ extension Home {
                     }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 50)
-            .background(Color.gray.opacity(0.22))
+            .frame(maxWidth: .infinity, maxHeight: 40)
+            .background(Color.purple.opacity(0.1))
         }
 
         var timeInterval: some View {
@@ -495,7 +500,7 @@ extension Home {
             let colour: Color = colorScheme == .dark ? .black : .white
             // Rectangle().fill(colour).frame(maxHeight: 1)
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.22)).frame(maxHeight: 50)
+                Rectangle().fill(Color.purple.opacity(0.1)).frame(maxHeight: 40)
                 let cancel = fetchedPercent.first?.enabled ?? false
                 HStack(spacing: cancel ? 25 : 15) {
                     Button { state.showModal(for: .overrideProfilesConfig) }
@@ -565,7 +570,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 54 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 54 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
