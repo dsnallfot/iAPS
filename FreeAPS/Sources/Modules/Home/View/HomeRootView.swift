@@ -104,38 +104,24 @@ extension Home {
         }
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
-            // let colour: Color = colorScheme == .dark ? .black : .white
             VStack(alignment: .center) {
                 glucoseView
-                    .padding(.bottom, 18)
+                    .padding(.bottom, 22)
                     .padding(.top, 8)
-                HStack /* (alignment: .bottom) */ {
+                HStack(alignment: .bottom) {
                     Spacer()
                     cobIobView
-                    // glucoseView
-                    // Spacer()
-                    // cobIobView
-                    // glucoseView
-                    // loopView
-                    // .padding(.leading, 8)
-                    // .padding(.trailing, 8)
-                    // Spacer()
                     pumpView
                     Spacer()
-                    // loopView
-                    // Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.bottom, 2)
+            .padding(.bottom, 0)
             .background(Color.purple.opacity(0.1))
-
-            // Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         var cobIobView: some View {
-            // VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("IOB")
                     .font(.system(size: 12)).foregroundColor(.secondary)
@@ -144,11 +130,8 @@ extension Home {
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 8)
-                // }
-                // .frame(alignment: .top) // Align the whole HStack to the top
+                .padding(.trailing, 12)
 
-                // HStack {
                 Text("COB")
                     .font(.system(size: 12)).foregroundColor(.secondary)
                 Text(
@@ -156,11 +139,12 @@ extension Home {
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 8)
+                .padding(.trailing, 12)
             }
-            // .frame(alignment: .bottom) // Align the whole HStack to the bottom
-            // }
-        }
+            .frame(alignment: .bottom)
+            .onTapGesture {
+                state.showModal(for: .dataTable)
+            } }
 
         var glucoseView: some View {
             CurrentGlucoseView(
@@ -174,7 +158,7 @@ extension Home {
             )
             .onTapGesture {
                 if state.alarm == nil {
-                    state.openCGM()
+                    state.showModal(for: .snooze)
                 } else {
                     state.showModal(for: .snooze)
                 }
@@ -183,7 +167,7 @@ extension Home {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
                 if state.alarm == nil {
-                    state.showModal(for: .snooze)
+                    state.openCGM()
                 } else {
                     state.openCGM()
                 }
@@ -355,9 +339,6 @@ extension Home {
                     state.showModal(for: .overrideProfilesConfig)
                 }) {
                     if let overrideString = overrideString {
-                        /* Image(systemName: "person.fill")
-                         .font(.system(size: 12))
-                         .foregroundColor(.cyan) */
                         Text(selectedProfile().name)
                             .font(.system(size: 12))
                             .foregroundColor(.cyan)
@@ -406,14 +387,8 @@ extension Home {
                     .frame(maxHeight: 20).padding(.horizontal)
                     .background(button.active ? Color.purple.opacity(0.15) : .clear, in: .capsule(style: .circular))
                 }
-                /* Image(systemName: "ellipsis.circle.fill")
-                 .foregroundStyle(.secondary)
-                 .padding(.leading)
-                 .onTapGesture {
-                     state.showModal(for: .statisticsConfig)
-                 } */
                 Image(systemName: "chart.xyaxis.line")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.purple.opacity(0.5))
                     .padding(.leading)
                     .onTapGesture {
                         state.showModal(for: .statistics)
@@ -474,7 +449,7 @@ extension Home {
                     .padding(.trailing, 10)
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 12)
+                .padding([.bottom], 16)
             }
         }
 
@@ -515,46 +490,6 @@ extension Home {
             .modal(for: .dataTable, from: self)
         }
 
-        /*@ViewBuilder private func profiles(_: GeometryProxy) -> some View {
-             // let colour: Color = colorScheme == .dark ? .black : .white
-             // Rectangle().fill(colour).frame(maxHeight: 1)
-             ZStack {
-                 Rectangle().fill(Color.purple.opacity(0.1)).frame(maxHeight: 40)
-                 let cancel = fetchedPercent.first?.enabled ?? false
-                 HStack(spacing: cancel ? 25 : 15) {
-                     Button { state.showModal(for: .overrideProfilesConfig) }
-                     label: {
-                         Text(selectedProfile().name).foregroundColor(.primary)
-
-                         Image(systemName: "person.3.sequence.fill")
-                             .symbolRenderingMode(.palette)
-                             .foregroundStyle(
-                                 !(fetchedPercent.first?.enabled ?? false) ? .green : .cyan,
-                                 !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
-                                 .purple
-                             )
-                     }
-                     if cancel, selectedProfile().isOn {
-                         Button { showCancelAlert.toggle() }
-                         label: {
-                             Image(systemName: "arrow.uturn.backward")
-                                 .foregroundStyle(.red)
-                         }
-                     }
-                 }
-             }
-             .alert(
-                 "Return to Normal?", isPresented: $showCancelAlert,
-                 actions: {
-                     Button("No", role: .cancel) {}
-                     Button("Yes", role: .destructive) {
-                         state.cancelProfile()
-                     }
-                 }, message: { Text("This will change settings back to your normal profile.") }
-             )
-             // Rectangle().fill(colour).frame(maxHeight: 1)
-         }*/
-
         private func selectedProfile() -> (name: String, isOn: Bool) {
             var profileString = ""
             var display: Bool = false
@@ -589,7 +524,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 70 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 66 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -656,8 +591,6 @@ extension Home {
                                 .padding(.trailing, 9)
 
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
-                                // let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
-                                // Text(formattedInsulin)
                                 Image(systemName: "plus.circle")
                                     .font(.caption2)
                                     .foregroundColor(.white)
@@ -687,12 +620,12 @@ extension Home {
                             Image(systemName: "person.fill")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 27, height: 27)
+                                .frame(width: 25, height: 25)
                                 .foregroundColor(.cyan)
-                                .padding(.top, 27)
+                                .padding(.top, 29)
                                 .padding(.bottom, 8)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.leading, 10)
+                                .padding(.trailing, 10)
                             if selectedProfile().isOn {
                                 Image(systemName: "person.fill")
                                     .font(.caption2)
@@ -702,18 +635,6 @@ extension Home {
                             }
                         }
                     }.buttonStyle(.plain)
-                    /* Button { state.showModal(for: .statistics)
-                     }
-                     label: {
-                         Image(systemName: "chart.xyaxis.line")
-                             .renderingMode(.template)
-                             .resizable()
-                             .frame(width: 27, height: 27)
-                             .padding(.top, 12)
-                             .padding(.bottom, 7)
-                             .padding(.leading, 9)
-                             .padding(.trailing, 9)
-                     }.foregroundColor(.purple)*/
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
