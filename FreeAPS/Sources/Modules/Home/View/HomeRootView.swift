@@ -401,7 +401,7 @@ extension Home {
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color(.systemGray5) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color.purple.opacity(0.15) : .clear, in: .capsule(style: .circular))
                 }
                 /* Image(systemName: "ellipsis.circle.fill")
                  .foregroundStyle(.secondary)
@@ -427,31 +427,31 @@ extension Home {
                     Group {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
                         Text("BG")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.loopGreen)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
                     }
                     Group {
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
                             .padding(.leading, 8)
                         Text("IOB")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                     }
                     Group {
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
                             .padding(.leading, 8)
                         Text("ZT")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.zt)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
                     }
                     Group {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
                             .padding(.leading, 8)
                         Text("COB")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.loopYellow)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
                     }
                     Group {
                         Circle().fill(Color.uam).frame(width: 8, height: 8)
                             .padding(.leading, 8)
                         Text("UAM")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.uam)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
                     }
 
                     if let eventualBG = state.eventualBG {
@@ -460,11 +460,12 @@ extension Home {
                                 from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
                             )!
                         )
-                        .font(.system(size: 12, weight: .bold)).foregroundColor(.secondary)
+                        .padding(.leading, 8)
+                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 14)
+                .padding([.bottom], 20)
             }
         }
 
@@ -599,7 +600,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -621,7 +622,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -652,7 +653,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }
@@ -688,7 +689,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }.buttonStyle(.plain)
