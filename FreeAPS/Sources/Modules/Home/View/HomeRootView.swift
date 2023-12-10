@@ -352,8 +352,11 @@ extension Home {
                     state.showModal(for: .overrideProfilesConfig)
                 }) {
                     if let overrideString = overrideString {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 14))
+                        /* Image(systemName: "person.fill")
+                         .font(.system(size: 12))
+                         .foregroundColor(.cyan) */
+                        Text(selectedProfile().name)
+                            .font(.system(size: 12))
                             .foregroundColor(.cyan)
                         Text(overrideString)
                             .font(.system(size: 12))
@@ -400,11 +403,17 @@ extension Home {
                     .frame(maxHeight: 20).padding(.horizontal)
                     .background(button.active ? Color(.systemGray5) : .clear, in: .capsule(style: .circular))
                 }
-                Image(systemName: "ellipsis.circle.fill")
+                /* Image(systemName: "ellipsis.circle.fill")
+                 .foregroundStyle(.secondary)
+                 .padding(.leading)
+                 .onTapGesture {
+                     state.showModal(for: .statisticsConfig)
+                 } */
+                Image(systemName: "chart.xyaxis.line")
                     .foregroundStyle(.secondary)
                     .padding(.leading)
                     .onTapGesture {
-                        state.showModal(for: .statisticsConfig)
+                        state.showModal(for: .statistics)
                     }
             }
             .font(buttonFont)
@@ -496,45 +505,45 @@ extension Home {
             .modal(for: .dataTable, from: self)
         }
 
-        @ViewBuilder private func profiles(_: GeometryProxy) -> some View {
-            // let colour: Color = colorScheme == .dark ? .black : .white
-            // Rectangle().fill(colour).frame(maxHeight: 1)
-            ZStack {
-                Rectangle().fill(Color.purple.opacity(0.1)).frame(maxHeight: 40)
-                let cancel = fetchedPercent.first?.enabled ?? false
-                HStack(spacing: cancel ? 25 : 15) {
-                    Button { state.showModal(for: .overrideProfilesConfig) }
-                    label: {
-                        Text(selectedProfile().name).foregroundColor(.primary)
+        /*@ViewBuilder private func profiles(_: GeometryProxy) -> some View {
+             // let colour: Color = colorScheme == .dark ? .black : .white
+             // Rectangle().fill(colour).frame(maxHeight: 1)
+             ZStack {
+                 Rectangle().fill(Color.purple.opacity(0.1)).frame(maxHeight: 40)
+                 let cancel = fetchedPercent.first?.enabled ?? false
+                 HStack(spacing: cancel ? 25 : 15) {
+                     Button { state.showModal(for: .overrideProfilesConfig) }
+                     label: {
+                         Text(selectedProfile().name).foregroundColor(.primary)
 
-                        Image(systemName: "person.3.sequence.fill")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(
-                                !(fetchedPercent.first?.enabled ?? false) ? .green : .cyan,
-                                !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
-                                .purple
-                            )
-                    }
-                    if cancel, selectedProfile().isOn {
-                        Button { showCancelAlert.toggle() }
-                        label: {
-                            Image(systemName: "arrow.uturn.backward")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                }
-            }
-            .alert(
-                "Return to Normal?", isPresented: $showCancelAlert,
-                actions: {
-                    Button("No", role: .cancel) {}
-                    Button("Yes", role: .destructive) {
-                        state.cancelProfile()
-                    }
-                }, message: { Text("This will change settings back to your normal profile.") }
-            )
-            // Rectangle().fill(colour).frame(maxHeight: 1)
-        }
+                         Image(systemName: "person.3.sequence.fill")
+                             .symbolRenderingMode(.palette)
+                             .foregroundStyle(
+                                 !(fetchedPercent.first?.enabled ?? false) ? .green : .cyan,
+                                 !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
+                                 .purple
+                             )
+                     }
+                     if cancel, selectedProfile().isOn {
+                         Button { showCancelAlert.toggle() }
+                         label: {
+                             Image(systemName: "arrow.uturn.backward")
+                                 .foregroundStyle(.red)
+                         }
+                     }
+                 }
+             }
+             .alert(
+                 "Return to Normal?", isPresented: $showCancelAlert,
+                 actions: {
+                     Button("No", role: .cancel) {}
+                     Button("Yes", role: .destructive) {
+                         state.cancelProfile()
+                     }
+                 }, message: { Text("This will change settings back to your normal profile.") }
+             )
+             // Rectangle().fill(colour).frame(maxHeight: 1)
+         }*/
 
         private func selectedProfile() -> (name: String, isOn: Bool) {
             var profileString = ""
@@ -570,7 +579,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 54 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 70 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -581,7 +590,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 12)
+                                .padding(.top, 27)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -603,7 +612,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 10)
+                                .padding(.top, 25)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
@@ -631,7 +640,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
-                                .padding(.top, 12)
+                                .padding(.top, 27)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -655,25 +664,46 @@ extension Home {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 27, height: 27)
-                                .padding(.top, 12)
+                                .padding(.top, 27)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
-                    Button { state.showModal(for: .statistics)
-                    }
+                    Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
-                        Image(systemName: "chart.xyaxis.line")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 27, height: 27)
-                            .padding(.top, 12)
-                            .padding(.bottom, 7)
-                            .padding(.leading, 9)
-                            .padding(.trailing, 9)
-                    }.foregroundColor(.purple)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image(systemName: "person.fill")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 26, height: 26)
+                                .foregroundColor(.cyan)
+                                .padding(.top, 27)
+                                .padding(.bottom, 8)
+                                .padding(.leading, 10)
+                                .padding(.trailing, 10)
+                            if selectedProfile().isOn {
+                                Image(systemName: "person.fill")
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                                    .padding(2)
+                                    .background(Capsule().fill(Color.loopRed))
+                            }
+                        }
+                    }.buttonStyle(.plain)
+                    /* Button { state.showModal(for: .statistics)
+                     }
+                     label: {
+                         Image(systemName: "chart.xyaxis.line")
+                             .renderingMode(.template)
+                             .resizable()
+                             .frame(width: 27, height: 27)
+                             .padding(.top, 12)
+                             .padding(.bottom, 7)
+                             .padding(.leading, 9)
+                             .padding(.trailing, 9)
+                     }.foregroundColor(.purple)*/
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
@@ -681,7 +711,7 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(.top, 12)
+                            .padding(.top, 27)
                             .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
@@ -700,7 +730,7 @@ extension Home {
                     mainChart
                     timeInterval
                     legendPanel
-                    profiles(geo)
+                    // profiles(geo)
                     bottomPanel(geo)
                 }
                 .edgesIgnoringSafeArea(.vertical)
