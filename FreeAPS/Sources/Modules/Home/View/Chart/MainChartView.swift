@@ -25,13 +25,13 @@ typealias GlucoseYRange = (minValue: Int, minY: CGFloat, maxValue: Int, maxY: CG
 struct MainChartView: View {
     private enum Config {
         static let endID = "End"
-        static let basalHeight: CGFloat = 80
-        static let topYPadding: CGFloat = 20
-        static let bottomYPadding: CGFloat = 80
+        static let basalHeight: CGFloat = 65
+        static let topYPadding: CGFloat = 10
+        static let bottomYPadding: CGFloat = 65
         static let minAdditionalWidth: CGFloat = 150
-        static let maxGlucose = 270
-        static let minGlucose = 45
-        static let yLinesCount = 5
+        static let maxGlucose = 324
+        static let minGlucose = 36
+        static let yLinesCount = 4
         static let glucoseScale: CGFloat = 2 // default 2
         static let bolusSize: CGFloat = 8
         static let bolusScale: CGFloat = 10 // default 2.5 increase due to smaller boluses in our user case
@@ -257,7 +257,8 @@ struct MainChartView: View {
 
             return Text(glucoseFormatter.string(from: value as NSNumber)!)
                 .position(CGPoint(x: fullSize.width - 12, y: range.minY + CGFloat(line) * yStep))
-                .font(.caption2)
+                .font(.caption2.weight(.semibold))
+                .foregroundColor(.secondary)
                 .asAny()
         }
     }

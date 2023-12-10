@@ -107,8 +107,9 @@ extension Home {
             // let colour: Color = colorScheme == .dark ? .black : .white
             VStack(alignment: .center) {
                 glucoseView
-                    .padding(.bottom, 14)
-                HStack(alignment: .bottom) {
+                    .padding(.bottom, 18)
+                    .padding(.top, 8)
+                HStack /* (alignment: .bottom) */ {
                     Spacer()
                     cobIobView
                     // glucoseView
@@ -127,7 +128,7 @@ extension Home {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.bottom, 5)
+            .padding(.bottom, 2)
             .background(Color.purple.opacity(0.1))
 
             // Rectangle().fill(colour).frame(maxHeight: 1)
@@ -142,7 +143,7 @@ extension Home {
                     (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
-                .font(.system(size: 12, weight: .bold)).foregroundColor(.primary)
+                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                 // }
                 // .frame(alignment: .top) // Align the whole HStack to the top
 
@@ -153,7 +154,7 @@ extension Home {
                     (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
-                .font(.system(size: 12, weight: .bold)).foregroundColor(.primary)
+                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
             }
             // .frame(alignment: .bottom) // Align the whole HStack to the bottom
             // }
@@ -327,11 +328,11 @@ extension Home {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
                     Text("Pump suspended")
-                        .font(.system(size: 14, weight: .bold)).foregroundColor(.loopGray)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopGray)
                         .padding(.leading, 8)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.insulin)
                         .padding(.leading, 8)
                 }
@@ -378,7 +379,7 @@ extension Home {
                 if let progress = state.bolusProgress {
                     HStack {
                         Text("Bolusing")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                             .padding(.trailing, 8)
