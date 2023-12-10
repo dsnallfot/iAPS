@@ -109,39 +109,40 @@ extension Home {
                     .padding(.bottom, 22)
                     .padding(.top, 8)
                 HStack(alignment: .bottom) {
-                    Spacer()
+                    // Spacer()
                     cobIobView
+                    // Spacer()
                     pumpView
-                    Spacer()
+                    // Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
             .padding(.bottom, 0)
-            .background(Color.purple.opacity(0.1))
+            .padding(.leading, 8)
+            .padding(.trailing, 8)
+            .background(Color.purple.opacity(0.12))
         }
 
         var cobIobView: some View {
             HStack {
                 Text("IOB")
-                    .font(.system(size: 12)).foregroundColor(.secondary)
+                    .font(.system(size: 14)).foregroundColor(.secondary)
                 Text(
                     (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
-                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 14)
-
+                .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 16)
                 Text("COB")
-                    .font(.system(size: 12)).foregroundColor(.secondary)
+                    .font(.system(size: 14)).foregroundColor(.secondary)
                 Text(
                     (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
-                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 14)
+                .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 16)
             }
-            .frame(alignment: .bottom)
             .onTapGesture {
                 state.showModal(for: .dataTable)
             } }
@@ -373,7 +374,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
-            .background(Color.purple.opacity(0.1))
+            .background(Color.purple.opacity(0.12))
         }
 
         var timeInterval: some View {
@@ -385,7 +386,7 @@ extension Home {
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color.purple.opacity(0.15) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color.purple.opacity(0.12) : .clear, in: .capsule(style: .circular))
                 }
                 Image(systemName: "chart.xyaxis.line")
                     .foregroundStyle(.purple.opacity(0.5))
@@ -424,7 +425,7 @@ extension Home {
                     Spacer()
 
                     loopView
-                        .offset(x: 0, y: 9)
+                        .offset(x: 0, y: 10)
 
                     Spacer()
 
@@ -530,7 +531,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 66 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.purple.opacity(0.12)).frame(height: 66 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -667,7 +668,6 @@ extension Home {
                     mainChart
                     timeInterval
                     legendPanel
-                    // profiles(geo)
                     bottomPanel(geo)
                 }
                 .edgesIgnoringSafeArea(.vertical)
@@ -688,7 +688,7 @@ extension Home {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color(UIColor.systemGray3))
+                            .fill(Color(UIColor.systemGray4))
                     )
                     .onTapGesture {
                         isStatusPopupPresented = false
@@ -709,20 +709,20 @@ extension Home {
 
         private var popup: some View {
             VStack(alignment: .leading, spacing: 4) {
-                Text(state.statusTitle).font(.headline).foregroundColor(.white)
+                Text(state.statusTitle).font(.headline).foregroundColor(.primary)
                     .padding(.bottom, 4)
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
-                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption).foregroundColor(.white)
+                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption).foregroundColor(.primary)
 
                 } else {
-                    Text("No suggestion found").font(.body).foregroundColor(.white)
+                    Text("No suggestion found").font(.body).foregroundColor(.primary)
                 }
 
                 if let errorMessage = state.errorMessage, let date = state.errorDate {
                     Text(NSLocalizedString("Error at", comment: "") + " " + dateFormatter.string(from: date))
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)
