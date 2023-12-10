@@ -22,59 +22,64 @@ struct PumpView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if let reservoir = reservoir {
-                HStack {
-                    Image(systemName: "drop.fill")
+        // VStack(alignment: .leading, spacing: 12) {
+        if let reservoir = reservoir {
+            HStack {
+                Image(systemName: "drop.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxHeight: 10)
+                    .foregroundColor(reservoirColor)
+                    .padding(.leading, 14)
+                if reservoir == 0xDEAD_BEEF {
+                    Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
+                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                } else {
+                    Text(
+                        reservoirFormatter
+                            .string(from: reservoir as NSNumber)! + NSLocalizedString(" U", comment: "Insulin unit")
+                    )
+                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary) }
+
+                if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
+                    Image(systemName: "clock.badge.exclamationmark.fill")
                         .resizable()
+                        /* .frame(width: rect.width * 0.45, height: rect.height * 0.45) */
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
-                        .foregroundColor(reservoirColor)
-                    if reservoir == 0xDEAD_BEEF {
-                        Text("50+ " + NSLocalizedString("U", comment: "Insulin unit")).font(.footnote)
-                            .fontWeight(.bold)
-                    } else {
-                        Text(
-                            reservoirFormatter
-                                .string(from: reservoir as NSNumber)! + NSLocalizedString(" U", comment: "Insulin unit")
-                        )
-                        .font(.footnote).fontWeight(.bold)
-                    }
-
-                    if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
-                        Image(systemName: "clock.badge.exclamationmark.fill")
-                            .resizable()
-                            /* .frame(width: rect.width * 0.45, height: rect.height * 0.45) */
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 10)
-                            .symbolRenderingMode(.multicolor)
-                            .foregroundStyle(Color.warning, Color.red)
-                    }
-                }.frame(alignment: .top)
-            }
-            if let battery = battery, battery.display ?? false, expiresAtDate == nil {
-                HStack {
+                        .symbolRenderingMode(.multicolor)
+                        .foregroundStyle(Color.warning, Color.red)
+                }
+                // }
+                // .frame(alignment: .top)
+                // }
+                if let battery = battery, battery.display ?? false, expiresAtDate == nil {
+                    // HStack {
                     Image(systemName: "battery.100")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
                         .foregroundColor(batteryColor)
-                    Text("\(Int(battery.percent ?? 100)) %").font(.footnote)
-                        .fontWeight(.bold)
-                }.frame(alignment: .bottom)
-            }
-
-            if let date = expiresAtDate {
-                HStack {
+                        .padding(.leading, 14)
+                    Text("\(Int(battery.percent ?? 100)) %")
+                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                }
+                // .frame(alignment: .bottom)
+                // }
+                if let date = expiresAtDate {
+                    // HStack {
                     Image(systemName: "stopwatch.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
                         .foregroundColor(timerColor)
-                    Text(remainingTimeString(time: date.timeIntervalSince(timerDate))).font(.footnote)
-                        .fontWeight(.bold)
-                }.frame(alignment: .bottom)
+                        .padding(.leading, 14)
+                    Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
+                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                }
+                // .frame(alignment: .bottom)
             }
+            .frame(alignment: .bottom)
         }
     }
 

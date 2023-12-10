@@ -104,55 +104,47 @@ extension Home {
         }
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
-            let colour: Color = colorScheme == .dark ? .black : .white
-            HStack(alignment: .bottom) {
-                Spacer()
-                cobIobView
-                Spacer()
+            VStack(alignment: .center) {
                 glucoseView
-                Spacer()
-                pumpView
-                Spacer()
-                loopView
-                Spacer()
+                    .padding(.bottom, 22)
+                    .padding(.top, 8)
+                HStack(alignment: .bottom) {
+                    Spacer()
+                    cobIobView
+                    pumpView
+                    Spacer()
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.bottom, 10)
-            .background(Color.gray.opacity(0.3))
-
-            Rectangle().fill(colour).frame(maxHeight: 1)
+            .padding(.bottom, 0)
+            .background(Color.purple.opacity(0.1))
         }
 
         var cobIobView: some View {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("IOB: ")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" U", comment: "Insulin unit")
-                    )
-                    .font(.footnote)
-                    .fontWeight(.bold)
-                }
-                .frame(alignment: .top) // Align the whole HStack to the top
+            HStack {
+                Text("IOB")
+                    .font(.system(size: 12)).foregroundColor(.secondary)
+                Text(
+                    (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
+                        NSLocalizedString(" U", comment: "Insulin unit")
+                )
+                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 14)
 
-                HStack {
-                    Text("COB:")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" g", comment: "gram of carbs")
-                    )
-                    .font(.footnote)
-                    .fontWeight(.bold)
-                }
-                .frame(alignment: .bottom) // Align the whole HStack to the bottom
+                Text("COB")
+                    .font(.system(size: 12)).foregroundColor(.secondary)
+                Text(
+                    (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
+                        NSLocalizedString(" g", comment: "gram of carbs")
+                )
+                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 14)
             }
-        }
+            .frame(alignment: .bottom)
+            .onTapGesture {
+                state.showModal(for: .dataTable)
+            } }
 
         var glucoseView: some View {
             CurrentGlucoseView(
@@ -166,7 +158,7 @@ extension Home {
             )
             .onTapGesture {
                 if state.alarm == nil {
-                    state.openCGM()
+                    state.showModal(for: .snooze)
                 } else {
                     state.showModal(for: .snooze)
                 }
@@ -175,7 +167,7 @@ extension Home {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
                 if state.alarm == nil {
-                    state.showModal(for: .snooze)
+                    state.openCGM()
                 } else {
                     state.openCGM()
                 }
@@ -209,7 +201,7 @@ extension Home {
                 manualTempBasal: $state.manualTempBasal,
                 timeZone: $state.timeZone
             ).onTapGesture {
-                isStatusPopupPresented = true
+                isStatusPopupPresented.toggle()
             }.onLongPressGesture {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
@@ -322,11 +314,11 @@ extension Home {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
                     Text("Pump suspended")
-                        .font(.system(size: 14, weight: .bold)).foregroundColor(.loopGray)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopGray)
                         .padding(.leading, 8)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.insulin)
                         .padding(.leading, 8)
                 }
@@ -347,8 +339,8 @@ extension Home {
                     state.showModal(for: .overrideProfilesConfig)
                 }) {
                     if let overrideString = overrideString {
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 14))
+                        Text(selectedProfile().name)
+                            .font(.system(size: 12))
                             .foregroundColor(.cyan)
                         Text(overrideString)
                             .font(.system(size: 12))
@@ -370,7 +362,7 @@ extension Home {
                 if let progress = state.bolusProgress {
                     HStack {
                         Text("Bolusing")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                             .padding(.trailing, 8)
@@ -380,12 +372,12 @@ extension Home {
                     }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 50)
-            .background(Color.gray.opacity(0.22))
+            .frame(maxWidth: .infinity, maxHeight: 40)
+            .background(Color.purple.opacity(0.1))
         }
 
         var timeInterval: some View {
-            HStack {
+            HStack(alignment: .center) {
                 ForEach(timeButtons) { button in
                     Text(button.active ? NSLocalizedString(button.label, comment: "") : button.number).onTapGesture {
                         state.hours = button.hours
@@ -393,64 +385,77 @@ extension Home {
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20).padding(.horizontal)
-                    .background(button.active ? Color(.systemGray5) : .clear, in: .capsule(style: .circular))
+                    .background(button.active ? Color.purple.opacity(0.15) : .clear, in: .capsule(style: .circular))
                 }
-                Image(systemName: "ellipsis.circle.fill")
-                    .foregroundStyle(.secondary)
+                Image(systemName: "chart.xyaxis.line")
+                    .foregroundStyle(.purple.opacity(0.5))
                     .padding(.leading)
                     .onTapGesture {
-                        state.showModal(for: .statisticsConfig)
+                        state.showModal(for: .statistics)
                     }
             }
             .font(buttonFont)
-            .padding(.top, 5)
-            .padding(.bottom, 25)
+            .padding(.top, 0)
+            .padding(.bottom, 12)
         }
 
         var legendPanel: some View {
             ZStack {
                 HStack(alignment: .center) {
-                    Group {
+                    HStack(spacing: 4) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
-                        Text("BG")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.loopGreen)
-                    }
-                    Group {
+                        Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                        Spacer()
+
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("IOB")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.insulin)
-                    }
-                    Group {
+                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                        Spacer()
+
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("ZT")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.zt)
+                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                            .padding(.trailing, 8)
                     }
-                    Group {
-                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("COB")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.loopYellow)
-                    }
-                    Group {
-                        Circle().fill(Color.uam).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("UAM")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(.uam)
+                    .frame(width: 150)
+                    .padding(.leading, 8)
+                    .onTapGesture {
+                        isStatusPopupPresented.toggle()
                     }
 
-                    if let eventualBG = state.eventualBG {
-                        Text(
-                            "⇢ " + numberFormatter.string(
-                                from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                            )!
-                        )
-                        .font(.system(size: 12, weight: .bold)).foregroundColor(.secondary)
+                    Spacer()
+
+                    loopView
+                        .offset(x: 0, y: 9)
+
+                    Spacer()
+
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
+                            .padding(.leading, 8)
+                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                        Spacer()
+                        Circle().fill(Color.uam).frame(width: 8, height: 8)
+                        Text("UAM")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
+                        Spacer()
+
+                        if let eventualBG = state.eventualBG {
+                            Text(
+                                "⇢ " + numberFormatter.string(
+                                    from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                )!
+                            )
+
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                        }
+                    }
+                    .frame(width: 150)
+                    .padding(.trailing, 8)
+                    .onTapGesture {
+                        isStatusPopupPresented.toggle()
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 17)
+                .padding([.bottom], 16)
             }
         }
 
@@ -491,46 +496,6 @@ extension Home {
             .modal(for: .dataTable, from: self)
         }
 
-        @ViewBuilder private func profiles(_: GeometryProxy) -> some View {
-            let colour: Color = colorScheme == .dark ? .black : .white
-            // Rectangle().fill(colour).frame(maxHeight: 1)
-            ZStack {
-                Rectangle().fill(Color.gray.opacity(0.22)).frame(maxHeight: 50)
-                let cancel = fetchedPercent.first?.enabled ?? false
-                HStack(spacing: cancel ? 25 : 15) {
-                    Button { state.showModal(for: .overrideProfilesConfig) }
-                    label: {
-                        Text(selectedProfile().name).foregroundColor(.primary)
-
-                        Image(systemName: "person.3.sequence.fill")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(
-                                !(fetchedPercent.first?.enabled ?? false) ? .green : .cyan,
-                                !(fetchedPercent.first?.enabled ?? false) ? .cyan : .green,
-                                .purple
-                            )
-                    }
-                    if cancel, selectedProfile().isOn {
-                        Button { showCancelAlert.toggle() }
-                        label: {
-                            Image(systemName: "arrow.uturn.backward")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                }
-            }
-            .alert(
-                "Return to Normal?", isPresented: $showCancelAlert,
-                actions: {
-                    Button("No", role: .cancel) {}
-                    Button("Yes", role: .destructive) {
-                        state.cancelProfile()
-                    }
-                }, message: { Text("This will change settings back to your normal profile.") }
-            )
-            Rectangle().fill(colour).frame(maxHeight: 1)
-        }
-
         private func selectedProfile() -> (name: String, isOn: Bool) {
             var profileString = ""
             var display: Bool = false
@@ -565,89 +530,8 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 54 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.purple.opacity(0.1)).frame(height: 66 + geo.safeAreaInsets.bottom)
 
-                /*
-                  HStack {
-                     Button { state.showModal(for: .addCarbs) }
-                     label: {
-                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                             Image(systemName: "fork.knife.circle")
-                                 .renderingMode(.template)
-                                 .resizable()
-                                 .frame(width: 32, height: 32)
-                                 .foregroundColor(.loopYellow)
-                                 .padding(8)
-                             if let carbsReq = state.carbsRequired {
-                                 Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                     .font(.caption)
-                                     .foregroundColor(.white)
-                                     .padding(3)
-                                     .background(Capsule().fill(Color.loopRed))
-                             }
-                         }
-                     }.buttonStyle(.plain)
-                     Spacer()
-                     Button { state.showModal(for: .addTempTarget) }
-                     label: {
-                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                             Image(systemName: "target")
-                                 .renderingMode(.template)
-                                 .resizable()
-                                 .frame(width: 32, height: 32)
-                                 .foregroundColor(.loopGreen)
-                                 .padding(8)
-                             if state.tempTarget != nil {
-                                 Image(systemName: "timer")
-                                     .font(.caption)
-                                     .foregroundColor(.white)
-                                     .padding(3)
-                                     .background(Capsule().fill(Color.loopRed))
-                             }
-                         }
-                     }.buttonStyle(.plain)
-                     Spacer()
-                     Button { state.showModal(for: .bolus(waitForSuggestion: false)) }
-                     label: {
-                         Image(systemName: "drop.circle")
-                             .renderingMode(.template)
-                             .resizable()
-                             .frame(width: 32, height: 32)
-                             .padding(8)
-                     }.foregroundColor(.insulin)
-                     Spacer()
-                     if state.allowManualTemp {
-                         Button { state.showModal(for: .manualTempBasal) }
-                         label: {
-                             Image(systemName: "plus.circle")
-                                 .renderingMode(.template)
-                                 .resizable()
-                                 .frame(width: 32, height: 32)
-                                 .padding(8)
-                         }.foregroundColor(.insulin)
-                         Spacer()
-                     }
-                     Button { state.showModal(for: .statistics)
-                     }
-                     label: {
-                         Image(systemName: "chart.line.uptrend.xyaxis.circle")
-                             .renderingMode(.template)
-                             .resizable()
-                             .frame(width: 32, height: 32)
-                             .padding(8)
-                     }.foregroundColor(.purple)
-                     Spacer()
-                     Button { state.showModal(for: .settings) }
-                     label: {
-                         Image(systemName: "gearshape.circle")
-                             .renderingMode(.template)
-                             .resizable()
-                             .frame(width: 32, height: 32)
-                             .padding(8)
-                     }.foregroundColor(.gray)
-                 }
-
-                   */
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
                     label: {
@@ -657,8 +541,8 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 15)
-                                .padding(.bottom, 7)
+                                .padding(.top, 27)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
@@ -666,7 +550,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -679,7 +563,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 12)
+                                .padding(.top, 25)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
@@ -688,7 +572,7 @@ extension Home {
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }.buttonStyle(.plain)
@@ -707,19 +591,17 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
-                                .padding(.top, 15)
-                                .padding(.bottom, 7)
+                                .padding(.top, 27)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
-                                // let formattedInsulin = String(format: "%.1f", Double(insulinRequested) as Double)
-                                // Text(formattedInsulin)
                                 Image(systemName: "plus.circle")
                                     .font(.caption2)
                                     .foregroundColor(.white)
                                     .padding(2)
-                                    .background(Capsule().fill(Color.loopRed))
+                                    .background(Capsule().fill(Color.purple))
                             }
                         }
                     }
@@ -731,25 +613,34 @@ extension Home {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 27, height: 27)
-                                .padding(.top, 15)
-                                .padding(.bottom, 7)
+                                .padding(.top, 27)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
-                    Button { state.showModal(for: .statistics)
-                    }
+                    Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
-                        Image(systemName: "chart.xyaxis.line")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 27, height: 27)
-                            .padding(.top, 15)
-                            .padding(.bottom, 7)
-                            .padding(.leading, 9)
-                            .padding(.trailing, 9)
-                    }.foregroundColor(.purple)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image(systemName: "person.fill")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .foregroundColor(.cyan)
+                                .padding(.top, 27)
+                                .padding(.bottom, 8)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+                            if selectedProfile().isOn {
+                                Image(systemName: "person.fill")
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                                    .padding(2)
+                                    .background(Capsule().fill(Color.purple))
+                            }
+                        }
+                    }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
@@ -757,8 +648,8 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(.top, 15)
-                            .padding(.bottom, 7)
+                            .padding(.top, 27)
+                            .padding(.bottom, 8)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.gray)
@@ -776,10 +667,13 @@ extension Home {
                     mainChart
                     timeInterval
                     legendPanel
-                    profiles(geo)
+                    // profiles(geo)
                     bottomPanel(geo)
                 }
                 .edgesIgnoringSafeArea(.vertical)
+            }
+            .onChange(of: state.hours) { _ in
+                highlightButtons()
             }
             .onAppear {
                 configureView {

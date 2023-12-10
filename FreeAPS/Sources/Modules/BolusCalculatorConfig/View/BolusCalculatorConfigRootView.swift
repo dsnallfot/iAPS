@@ -24,11 +24,11 @@ extension BolusCalculatorConfig {
             Form {
                 Section {
                     HStack {
-                        Toggle("Använd alternativ boluskalkylator", isOn: $state.useCalc)
+                        Toggle("Använd ny boluskalkylator", isOn: $state.useCalc)
                     }
                     if state.useCalc {
                         HStack {
-                            Toggle("Visa utökade beräkningar", isOn: $state.advancedCalc)
+                            Toggle("Visa detaljerad data och beräkningar", isOn: $state.advancedCalc)
                         }
                         HStack {
                             Text("Manuell bolus faktor")

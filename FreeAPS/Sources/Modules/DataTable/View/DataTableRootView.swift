@@ -22,12 +22,24 @@ extension DataTable {
         private var glucoseFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 0
+            if state.units == .mmolL {
+                formatter.maximumFractionDigits = 1
+                formatter.roundingMode = .halfUp
+            } else {
+                formatter.maximumFractionDigits = 0
+            }
+            return formatter
+        }
+
+        private var manualGlucoseFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
             if state.units == .mmolL {
                 formatter.maximumFractionDigits = 1
                 formatter.roundingMode = .ceiling
+            } else {
+                formatter.maximumFractionDigits = 0
             }
-            formatter.roundingMode = .halfUp
             return formatter
         }
 
@@ -95,7 +107,7 @@ extension DataTable {
                                 DecimalTextField(
                                     " ... ",
                                     value: $state.manualGlucose,
-                                    formatter: glucoseFormatter,
+                                    formatter: manualGlucoseFormatter,
                                     autofocus: true
                                 )
                                 Text(state.units.rawValue).foregroundStyle(.primary)
@@ -279,7 +291,7 @@ extension DataTable {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
                                 .listRowBackground(
-                                    item.date > Date() ? Color(.systemGray4) : Color(.systemGray5)
+                                    item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
                                 )
                         }
                     }
@@ -297,6 +309,7 @@ extension DataTable {
                     ForEach(state.basals) { item in
                         basalView(item)
                     }
+                    .listRowBackground(Color(.secondarySystemBackground))
 
                 } else {
                     HStack {
@@ -322,6 +335,7 @@ extension DataTable {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
+                    .listRowBackground(Color(.secondarySystemBackground))
                 } else {
                     HStack {
                         Text("Ingen data.")
@@ -362,23 +376,26 @@ extension DataTable {
                         alertTreatmentToDelete = item
                         if item.type == .carbs {
                             alertTitle = "Radera kolhydrater?"
-                            alertMessage = dateFormatter.string(from: item.date) + " • " + item.amountText
+                            alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
                         } else if item.type == .fpus {
                             alertTitle = "Radera Fett & Protein?"
                             alertMessage = "All registrerad fett och protein i måltiden kommer att raderas."
                         } else {
                             // item is insulin treatment; item.type == .bolus
                             alertTitle = "Radera insulin?"
-                            alertMessage = dateFormatter.string(from: item.date) + " • " + item.amountText
                             if item.isSMB ?? false {
-                                // Add text snippet, so that alert message is more descriptive for SMBs
-                                alertMessage += "• SMB"
+                                // If it's an SMB, add SMB first and then the rest
+                                alertMessage = item.amountText + " • SMB • " + dateFormatter.string(from: item.date)
+                            } else {
+                                // If it's not an SMB, add the rest as before
+                                alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
                             }
                         }
                         isRemoveHistoryItemAlertPresented = true
                     }
                 ).tint(.red)
             }
+
             .disabled(item.type == .tempBasal || item.type == .tempTarget || item.type == .resume || item.type == .suspend)
             .alert(
                 Text(alertTitle),
@@ -424,7 +441,12 @@ extension DataTable {
         @ViewBuilder private func glucoseView(_ item: Glucose, isManual: BloodGlucose) -> some View {
             HStack {
                 Text(item.glucose.glucose.map {
-                    glucoseFormatter.string(from: Double(
+                    (
+                        isManual.type == GlucoseType.manual.rawValue ?
+                            manualGlucoseFormatter :
+                            glucoseFormatter
+                    )
+                    .string(from: Double(
                         state.units == .mmolL ? $0.asMmolL : Decimal($0)
                     ) as NSNumber)!
                 } ?? "--")
@@ -445,12 +467,16 @@ extension DataTable {
                     action: {
                         alertGlucoseToDelete = item
 
-                        let valueText = glucoseFormatter.string(from: Double(
+                        let valueText = (
+                            isManual.type == GlucoseType.manual.rawValue ?
+                                manualGlucoseFormatter :
+                                glucoseFormatter
+                        ).string(from: Double(
                             state.units == .mmolL ? Double(item.glucose.value.asMmolL) : item.glucose.value
                         ) as NSNumber)! + " " + state.units.rawValue
 
                         alertTitle = "Radera glukosvärde?"
-                        alertMessage = dateFormatter.string(from: item.glucose.dateString) + " • " + valueText
+                        alertMessage = valueText + " • " + dateFormatter.string(from: item.glucose.dateString)
 
                         isRemoveHistoryItemAlertPresented = true
                     }
@@ -462,11 +488,8 @@ extension DataTable {
             ) {
                 Button("Avbryt", role: .cancel) {}
                 Button("Radera", role: .destructive) {
-                    // gracefully unwrap value here.
-                    // value cannot ever really be nil because it is an existing(!) table entry
-                    // but just to be sure.
                     guard let glucoseToDelete = alertGlucoseToDelete else {
-                        print("Cannot gracefully unwrap alertTreatmentToDelete!")
+                        print("Cannot unwrap alertTreatmentToDelete!")
                         return
                     }
                     state.deleteGlucose(glucoseToDelete)

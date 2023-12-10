@@ -69,6 +69,7 @@ struct TagCloudView: View {
                  textTag where textTag.contains("Logaritmisk formel"),
                  textTag where textTag.contains("AF:"),
                  textTag where textTag.contains("Autosens/Dynamic Limit:"),
+                 textTag where textTag.contains("Autosens gränsvärde:"),
                  textTag where textTag.contains("Dynamic ISF/CR"),
                  textTag where textTag.contains("Dynamisk ISF/CR"),
                  textTag where textTag.contains("Basal Ratio"),

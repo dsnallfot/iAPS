@@ -79,7 +79,7 @@ extension Snooze {
         }
 
         private var snoozeButton: some View {
-            VStack(alignment: .leading) {
+            VStack {
                 Button {
                     let interval = pickerTimes[selectedInterval]
                     let snoozeFor = formatter.string(from: interval)!
@@ -90,10 +90,18 @@ extension Snooze {
                     BaseUserNotificationsManager.stopSound()
                     state.hideModal()
                 } label: {
-                    Text("Click to Snooze Alerts")
-                        .padding()
+                    HStack {
+                        Image(systemName: "alarm")
+                        Text("Snooza larm")
+                    }
+                    .fontWeight(.semibold)
+                    .tint(.white)
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
                 }
             }
+            .listRowBackground(Color(.loopRed))
+            .frame(maxWidth: .infinity)
         }
 
         private var snoozePicker: some View {
@@ -112,11 +120,13 @@ extension Snooze {
                 Section {
                     Text(snoozeDescription).lineLimit(nil)
                     snoozePicker
+                }
+                Section {
                     snoozeButton
                 }
             }
             .navigationBarTitle("Snooze Alerts")
-            .navigationBarTitleDisplayMode(.automatic)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
             .onAppear {
                 configureView()

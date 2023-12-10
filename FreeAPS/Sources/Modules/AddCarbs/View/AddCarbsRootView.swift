@@ -73,6 +73,14 @@ extension AddCarbs {
                         Text("grams").fontWeight(.semibold)
                     }
                     .listRowBackground(Color(.loopYellow).opacity(0.8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8) // Adjust the corner radius as needed
+                            .stroke(lineWidth: 3)
+                            .padding(.leading, -14)
+                            .padding(.trailing, -14)
+                            .padding(.top, -2)
+                            .padding(.bottom, -2)
+                    )
 
                     if state.useFPUconversion {
                         proteinAndFat()
@@ -128,7 +136,8 @@ extension AddCarbs {
                                     (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
                                         (
                                             (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) ==
+                                                state
                                                 .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
                                                 state
                                                 .protein
@@ -138,8 +147,10 @@ extension AddCarbs {
                                     (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
                                         (
                                             (((state.selection?.carbs ?? 0) as NSDecimalNumber) as Decimal) == state
-                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) == state
-                                                .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) == state
+                                                .carbs && (((state.selection?.fat ?? 0) as NSDecimalNumber) as Decimal) ==
+                                                state
+                                                .fat && (((state.selection?.protein ?? 0) as NSDecimalNumber) as Decimal) ==
+                                                state
                                                 .protein
                                         )
                                 )
@@ -185,7 +196,8 @@ extension AddCarbs {
                                 (state.skipBolus && !override && !editMode) ? "Save" :
                                     (
                                         (
-                                            state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state.protein <= state
+                                            state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state
+                                                .protein <= state
                                                 .maxCarbs
                                         ) ?
                                             "Fortsätt" :
@@ -208,6 +220,7 @@ extension AddCarbs {
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
+
             .onAppear {
                 configureView {
                     state.loadEntries(editMode)
@@ -417,19 +430,6 @@ extension AddCarbs {
         }
     }
 }
-
-public extension Color {
-    static func randomGreen(randomOpacity: Bool = false) -> Color {
-        Color(
-            red: .random(in: 0 ... 1),
-            green: .random(in: 0.4 ... 0.7),
-            blue: .random(in: 0.2 ... 1),
-            opacity: randomOpacity ? .random(in: 0.8 ... 1) : 1
-        )
-    }
-}
-
-import SwiftUI
 
 public extension Color {
     static func randomVibrantColor(randomOpacity: Bool = false) -> Color {

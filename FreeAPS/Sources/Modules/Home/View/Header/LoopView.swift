@@ -22,13 +22,13 @@ struct LoopView: View {
         return formatter
     }
 
-    private let rect = CGRect(x: 0, y: 0, width: 28, height: 28)
+    private let rect = CGRect(x: 0, y: 0, width: 22, height: 22)
 
     var body: some View {
         VStack(alignment: .center) {
             ZStack {
                 Circle()
-                    .strokeBorder(color, lineWidth: 5)
+                    .strokeBorder(color, lineWidth: 4)
                     .frame(width: rect.width, height: rect.height, alignment: .bottom)
                     .mask(mask(in: rect).fill(style: FillStyle(eoFill: true)))
                 /* if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
