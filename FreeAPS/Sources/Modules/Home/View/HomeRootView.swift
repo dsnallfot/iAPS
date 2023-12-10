@@ -130,7 +130,7 @@ extension Home {
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 12)
+                .padding(.trailing, 14)
 
                 Text("COB")
                     .font(.system(size: 12)).foregroundColor(.secondary)
@@ -139,7 +139,7 @@ extension Home {
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 12)
+                .padding(.trailing, 14)
             }
             .frame(alignment: .bottom)
             .onTapGesture {
@@ -404,19 +404,22 @@ extension Home {
                 HStack(alignment: .center) {
                     HStack(spacing: 4) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
-                        Text("BG").font(.system(size: 11, weight: .semibold)).foregroundColor(.loopGreen)
+                        Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
                         Spacer()
 
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                        Text("IOB").font(.system(size: 11, weight: .semibold)).foregroundColor(.insulin)
+                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         Spacer()
 
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
-                        Text("ZT").font(.system(size: 11, weight: .semibold)).foregroundColor(.zt)
+                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
                             .padding(.trailing, 8)
                     }
                     .frame(width: 150)
-                    .padding(.leading, 10)
+                    .padding(.leading, 8)
+                    .onTapGesture {
+                        isStatusPopupPresented.toggle()
+                    }
 
                     Spacer()
 
@@ -428,11 +431,11 @@ extension Home {
                     HStack(spacing: 4) {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
                             .padding(.leading, 8)
-                        Text("COB").font(.system(size: 11, weight: .semibold)).foregroundColor(.loopYellow)
+                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
                         Spacer()
                         Circle().fill(Color.uam).frame(width: 8, height: 8)
                         Text("UAM")
-                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.uam)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
                         Spacer()
 
                         if let eventualBG = state.eventualBG {
@@ -442,11 +445,14 @@ extension Home {
                                 )!
                             )
 
-                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.secondary)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                         }
                     }
                     .frame(width: 150)
-                    .padding(.trailing, 10)
+                    .padding(.trailing, 8)
+                    .onTapGesture {
+                        isStatusPopupPresented.toggle()
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding([.bottom], 16)
