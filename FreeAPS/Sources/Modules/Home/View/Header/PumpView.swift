@@ -30,6 +30,7 @@ struct PumpView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(maxHeight: 10)
                     .foregroundColor(reservoirColor)
+                    .padding(.leading, 8)
                 if reservoir == 0xDEAD_BEEF {
                     Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
                         .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
@@ -59,12 +60,12 @@ struct PumpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
                         .foregroundColor(batteryColor)
+                        .padding(.leading, 8)
                     Text("\(Int(battery.percent ?? 100)) %")
                         .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                 }
                 // .frame(alignment: .bottom)
                 // }
-
                 if let date = expiresAtDate {
                     // HStack {
                     Image(systemName: "stopwatch.fill")
@@ -72,6 +73,7 @@ struct PumpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
                         .foregroundColor(timerColor)
+                        .padding(.leading, 8)
                     Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
                         .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                 }

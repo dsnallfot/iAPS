@@ -41,16 +41,16 @@ struct LoopView: View {
                     ProgressView()
                 }
             }
-            /* if isLooping {
-                 Text("looping").font(.caption2)
-             } else if manualTempBasal {
-                 Text("Manual").font(.caption2)
-             } else if actualSuggestion?.timestamp != nil {
-                 Text(timeString).font(.caption2)
-                     .foregroundColor(.secondary)
-             } else {
-                 Text("--").font(.caption2).foregroundColor(.secondary)
-             } */
+            if isLooping {
+                Text("looping").font(.caption2)
+            } else if manualTempBasal {
+                Text("Manual").font(.caption2)
+            } else if actualSuggestion?.timestamp != nil {
+                Text(timeString).font(.caption2)
+                    .foregroundColor(.secondary)
+            } else {
+                Text("--").font(.caption2).foregroundColor(.secondary)
+            }
         }
     }
 

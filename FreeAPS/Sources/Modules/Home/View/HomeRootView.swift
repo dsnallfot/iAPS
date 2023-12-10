@@ -113,7 +113,7 @@ extension Home {
                     Spacer()
                     cobIobView
                     // glucoseView
-                    Spacer()
+                    // Spacer()
                     // cobIobView
                     // glucoseView
                     // loopView
@@ -122,8 +122,8 @@ extension Home {
                     // Spacer()
                     pumpView
                     Spacer()
-                    loopView
-                    Spacer()
+                    // loopView
+                    // Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
@@ -144,6 +144,7 @@ extension Home {
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 8)
                 // }
                 // .frame(alignment: .top) // Align the whole HStack to the top
 
@@ -155,6 +156,7 @@ extension Home {
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
                 .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                .padding(.trailing, 8)
             }
             // .frame(alignment: .bottom) // Align the whole HStack to the bottom
             // }
@@ -215,7 +217,7 @@ extension Home {
                 manualTempBasal: $state.manualTempBasal,
                 timeZone: $state.timeZone
             ).onTapGesture {
-                isStatusPopupPresented = true
+                isStatusPopupPresented.toggle()
             }.onLongPressGesture {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
@@ -425,48 +427,54 @@ extension Home {
         var legendPanel: some View {
             ZStack {
                 HStack(alignment: .center) {
-                    Group {
+                    HStack(spacing: 4) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
-                        Text("BG")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
-                    }
-                    Group {
+                        Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                        Spacer()
+
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("IOB")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
-                    }
-                    Group {
+                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                        Spacer()
+
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
-                        Text("ZT")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                            .padding(.trailing, 8)
                     }
-                    Group {
+                    .frame(width: 150)
+                    .padding(.leading, 12)
+
+                    Spacer()
+
+                    loopView
+                        .offset(x: 0, y: 10)
+
+                    Spacer()
+
+                    HStack(spacing: 4) {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
                             .padding(.leading, 8)
-                        Text("COB")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
-                    }
-                    Group {
+                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                        Spacer()
                         Circle().fill(Color.uam).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
                         Text("UAM")
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
-                    }
+                        Spacer()
 
-                    if let eventualBG = state.eventualBG {
-                        Text(
-                            "⇢ " + numberFormatter.string(
-                                from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                            )!
-                        )
-                        .padding(.leading, 8)
-                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                        if let eventualBG = state.eventualBG {
+                            Text(
+                                "⇢ " + numberFormatter.string(
+                                    from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                )!
+                            )
+
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                        }
                     }
+                    .frame(width: 150)
+                    .padding(.trailing, 12)
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 20)
+                .padding([.bottom], 12)
             }
         }
 
@@ -593,7 +601,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
                                 .padding(.top, 27)
-                                .padding(.bottom, 7)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
@@ -643,7 +651,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
                                 .padding(.top, 27)
-                                .padding(.bottom, 7)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
@@ -667,7 +675,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .padding(.top, 27)
-                                .padding(.bottom, 7)
+                                .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
@@ -679,12 +687,12 @@ extension Home {
                             Image(systemName: "person.fill")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 26, height: 26)
+                                .frame(width: 27, height: 27)
                                 .foregroundColor(.cyan)
                                 .padding(.top, 27)
                                 .padding(.bottom, 8)
-                                .padding(.leading, 10)
-                                .padding(.trailing, 10)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
                             if selectedProfile().isOn {
                                 Image(systemName: "person.fill")
                                     .font(.caption2)
@@ -714,7 +722,7 @@ extension Home {
                             .resizable()
                             .frame(width: 27, height: 27)
                             .padding(.top, 27)
-                            .padding(.bottom, 7)
+                            .padding(.bottom, 8)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.gray)
