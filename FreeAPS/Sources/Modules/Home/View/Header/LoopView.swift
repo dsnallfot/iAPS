@@ -22,7 +22,7 @@ struct LoopView: View {
         return formatter
     }
 
-    private let rect = CGRect(x: 0, y: 0, width: 20, height: 20)
+    private let rect = CGRect(x: 0, y: 0, width: 22, height: 22)
 
     var body: some View {
         VStack(alignment: .center) {

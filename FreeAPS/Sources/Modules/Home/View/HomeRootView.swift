@@ -115,14 +115,14 @@ extension Home {
                     Spacer()
                     // cobIobView
                     // glucoseView
-                    loopView
+                    // loopView
                     // .padding(.leading, 8)
                     // .padding(.trailing, 8)
-                    Spacer()
+                    // Spacer()
                     pumpView
                     Spacer()
-                    // loopView
-                    // Spacer()
+                    loopView
+                    Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
