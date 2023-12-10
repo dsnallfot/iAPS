@@ -104,21 +104,21 @@ extension Home {
         }
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
-            let colour: Color = colorScheme == .dark ? .black : .white
+            // let colour: Color = colorScheme == .dark ? .black : .white
             VStack(alignment: .center) {
                 glucoseView
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 14)
                 HStack(alignment: .bottom) {
                     Spacer()
                     cobIobView
                     // glucoseView
-                    // Spacer()
+                    Spacer()
                     // cobIobView
                     // glucoseView
                     loopView
-                        .padding(.leading, 8)
-                        .padding(.trailing, 8)
-                    // Spacer()
+                    // .padding(.leading, 8)
+                    // .padding(.trailing, 8)
+                    Spacer()
                     pumpView
                     Spacer()
                     // loopView
@@ -126,11 +126,11 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 0 + geo.safeAreaInsets.top)
-            .padding(.bottom, 10)
+            .padding(.top, 10 + geo.safeAreaInsets.top)
+            .padding(.bottom, 5)
             .background(Color.purple.opacity(0.1))
 
-            Rectangle().fill(colour).frame(maxHeight: 1)
+            // Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         var cobIobView: some View {
@@ -408,8 +408,8 @@ extension Home {
                     }
             }
             .font(buttonFont)
-            .padding(.top, 5)
-            .padding(.bottom, 25)
+            .padding(.top, 0)
+            .padding(.bottom, 20)
         }
 
         var legendPanel: some View {
@@ -455,7 +455,7 @@ extension Home {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 17)
+                .padding([.bottom], 14)
             }
         }
 
@@ -497,7 +497,7 @@ extension Home {
         }
 
         @ViewBuilder private func profiles(_: GeometryProxy) -> some View {
-            let colour: Color = colorScheme == .dark ? .black : .white
+            // let colour: Color = colorScheme == .dark ? .black : .white
             // Rectangle().fill(colour).frame(maxHeight: 1)
             ZStack {
                 Rectangle().fill(Color.purple.opacity(0.1)).frame(maxHeight: 40)
@@ -533,7 +533,7 @@ extension Home {
                     }
                 }, message: { Text("This will change settings back to your normal profile.") }
             )
-            Rectangle().fill(colour).frame(maxHeight: 1)
+            // Rectangle().fill(colour).frame(maxHeight: 1)
         }
 
         private func selectedProfile() -> (name: String, isOn: Bool) {
@@ -581,7 +581,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 15)
+                                .padding(.top, 12)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -603,7 +603,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 12)
+                                .padding(.top, 10)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
@@ -631,7 +631,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
-                                .padding(.top, 15)
+                                .padding(.top, 12)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -655,7 +655,7 @@ extension Home {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 27, height: 27)
-                                .padding(.top, 15)
+                                .padding(.top, 12)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -669,7 +669,7 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(.top, 15)
+                            .padding(.top, 12)
                             .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
@@ -681,7 +681,7 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(.top, 15)
+                            .padding(.top, 12)
                             .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
