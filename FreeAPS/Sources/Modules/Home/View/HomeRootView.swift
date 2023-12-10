@@ -385,11 +385,14 @@ extension Home {
                         highlightButtons()
                     }
                     .foregroundStyle(button.active ? .primary : .secondary)
-                    .frame(maxHeight: 20).padding(.horizontal)
+                    .frame(maxHeight: 20)
+                    .padding(.horizontal)
+                    .padding(.vertical, 3)
                     .background(button.active ? Color.blue.opacity(0.12) : .clear, in: .capsule(style: .circular))
                 }
                 Image(systemName: "chart.xyaxis.line")
                     .foregroundStyle(.purple.opacity(0.5))
+                    .font(.system(size: 12, weight: .semibold))
                     .padding(.leading)
                     .onTapGesture {
                         state.showModal(for: .statistics)
@@ -397,7 +400,7 @@ extension Home {
             }
             .font(buttonFont)
             .padding(.top, 0)
-            .padding(.bottom, 12)
+            .padding(.bottom, 8)
         }
 
         var legendPanel: some View {
@@ -456,7 +459,7 @@ extension Home {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding([.bottom], 16)
+                .padding([.bottom], 14)
             }
         }
 
@@ -531,7 +534,7 @@ extension Home {
 
         @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.blue.opacity(0.12)).frame(height: 66 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(Color.blue.opacity(0.12)).frame(height: 70 + geo.safeAreaInsets.bottom)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
