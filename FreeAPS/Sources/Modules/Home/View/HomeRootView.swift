@@ -402,7 +402,7 @@ extension Home {
         var legendPanel: some View {
             ZStack {
                 HStack(alignment: .center) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
                         Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
                         Spacer()
@@ -413,7 +413,7 @@ extension Home {
 
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
                         Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
-                            .padding(.trailing, 8)
+                        // .padding(.trailing, 6)
                     }
                     .frame(width: 150)
                     .padding(.leading, 8)
@@ -428,9 +428,9 @@ extension Home {
 
                     Spacer()
 
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
-                            .padding(.leading, 8)
+                            .padding(.leading, 6)
                         Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
                         Spacer()
                         Circle().fill(Color.uam).frame(width: 8, height: 8)
