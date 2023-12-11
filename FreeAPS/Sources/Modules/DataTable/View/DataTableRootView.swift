@@ -132,7 +132,7 @@ extension DataTable {
                                     isAmountUnconfirmed = false
                                     showManualGlucose = false
                                 }
-                                label: { Text("Logga värde från fingerstick") }
+                                label: { Text("Logga blodsockermätning") }
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .fontWeight(.semibold)
@@ -154,7 +154,7 @@ extension DataTable {
                     state.manualGlucoseDate = Date()
                     configureView()
                 }
-                .navigationTitle("Fingerstick")
+                .navigationTitle("Blodsockermätning")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button("Close", action: { showManualGlucose = false
                     state.manualGlucose = 0 }))
@@ -205,7 +205,7 @@ extension DataTable {
                                                 .foregroundColor(.orange)
                                         }
                                         Text(
-                                            !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga dos från insulinpenna" :
+                                            !(state.nonPumpInsulinAmount > state.maxBolus) ? "Logga insulindos" :
                                                 "Inställd maxbolus: \(formattedMaxAmountBolus)E   "
                                         )
                                         .fontWeight(.semibold)
@@ -231,7 +231,7 @@ extension DataTable {
                     state.nonPumpInsulinDate = Date()
                     configureView()
                 }
-                .navigationTitle("Insulinpenna")
+                .navigationTitle("Externt insulin")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button("Close", action: { showNonPumpInsulin = false
                     state.nonPumpInsulinAmount = 0 }))
@@ -252,8 +252,8 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showNonPumpInsulin = true }, label: {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Insulinpenna")
+                        Image(systemName: "plus.app")
+                        Text("Insulin")
                             .font(.subheadline)
                     })
                         .buttonStyle(.borderless)
@@ -275,7 +275,7 @@ extension DataTable {
                             .buttonStyle(.borderless)
                     }
                 }
-                .listRowBackground(Color(.tertiarySystemBackground))
+                .listRowBackground(Color(.tertiarySystemFill))
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
@@ -284,14 +284,14 @@ extension DataTable {
                         }) { item in
                             treatmentView(item)
                                 .listRowBackground(
-                                    item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
+                                    item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
                                 )
                         }
                     } else {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
                                 .listRowBackground(
-                                    item.date > Date() ? Color(.tertiarySystemBackground) : Color(.secondarySystemBackground)
+                                    item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
                                 )
                         }
                     }
@@ -309,7 +309,7 @@ extension DataTable {
                     ForEach(state.basals) { item in
                         basalView(item)
                     }
-                    .listRowBackground(Color(.secondarySystemBackground))
+                    .listRowBackground(Color(.tertiarySystemBackground))
 
                 } else {
                     HStack {
@@ -323,19 +323,19 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showManualGlucose = true }, label: {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Fingerstick")
+                        Image(systemName: "plus.app")
+                        Text("Blodsocker")
                             .font(.subheadline)
                     })
                         .buttonStyle(.borderless)
                 }
-                .listRowBackground(Color(.tertiarySystemBackground))
+                .listRowBackground(Color(.tertiarySystemFill))
 
                 if !state.glucose.isEmpty {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
-                    .listRowBackground(Color(.secondarySystemBackground))
+                    .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
                         Text("Ingen data.")
