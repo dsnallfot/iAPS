@@ -37,19 +37,20 @@ struct LoopView: View {
             }
             if isLooping {
                 Text("looping").font(.caption2)
-                    .offset(x: 0, y: -4)
+                    .offset(x: 0, y: -3)
             } else if manualTempBasal {
                 Text("Manual").font(.caption2)
-                    .offset(x: 0, y: -4)
+                    .offset(x: 0, y: -3)
             } else if actualSuggestion?.timestamp != nil {
                 Text(timeString).font(.caption2)
                     .foregroundColor(.secondary)
-                    .offset(x: 0, y: -4)
+                    .offset(x: 0, y: -3)
             } else {
                 Text("--").font(.caption2).foregroundColor(.secondary)
-                    .offset(x: 0, y: -4)
+                    .offset(x: 0, y: -3)
             }
         }
+        .frame(width: 40)
     }
 
     private var timeString: String {

@@ -406,24 +406,28 @@ extension Home {
         var legendPanel: some View {
             ZStack {
                 HStack(alignment: .center) {
-                    HStack(spacing: 3) {
+                    HStack(spacing: 4) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
                         Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
-                        Spacer()
-
-                        Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
-                        Spacer()
-
-                        Circle().fill(Color.zt).frame(width: 8, height: 8)
-                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
-                        // .padding(.trailing, 6)
                     }
-                    .frame(width: 150)
-                    .padding(.leading, 8)
-                    .onTapGesture {
-                        isStatusPopupPresented.toggle()
+                    .frame(width: 45)
+
+                    Spacer()
+
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
+                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
                     }
+                    .frame(width: 45)
+
+                    Spacer()
+
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.uam).frame(width: 8, height: 8)
+                        Text("UAM")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
+                    }
+                    .frame(width: 45)
 
                     Spacer()
 
@@ -432,34 +436,43 @@ extension Home {
 
                     Spacer()
 
-                    HStack(spacing: 3) {
-                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
-                            .padding(.leading, 6)
-                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
-                        Spacer()
-                        Circle().fill(Color.uam).frame(width: 8, height: 8)
-                        Text("UAM")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
-                        Spacer()
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.insulin).frame(width: 8, height: 8)
+                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                    }
+                    .frame(width: 45)
 
+                    Spacer()
+
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.zt).frame(width: 8, height: 8)
+                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                    }
+                    .frame(width: 45)
+
+                    Spacer()
+                    HStack(spacing: 4) {
                         if let eventualBG = state.eventualBG {
                             Text(
                                 "⇢ " + numberFormatter.string(
                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
                                 )!
                             )
-
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                         }
                     }
-                    .frame(width: 150)
-                    .padding(.trailing, 8)
+                    .frame(width: 45)
                     .onTapGesture {
                         isStatusPopupPresented.toggle()
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .padding([.bottom], 14)
+                .padding(.leading, 6)
+                .padding(.trailing, 8)
+                .onTapGesture {
+                    isStatusPopupPresented.toggle()
+                }
             }
         }
 
