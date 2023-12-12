@@ -74,7 +74,7 @@ extension AddCarbs {
                     }
                     .listRowBackground(Color(.loopYellow).opacity(0.8))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12) // Adjust the corner radius as needed
+                        RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
                             .stroke(lineWidth: 7)
                             .padding(.leading, -16)
                             .padding(.trailing, -16)
