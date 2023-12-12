@@ -50,7 +50,7 @@ struct LoopView: View {
                     .offset(x: 0, y: -2)
             }
         }
-        .frame(width: 40)
+        .frame(width: 34)
     }
 
     private var timeString: String {
