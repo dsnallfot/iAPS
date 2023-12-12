@@ -323,7 +323,7 @@ extension Home {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
                     Text("Pump suspended")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopGray)
+                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGray)
                         .padding(.leading, 8)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
@@ -349,10 +349,10 @@ extension Home {
                 }) {
                     if let overrideString = overrideString {
                         Text(selectedProfile().name)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(.cyan)
                         Text(overrideString)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(.cyan)
                             .padding(.trailing, 8)
                     }
@@ -360,7 +360,7 @@ extension Home {
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
-                        .font(.callout)
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.orange)
                         .padding(.trailing, 8)
                         .onTapGesture {
@@ -398,8 +398,8 @@ extension Home {
                     .padding(.vertical, 3)
                     .background(button.active ? Color.blue.opacity(0.12) : .clear, in: .capsule(style: .circular))
                 }
-                Image(systemName: "chart.xyaxis.line")
-                    .foregroundStyle(.purple.opacity(0.5))
+                Image(systemName: "chart.bar.fill")
+                    .foregroundStyle(.purple.opacity(0.6))
                     .font(.system(size: 12, weight: .semibold))
                     .padding(.leading)
                     .onTapGesture {

@@ -18,11 +18,11 @@ struct ChartsView: View {
 
     var body: some View {
         glucoseChart
-        Rectangle().fill(.cyan.opacity(0.2)).frame(maxHeight: 3)
+        Rectangle().fill(.primary.opacity(0.8)).frame(maxHeight: 1)
         if standing {
             VStack {
                 tirChart
-                Rectangle().fill(.cyan.opacity(0.2)).frame(maxHeight: 3)
+                Rectangle().fill(.primary.opacity(0.8)).frame(maxHeight: 1)
                 groupedGlucoseStatsLaying
             }
         } else {
@@ -148,7 +148,7 @@ struct ChartsView: View {
                 "High",
                 comment: ""
             ) + " (≥\(high.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))))": .orange
-        ]).frame(maxHeight: 25)
+        ]).frame(maxHeight: 40)
     }
 
     var standingTIRchart: some View {
