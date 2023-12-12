@@ -49,7 +49,7 @@ struct PumpView: View {
                             .foregroundStyle(Color.warning, Color.red)
                     }
                 }
-                .frame(width: 82)
+                .frame(width: 80)
                 Spacer()
                 HStack {
                     if let battery = battery, battery.display ?? false, expiresAtDate == nil {
@@ -71,7 +71,7 @@ struct PumpView: View {
                             .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
-                .frame(width: 82)
+                .frame(width: 80)
             }
         }
     }

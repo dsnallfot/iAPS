@@ -116,6 +116,8 @@ extension Home {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
+            .padding(.leading, 8)
+            .padding(.trailing, 8)
             .background(Color.blue.opacity(0.12))
         }
 
@@ -131,7 +133,7 @@ extension Home {
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                 }
 
-                .frame(width: 82)
+                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -146,7 +148,7 @@ extension Home {
                     )
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                 }
-                .frame(width: 82)
+                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -472,6 +474,7 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
+                .padding(.bottom, 10)
                 .onTapGesture {
                     isStatusPopupPresented.toggle()
                 }
