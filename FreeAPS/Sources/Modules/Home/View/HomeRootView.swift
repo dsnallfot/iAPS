@@ -133,7 +133,7 @@ extension Home {
                         NSLocalizedString(" U", comment: "Insulin unit")
                 )
                 .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 16)
+                .padding(.trailing, 20)
                 Text("COB")
                     .font(.system(size: 14)).foregroundColor(.secondary)
                 Text(
@@ -141,7 +141,7 @@ extension Home {
                         NSLocalizedString(" g", comment: "gram of carbs")
                 )
                 .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 16)
+                .padding(.trailing, 10)
             }
             .onTapGesture {
                 state.showModal(for: .dataTable)
