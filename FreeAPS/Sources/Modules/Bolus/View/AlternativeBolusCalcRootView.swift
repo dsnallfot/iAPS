@@ -119,12 +119,13 @@ extension Bolus {
                     // }
                 }
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8) // Adjust the corner radius as needed
-                        .stroke(lineWidth: 3)
-                        .padding(.leading, -14)
-                        .padding(.trailing, -14)
-                        .padding(.top, -2)
-                        .padding(.bottom, -2)
+                    RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
+                        .stroke(lineWidth: 7)
+                        .padding(.leading, -16)
+                        .padding(.trailing, -16)
+                        .padding(.top, -4)
+                        .padding(.bottom, -4)
+                        .foregroundColor(colorScheme == .dark ? .primary : .white)
                 )
 
                 if state.amount > 0 {
