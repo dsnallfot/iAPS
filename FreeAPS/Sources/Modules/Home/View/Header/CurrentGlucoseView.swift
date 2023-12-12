@@ -123,7 +123,7 @@ struct CurrentGlucoseView: View {
                      .tripleDown:
                     rotationDegrees = 90
 
-                case nil,
+                case .none,
                      .notComputable,
                      .rateOutOfRange:
                     rotationDegrees = 0
