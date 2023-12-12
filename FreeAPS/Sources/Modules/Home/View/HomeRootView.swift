@@ -246,7 +246,7 @@ extension Home {
             var string = ""
             if sliderTTpresets.first?.active ?? false {
                 let hbt = sliderTTpresets.first?.hbt ?? 0
-                string = ", " + (tirFormatter.string(from: state.infoPanelTTPercentage(hbt, target) as NSNumber) ?? "") + " %"
+                string = " " + (tirFormatter.string(from: state.infoPanelTTPercentage(hbt, target) as NSNumber) ?? "") + " %"
             }
 
             let percentString = state
@@ -289,7 +289,7 @@ extension Home {
                 )
 
             let smbToggleString = (fetchedPercent.first?.smbIsOff ?? false) ? " \u{20e0}" : ""
-            var comma1 = ", "
+            var comma1 = " "
             var comma2 = comma1
             var comma3 = comma1
             if targetString == "" || percentString == "" { comma1 = "" }
