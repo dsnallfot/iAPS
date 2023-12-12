@@ -63,7 +63,7 @@ extension Home {
         private var numberFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 1
+            formatter.maximumFractionDigits = 2
             return formatter
         }
 
@@ -125,12 +125,12 @@ extension Home {
             HStack {
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 14)).foregroundColor(.secondary)
+                        .font(.system(size: 13)).foregroundColor(.secondary)
                     Text(
-                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
+                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" U", comment: "Insulin unit")
                     )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                 }
 
                 .frame(width: 80)
@@ -141,12 +141,12 @@ extension Home {
                 Spacer()
                 HStack {
                     Text("COB")
-                        .font(.system(size: 14)).foregroundColor(.secondary)
+                        .font(.system(size: 13)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                 }
                 .frame(width: 80)
                 .onTapGesture {

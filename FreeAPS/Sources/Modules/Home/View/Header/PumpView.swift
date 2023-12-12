@@ -32,13 +32,13 @@ struct PumpView: View {
                         .foregroundColor(reservoirColor)
                     if reservoir == 0xDEAD_BEEF {
                         Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
-                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                     } else {
                         Text(
                             reservoirFormatter
                                 .string(from: reservoir as NSNumber)! + NSLocalizedString(" U", comment: "Insulin unit")
                         )
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary) }
+                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary) }
 
                     if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
                         Image(systemName: "clock.badge.exclamationmark.fill")
@@ -59,7 +59,7 @@ struct PumpView: View {
                             .frame(maxHeight: 10)
                             .foregroundColor(batteryColor)
                         Text("\(Int(battery.percent ?? 100)) %")
-                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                     }
                     if let date = expiresAtDate {
                         Image(systemName: "stopwatch.fill")
@@ -68,7 +68,7 @@ struct PumpView: View {
                             .frame(maxHeight: 10)
                             .foregroundColor(timerColor)
                         Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
-                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
                 .frame(width: 80)

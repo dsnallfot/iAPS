@@ -160,7 +160,7 @@ struct Triangle: Shape {
 
         path.move(to: CGPoint(x: rect.midX, y: rect.minY + 10))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        
+
         path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY), control: CGPoint(x: rect.midX, y: rect.midY + 13))
 
         path.closeSubpath()
