@@ -107,7 +107,7 @@ extension Home {
             VStack(alignment: .center) {
                 glucoseView
                     .padding(.bottom, 30)
-                    .padding(.top, 8)
+                    .padding(.top, 12)
                 HStack(alignment: .bottom) {
                     cobIobView
                     Spacer()
