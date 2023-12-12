@@ -468,7 +468,7 @@ extension Home {
                 }
                 .frame(maxWidth: .infinity)
                 .padding([.bottom], 14)
-                .padding(.leading, 6)
+                .padding(.leading, 8)
                 .padding(.trailing, 8)
                 .onTapGesture {
                     isStatusPopupPresented.toggle()
