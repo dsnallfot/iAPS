@@ -158,11 +158,11 @@ struct Triangle: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
 
-        let cornerRadius: CGFloat = 8
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY + 10))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        
+        path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY), control: CGPoint(x: rect.midX, y: rect.midY + 13))
 
-        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - cornerRadius))
-        path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY - cornerRadius), control: CGPoint(x: rect.midX, y: rect.maxY))
         path.closeSubpath()
 
         return path
@@ -181,7 +181,7 @@ struct TrendShape: View {
                 Group {
                     CircleShape(gradient: gradient)
                     TriangleShape(color: color)
-                }.shadow(color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33), radius: colorScheme == .dark ? 5 : 3)
+                }.shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.33), radius: colorScheme == .dark ? 3 : 3)
                 CircleShape(gradient: gradient)
             }
         }
@@ -215,6 +215,6 @@ struct TriangleShape: View {
             .fill(color)
             .frame(width: 35, height: 35)
             .rotationEffect(.degrees(90))
-            .offset(x: 70)
+            .offset(x: 86)
     }
 }
