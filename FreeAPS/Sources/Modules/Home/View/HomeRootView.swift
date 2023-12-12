@@ -106,7 +106,7 @@ extension Home {
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 glucoseView
-                    .padding(.bottom, 22)
+                    .padding(.bottom, 28)
                     .padding(.top, 8)
                 HStack(alignment: .bottom) {
                     cobIobView
