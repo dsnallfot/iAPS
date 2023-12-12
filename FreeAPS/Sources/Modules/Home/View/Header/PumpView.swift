@@ -29,7 +29,7 @@ struct PumpView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(maxHeight: 10)
                     .foregroundColor(reservoirColor)
-                    .padding(.leading, 11)
+                    .padding(.leading, 10)
                 if reservoir == 0xDEAD_BEEF {
                     Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
                         .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
