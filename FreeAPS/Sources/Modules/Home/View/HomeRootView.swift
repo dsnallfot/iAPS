@@ -109,43 +109,49 @@ extension Home {
                     .padding(.bottom, 22)
                     .padding(.top, 8)
                 HStack(alignment: .bottom) {
-                    // Spacer()
                     cobIobView
-                    // Spacer()
+                    Spacer()
                     pumpView
-                    // Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.bottom, 0)
-            .padding(.leading, 8)
-            .padding(.trailing, 8)
             .background(Color.blue.opacity(0.12))
         }
 
         var cobIobView: some View {
             HStack {
-                Text("IOB")
-                    .font(.system(size: 14)).foregroundColor(.secondary)
-                Text(
-                    (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
-                        NSLocalizedString(" U", comment: "Insulin unit")
-                )
-                .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 20)
-                Text("COB")
-                    .font(.system(size: 14)).foregroundColor(.secondary)
-                Text(
-                    (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                        NSLocalizedString(" g", comment: "gram of carbs")
-                )
-                .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                .padding(.trailing, 10)
+                HStack {
+                    Text("IOB")
+                        .font(.system(size: 14)).foregroundColor(.secondary)
+                    Text(
+                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0") +
+                            NSLocalizedString(" U", comment: "Insulin unit")
+                    )
+                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                }
+
+                .frame(width: 82)
+                .onTapGesture {
+                    state.showModal(for: .dataTable)
+                }
+
+                Spacer()
+                HStack {
+                    Text("COB")
+                        .font(.system(size: 14)).foregroundColor(.secondary)
+                    Text(
+                        (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
+                            NSLocalizedString(" g", comment: "gram of carbs")
+                    )
+                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                }
+                .frame(width: 82)
+                .onTapGesture {
+                    state.showModal(for: .dataTable)
+                }
             }
-            .onTapGesture {
-                state.showModal(for: .dataTable)
-            } }
+        }
 
         var glucoseView: some View {
             CurrentGlucoseView(
@@ -466,10 +472,6 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .padding([.bottom], 14)
-                .padding(.leading, 8)
-                .padding(.trailing, 8)
                 .onTapGesture {
                     isStatusPopupPresented.toggle()
                 }
