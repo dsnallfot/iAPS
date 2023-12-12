@@ -432,7 +432,7 @@ extension Home {
                     Spacer()
 
                     loopView
-                        .offset(x: 0, y: 10)
+                        .offset(x: 0, y: 8)
 
                     Spacer()
 
