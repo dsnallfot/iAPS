@@ -399,7 +399,7 @@ extension Home {
                     .background(
                         button.active ?
                             (
-                                colorScheme == .dark ? Color.basal.opacity(0.4) :
+                                colorScheme == .dark ? Color.basal.opacity(0.3) :
                                     Color.white
                             ) :
                             Color
@@ -408,7 +408,7 @@ extension Home {
                     .cornerRadius(20)
                 }
                 Image(systemName: "chart.bar.fill")
-                    .foregroundStyle(.purple.opacity(0.6))
+                    .foregroundStyle(.purple.opacity(0.7))
                     .font(.system(size: 12, weight: .semibold))
                     .padding(.leading)
                     .onTapGesture {
@@ -572,7 +572,7 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.basal.opacity(0.4) : Color.white
+                    colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
                 )
                 .frame(height: 80)
                 .cornerRadius(10)
