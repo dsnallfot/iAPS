@@ -572,8 +572,7 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.black.opacity(0.5) :
-                        Color.white
+                    colorScheme == .dark ? Color.basal.opacity(0.4) : Color.white
                 )
                 .frame(height: 80)
                 .cornerRadius(10)
