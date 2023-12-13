@@ -116,9 +116,9 @@ extension Home {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.leading, 8)
-            .padding(.trailing, 8)
-            .background(Color.blue.opacity(0.12))
+            .padding(.leading, 10)
+            .padding(.trailing, 10)
+            .background(Color.clear)
         }
 
         var cobIobView: some View {
@@ -324,12 +324,12 @@ extension Home {
                 if state.pumpSuspended {
                     Text("Pump suspended")
                         .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGray)
-                        .padding(.leading, 8)
+                        .padding(.leading, 10)
                 } else if let tempBasalString = tempBasalString {
                     Text(tempBasalString)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.insulin)
-                        .padding(.leading, 8)
+                        .padding(.leading, 10)
                 }
 
                 Button(action: {
@@ -354,7 +354,7 @@ extension Home {
                         Text(overrideString)
                             .font(.caption)
                             .foregroundColor(.cyan)
-                            .padding(.trailing, 8)
+                            .padding(.trailing, 10)
                     }
                 }
 
@@ -362,7 +362,7 @@ extension Home {
                     (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.orange)
-                        .padding(.trailing, 8)
+                        .padding(.trailing, 10)
                         .onTapGesture {
                             state.showModal(for: .preferencesEditor)
                         }
@@ -374,7 +374,7 @@ extension Home {
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
-                            .padding(.trailing, 8)
+                            .padding(.trailing, 10)
                     }
                     .onTapGesture {
                         state.cancelBolus()
@@ -382,7 +382,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
-            .background(Color.blue.opacity(0.12))
+            .background(Color.clear)
         }
 
         var timeInterval: some View {
@@ -396,10 +396,19 @@ extension Home {
                     .frame(maxHeight: 20)
                     .padding(.horizontal)
                     .padding(.vertical, 3)
-                    .background(button.active ? Color.blue.opacity(0.12) : .clear, in: .capsule(style: .circular))
+                    .background(
+                        button.active ?
+                            (
+                                colorScheme == .dark ? Color.basal.opacity(0.3) :
+                                    Color.white
+                            ) :
+                            Color
+                            .clear
+                    )
+                    .cornerRadius(20)
                 }
                 Image(systemName: "chart.bar.fill")
-                    .foregroundStyle(.purple.opacity(0.6))
+                    .foregroundStyle(.purple.opacity(0.7))
                     .font(.system(size: 12, weight: .semibold))
                     .padding(.leading)
                     .onTapGesture {
@@ -407,8 +416,12 @@ extension Home {
                     }
             }
             .font(buttonFont)
-            .padding(.top, 0)
-            .padding(.bottom, 8)
+            .shadow(
+                color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                radius: colorScheme == .dark ? 5 : 3
+            )
+            .padding(.top, 15)
+            .padding(.bottom, 6)
         }
 
         var legendPanel: some View {
@@ -418,7 +431,7 @@ extension Home {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
                         Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
 
                     Spacer()
 
@@ -426,7 +439,7 @@ extension Home {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
                         Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
 
                     Spacer()
 
@@ -435,7 +448,7 @@ extension Home {
                         Text("UAM")
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
 
                     Spacer()
 
@@ -448,7 +461,7 @@ extension Home {
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
                         Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
 
                     Spacer()
 
@@ -456,25 +469,27 @@ extension Home {
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
                         Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
 
                     Spacer()
                     HStack(spacing: 4) {
                         if let eventualBG = state.eventualBG {
                             Text(
-                                "⇢ " + numberFormatter.string(
+                                "⇢ " + targetFormatter.string(
                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
                                 )!
                             )
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                         }
                     }
-                    .frame(width: 45)
+                    .frame(width: 44)
                     .onTapGesture {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .padding(.bottom, 10)
+                .padding(.bottom, 15)
+                .padding(.leading, 10)
+                .padding(.trailing, 10)
                 .onTapGesture {
                     isStatusPopupPresented.toggle()
                 }
@@ -514,8 +529,12 @@ extension Home {
                     thresholdLines: $state.thresholdLines
                 )
             }
-            .padding(.bottom)
+            .padding(.bottom, 2)
             .modal(for: .dataTable, from: self)
+            .background(
+                colorScheme == .dark ? Color.black.opacity(0.5) :
+                    Color.white
+            )
         }
 
         private func selectedProfile() -> (name: String, isOn: Bool) {
@@ -550,9 +569,18 @@ extension Home {
             }
         }
 
-        @ViewBuilder private func bottomPanel(_ geo: GeometryProxy) -> some View {
+        @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
-                Rectangle().fill(Color.blue.opacity(0.12)).frame(height: 70 + geo.safeAreaInsets.bottom)
+                Rectangle().fill(
+                    colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
+                )
+                .frame(height: 80)
+                .cornerRadius(10)
+                .shadow(
+                    color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                .padding([.leading, .trailing], 10)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -563,7 +591,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 27)
+                                .padding(.top, 20)
                                 .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -585,7 +613,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 25)
+                                .padding(.top, 18)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
@@ -613,7 +641,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
-                                .padding(.top, 27)
+                                .padding(.top, 20)
                                 .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -635,7 +663,7 @@ extension Home {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 27, height: 27)
-                                .padding(.top, 27)
+                                .padding(.top, 20)
                                 .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -650,7 +678,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.cyan)
-                                .padding(.top, 27)
+                                .padding(.top, 20)
                                 .padding(.bottom, 8)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
@@ -670,14 +698,14 @@ extension Home {
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 27, height: 27)
-                            .padding(.top, 27)
+                            .padding(.top, 20)
                             .padding(.bottom, 8)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, geo.safeAreaInsets.bottom)
+                .padding(.bottom, 20)
             }
         }
 
@@ -686,12 +714,21 @@ extension Home {
                 VStack(spacing: 0) {
                     header(geo)
                     infoPanel
-                    mainChart
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.clear)
+                        .overlay(mainChart)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(
+                            color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
+                        .padding(.horizontal, 10)
+                        .frame(maxHeight: UIScreen.main.bounds.height / 2.2)
                     timeInterval
                     legendPanel
                     bottomPanel(geo)
                 }
-                .edgesIgnoringSafeArea(.vertical)
+                .edgesIgnoringSafeArea(.all)
             }
             .onChange(of: state.hours) { _ in
                 highlightButtons()
@@ -701,6 +738,7 @@ extension Home {
                     highlightButtons()
                 }
             }
+            .background(Color.blue.opacity(0.12))
             .navigationTitle("Home")
             .navigationBarHidden(true)
             .ignoresSafeArea(.keyboard)
