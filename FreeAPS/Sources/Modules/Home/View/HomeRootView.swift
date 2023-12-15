@@ -592,7 +592,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.loopYellow)
                                 .padding(.top, 20)
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if let carbsReq = state.carbsRequired {
@@ -614,7 +614,7 @@ extension Home {
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.loopGreen)
                                 .padding(.top, 18)
-                                .padding(.bottom, 14)
+                                .padding(.bottom, 6)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
                             if state.tempTarget != nil {
@@ -642,7 +642,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.insulin)
                                 .padding(.top, 20)
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
@@ -664,7 +664,7 @@ extension Home {
                                 .resizable()
                                 .frame(width: 27, height: 27)
                                 .padding(.top, 20)
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                         }.foregroundColor(.insulin)
@@ -679,7 +679,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .foregroundColor(.cyan)
                                 .padding(.top, 20)
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if selectedProfile().isOn {
@@ -699,13 +699,13 @@ extension Home {
                             .resizable()
                             .frame(width: 27, height: 27)
                             .padding(.top, 20)
-                            .padding(.bottom, 15)
+                            .padding(.bottom, 7)
                             .padding(.leading, 9)
                             .padding(.trailing, 9)
                     }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 20)
+                .padding(.bottom, 30)
             }
         }
 
