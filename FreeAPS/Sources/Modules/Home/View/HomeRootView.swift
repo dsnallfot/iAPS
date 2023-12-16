@@ -487,7 +487,7 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .padding(.bottom, 15)
+                .padding(.bottom, 12)
                 .padding(.leading, 10)
                 .padding(.trailing, 10)
                 .onTapGesture {
@@ -575,12 +575,16 @@ extension Home {
                     colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
                 )
                 .frame(height: 87)
-                .cornerRadius(10)
                 .shadow(
                     color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-                .padding([.leading, .trailing], 10)
+                /* .cornerRadius(10)
+                 .shadow(
+                     color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 )
+                 .padding([.leading, .trailing], 10) */
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -705,7 +709,7 @@ extension Home {
                     }.foregroundColor(.gray)
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 30)
+                .padding(.bottom, 25)
             }
         }
 
