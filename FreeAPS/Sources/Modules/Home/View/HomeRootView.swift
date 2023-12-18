@@ -429,7 +429,7 @@ extension Home {
                 HStack(alignment: .center) {
                     HStack(spacing: 4) {
                         Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
-                        Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                        Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
                     }
                     .frame(width: 44)
 
@@ -437,7 +437,7 @@ extension Home {
 
                     HStack(spacing: 4) {
                         Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
-                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                        Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
                     }
                     .frame(width: 44)
 
@@ -446,7 +446,7 @@ extension Home {
                     HStack(spacing: 4) {
                         Circle().fill(Color.uam).frame(width: 8, height: 8)
                         Text("UAM")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
+                            .font(.system(size: 12)).foregroundColor(.uam)
                     }
                     .frame(width: 44)
 
@@ -459,7 +459,7 @@ extension Home {
 
                     HStack(spacing: 4) {
                         Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                        Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
                     }
                     .frame(width: 44)
 
@@ -467,7 +467,7 @@ extension Home {
 
                     HStack(spacing: 4) {
                         Circle().fill(Color.zt).frame(width: 8, height: 8)
-                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                        Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
                     }
                     .frame(width: 44)
 
