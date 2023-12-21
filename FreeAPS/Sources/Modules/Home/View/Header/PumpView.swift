@@ -33,13 +33,13 @@ struct PumpView: View {
                         .offset(x: 2, y: 0)
                     if reservoir == 0xDEAD_BEEF {
                         Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     } else {
                         Text(
                             reservoirFormatter
                                 .string(from: reservoir as NSNumber)! + NSLocalizedString(" U", comment: "Insulin unit")
                         )
-                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary) }
+                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary) }
 
                     if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
                         Image(systemName: "clock.badge.exclamationmark.fill")
@@ -61,7 +61,7 @@ struct PumpView: View {
                             .foregroundColor(batteryColor)
                             .offset(x: 3, y: 0)
                         Text("\(Int(battery.percent ?? 100)) %")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     }
                     if let date = expiresAtDate {
                         Image(systemName: "stopwatch.fill")
@@ -71,7 +71,7 @@ struct PumpView: View {
                             .foregroundColor(timerColor)
                             .offset(x: 2, y: 0)
                         Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
                 .frame(width: 65, alignment: .trailing)

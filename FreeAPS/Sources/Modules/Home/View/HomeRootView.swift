@@ -110,9 +110,28 @@ extension Home {
                     .padding(.top, 12)
 
                 HStack(alignment: .center) {
+                    HStack {
+                        if state.pumpSuspended {
+                            Text("Basal")
+                                .font(.system(size: 11)).foregroundColor(.secondary)
+                            Text("--")
+                                .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                                .offset(x: -2, y: 0)
+                        } else if let tempBasalString = tempBasalString {
+                            Text("Basal")
+                                .font(.system(size: 11)).foregroundColor(.secondary)
+                            Text(tempBasalString)
+                                .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                                .offset(x: -2, y: 0)
+                        }
+                    }
+                    .frame(width: 80, alignment: .leading)
+                    .onTapGesture {
+                        state.showModal(for: .dataTable)
+                    }
+                    Spacer()
                     cobIobView
-                        .frame(width: 215, alignment: .leading)
-
+                        .frame(width: 130, alignment: .leading)
                     pumpView
                         .frame(width: 130, alignment: .trailing)
                 }
@@ -142,33 +161,13 @@ extension Home {
         var cobIobView: some View {
             HStack {
                 HStack {
-                    if state.pumpSuspended {
-                        Text("Basal")
-                            .font(.system(size: 11)).foregroundColor(.secondary)
-                        Text("--")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                            .offset(x: -2, y: 0)
-                    } else if let tempBasalString = tempBasalString {
-                        Text("Basal")
-                            .font(.system(size: 11)).foregroundColor(.secondary)
-                        Text(tempBasalString)
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                            .offset(x: -2, y: 0)
-                    }
-                }
-                .frame(width: 85, alignment: .leading)
-                .onTapGesture {
-                    state.showModal(for: .dataTable)
-                }
-                Spacer()
-                HStack {
                     Text("IOB")
                         .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" E", comment: "Insulin unit")
                     )
-                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 65, alignment: .trailing)
@@ -184,7 +183,7 @@ extension Home {
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 65, alignment: .trailing)
