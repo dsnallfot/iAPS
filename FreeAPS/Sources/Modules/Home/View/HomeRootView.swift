@@ -108,32 +108,70 @@ extension Home {
                 glucoseView
                     .padding(.bottom, 30)
                     .padding(.top, 12)
-                HStack(alignment: .bottom) {
+
+                HStack {
                     cobIobView
+                        .frame(width: 220, alignment: .leading)
+
                     Spacer()
+
                     pumpView
+                        .frame(width: 125, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.leading, 10)
-            .padding(.trailing, 10)
+            .padding(.horizontal, 10)
             .background(Color.clear)
+        }
+
+        var tempBasalString: String? {
+            guard let tempRate = state.tempRate else {
+                return nil
+            }
+            let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
+            var manualBasalString = ""
+
+            if state.apsManager.isManualTempBasal {
+                manualBasalString = NSLocalizedString(
+                    " - Manual Basal ⚠️",
+                    comment: "Manual Temp basal"
+                )
+            }
+            return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
         }
 
         var cobIobView: some View {
             HStack {
                 HStack {
+                    if state.pumpSuspended {
+                        Text("B")
+                            .font(.system(size: 12)).foregroundColor(.secondary)
+                        Text("--")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                            .offset(x: -2, y: 0)
+                    } else if let tempBasalString = tempBasalString {
+                        Text("B")
+                            .font(.system(size: 12)).foregroundColor(.secondary)
+                        Text(tempBasalString)
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                            .offset(x: -2, y: 0)
+                    }
+                }
+                .onTapGesture {
+                    state.showModal(for: .dataTable)
+                }
+                Spacer()
+                HStack {
                     Text("IOB")
-                        .font(.system(size: 13)).foregroundColor(.secondary)
+                        .font(.system(size: 12)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" U", comment: "Insulin unit")
                     )
-                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
                 }
-
-                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -141,14 +179,14 @@ extension Home {
                 Spacer()
                 HStack {
                     Text("COB")
-                        .font(.system(size: 13)).foregroundColor(.secondary)
+                        .font(.system(size: 12)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
                 }
-                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -218,21 +256,21 @@ extension Home {
             }
         }
 
-        var tempBasalString: String? {
-            guard let tempRate = state.tempRate else {
-                return nil
-            }
-            let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
-            var manualBasalString = ""
+        /* var tempBasalString: String? {
+             guard let tempRate = state.tempRate else {
+                 return nil
+             }
+             let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
+             var manualBasalString = ""
 
-            if state.apsManager.isManualTempBasal {
-                manualBasalString = NSLocalizedString(
-                    " - Manual Basal ⚠️",
-                    comment: "Manual Temp basal"
-                )
-            }
-            return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
-        }
+             if state.apsManager.isManualTempBasal {
+                 manualBasalString = NSLocalizedString(
+                     " - Manual Basal ⚠️",
+                     comment: "Manual Temp basal"
+                 )
+             }
+             return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
+         } */
 
         var tempTargetString: String? {
             guard let tempTarget = state.tempTarget else {
@@ -322,15 +360,26 @@ extension Home {
         var infoPanel: some View {
             HStack(alignment: .center) {
                 if state.pumpSuspended {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundColor(.loopGray)
+                        .padding(.leading, 10)
                     Text("Pump suspended")
-                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGray)
-                        .padding(.leading, 10)
-                } else if let tempBasalString = tempBasalString {
-                    Text(tempBasalString)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.insulin)
-                        .padding(.leading, 10)
-                }
+                        .font(.caption)
+                        .foregroundColor(.loopGray)
+                        .onTapGesture {
+                            state.showModal(for: .pumpConfig)
+                        }
+                } /* else if let tempBasalString = tempBasalString {
+                     Text("Basal")
+                         .font(.caption)
+                         .foregroundColor(.insulin)
+                         .padding(.leading, 10)
+                     Text(tempBasalString)
+                         .font(.system(size: 12)) // , weight: .semibold))
+                         .foregroundColor(.insulin)
+                         .offset(x: -3, y: 0)
+                 } */
 
                 Button(action: {
                     state.showModal(for: .addTempTarget)
@@ -338,7 +387,8 @@ extension Home {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
                             .font(.caption)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.loopGreen)
+                            .padding(.leading, 10)
                     }
                 }
 
@@ -360,7 +410,7 @@ extension Home {
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.caption)
                         .foregroundColor(.orange)
                         .padding(.trailing, 10)
                         .onTapGesture {
