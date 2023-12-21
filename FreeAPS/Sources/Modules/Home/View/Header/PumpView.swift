@@ -74,7 +74,7 @@ struct PumpView: View {
                             .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
-                .frame(width: 65, alignment: .trailing)
+                .frame(width: 60, alignment: .trailing)
             }
         }
     }

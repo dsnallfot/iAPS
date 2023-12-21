@@ -125,7 +125,7 @@ extension Home {
                                 .offset(x: -2, y: 0)
                         }
                     }
-                    .frame(width: 80, alignment: .leading)
+                    .frame(width: 85, alignment: .leading)
                     .onTapGesture {
                         state.showModal(for: .dataTable)
                     }
@@ -133,7 +133,7 @@ extension Home {
                     cobIobView
                         .frame(width: 130, alignment: .leading)
                     pumpView
-                        .frame(width: 130, alignment: .trailing)
+                        .frame(width: 125, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -256,22 +256,6 @@ extension Home {
             }
         }
 
-        /* var tempBasalString: String? {
-             guard let tempRate = state.tempRate else {
-                 return nil
-             }
-             let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
-             var manualBasalString = ""
-
-             if state.apsManager.isManualTempBasal {
-                 manualBasalString = NSLocalizedString(
-                     " - Manual Basal ⚠️",
-                     comment: "Manual Temp basal"
-                 )
-             }
-             return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
-         } */
-
         var tempTargetString: String? {
             guard let tempTarget = state.tempTarget else {
                 return nil
@@ -363,24 +347,14 @@ extension Home {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.caption)
                         .foregroundColor(.loopGray)
-                        .padding(.leading, 10)
                     Text("Pump suspended")
                         .font(.caption)
                         .foregroundColor(.loopGray)
                         .onTapGesture {
                             state.showModal(for: .pumpConfig)
                         }
-                } /* else if let tempBasalString = tempBasalString {
-                     Text("Basal")
-                         .font(.caption)
-                         .foregroundColor(.insulin)
-                         .padding(.leading, 10)
-                     Text(tempBasalString)
-                         .font(.system(size: 12)) // , weight: .semibold))
-                         .foregroundColor(.insulin)
-                         .offset(x: -3, y: 0)
-                 } */
-
+                }
+                Spacer()
                 Button(action: {
                     state.showModal(for: .addTempTarget)
                 }) {
@@ -388,31 +362,45 @@ extension Home {
                         Text(tempTargetString)
                             .font(.caption)
                             .foregroundColor(.loopGreen)
-                            .padding(.leading, 10)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
                     }
                 }
-
-                Spacer()
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
 
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
                 }) {
                     if let overrideString = overrideString {
-                        Text(selectedProfile().name)
-                            .font(.caption)
-                            .foregroundColor(.cyan)
-                        Text(overrideString)
-                            .font(.caption)
-                            .foregroundColor(.cyan)
-                            .padding(.trailing, 10)
+                        HStack {
+                            Text(selectedProfile().name)
+                            Text(overrideString)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.cyan)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.horizontal, 9)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
                     }
                 }
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                Spacer()
 
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
                         .font(.caption)
                         .foregroundColor(.orange)
-                        .padding(.trailing, 10)
                         .onTapGesture {
                             state.showModal(for: .preferencesEditor)
                         }
@@ -424,7 +412,6 @@ extension Home {
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
-                            .padding(.trailing, 10)
                     }
                     .onTapGesture {
                         state.cancelBolus()
@@ -433,6 +420,9 @@ extension Home {
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
             .background(Color.clear)
+            .padding(.horizontal, 10)
+            .padding(.top, 5)
+            .padding(.bottom, 5)
         }
 
         var timeInterval: some View {
@@ -442,9 +432,9 @@ extension Home {
                         state.hours = button.hours
                         highlightButtons()
                     }
-                    .foregroundStyle(button.active ? .primary : .secondary)
+                    .foregroundStyle(button.active ? .secondary : .secondary)
                     .frame(maxHeight: 20)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 9)
                     .padding(.vertical, 3)
                     .background(
                         button.active ?
@@ -455,7 +445,7 @@ extension Home {
                             Color
                             .clear
                     )
-                    .cornerRadius(20)
+                    .cornerRadius(13)
                 }
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.purple.opacity(0.7))
@@ -466,10 +456,7 @@ extension Home {
                     }
             }
             .font(buttonFont)
-            .shadow(
-                color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
-                radius: colorScheme == .dark ? 5 : 3
-            )
+            .shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33), radius: colorScheme == .dark ? 5 : 3)
             .padding(.top, 15)
             .padding(.bottom, 6)
         }
@@ -478,7 +465,7 @@ extension Home {
             ZStack {
                 HStack(alignment: .center) {
                     HStack(spacing: 4) {
-                        Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
+                        Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
                         Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
                     }
                     .frame(width: 44)
@@ -486,7 +473,7 @@ extension Home {
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
+                        Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
                         Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
                     }
                     .frame(width: 44)
@@ -494,7 +481,7 @@ extension Home {
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.uam).frame(width: 8, height: 8)
+                        Circle().fill(Color.uam).frame(width: 5, height: 5)
                         Text("UAM")
                             .font(.system(size: 12)).foregroundColor(.uam)
                     }
@@ -508,7 +495,7 @@ extension Home {
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.insulin).frame(width: 8, height: 8)
+                        Circle().fill(Color.insulin).frame(width: 5, height: 5)
                         Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
                     }
                     .frame(width: 44)
@@ -516,7 +503,7 @@ extension Home {
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.zt).frame(width: 8, height: 8)
+                        Circle().fill(Color.zt).frame(width: 5, height: 5)
                         Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
                     }
                     .frame(width: 44)
@@ -579,7 +566,7 @@ extension Home {
                     thresholdLines: $state.thresholdLines
                 )
             }
-            .padding(.bottom, 2)
+            // .padding(.bottom, 2)
             .modal(for: .dataTable, from: self)
             .background(
                 colorScheme == .dark ? Color.black.opacity(0.5) :
@@ -626,7 +613,7 @@ extension Home {
                 )
                 .frame(height: 87)
                 .shadow(
-                    color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
                 /* .cornerRadius(10)
