@@ -111,7 +111,7 @@ extension Home {
 
                 HStack(alignment: .center) {
                     cobIobView
-                        .frame(width: 128, alignment: .leading)
+                        .frame(width: 140, alignment: .leading)
                     Spacer()
                     HStack {
                         if state.pumpSuspended {
@@ -128,14 +128,14 @@ extension Home {
                                 .offset(x: -2, y: 0)
                         }
                     }
-                    .frame(width: 85)
+                    .frame(width: 80)
                     .onTapGesture {
                         state.showModal(for: .dataTable)
                     }
                     Spacer()
 
                     pumpView
-                        .frame(width: 127, alignment: .trailing)
+                        .frame(width: 120, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -157,7 +157,7 @@ extension Home {
                     comment: "Manual Temp basal"
                 )
             }
-            return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
+            return rateString + NSLocalizedString("E/h", comment: "Unit per hour with space") + manualBasalString
         }
 
         var cobIobView: some View {
@@ -167,12 +167,12 @@ extension Home {
                         .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" E", comment: "Insulin unit")
+                            NSLocalizedString("E", comment: "Insulin unit")
                     )
                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 64, alignment: .leading)
+                .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -183,12 +183,12 @@ extension Home {
                         .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" g", comment: "gram of carbs")
+                            NSLocalizedString("g", comment: "gram of carbs")
                     )
                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 64, alignment: .leading)
+                .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -648,12 +648,14 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
-                            if let carbsReq = state.carbsRequired {
-                                Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                            if state.carbsRequired != nil {
+                                /* Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -671,11 +673,13 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
                             if state.tempTarget != nil {
-                                Image(systemName: "timer")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                                /* Image(systemName: "timer")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -21, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -700,11 +704,13 @@ extension Home {
                                 .padding(.trailing, 9)
 
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
-                                Image(systemName: "plus.circle")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                                /* Image(systemName: "plus.circle")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }
@@ -736,26 +742,35 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if selectedProfile().isOn {
-                                Image(systemName: "person.fill")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                                /* Image(systemName: "person.fill")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
-                        Image("settings1")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 27, height: 27)
-                            .padding(.top, 20)
-                            .padding(.bottom, 7)
-                            .padding(.leading, 9)
-                            .padding(.trailing, 9)
-                    }.foregroundColor(.gray)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image("settings1")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .padding(.top, 20)
+                                .padding(.bottom, 7)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+                                .foregroundColor(.gray)
+                            if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
+                            }
+                        }
+                    }
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 25)
