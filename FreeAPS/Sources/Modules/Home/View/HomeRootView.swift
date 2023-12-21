@@ -116,7 +116,7 @@ extension Home {
                     Spacer()
 
                     pumpView
-                        .frame(width: 125, alignment: .trailing)
+                        .frame(width: 130, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -145,26 +145,27 @@ extension Home {
             HStack {
                 HStack {
                     if state.pumpSuspended {
-                        Text("B")
-                            .font(.system(size: 12)).foregroundColor(.secondary)
+                        Text("Basal")
+                            .font(.system(size: 11)).foregroundColor(.secondary)
                         Text("--")
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                             .offset(x: -2, y: 0)
                     } else if let tempBasalString = tempBasalString {
-                        Text("B")
-                            .font(.system(size: 12)).foregroundColor(.secondary)
+                        Text("Basal")
+                            .font(.system(size: 11)).foregroundColor(.secondary)
                         Text(tempBasalString)
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                             .offset(x: -2, y: 0)
                     }
                 }
+                .frame(width: 85, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
                 Spacer()
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 12)).foregroundColor(.secondary)
+                        .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" U", comment: "Insulin unit")
@@ -172,6 +173,7 @@ extension Home {
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
+                .frame(width: 65, alignment: .trailing)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -179,7 +181,7 @@ extension Home {
                 Spacer()
                 HStack {
                     Text("COB")
-                        .font(.system(size: 12)).foregroundColor(.secondary)
+                        .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
@@ -187,6 +189,7 @@ extension Home {
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
+                .frame(width: 65, alignment: .trailing)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }

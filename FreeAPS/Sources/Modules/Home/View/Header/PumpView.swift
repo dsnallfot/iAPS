@@ -50,13 +50,14 @@ struct PumpView: View {
                             .foregroundStyle(Color.warning, Color.red)
                     }
                 }
+                .frame(width: 65, alignment: .trailing)
                 Spacer()
                 HStack {
                     if let battery = battery, battery.display ?? false, expiresAtDate == nil {
                         Image(systemName: "battery.100")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 8)
+                            .frame(maxHeight: 6)
                             .foregroundColor(batteryColor)
                             .offset(x: 3, y: 0)
                         Text("\(Int(battery.percent ?? 100)) %")
@@ -73,6 +74,7 @@ struct PumpView: View {
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
+                .frame(width: 65, alignment: .trailing)
             }
         }
     }
