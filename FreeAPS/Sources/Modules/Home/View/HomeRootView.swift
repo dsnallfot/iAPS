@@ -110,6 +110,9 @@ extension Home {
                     .padding(.top, 12)
 
                 HStack(alignment: .center) {
+                    cobIobView
+                        .frame(width: 128, alignment: .leading)
+                    Spacer()
                     HStack {
                         if state.pumpSuspended {
                             Text("Basal")
@@ -125,15 +128,14 @@ extension Home {
                                 .offset(x: -2, y: 0)
                         }
                     }
-                    .frame(width: 85, alignment: .leading)
+                    .frame(width: 85)
                     .onTapGesture {
                         state.showModal(for: .dataTable)
                     }
                     Spacer()
-                    cobIobView
-                        .frame(width: 130, alignment: .leading)
+
                     pumpView
-                        .frame(width: 125, alignment: .trailing)
+                        .frame(width: 127, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -170,7 +172,7 @@ extension Home {
                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .trailing)
+                .frame(width: 64, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -186,7 +188,7 @@ extension Home {
                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .trailing)
+                .frame(width: 64, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -346,14 +348,15 @@ extension Home {
                 if state.pumpSuspended {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.caption)
-                        .foregroundColor(.loopGray)
+                        .foregroundColor(.secondary)
                     Text("Pump suspended")
                         .font(.caption)
-                        .foregroundColor(.loopGray)
+                        .foregroundColor(.secondary)
                         .onTapGesture {
-                            state.showModal(for: .pumpConfig)
-                        }
-                }
+                            if state.pumpDisplayState != nil {
+                                state.setupPump = true
+                            }
+                        } }
                 Spacer()
                 Button(action: {
                     state.showModal(for: .addTempTarget)
@@ -369,6 +372,10 @@ extension Home {
                             .cornerRadius(13)
                     }
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1)
+                )
                 .shadow(
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
@@ -391,6 +398,10 @@ extension Home {
                         .cornerRadius(13)
                     }
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.cyan.opacity(1.0), lineWidth: 1)
+                )
                 .shadow(
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
@@ -457,7 +468,7 @@ extension Home {
             }
             .font(buttonFont)
             .shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33), radius: colorScheme == .dark ? 5 : 3)
-            .padding(.top, 15)
+            .padding(.top, 10)
             .padding(.bottom, 6)
         }
 
@@ -490,7 +501,7 @@ extension Home {
                     Spacer()
 
                     loopView
-                        .offset(x: 0, y: 8)
+                        .offset(x: 0, y: 0)
 
                     Spacer()
 
@@ -524,7 +535,8 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .padding(.bottom, 12)
+                .padding(.bottom, 20)
+                .padding(.top, 8)
                 .padding(.leading, 10)
                 .padding(.trailing, 10)
                 .onTapGesture {
