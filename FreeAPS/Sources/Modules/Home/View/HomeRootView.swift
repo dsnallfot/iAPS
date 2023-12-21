@@ -109,14 +109,14 @@ extension Home {
                     .padding(.bottom, 30)
                     .padding(.top, 12)
 
-                HStack {
+                HStack(alignment: .center) {
                     cobIobView
                         .frame(width: 220, alignment: .leading)
 
                     Spacer()
 
                     pumpView
-                        .frame(width: 130, alignment: .trailing)
+                        .frame(width: 120, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -158,7 +158,7 @@ extension Home {
                             .offset(x: -2, y: 0)
                     }
                 }
-                .frame(width: 85, alignment: .leading)
+                .frame(width: 90, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -168,12 +168,12 @@ extension Home {
                         .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" U", comment: "Insulin unit")
+                            NSLocalizedString(" E", comment: "Insulin unit")
                     )
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .trailing)
+                .frame(width: 65, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -189,7 +189,7 @@ extension Home {
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .trailing)
+                .frame(width: 65, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
