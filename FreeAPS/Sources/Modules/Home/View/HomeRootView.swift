@@ -344,7 +344,7 @@ extension Home {
         }
 
         var infoPanel: some View {
-            HStack(alignment: .center, spacing: 5) {
+            HStack(alignment: .center) {
                 Button(action: {
                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
                     if let carbsReq = state.carbsRequired {
@@ -403,7 +403,7 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-                // Spacer()
+
                 Button(action: {
                     state.showModal(for: .addTempTarget)
                 }) {
@@ -426,7 +426,7 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-                // Spacer()
+
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
                 })
@@ -453,7 +453,6 @@ extension Home {
                         color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                         radius: colorScheme == .dark ? 5 : 3
                     )
-                // Spacer()
 
                 Button(action: {
                     state.showModal(for: .preferencesEditor)
