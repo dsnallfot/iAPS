@@ -111,12 +111,10 @@ extension Home {
 
                 HStack(alignment: .center) {
                     cobIobView
-                        .frame(width: 220, alignment: .leading)
-
-                    Spacer()
+                        .frame(width: 215, alignment: .leading)
 
                     pumpView
-                        .frame(width: 120, alignment: .trailing)
+                        .frame(width: 130, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -158,7 +156,7 @@ extension Home {
                             .offset(x: -2, y: 0)
                     }
                 }
-                .frame(width: 90, alignment: .leading)
+                .frame(width: 85, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -173,7 +171,7 @@ extension Home {
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .leading)
+                .frame(width: 65, alignment: .trailing)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -189,7 +187,7 @@ extension Home {
                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 65, alignment: .leading)
+                .frame(width: 65, alignment: .trailing)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
