@@ -344,20 +344,66 @@ extension Home {
         }
 
         var infoPanel: some View {
-            HStack(alignment: .center) {
-                if state.pumpSuspended {
-                    Image(systemName: "exclamationmark.triangle")
+            HStack(alignment: .center, spacing: 5) {
+                Button(action: {
+                    state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
+                    if let carbsReq = state.carbsRequired {
+                        HStack {
+                            Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+
+                            Text("g kh krävs!")
+                                .offset(x: -5, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.loopYellow)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.horizontal, 9)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+
+                Button(action: {
+                    if state.pumpDisplayState != nil {
+                        state.setupPump = true
+                    }
+                }) {
+                    if state.pumpSuspended {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .offset(x: 0, y: 0)
+
+                            Text("Pump suspended")
+                                .offset(x: -4, y: 0)
+                        }
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("Pump suspended")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .onTapGesture {
-                            if state.pumpDisplayState != nil {
-                                state.setupPump = true
-                            }
-                        } }
-                Spacer()
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 5)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.secondary.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                // Spacer()
                 Button(action: {
                     state.showModal(for: .addTempTarget)
                 }) {
@@ -380,42 +426,65 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-
+                // Spacer()
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
-                }) {
-                    if let overrideString = overrideString {
-                        HStack {
-                            Text(selectedProfile().name)
-                            Text(overrideString)
+                })
+                    {
+                        if let overrideString = overrideString {
+                            HStack {
+                                Text(selectedProfile().name)
+                                Text(overrideString)
+                            }
+                            .font(.caption)
+                            .foregroundColor(.cyan)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
                         }
-                        .font(.caption)
-                        .foregroundColor(.cyan)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.horizontal, 9)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
-                        .cornerRadius(13)
                     }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.cyan.opacity(1.0), lineWidth: 1)
-                )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
-                Spacer()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1)
+                    )
+                    .shadow(
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        radius: colorScheme == .dark ? 5 : 3
+                    )
+                // Spacer()
 
-                if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
-                    (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
-                        .font(.caption)
-                        .foregroundColor(.orange)
-                        .onTapGesture {
-                            state.showModal(for: .preferencesEditor)
+                Button(action: {
+                    state.showModal(for: .preferencesEditor)
+                })
+                    {
+                        if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .offset(x: 0, y: 0)
+
+                                Text("Max IOB: 0")
+                                    .offset(x: -4, y: 0)
+                            }
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 4)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
                         }
-                }
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.orange.opacity(1.0), lineWidth: 1)
+                    )
+                    .shadow(
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        radius: colorScheme == .dark ? 5 : 3
+                    )
 
                 if let progress = state.bolusProgress {
                     HStack {
