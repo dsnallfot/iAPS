@@ -345,6 +345,45 @@ extension Home {
 
         var infoPanel: some View {
             HStack(alignment: .center) {
+                Spacer()
+                Button(action: {
+                    state.showModal(for: .bolus(
+                        waitForSuggestion: true,
+                        fetch: false
+                    ))
+                    // Daniel: Add determinebasalsync to force update before entering bolusview
+                    state.apsManager.determineBasalSync() }) {
+                    if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                        HStack {
+                            Text("Insulinbehov")
+                                .offset(x: 5, y: 0)
+                            Text(numberFormatter.string(from: insulinRequested as NSNumber)!)
+
+                            Text("E")
+                                .offset(x: -5, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.insulin)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 4)
+                        .padding(.trailing, 4)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.insulin.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                    Spacer()
+                }
+
                 Button(action: {
                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
                     if let carbsReq = state.carbsRequired {
@@ -358,7 +397,8 @@ extension Home {
                         .foregroundColor(.loopYellow)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
-                        .padding(.horizontal, 9)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 4)
                         .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
                         .cornerRadius(13)
                     }
@@ -371,7 +411,9 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-
+                if state.carbsRequired != nil {
+                    Spacer()
+                }
                 Button(action: {
                     if state.pumpDisplayState != nil {
                         state.setupPump = true
@@ -403,7 +445,9 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-
+                if state.pumpSuspended {
+                    Spacer()
+                }
                 Button(action: {
                     state.showModal(for: .addTempTarget)
                 }) {
@@ -426,7 +470,9 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
-
+                if tempTargetString != nil {
+                    Spacer()
+                }
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
                 })
@@ -453,7 +499,9 @@ extension Home {
                         color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                         radius: colorScheme == .dark ? 5 : 3
                     )
-
+                if overrideString != nil {
+                    Spacer()
+                }
                 Button(action: {
                     state.showModal(for: .preferencesEditor)
                 })
@@ -484,7 +532,9 @@ extension Home {
                         color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                         radius: colorScheme == .dark ? 5 : 3
                     )
-
+                if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                    Spacer()
+                }
                 if let progress = state.bolusProgress {
                     HStack {
                         Text("Bolusing")
@@ -771,7 +821,7 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
-                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
+                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                                 /* Image(systemName: "plus.circle")
                                  .font(.caption2)
                                  .foregroundColor(.white)
