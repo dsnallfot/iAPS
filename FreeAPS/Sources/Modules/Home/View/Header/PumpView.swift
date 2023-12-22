@@ -30,15 +30,16 @@ struct PumpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: 10)
                         .foregroundColor(reservoirColor)
+                        .offset(x: 2, y: 0)
                     if reservoir == 0xDEAD_BEEF {
-                        Text("50+ " + NSLocalizedString("U", comment: "Insulin unit"))
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                        Text("50+" + NSLocalizedString("E", comment: "Insulin unit"))
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     } else {
                         Text(
                             reservoirFormatter
-                                .string(from: reservoir as NSNumber)! + NSLocalizedString(" U", comment: "Insulin unit")
+                                .string(from: reservoir as NSNumber)! + NSLocalizedString("E", comment: "Insulin unit")
                         )
-                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary) }
+                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary) }
 
                     if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
                         Image(systemName: "clock.badge.exclamationmark.fill")
@@ -49,17 +50,18 @@ struct PumpView: View {
                             .foregroundStyle(Color.warning, Color.red)
                     }
                 }
-                .frame(width: 80)
+                .frame(width: 60, alignment: .trailing)
                 Spacer()
                 HStack {
                     if let battery = battery, battery.display ?? false, expiresAtDate == nil {
                         Image(systemName: "battery.100")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 10)
+                            .frame(maxHeight: 6)
                             .foregroundColor(batteryColor)
-                        Text("\(Int(battery.percent ?? 100)) %")
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                            .offset(x: 3, y: 0)
+                        Text("\(Int(battery.percent ?? 100))%")
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     }
                     if let date = expiresAtDate {
                         Image(systemName: "stopwatch.fill")
@@ -67,11 +69,12 @@ struct PumpView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(maxHeight: 10)
                             .foregroundColor(timerColor)
+                            .offset(x: 2, y: 0)
                         Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
-                .frame(width: 80)
+                .frame(width: 60, alignment: .trailing)
             }
         }
     }

@@ -108,32 +108,71 @@ extension Home {
                 glucoseView
                     .padding(.bottom, 30)
                     .padding(.top, 12)
-                HStack(alignment: .bottom) {
+
+                HStack(alignment: .center) {
                     cobIobView
+                        .frame(width: 140, alignment: .leading)
                     Spacer()
+                    HStack {
+                        if state.pumpSuspended {
+                            Text("Basal")
+                                .font(.system(size: 11)).foregroundColor(.secondary)
+                            Text("--")
+                                .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                                .offset(x: -2, y: 0)
+                        } else if let tempBasalString = tempBasalString {
+                            Text("Basal")
+                                .font(.system(size: 11)).foregroundColor(.secondary)
+                            Text(tempBasalString)
+                                .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                                .offset(x: -2, y: 0)
+                        }
+                    }
+                    .frame(width: 80)
+                    .onTapGesture {
+                        state.showModal(for: .dataTable)
+                    }
+                    Spacer()
+
                     pumpView
+                        .frame(width: 120, alignment: .trailing)
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 10 + geo.safeAreaInsets.top)
-            .padding(.leading, 10)
-            .padding(.trailing, 10)
+            .padding(.horizontal, 10)
             .background(Color.clear)
+        }
+
+        var tempBasalString: String? {
+            guard let tempRate = state.tempRate else {
+                return nil
+            }
+            let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
+            var manualBasalString = ""
+
+            if state.apsManager.isManualTempBasal {
+                manualBasalString = NSLocalizedString(
+                    " - Manual Basal ⚠️",
+                    comment: "Manual Temp basal"
+                )
+            }
+            return rateString + NSLocalizedString("E/h", comment: "Unit per hour with space") + manualBasalString
         }
 
         var cobIobView: some View {
             HStack {
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 13)).foregroundColor(.secondary)
+                        .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" U", comment: "Insulin unit")
+                            NSLocalizedString("E", comment: "Insulin unit")
                     )
-                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
                 }
-
-                .frame(width: 80)
+                .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -141,14 +180,15 @@ extension Home {
                 Spacer()
                 HStack {
                     Text("COB")
-                        .font(.system(size: 13)).foregroundColor(.secondary)
+                        .font(.system(size: 11)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" g", comment: "gram of carbs")
+                            NSLocalizedString("g", comment: "gram of carbs")
                     )
-                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
                 }
-                .frame(width: 80)
+                .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -216,22 +256,6 @@ extension Home {
                 impactHeavy.impactOccurred()
                 state.runLoop()
             }
-        }
-
-        var tempBasalString: String? {
-            guard let tempRate = state.tempRate else {
-                return nil
-            }
-            let rateString = numberFormatter.string(from: tempRate as NSNumber) ?? "0"
-            var manualBasalString = ""
-
-            if state.apsManager.isManualTempBasal {
-                manualBasalString = NSLocalizedString(
-                    " - Manual Basal ⚠️",
-                    comment: "Manual Temp basal"
-                )
-            }
-            return rateString + NSLocalizedString(" U/hr", comment: "Unit per hour with space") + manualBasalString
         }
 
         var tempTargetString: String? {
@@ -321,60 +345,204 @@ extension Home {
 
         var infoPanel: some View {
             HStack(alignment: .center) {
+                Spacer()
+                Button(action: {
+                    if state.pumpDisplayState != nil {
+                        state.setupPump = true
+                    }
+                }) {
+                    if state.pumpSuspended {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .offset(x: 0, y: 0)
+
+                            Text("Pump suspended")
+                                .offset(x: -4, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 5)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.secondary.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
                 if state.pumpSuspended {
-                    Text("Pump suspended")
-                        .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGray)
-                        .padding(.leading, 10)
-                } else if let tempBasalString = tempBasalString {
-                    Text(tempBasalString)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.insulin)
-                        .padding(.leading, 10)
+                    Spacer()
                 }
 
+                Button(action: {
+                    state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
+                    if let carbsReq = state.carbsRequired {
+                        HStack {
+                            Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+
+                            Text("g kh krävs!")
+                                .offset(x: -5, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.loopYellow)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 4)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if state.carbsRequired != nil {
+                    Spacer()
+                }
                 Button(action: {
                     state.showModal(for: .addTempTarget)
                 }) {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
                             .font(.caption)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.loopGreen)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
                     }
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if tempTargetString != nil {
+                    Spacer()
+                }
 
-                Spacer()
+                Button(action: {
+                    state.showModal(for: .bolus(
+                        waitForSuggestion: true,
+                        fetch: false
+                    ))
+                    // Daniel: Add determinebasalsync to force update before entering bolusview
+                    state.apsManager.determineBasalSync() }) {
+                    if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                        HStack {
+                            Text("Insulinbehov")
+                                .offset(x: 5, y: 0)
+                            Text(numberFormatter.string(from: insulinRequested as NSNumber)!)
+
+                            Text("E")
+                                .offset(x: -5, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.insulin)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 4)
+                        .padding(.trailing, 4)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.insulin.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                    Spacer()
+                }
 
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
-                }) {
-                    if let overrideString = overrideString {
-                        Text(selectedProfile().name)
+                })
+                    {
+                        if let overrideString = overrideString {
+                            HStack {
+                                Text(selectedProfile().name)
+                                Text(overrideString)
+                            }
                             .font(.caption)
                             .foregroundColor(.cyan)
-                        Text(overrideString)
-                            .font(.caption)
-                            .foregroundColor(.cyan)
-                            .padding(.trailing, 10)
-                    }
-                }
-
-                if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
-                    (Text(Image(systemName: "exclamationmark.triangle")) + Text(" Max IOB: 0"))
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.orange)
-                        .padding(.trailing, 10)
-                        .onTapGesture {
-                            state.showModal(for: .preferencesEditor)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
                         }
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1)
+                    )
+                    .shadow(
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        radius: colorScheme == .dark ? 5 : 3
+                    )
+                if overrideString != nil {
+                    Spacer()
                 }
+                Button(action: {
+                    state.showModal(for: .preferencesEditor)
+                })
+                    {
+                        if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .offset(x: 0, y: 0)
 
+                                Text("Max IOB: 0")
+                                    .offset(x: -4, y: 0)
+                            }
+                            .font(.caption)
+                            .foregroundColor(.loopRed)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.leading, 9)
+                            .padding(.trailing, 4)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
+                        }
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1)
+                    )
+                    .shadow(
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        radius: colorScheme == .dark ? 5 : 3
+                    )
+                if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                    Spacer()
+                }
                 if let progress = state.bolusProgress {
                     HStack {
                         Text("Bolusing")
                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
-                            .padding(.trailing, 10)
                     }
                     .onTapGesture {
                         state.cancelBolus()
@@ -383,6 +551,9 @@ extension Home {
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
             .background(Color.clear)
+            .padding(.horizontal, 10)
+            .padding(.top, 5)
+            .padding(.bottom, 5)
         }
 
         var timeInterval: some View {
@@ -392,9 +563,9 @@ extension Home {
                         state.hours = button.hours
                         highlightButtons()
                     }
-                    .foregroundStyle(button.active ? .primary : .secondary)
+                    .foregroundStyle(button.active ? .secondary : .secondary)
                     .frame(maxHeight: 20)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 9)
                     .padding(.vertical, 3)
                     .background(
                         button.active ?
@@ -405,7 +576,7 @@ extension Home {
                             Color
                             .clear
                     )
-                    .cornerRadius(20)
+                    .cornerRadius(13)
                 }
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(.purple.opacity(0.7))
@@ -416,11 +587,8 @@ extension Home {
                     }
             }
             .font(buttonFont)
-            .shadow(
-                color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
-                radius: colorScheme == .dark ? 5 : 3
-            )
-            .padding(.top, 15)
+            .shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33), radius: colorScheme == .dark ? 5 : 3)
+            .padding(.top, 10)
             .padding(.bottom, 6)
         }
 
@@ -428,58 +596,74 @@ extension Home {
             ZStack {
                 HStack(alignment: .center) {
                     HStack(spacing: 4) {
-                        Circle().fill(Color.loopGreen).frame(width: 8, height: 8)
-                        Text("BG").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                        Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
+                        Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
                     }
                     .frame(width: 44)
 
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.loopYellow).frame(width: 8, height: 8)
-                        Text("COB").font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                        Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
+                        Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
                     }
                     .frame(width: 44)
 
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.uam).frame(width: 8, height: 8)
+                        Circle().fill(Color.uam).frame(width: 5, height: 5)
                         Text("UAM")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
+                            .font(.system(size: 12)).foregroundColor(.uam)
                     }
                     .frame(width: 44)
 
                     Spacer()
 
                     loopView
-                        .offset(x: 0, y: 8)
+                        .offset(x: 0, y: 0)
 
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.insulin).frame(width: 8, height: 8)
-                        Text("IOB").font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                        Circle().fill(Color.insulin).frame(width: 5, height: 5)
+                        Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
                     }
                     .frame(width: 44)
 
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Circle().fill(Color.zt).frame(width: 8, height: 8)
-                        Text("ZT").font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                        Circle().fill(Color.zt).frame(width: 5, height: 5)
+                        Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
                     }
                     .frame(width: 44)
 
                     Spacer()
                     HStack(spacing: 4) {
                         if let eventualBG = state.eventualBG {
-                            Text(
-                                "⇢ " + targetFormatter.string(
-                                    from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                )!
-                            )
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                            if Decimal(state.eventualBG!) > state.highGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                            } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+                            } else {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                            }
                         }
                     }
                     .frame(width: 44)
@@ -487,7 +671,8 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .padding(.bottom, 12)
+                .padding(.bottom, 20)
+                .padding(.top, 8)
                 .padding(.leading, 10)
                 .padding(.trailing, 10)
                 .onTapGesture {
@@ -529,7 +714,7 @@ extension Home {
                     thresholdLines: $state.thresholdLines
                 )
             }
-            .padding(.bottom, 2)
+            // .padding(.bottom, 2)
             .modal(for: .dataTable, from: self)
             .background(
                 colorScheme == .dark ? Color.black.opacity(0.5) :
@@ -576,7 +761,7 @@ extension Home {
                 )
                 .frame(height: 87)
                 .shadow(
-                    color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
                 /* .cornerRadius(10)
@@ -599,12 +784,14 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
-                            if let carbsReq = state.carbsRequired {
-                                Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                            if state.carbsRequired != nil {
+                                /* Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -622,11 +809,13 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 6)
                             if state.tempTarget != nil {
-                                Image(systemName: "timer")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                                /* Image(systemName: "timer")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -21, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -650,12 +839,14 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
 
-                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0 {
-                                Image(systemName: "plus.circle")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                                /* Image(systemName: "plus.circle")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }
@@ -687,26 +878,35 @@ extension Home {
                                 .padding(.leading, 9)
                                 .padding(.trailing, 9)
                             if selectedProfile().isOn {
-                                Image(systemName: "person.fill")
-                                    .font(.caption2)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Capsule().fill(Color.purple))
+                                /* Image(systemName: "person.fill")
+                                 .font(.caption2)
+                                 .foregroundColor(.white)
+                                 .padding(2)
+                                 .background(Capsule().fill(Color.purple)) */
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
-                        Image("settings1")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 27, height: 27)
-                            .padding(.top, 20)
-                            .padding(.bottom, 7)
-                            .padding(.leading, 9)
-                            .padding(.trailing, 9)
-                    }.foregroundColor(.gray)
+                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                            Image("settings1")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 27, height: 27)
+                                .padding(.top, 20)
+                                .padding(.bottom, 7)
+                                .padding(.leading, 9)
+                                .padding(.trailing, 9)
+                                .foregroundColor(.gray)
+                            if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
+                                Circle().fill(Color.purple).frame(width: 6, height: 6)
+                                    .offset(x: -19, y: 4)
+                            }
+                        }
+                    }
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 25)

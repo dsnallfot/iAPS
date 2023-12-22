@@ -22,35 +22,43 @@ struct LoopView: View {
         return formatter
     }
 
+    @Environment(\.colorScheme) var colorScheme
+
     private let rect = CGRect(x: 0, y: 0, width: 28, height: 28)
 
     var body: some View {
         VStack(alignment: .center) {
             ZStack {
                 Circle()
-                    .strokeBorder(color, lineWidth: 5)
+                    .strokeBorder(color, lineWidth: 3)
                     .frame(width: rect.width, height: rect.height, alignment: .bottom)
                     .mask(mask(in: rect).fill(style: FillStyle(eoFill: true)))
+                    .shadow(
+                        color: Color.white.opacity(colorScheme == .dark ? 0.5 : 0.33),
+                        radius: colorScheme == .dark ? 5 : 3
+                    )
                 if isLooping {
                     ProgressView()
                 }
-            }
-            if isLooping {
-                Text("looping").font(.caption2)
-                    .offset(x: 0, y: -2)
-            } else if manualTempBasal {
-                Text("Manual").font(.caption2)
-                    .offset(x: 0, y: -2)
-            } else if actualSuggestion?.timestamp != nil {
-                Text(timeString).font(.caption2)
-                    .foregroundColor(.secondary)
-                    .offset(x: 0, y: -2)
-            } else {
-                Text("--").font(.caption2).foregroundColor(.secondary)
-                    .offset(x: 0, y: -2)
+                // }
+                /* if isLooping {
+                 Text("looping").font(.system(size: 10))
+                 .offset(x: 0, y: -2)
+                 } else if manualTempBasal {
+                 Text("Manual").font(.system(size: 10))
+                 .offset(x: 0, y: -2)
+                 }*/
+                else if actualSuggestion?.timestamp != nil {
+                    Text(timeString).font(.system(size: 8))
+                        .foregroundColor(.secondary)
+                        .offset(x: 0, y: 0)
+                } else {
+                    Text("--").font(.system(size: 8)).foregroundColor(.secondary)
+                        .offset(x: 0, y: 0)
+                }
             }
         }
-        .frame(width: 34)
+        .frame(width: 44)
     }
 
     private var timeString: String {
@@ -58,7 +66,7 @@ struct LoopView: View {
         if minAgo > 1440 {
             return "--"
         }
-        return "\(minAgo) " + NSLocalizedString("min", comment: "Minutes ago since last loop")
+        return "\(minAgo)" + NSLocalizedString("m", comment: "Minutes ago since last loop")
     }
 
     private var color: Color {

@@ -25,7 +25,7 @@ import Foundation
                 protein: Decimal(quantityProtein),
                 note: note,
                 enteredBy: CarbsEntry.manual,
-                isFPU: false, fpuID: nil
+                isFPU: false, fpuID: UUID().uuidString
             )]
         )
         var resultDisplay: String
