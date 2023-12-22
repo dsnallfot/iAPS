@@ -347,6 +347,97 @@ extension Home {
             HStack(alignment: .center) {
                 Spacer()
                 Button(action: {
+                    if state.pumpDisplayState != nil {
+                        state.setupPump = true
+                    }
+                }) {
+                    if state.pumpSuspended {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .offset(x: 0, y: 0)
+
+                            Text("Pump suspended")
+                                .offset(x: -4, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 5)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.secondary.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if state.pumpSuspended {
+                    Spacer()
+                }
+
+                Button(action: {
+                    state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
+                    if let carbsReq = state.carbsRequired {
+                        HStack {
+                            Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+
+                            Text("g kh krävs!")
+                                .offset(x: -5, y: 0)
+                        }
+                        .font(.caption)
+                        .foregroundColor(.loopYellow)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 4)
+                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if state.carbsRequired != nil {
+                    Spacer()
+                }
+                Button(action: {
+                    state.showModal(for: .addTempTarget)
+                }) {
+                    if let tempTargetString = tempTargetString {
+                        Text(tempTargetString)
+                            .font(.caption)
+                            .foregroundColor(.loopGreen)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1)
+                )
+                .shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    radius: colorScheme == .dark ? 5 : 3
+                )
+                if tempTargetString != nil {
+                    Spacer()
+                }
+
+                Button(action: {
                     state.showModal(for: .bolus(
                         waitForSuggestion: true,
                         fetch: false
@@ -384,95 +475,6 @@ extension Home {
                     Spacer()
                 }
 
-                Button(action: {
-                    state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
-                    if let carbsReq = state.carbsRequired {
-                        HStack {
-                            Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-
-                            Text("g kh krävs!")
-                                .offset(x: -5, y: 0)
-                        }
-                        .font(.caption)
-                        .foregroundColor(.loopYellow)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 9)
-                        .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1)
-                )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
-                if state.carbsRequired != nil {
-                    Spacer()
-                }
-                Button(action: {
-                    if state.pumpDisplayState != nil {
-                        state.setupPump = true
-                    }
-                }) {
-                    if state.pumpSuspended {
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle")
-                                .offset(x: 0, y: 0)
-
-                            Text("Pump suspended")
-                                .offset(x: -4, y: 0)
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 9)
-                        .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.secondary.opacity(1), lineWidth: 1)
-                )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
-                if state.pumpSuspended {
-                    Spacer()
-                }
-                Button(action: {
-                    state.showModal(for: .addTempTarget)
-                }) {
-                    if let tempTargetString = tempTargetString {
-                        Text(tempTargetString)
-                            .font(.caption)
-                            .foregroundColor(.loopGreen)
-                            .frame(maxHeight: 20)
-                            .padding(.vertical, 3)
-                            .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
-                            .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1)
-                )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
-                if tempTargetString != nil {
-                    Spacer()
-                }
                 Button(action: {
                     state.showModal(for: .overrideProfilesConfig)
                 })
@@ -515,7 +517,7 @@ extension Home {
                                     .offset(x: -4, y: 0)
                             }
                             .font(.caption)
-                            .foregroundColor(.orange)
+                            .foregroundColor(.loopRed)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
@@ -526,7 +528,7 @@ extension Home {
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.orange.opacity(1.0), lineWidth: 1)
+                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1)
                     )
                     .shadow(
                         color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
@@ -640,12 +642,28 @@ extension Home {
                     Spacer()
                     HStack(spacing: 4) {
                         if let eventualBG = state.eventualBG {
-                            Text(
-                                "⇢ " + targetFormatter.string(
-                                    from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                )!
-                            )
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                            if Decimal(state.eventualBG!) > state.highGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                            } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+                            } else {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                            }
                         }
                     }
                     .frame(width: 44)
