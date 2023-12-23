@@ -791,7 +791,7 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.purple).frame(width: 6, height: 6)
-                                    .offset(x: -19, y: 4)
+                                    .offset(x: -19.33, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -846,7 +846,7 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.purple).frame(width: 6, height: 6)
-                                    .offset(x: -19, y: 4)
+                                    .offset(x: -19.33, y: 4)
                             }
                         }
                     }
@@ -884,7 +884,7 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.purple).frame(width: 6, height: 6)
-                                    .offset(x: -19, y: 4)
+                                    .offset(x: -19.33, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -903,7 +903,7 @@ extension Home {
                                 .foregroundColor(.gray)
                             if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
                                 Circle().fill(Color.purple).frame(width: 6, height: 6)
-                                    .offset(x: -19, y: 4)
+                                    .offset(x: -19.33, y: 4)
                             }
                         }
                     }
