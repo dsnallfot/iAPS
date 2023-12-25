@@ -942,7 +942,7 @@ extension Home {
                     highlightButtons()
                 }
             }
-            .background(Color.blue.opacity(0.12))
+            .background(Color.blue.opacity(0.0)) // 12))
             .navigationTitle("Home")
             .navigationBarHidden(true)
             .ignoresSafeArea(.keyboard)
