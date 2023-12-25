@@ -276,7 +276,7 @@ struct MainChartView: View {
         .scaleEffect(x: 1, y: -1)
         .frame(width: glucoseAndAdditionalWidth(fullSize: fullSize))
         .frame(maxHeight: Config.basalHeight)
-        .background(Color.secondary.opacity(0.1))
+        .background(Color.secondary.opacity(0.17))
         .onChange(of: tempBasals) { _ in
             calculateBasalPoints(fullSize: fullSize)
         }

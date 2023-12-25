@@ -68,7 +68,7 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.pumpHistory), from: self)
                             Text("Basal profile")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.basalProfile), from: self)
-                            Text("Targets ranges")
+                            Text("Målområden")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
                             Text("Temp targets")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.tempTargets), from: self)
@@ -87,7 +87,7 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Enact.enacted), from: self)
                             Text("Announcements")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
-                            Text("Enacted announcements")
+                            Text("Genomförda meddelanden")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
                             Text("Autotune")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
@@ -96,7 +96,7 @@ extension Settings {
                         }
 
                         Group {
-                            Text("Target presets")
+                            Text("TF målvärden, förinställda")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
                             Text("Calibrations")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.calibrations), from: self)
@@ -104,7 +104,7 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Middleware.determineBasal), from: self)
                             Text("Statistics")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
-                            Text("Edit settings json")
+                            Text("Ändra inställningar (json)")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
                         }
                         Group {
