@@ -50,7 +50,7 @@ struct PumpView: View {
                             .foregroundStyle(Color.warning, Color.red)
                     }
                 }
-                .frame(width: 85, alignment: .trailing)
+                .frame(width: 78) // , alignment: .trailing)
                 // .frame(width: 60, alignment: .trailing)
                 Spacer()
                 HStack {
@@ -75,7 +75,7 @@ struct PumpView: View {
                             .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
-                .frame(width: 85, alignment: .trailing)
+                .frame(width: 78) // , alignment: .trailing)
                 // .frame(width: 60, alignment: .trailing)
             }
         }

@@ -110,10 +110,11 @@ extension Home {
                     .padding(.top, 12)
 
                 HStack(alignment: .center) {
-                    cobIobView
-                        .frame(width: 170, alignment: .leading)
-                    // .frame(width: 140, alignment: .leading)
                     Spacer()
+                    cobIobView
+                    // .frame(width: 140, alignment: .leading)
+                    // .frame(width: 140, alignment: .leading)
+                    // Spacer()
 
                     /* HStack {
                          if state.pumpSuspended {
@@ -138,8 +139,10 @@ extension Home {
                     Spacer()
 
                     pumpView
-                        .frame(width: 170, alignment: .trailing)
+                    // .frame(width: 140, alignment: .trailing)
                     // .frame(width: 120, alignment: .trailing)
+
+                    Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
@@ -176,7 +179,7 @@ extension Home {
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 85, alignment: .leading)
+                .frame(width: 78) // , alignment: .leading)
                 // .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
@@ -193,7 +196,7 @@ extension Home {
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 85, alignment: .leading)
+                .frame(width: 78) // , alignment: .leading)
                 // .frame(width: 70, alignment: .leading)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
@@ -601,8 +604,8 @@ extension Home {
             }
             .font(buttonFont)
             .shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33), radius: colorScheme == .dark ? 5 : 3)
-            .padding(.top, 10)
-            .padding(.bottom, 6)
+            .padding(.top, 16)
+            .padding(.bottom, 8)
         }
 
         var legendPanel: some View {
@@ -684,7 +687,7 @@ extension Home {
                         isStatusPopupPresented.toggle()
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 16)
                 .padding(.top, 8)
                 .padding(.leading, 10)
                 .padding(.trailing, 10)
@@ -723,8 +726,8 @@ extension Home {
                      } */
                     Spacer()
                 }
-                .padding(.top, 6)
-                .padding(.trailing, 4)
+                .padding(.top, 8)
+                .padding(.trailing, 8)
 
                 if state.animatedBackground {
                     SpriteView(scene: spriteScene, options: [.allowsTransparency])
@@ -817,16 +820,18 @@ extension Home {
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
                     label: {
-                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image("carbs")
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                            Image(systemName: "fork.knife")
+                                // Image("carbs")
                                 .renderingMode(.template)
-                                .resizable()
+                                // .resizable()
                                 .frame(width: 27, height: 27)
+                                .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 20)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.top, 21)
+                                .padding(.bottom, 9)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
                             if state.carbsRequired != nil {
                                 /* Text(numberFormatter.string(from: carbsReq as NSNumber)!)
                                  .font(.caption2)
@@ -834,23 +839,30 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.loopYellow).frame(width: 6, height: 6)
-                                    .offset(x: -19.33, y: 4)
+                                    .offset(x: 1, y: 2.5)
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
-                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image("target")
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                            Image(systemName: "target")
+                                // Image("target")
                                 .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 30, height: 30)
+                                // .resizable()
+                                // .frame(width: 30, height: 30)
+                                .frame(width: 27, height: 27)
+                                .font(.system(size: 27, weight: .light))
                                 .foregroundColor(.loopGreen)
-                                .padding(.top, 18)
-                                .padding(.bottom, 6)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 6)
+                                /* .padding(.top, 18)
+                                 .padding(.bottom, 6)
+                                 .padding(.leading, 9)
+                                 .padding(.trailing, 6) */
+                                .padding(.top, 20)
+                                .padding(.bottom, 7)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
                             if state.tempTarget != nil {
                                 /* Image(systemName: "timer")
                                  .font(.caption2)
@@ -858,7 +870,8 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.loopGreen).frame(width: 6, height: 6)
-                                    .offset(x: -21, y: 4)
+                                    // .offset(x: -21, y: 4)
+                                    .offset(x: 0, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
@@ -871,16 +884,18 @@ extension Home {
                         // Daniel: Add determinebasalsync to force update before entering bolusview
                         state.apsManager.determineBasalSync()
                     } label: {
-                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image("bolus")
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                            Image(systemName: "drop")
+                                // Image("bolus")
                                 .renderingMode(.template)
-                                .resizable()
+                                // .resizable()
                                 .frame(width: 27, height: 27)
+                                .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.insulin)
                                 .padding(.top, 20)
                                 .padding(.bottom, 7)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
 
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                                 /* Image(systemName: "plus.circle")
@@ -889,7 +904,7 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.insulin).frame(width: 6, height: 6)
-                                    .offset(x: -19.33, y: 4)
+                                    .offset(x: 0, y: 4)
                             }
                         }
                     }
@@ -897,30 +912,32 @@ extension Home {
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
                         label: {
-                            Image("bolus1")
+                            Image(systemName: "hexagon")
+                                // Image("bolus1")
                                 .renderingMode(.template)
-                                .resizable()
+                                // .resizable()
                                 .frame(width: 27, height: 27)
+                                .font(.system(size: 27, weight: .regular))
                                 .padding(.top, 20)
                                 .padding(.bottom, 7)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
                     Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
-                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                             Image(systemName: "person")
                                 .renderingMode(.template)
-                                .resizable()
+                                // .resizable()
                                 .frame(width: 27, height: 27)
-                                .fontWeight(.light)
+                                .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.cyan)
                                 .padding(.top, 20)
                                 .padding(.bottom, 7)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
                             if selectedProfile().isOn {
                                 /* Image(systemName: "person.fill")
                                  .font(.caption2)
@@ -928,26 +945,28 @@ extension Home {
                                  .padding(2)
                                  .background(Capsule().fill(Color.purple)) */
                                 Circle().fill(Color.cyan).frame(width: 6, height: 6)
-                                    .offset(x: -19.33, y: 4)
+                                    .offset(x: 0, y: 4)
                             }
                         }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
-                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-                            Image("settings1")
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                            Image(systemName: "gearshape")
+                                // Image("settings1")
                                 .renderingMode(.template)
-                                .resizable()
+                                // .resizable()
                                 .frame(width: 27, height: 27)
+                                .font(.system(size: 27, weight: .regular))
                                 .padding(.top, 20)
                                 .padding(.bottom, 7)
-                                .padding(.leading, 9)
-                                .padding(.trailing, 9)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
                                 .foregroundColor(.gray)
                             if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
                                 Circle().fill(Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: -19.33, y: 4)
+                                    .offset(x: 0, y: 4)
                             }
                         }
                     }
