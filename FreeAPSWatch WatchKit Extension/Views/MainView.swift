@@ -104,176 +104,189 @@ import SwiftUI
                         let formattedComputedValue = String(format: "%.1f", computedValue)
                         let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
 
-                        Text(state.delta)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(.gray)
-
+                        HStack {
+                            Text(state.delta)
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.gray)
+                        }
+                        .frame(width: 45, alignment: .leading)
                         Spacer()
 
                         // Conditionally format the Image and Text
-                        if computedValue > 7.8 {
-                            Image(systemName: "goforward.15")
-                                .font(.system(size: 12))
-                                .foregroundColor(.loopYellow)
-                                .padding(.horizontal, -4)
-                            Text(formattedComputedValueWithComma)
-                                .font(.caption)
-                                .foregroundColor(.loopYellow)
-                                .offset(x: 1, y: 0)
-                        } else if computedValue < 3.9 {
-                            Image(systemName: "goforward.15")
-                                .font(.system(size: 12))
-                                .foregroundColor(.loopRed)
-                                .padding(.horizontal, -4)
-                            Text(formattedComputedValueWithComma)
-                                .font(.caption)
-                                .foregroundColor(.loopRed)
-                                .offset(x: 1, y: 0)
-                        } else {
-                            Image(systemName: "goforward.15")
-                                .font(.system(size: 12))
-                                .foregroundColor(.loopGreen)
-                                .padding(.horizontal, -4)
-                            Text(formattedComputedValueWithComma)
-                                .font(.caption)
-                                .foregroundColor(.loopGreen)
-                                .offset(x: 1, y: 0)
+                        HStack {
+                            if computedValue > 7.8 {
+                                Image(systemName: "goforward.15")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.loopYellow)
+                                Text(formattedComputedValueWithComma)
+                                    .font(.caption)
+                                    .foregroundColor(.loopYellow)
+                            } else if computedValue < 3.9 {
+                                Image(systemName: "goforward.15")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.loopRed)
+                                Text(formattedComputedValueWithComma)
+                                    .font(.caption)
+                                    .foregroundColor(.loopRed)
+                            } else {
+                                Image(systemName: "goforward.15")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.loopGreen)
+                                Text(formattedComputedValueWithComma)
+                                    .font(.caption)
+                                    .foregroundColor(.loopGreen)
+                            }
                         }
+                        .frame(width: 55, alignment: .leading)
                     } else {
-                        Text(state.delta)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(.gray)
+                        HStack {
+                            Text(state.delta)
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.gray)
+                        }
+                        .frame(width: 55, alignment: .leading)
                     }
 
-                    Spacer()
-
-                    if state.lastLoopDate != nil {
-                        Text(timeString)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(.gray)
-                    } else {
-                        Text("--")
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(.gray)
-                    }
-                }
-            }
-
-            Spacer()
-            HStack(alignment: .firstTextBaseline) {
-                Text(iobFormatter.string(from: (state.cob ?? 0) as NSNumber)!)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .foregroundColor(Color.white)
-                    .minimumScaleFactor(0.5)
-                Text("g").foregroundColor(.loopYellow)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .minimumScaleFactor(0.5)
-
-                switch state.displayOnWatch {
-                case .HR:
                     Spacer()
                     HStack {
-                        if completedLongPress {
-                            HStack {
-                                Text("❤️" + "\(pulse)")
-                                    .fontWeight(.regular)
-                                    .font(.custom("activated", size: 20))
-                                    .scaledToFill()
-                                    .foregroundColor(.white)
-                                    .minimumScaleFactor(0.5)
-                            }
-                            .scaleEffect(isDetectingLongPress ? 3 : 1)
-                            .gesture(longPress)
-
+                        if state.lastLoopDate != nil {
+                            Text(timeString)
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.gray)
                         } else {
+                            Text("--")
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .frame(width: 50, alignment: .trailing)
+                }
+
+                Spacer()
+                HStack(alignment: .firstTextBaseline) {
+                    HStack {
+                        Text(iobFormatter.string(from: (state.cob ?? 0) as NSNumber)!)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(Color.white)
+                            .minimumScaleFactor(0.5)
+                        Text("g").foregroundColor(.loopYellow)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .minimumScaleFactor(0.5)
+                    }
+                    .frame(width: 45, alignment: .leading)
+
+                    switch state.displayOnWatch {
+                    case .HR:
+                        Spacer()
+                        HStack {
+                            if completedLongPress {
+                                HStack {
+                                    Text("❤️" + "\(pulse)")
+                                        .fontWeight(.regular)
+                                        .font(.custom("activated", size: 20))
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                        .minimumScaleFactor(0.5)
+                                }
+                                .scaleEffect(isDetectingLongPress ? 3 : 1)
+                                .gesture(longPress)
+
+                            } else {
+                                HStack {
+                                    Text("❤️" + "\(pulse)")
+                                        .fontWeight(.regular)
+                                        .font(.caption2)
+                                        .scaledToFill()
+                                        .foregroundColor(.white)
+                                        .minimumScaleFactor(0.5)
+                                }
+                                .scaleEffect(isDetectingLongPress ? 3 : 1)
+                                .gesture(longPress)
+                            }
+                        }
+                        .frame(width: 55, alignment: .leading)
+                    case .BGTarget:
+                        if let eventualBG = state.eventualBG.nonEmpty {
+                            Spacer()
                             HStack {
-                                Text("❤️" + "\(pulse)")
-                                    .fontWeight(.regular)
+                                Text(" " + eventualBG)
                                     .font(.caption2)
                                     .scaledToFill()
                                     .foregroundColor(.white)
                                     .minimumScaleFactor(0.5)
                             }
-                            .scaleEffect(isDetectingLongPress ? 3 : 1)
-                            .gesture(longPress)
+                            .frame(width: 55, alignment: .leading)
                         }
-                    }
-                case .BGTarget:
-                    if let eventualBG = state.eventualBG.nonEmpty {
+                    case .steps:
                         Spacer()
                         HStack {
-                            Text(eventualBG)
+                            Text("🦶" + "\(steps)")
+                                .fontWeight(.regular)
                                 .font(.caption2)
                                 .scaledToFill()
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
+                        .frame(width: 55, alignment: .leading)
+                    case .isf:
+                        Spacer()
+                        let isf: String = state.isf != nil ? "\(state.isf ?? 0)" : "-"
+                        HStack {
+                            Image(systemName: "arrow.up.arrow.down")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.loopGreen)
+                            Text("\(isf)")
+                                .fontWeight(.regular)
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.white)
+                                .minimumScaleFactor(0.5)
+                        }
+                        .frame(width: 55, alignment: .leading)
+                    case .override:
+                        Spacer()
+                        let override: String = state.override != nil ? state.override! : "-"
+                        HStack {
+                            Image(systemName: "person")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.white)
+                            Text(override)
+                                .fontWeight(.regular)
+                                .font(.caption2)
+                                .scaledToFill()
+                                .foregroundColor(.white)
+                                .minimumScaleFactor(0.5)
+                        }
+                        .frame(width: 55, alignment: .leading)
                     }
-                case .steps:
                     Spacer()
                     HStack {
-                        Text("🦶" + "\(steps)")
-                            .fontWeight(.regular)
+                        Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
                             .font(.caption2)
                             .scaledToFill()
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.white)
                             .minimumScaleFactor(0.5)
-                    }
-                case .isf:
-                    Spacer()
-                    let isf: String = state.isf != nil ? "\(state.isf ?? 0)" : "-"
-                    HStack {
-                        Image(systemName: "arrow.up.arrow.down")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(.loopGreen)
-                            .offset(x: 3, y: 0)
-                        Text("\(isf)")
-                            .fontWeight(.regular)
+
+                        Text("U").foregroundColor(.insulin)
                             .font(.caption2)
                             .scaledToFill()
-                            .foregroundColor(.white)
                             .minimumScaleFactor(0.5)
                     }
-                case .override:
-                    Spacer()
-                    let override: String = state.override != nil ? state.override! : "-"
-                    HStack {
-                        Image(systemName: "person")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(.white)
-                            .offset(x: 3, y: 0)
-                        Text(override)
-                            .fontWeight(.regular)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(.white)
-                            .minimumScaleFactor(0.5)
-                    }
+                    .frame(width: 50, alignment: .trailing)
                 }
                 Spacer()
-                Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .foregroundColor(Color.white)
-                    .minimumScaleFactor(0.5)
-
-                Text("U").foregroundColor(.insulin)
-                    .font(.caption2)
-                    .scaledToFill()
-                    .minimumScaleFactor(0.5)
+                    .onAppear(perform: start)
             }
-            Spacer()
-                .onAppear(perform: start)
         }
         .padding()
         // .scaleEffect(isDetectingLongPressOfBG ? 3 : 1)
@@ -290,7 +303,7 @@ import SwiftUI
             }.padding(.bottom, 35)
 
             HStack {
-                Circle().stroke(color, lineWidth: 5).frame(width: 20, height: 20).padding(10)
+                Circle().stroke(color, lineWidth: 5).frame(width: 30, height: 30).padding(10)
             }
         }
         .gesture(longPresBGs)
