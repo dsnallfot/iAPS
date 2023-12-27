@@ -28,29 +28,29 @@ struct PumpView: View {
                     Image(systemName: "drop.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 13)
+                        .frame(maxHeight: 14)
                         .foregroundColor(reservoirColor)
                         .offset(x: 2, y: 0)
                     if reservoir == 0xDEAD_BEEF {
                         Text("50+" + NSLocalizedString(" E", comment: "Insulin unit"))
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     } else {
                         Text(
                             reservoirFormatter
                                 .string(from: reservoir as NSNumber)! + NSLocalizedString(" E", comment: "Insulin unit")
                         )
-                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary) }
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary) }
 
                     if let timeZone = timeZone, timeZone.secondsFromGMT() != TimeZone.current.secondsFromGMT() {
                         Image(systemName: "clock.badge.exclamationmark.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 13)
+                            .frame(maxHeight: 134)
                             .symbolRenderingMode(.multicolor)
                             .foregroundStyle(Color.warning, Color.red)
                     }
                 }
-                .frame(width: 78) // , alignment: .trailing)
+                .frame(width: 75) // , alignment: .trailing)
                 // .frame(width: 60, alignment: .trailing)
                 Spacer()
                 HStack {
@@ -62,20 +62,20 @@ struct PumpView: View {
                             .foregroundColor(batteryColor)
                             .offset(x: 3, y: 0)
                         Text("\(Int(battery.percent ?? 100)) %")
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     }
                     if let date = expiresAtDate {
                         Image(systemName: "stopwatch.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 13)
+                            .frame(maxHeight: 14)
                             .foregroundColor(timerColor)
                             .offset(x: 2, y: 0)
                         Text(remainingTimeString(time: date.timeIntervalSince(timerDate)))
-                            .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
+                            .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     }
                 }
-                .frame(width: 78) // , alignment: .trailing)
+                .frame(width: 75) // , alignment: .trailing)
                 // .frame(width: 60, alignment: .trailing)
             }
         }
