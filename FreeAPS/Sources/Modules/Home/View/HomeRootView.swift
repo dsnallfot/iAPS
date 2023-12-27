@@ -171,12 +171,12 @@ extension Home {
             HStack {
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
+                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" E", comment: "Insulin unit")
                     )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 78) // , alignment: .leading)
@@ -188,12 +188,12 @@ extension Home {
                 Spacer()
                 HStack {
                     Text("COB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
+                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
                     )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 78) // , alignment: .leading)
