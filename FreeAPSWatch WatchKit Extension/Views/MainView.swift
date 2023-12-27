@@ -138,7 +138,7 @@ import SwiftUI
                                     .foregroundColor(.loopGreen)
                             }
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     } else {
                         HStack {
                             Text(state.delta)
@@ -146,7 +146,7 @@ import SwiftUI
                                 .scaledToFill()
                                 .foregroundColor(.gray)
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     }
 
                     Spacer()
@@ -210,7 +210,7 @@ import SwiftUI
                                 .gesture(longPress)
                             }
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     case .BGTarget:
                         if let eventualBG = state.eventualBG.nonEmpty {
                             Spacer()
@@ -221,7 +221,7 @@ import SwiftUI
                                     .foregroundColor(.white)
                                     .minimumScaleFactor(0.5)
                             }
-                            .frame(width: 55, alignment: .leading)
+                            .frame(width: 60, alignment: .leading)
                         }
                     case .steps:
                         Spacer()
@@ -233,7 +233,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     case .isf:
                         Spacer()
                         let isf: String = state.isf != nil ? "\(state.isf ?? 0)" : "-"
@@ -250,7 +250,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     case .override:
                         Spacer()
                         let override: String = state.override != nil ? state.override! : "-"
@@ -267,7 +267,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 55, alignment: .leading)
+                        .frame(width: 60, alignment: .leading)
                     }
                     Spacer()
                     HStack {
