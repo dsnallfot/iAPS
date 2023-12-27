@@ -75,12 +75,12 @@ import SwiftUI
             HStack(alignment: .top) {
                 HStack {
                     Text(state.glucose)
-                        .font(.title)
+                        .font(.system(size: 45, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
 
                     Text(state.trend)
-                        .font(.title2)
+                        .font(.system(size: 35, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
                     Spacer()
@@ -296,11 +296,11 @@ import SwiftUI
     var bigHeader: some View {
         VStack(alignment: .center) {
             HStack {
-                Text(state.glucose).font(.custom("Big BG", size: 55))
-                Text(state.trend != "→" ? state.trend : "")
+                Text(state.glucose).font(.system(size: 60, weight: .semibold))
+                Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
                     .scaledToFill()
                     .minimumScaleFactor(0.5)
-            }.padding(.bottom, 35)
+            }.padding(.bottom, 30)
 
             HStack {
                 Circle().stroke(color, lineWidth: 5).frame(width: 30, height: 30).padding(10)
