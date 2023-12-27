@@ -275,29 +275,35 @@ extension Bolus {
                                         if fetch {
                                             mealParts
                                             if fetch {
-                                                Divider().fontWeight(.bold) // .padding(1)
+                                                Divider()
+                                                    .frame(height: 1)
+                                                    .background(Color.secondary) // .padding(1)
                                             }
                                         }
 
                                         VStack {
                                             variableParts
 
-                                            Divider().fontWeight(.bold) // .padding(1)
+                                            Divider()
+                                                .frame(height: 1)
+                                                .background(Color.secondary) // .padding(1)
 
                                             guardRailParts
 
-                                            Divider().fontWeight(.bold) // .padding(1)
+                                            Divider()
+                                                .frame(height: 1)
+                                                .background(Color.secondary) // .padding(1)
                                         }
                                         VStack {
                                             if state.advancedCalc {
                                                 orefParts
 
-                                                Divider().fontWeight(.bold) // .padding(1)
+                                                Divider()
+                                                    .frame(height: 1)
+                                                    .background(Color.secondary) // .padding(1)
                                             }
 
                                             calculationParts
-
-                                            Divider().fontWeight(.bold) // .padding(1)
                                         }
                                         VStack {
                                             HStack {
@@ -311,10 +317,13 @@ extension Bolus {
                                                     .foregroundColor(.primary)
                                             }
                                             .fontWeight(.semibold)
-                                            .padding(.top, 1)
                                             .padding(.bottom, 1)
+                                            .padding(.top, 1)
                                         }
-                                        Divider().fontWeight(.bold) // .padding(1)
+                                        Divider()
+                                            .frame(height: 1)
+                                            .background(Color.secondary) // .padding(1)
+
                                         VStack {
                                             resultsPart
 
@@ -800,7 +809,6 @@ extension Bolus {
                     if state.evBG != 0 {
                         Text("Blodsockerprognos:")
                             .foregroundColor(.secondary)
-                            .italic()
                         Spacer()
                         let eventualBG = Double(state.evBG) * 0.0555
                         Text(
@@ -810,10 +818,8 @@ extension Bolus {
                                         .precision(.fractionLength(fractionDigits))
                                 )
                         )
-                        .italic()
                         Text("mmol/L")
                             .foregroundColor(.secondary)
-                            .italic()
                     }
                 }
 
@@ -821,24 +827,18 @@ extension Bolus {
                     if state.minGuardBG < state.threshold && state.minGuardBG != 0 {
                         Text("Lägsta förväntade BG:")
                             .foregroundColor(.loopRed)
-                            .italic()
                         Spacer()
                         Text(roundedMinBG.formatted())
                             .foregroundColor(.loopRed)
-                            .italic()
                         Text("mmol/L")
                             .foregroundColor(.loopRed)
-                            .italic()
                     } else if state.minGuardBG != 0 {
                         Text("Lägsta förväntade BG:")
                             .foregroundColor(.secondary)
-                            .italic()
                         Spacer()
                         Text(roundedMinBG.formatted())
-                            .italic()
                         Text("mmol/L")
                             .foregroundColor(.secondary)
-                            .italic()
                     }
                 }
 
@@ -848,26 +848,19 @@ extension Bolus {
                     {
                         Text("Insulinbehov:")
                             .foregroundColor(.insulin)
-                            .italic()
                         Spacer()
                         Text(roundedOrefInsulin.formatted())
                             .foregroundColor(.insulin)
-                            .italic()
-
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.insulin)
-                            .italic()
                     } else if roundedOrefInsulin != 0 {
                         Text("Insulinbehov:")
                             .foregroundColor(.secondary)
-                            .italic()
                         Spacer()
                         Text(roundedOrefInsulin.formatted())
-                            .italic()
 
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.secondary)
-                            .italic()
                     }
                 }
             }
@@ -952,13 +945,13 @@ extension Bolus {
         var calculationParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    Text("Boluskalkyl")
+                    Text("Bolusberäkning")
                     Spacer()
-                    Text("Behov +/-  E")
+                    Text("Behov  +/-  E")
                 }
                 .foregroundColor(.primary).fontWeight(.semibold)
                 .padding(.top, 2)
-                .padding(.bottom, 2)
+                .padding(.bottom, 4)
 
                 let carbs = meal.first?.carbs
                 let formattedCarbs = Decimal(carbs!)
@@ -966,15 +959,15 @@ extension Bolus {
                 if fetch {
                     if let carbs = meal.first?.carbs, carbs > 0 {
                         HStack(alignment: .center, spacing: nil) {
-                            Text("Aktuell måltid Kh:")
+                            Text("• Aktuell måltid Kh:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 110, alignment: .leading)
+                                .frame(minWidth: 120, alignment: .leading)
 
                             Text(formattedCarbs.formatted())
-                                .frame(minWidth: 50, alignment: .trailing)
+                                .frame(minWidth: 40, alignment: .trailing)
 
                             Text("g").foregroundColor(.secondary)
-                                .frame(minWidth: 50, alignment: .leading)
+                                .frame(minWidth: 60, alignment: .leading)
 
                             Image(systemName: "arrow.right")
                                 .frame(minWidth: 15, alignment: .trailing)
@@ -989,17 +982,17 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                         }
                         HStack(alignment: .center, spacing: nil) {
-                            Text("COB:")
+                            Text("• COB:")
                                 .foregroundColor(.secondary)
-                                .frame(minWidth: 110, alignment: .leading)
+                                .frame(minWidth: 120, alignment: .leading)
 
                             let cob = state.cob - formattedCarbs
                             Text(cob.formatted())
-                                .frame(minWidth: 50, alignment: .trailing)
+                                .frame(minWidth: 40, alignment: .trailing)
 
                             let unitGrams = NSLocalizedString("g", comment: "grams")
                             Text(unitGrams).foregroundColor(.secondary)
-                                .frame(minWidth: 50, alignment: .leading)
+                                .frame(minWidth: 60, alignment: .leading)
 
                             Image(systemName: "arrow.right")
                                 .frame(minWidth: 15, alignment: .trailing)
@@ -1015,17 +1008,17 @@ extension Bolus {
                     }
                 } else {
                     HStack(alignment: .center, spacing: nil) {
-                        Text("COB:")
+                        Text("• COB:")
                             .foregroundColor(.secondary)
-                            .frame(minWidth: 110, alignment: .leading)
+                            .frame(minWidth: 120, alignment: .leading)
 
                         let cob = state.cob
                         Text(cob.formatted())
-                            .frame(minWidth: 50, alignment: .trailing)
+                            .frame(minWidth: 40, alignment: .trailing)
 
                         let unitGrams = NSLocalizedString("g", comment: "grams")
                         Text(unitGrams).foregroundColor(.secondary)
-                            .frame(minWidth: 50, alignment: .leading)
+                            .frame(minWidth: 60, alignment: .leading)
 
                         Image(systemName: "arrow.right")
                             .frame(minWidth: 15, alignment: .trailing)
@@ -1040,20 +1033,20 @@ extension Bolus {
                     }
                 }
                 HStack(alignment: .center, spacing: nil) {
-                    Text("IOB:")
+                    Text("• IOB:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 110, alignment: .leading)
+                        .frame(minWidth: 120, alignment: .leading)
 
                     let iob = state.iob
                     // rounding
                     let iobAsDouble = NSDecimalNumber(decimal: iob).doubleValue
                     let roundedIob = Decimal(round(100 * iobAsDouble) / 100)
                     Text(roundedIob.formatted())
-                        .frame(minWidth: 50, alignment: .trailing)
+                        .frame(minWidth: 40, alignment: .trailing)
 
                     Text("E")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 50, alignment: .leading)
+                        .frame(minWidth: 60, alignment: .leading)
 
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
@@ -1066,9 +1059,9 @@ extension Bolus {
                     Text("E").foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
-                    Text("Blodsocker:")
+                    Text("• Blodsocker:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 110, alignment: .leading)
+                        .frame(minWidth: 120, alignment: .leading)
 
                     let glucose = state.units == .mmolL ? state.currentBG.asMmolL : state.currentBG
                     Text(
@@ -1078,10 +1071,10 @@ extension Bolus {
                                     .precision(.fractionLength(fractionDigits))
                             )
                     )
-                    .frame(minWidth: 50, alignment: .trailing)
+                    .frame(minWidth: 40, alignment: .trailing)
                     Text("mmol/l")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 50, alignment: .leading)
+                        .frame(minWidth: 60, alignment: .leading)
 
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
@@ -1100,9 +1093,9 @@ extension Bolus {
                         .foregroundColor(.secondary)
                 }
                 HStack(alignment: .center, spacing: nil) {
-                    Text("15 min trend:")
+                    Text("• 15 min trend:")
                         .foregroundColor(.secondary)
-                        .frame(minWidth: 110, alignment: .leading)
+                        .frame(minWidth: 120, alignment: .leading)
 
                     let trend = state.units == .mmolL ? state.deltaBG.asMmolL : state.deltaBG
                     Text(
@@ -1112,9 +1105,9 @@ extension Bolus {
                                     .precision(.fractionLength(fractionDigits))
                             )
                     )
-                    .frame(minWidth: 50, alignment: .trailing)
+                    .frame(minWidth: 40, alignment: .trailing)
                     Text("mmol/l").foregroundColor(.secondary)
-                        .frame(minWidth: 50, alignment: .leading)
+                        .frame(minWidth: 60, alignment: .leading)
 
                     Image(systemName: "arrow.right")
                         .frame(minWidth: 15, alignment: .trailing)
@@ -1164,21 +1157,25 @@ extension Bolus {
 
                     if !state.useSuperBolus {
                         let fraction = state.fraction * 100
-                        HStack {
-                            Text(fraction.formatted())
-                                .offset(x: 5, y: 0)
-                            Text("% x")
-                                .foregroundColor(.secondary)
+                        if fraction != 100 {
+                            HStack {
+                                Text(fraction.formatted())
+                                    .offset(x: 5, y: 0)
+                                Text("% x")
+                                    .foregroundColor(.secondary)
+                            }
                         }
 
                         if state.useFattyMealCorrectionFactor {
                             let fattyMealFactor = state.fattyMealFactor * 100
-                            HStack {
-                                Text(fattyMealFactor.formatted())
-                                    .foregroundColor(.brown)
-                                    .offset(x: 5, y: 0)
-                                Text("% x")
-                                    .foregroundColor(.secondary)
+                            if fattyMealFactor != 100 {
+                                HStack {
+                                    Text(fattyMealFactor.formatted())
+                                        .foregroundColor(.brown)
+                                        .offset(x: 5, y: 0)
+                                    Text("% x")
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                         let insulin = state.roundedWholeCalc
@@ -1458,7 +1455,7 @@ extension Bolus {
                     }
                 }
             }
-            .padding(.bottom, 6)
+            .padding(.bottom, 8)
         }
 
         var warningParts: some View {
@@ -1483,7 +1480,9 @@ extension Bolus {
                             .padding(.bottom, 2)
                     }
                 }
-                Divider().fontWeight(.bold) // .padding(1)
+                Divider()
+                    .frame(height: 1)
+                    .background(Color.secondary) // .padding(1)
                 VStack {
                     if state.error, state.insulinCalculated > 0 {
                         VStack {
@@ -1498,7 +1497,6 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
-                            Divider().fontWeight(.bold) // .padding(1)
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
@@ -1513,7 +1511,6 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
-                            Divider().fontWeight(.bold) // .padding(1)
                         }
                     }
                 }
