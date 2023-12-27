@@ -2,7 +2,7 @@ import HealthKit
 import SwiftDate
 import SwiftUI
 
-struct MainView: View {
+@available(watchOSApplicationExtension 9.0, *) struct MainView: View {
     private enum Config {
         static let lag: TimeInterval = 30
     }
@@ -34,7 +34,7 @@ struct MainView: View {
                                 .frame(width: 14, height: 14)
                                 .padding(2)
                         }
-                        Text("Updating...").font(.caption2).foregroundColor(.secondary)
+                        Text("Updating...").font(.system(size: 10)).foregroundColor(.secondary)
                     }
                 }
             }
@@ -120,6 +120,7 @@ struct MainView: View {
                             Text(formattedComputedValueWithComma)
                                 .font(.caption)
                                 .foregroundColor(.loopYellow)
+                                .offset(x: 1, y: 0)
                         } else if computedValue < 3.9 {
                             Image(systemName: "goforward.15")
                                 .font(.system(size: 12))
@@ -128,6 +129,7 @@ struct MainView: View {
                             Text(formattedComputedValueWithComma)
                                 .font(.caption)
                                 .foregroundColor(.loopRed)
+                                .offset(x: 1, y: 0)
                         } else {
                             Image(systemName: "goforward.15")
                                 .font(.system(size: 12))
@@ -136,6 +138,7 @@ struct MainView: View {
                             Text(formattedComputedValueWithComma)
                                 .font(.caption)
                                 .foregroundColor(.loopGreen)
+                                .offset(x: 1, y: 0)
                         }
                     } else {
                         Text(state.delta)
@@ -178,7 +181,7 @@ struct MainView: View {
                     HStack {
                         if completedLongPress {
                             HStack {
-                                Text("❤️" + " \(pulse)")
+                                Text("❤️" + "\(pulse)")
                                     .fontWeight(.regular)
                                     .font(.custom("activated", size: 20))
                                     .scaledToFill()
@@ -190,7 +193,7 @@ struct MainView: View {
 
                         } else {
                             HStack {
-                                Text("❤️" + " \(pulse)")
+                                Text("❤️" + "\(pulse)")
                                     .fontWeight(.regular)
                                     .font(.caption2)
                                     .scaledToFill()
@@ -215,7 +218,7 @@ struct MainView: View {
                 case .steps:
                     Spacer()
                     HStack {
-                        Text("🦶" + " \(steps)")
+                        Text("🦶" + "\(steps)")
                             .fontWeight(.regular)
                             .font(.caption2)
                             .scaledToFill()
@@ -231,6 +234,7 @@ struct MainView: View {
                             .resizable()
                             .frame(width: 12, height: 12)
                             .foregroundColor(.loopGreen)
+                            .offset(x: 3, y: 0)
                         Text("\(isf)")
                             .fontWeight(.regular)
                             .font(.caption2)
@@ -242,7 +246,13 @@ struct MainView: View {
                     Spacer()
                     let override: String = state.override != nil ? state.override! : "-"
                     HStack {
-                        Text("👤 \(override)")
+                        Image(systemName: "person")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.white)
+                            .offset(x: 3, y: 0)
+                        Text(override)
                             .fontWeight(.regular)
                             .font(.caption2)
                             .scaledToFill()
@@ -321,9 +331,11 @@ struct MainView: View {
                 Image(systemName: "fork.knife.circle")
                     .renderingMode(.template)
                     .resizable()
+                    .fontWeight(.light)
                     .frame(width: 30, height: 30)
                     .foregroundColor(.loopYellow)
             }
+            Spacer()
 
             NavigationLink(isActive: $state.isTempTargetViewActive) {
                 TempTargetsView()
@@ -333,6 +345,7 @@ struct MainView: View {
                     Image(systemName: "target")
                         .renderingMode(.template)
                         .resizable()
+                        .fontWeight(.light)
                         .frame(width: 30, height: 30)
                         .foregroundColor(.loopGreen)
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
@@ -342,6 +355,7 @@ struct MainView: View {
                     }
                 }
             }
+            Spacer()
 
             NavigationLink(isActive: $state.isBolusViewActive) {
                 BolusView()
@@ -350,6 +364,7 @@ struct MainView: View {
                 Image(systemName: "drop.circle")
                     .renderingMode(.template)
                     .resizable()
+                    .fontWeight(.light)
                     .frame(width: 30, height: 30)
                     .foregroundColor(.insulin)
             }
@@ -475,7 +490,7 @@ struct MainView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+@available(watchOSApplicationExtension 9.0, *) struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let state = WatchStateModel()
 

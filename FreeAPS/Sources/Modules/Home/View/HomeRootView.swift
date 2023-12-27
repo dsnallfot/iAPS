@@ -549,7 +549,7 @@ extension Home {
                 if let progress = state.bolusProgress {
                     HStack {
                         Text("Bolusing")
-                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                            .font(.system(size: 12, weight: .regular)).foregroundColor(.insulin)
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                     }
