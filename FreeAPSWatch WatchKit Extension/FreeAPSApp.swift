@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(watchOSApplicationExtension 9.0, *)
 @main struct FreeAPSApp: App {
     @StateObject var state = WatchStateModel()
 
