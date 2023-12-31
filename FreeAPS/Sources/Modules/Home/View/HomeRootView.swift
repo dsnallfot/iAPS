@@ -67,6 +67,14 @@ extension Home {
             return formatter
         }
 
+        private var bolusFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+            return formatter
+        }
+
         private var fetchedTargetFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -546,17 +554,17 @@ extension Home {
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     Spacer()
                 }
-                if let progress = state.bolusProgress {
-                    HStack {
-                        Text("Bolusing")
-                            .font(.system(size: 12, weight: .regular)).foregroundColor(.insulin)
-                        ProgressView(value: Double(progress))
-                            .progressViewStyle(BolusProgressViewStyle())
-                    }
-                    .onTapGesture {
-                        state.cancelBolus()
-                    }
-                }
+                /* if let progress = state.bolusProgress {
+                     HStack {
+                         Text("Bolusing")
+                             .font(.system(size: 12, weight: .regular)).foregroundColor(.insulin)
+                         ProgressView(value: Double(progress))
+                             .progressViewStyle(BolusProgressViewStyle())
+                     }
+                     .onTapGesture {
+                         state.cancelBolus()
+                     }
+                 } */
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
             .background(Color.clear)
@@ -971,6 +979,37 @@ extension Home {
             }
         }
 
+        func bolusProgressView(progress: Decimal, amount: Decimal) -> some View {
+            ZStack {
+                HStack {
+                    VStack {
+                        HStack {
+                            Text("Bolusing")
+                                .foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                            let bolused = bolusFormatter
+                                .string(from: (amount * progress) as NSNumber) ?? ""
+
+                            Text(
+                                bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
+                                    .formatted() + NSLocalizedString(" E", comment: "")
+                            ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                        }
+                        ProgressView(value: Double(progress))
+                            .progressViewStyle(BolusProgressViewStyle())
+                    }
+                    .padding(.top, 20)
+                    .padding(.bottom, 20)
+
+                    Image(systemName: "xmark.square.fill")
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white, .red)
+                        .font(.system(size: 30, weight: .bold))
+                        .onTapGesture { state.cancelBolus() }
+                        .offset(x: 15, y: 0)
+                }
+            }
+        }
+
         var body: some View {
             GeometryReader { geo in
                 VStack(spacing: 0) {
@@ -998,6 +1037,22 @@ extension Home {
             .onAppear {
                 configureView {
                     highlightButtons()
+                }
+            }
+            .overlay {
+                if let progress = state.bolusProgress, let amount = state.bolusAmount {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.insulin.opacity(0.9))
+                            .frame(width: 300, height: 60)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.white, lineWidth: 3)
+                            )
+                        bolusProgressView(progress: progress, amount: amount)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .offset(x: 0, y: 10)
                 }
             }
             .background(Color.blue.opacity(0.0)) // 12))
