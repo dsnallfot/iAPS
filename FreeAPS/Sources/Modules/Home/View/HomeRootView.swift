@@ -997,21 +997,23 @@ extension Home {
                                     bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
                                         .formatted() + NSLocalizedString(" E", comment: "")
                                 ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
-                            }.frame(width: 110, alignment: .trailing)
+                            }.frame(width: 104, alignment: .trailing)
                         }
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                             .frame(width: 180, alignment: .leading)
+                            .offset(x: 0, y: 0)
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 20)
+                    .padding(.trailing, 10)
 
-                    Image(systemName: "xmark.square.fill")
+                    Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.red, .white)
-                        .font(.system(size: 25, weight: .bold))
+                        .foregroundStyle(.white, Color(.loopRed))
+                        .font(.system(size: 23, weight: .semibold))
                         .onTapGesture { state.cancelBolus() }
-                        .offset(x: 15, y: 0)
+                        .offset(x: 0, y: 0)
                 }
             }
         }
@@ -1054,6 +1056,10 @@ extension Home {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 15)
                                     .stroke(Color.white, lineWidth: 3)
+                            )
+                            .shadow(
+                                color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
                             )
                         bolusProgressView(progress: progress, amount: amount)
                     }
