@@ -984,18 +984,24 @@ extension Home {
                 HStack {
                     VStack {
                         HStack {
-                            Text("Bolusing")
-                                .foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                            HStack {
+                                Text("Bolusing")
+                                    .foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+
+                            }.frame(width: 70, alignment: .leading)
                             let bolused = bolusFormatter
                                 .string(from: (amount * progress) as NSNumber) ?? ""
 
-                            Text(
-                                bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
-                                    .formatted() + NSLocalizedString(" E", comment: "")
-                            ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                            HStack {
+                                Text(
+                                    bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
+                                        .formatted() + NSLocalizedString(" E", comment: "")
+                                ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                            }.frame(width: 110, alignment: .trailing)
                         }
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
+                            .frame(width: 180, alignment: .leading)
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 20)
@@ -1003,7 +1009,7 @@ extension Home {
                     Image(systemName: "xmark.square.fill")
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(.white, .red)
-                        .font(.system(size: 30, weight: .bold))
+                        .font(.system(size: 25, weight: .bold))
                         .onTapGesture { state.cancelBolus() }
                         .offset(x: 15, y: 0)
                 }
@@ -1090,7 +1096,7 @@ extension Home {
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
-                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption).foregroundColor(.primary)
+                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption2).foregroundColor(.primary)
 
                 } else {
                     Text("No suggestion found").font(.body).foregroundColor(.primary)
@@ -1102,7 +1108,7 @@ extension Home {
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)
-                    Text(errorMessage).font(.caption).foregroundColor(.loopRed)
+                    Text(errorMessage).font(.caption2).foregroundColor(.loopRed)
                 }
             }
         }

@@ -12,7 +12,7 @@ public struct BolusProgressViewStyle: ProgressViewStyle {
                     .progressViewStyle(LinearProgressViewStyle())
                     .accentColor(Color.white)
             }
-        }.frame(width: 150, height: 5)
+        }.frame(width: 180, height: 5)
     }
 }
 

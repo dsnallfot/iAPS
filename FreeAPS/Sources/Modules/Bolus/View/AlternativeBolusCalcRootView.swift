@@ -100,7 +100,7 @@ extension Bolus {
                             value: $state.amount,
                             formatter: formatter,
                             autofocus: true,
-                            cleanInput: true
+                            cleanInput: false
                         )
                         Text(exceededMaxBolus3 ? "☠️" : "U").fontWeight(.semibold)
                     }
