@@ -50,10 +50,10 @@ struct LoopView: View {
                  }*/
                 else if actualSuggestion?.timestamp != nil {
                     Text(timeString).font(.system(size: 9))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.primary)
                         .offset(x: 0, y: -1)
                 } else {
-                    Text("--").font(.system(size: 9)).foregroundColor(.secondary)
+                    Text("--").font(.system(size: 9)).foregroundColor(.primary)
                         .offset(x: 0, y: -1)
                 }
             }

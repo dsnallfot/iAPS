@@ -106,8 +106,8 @@ extension Home {
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 glucoseView
-                    .padding(.bottom, 30)
-                    .padding(.top, 12)
+                    .padding(.bottom, 35)
+                    .padding(.top, 15)
 
                 HStack(alignment: .center) {
                     Spacer()
@@ -572,7 +572,7 @@ extension Home {
                         state.hours = button.hours
                         highlightButtons()
                     }
-                    .foregroundStyle(button.active ? .secondary : .secondary)
+                    .foregroundStyle(button.active ? .primary : .secondary)
                     .frame(maxHeight: 20)
                     .padding(.horizontal, 9)
                     .padding(.vertical, 3)
@@ -716,23 +716,17 @@ extension Home {
                                 .offset(x: -2, y: 0)
                         }
                     }
-                    /* .shadow(
-                         color: Color.black.opacity(colorScheme == .dark ? 0.8 : 0.5),
-                         radius: colorScheme == .dark ? 3 : 3
-                     ) */
-                    // .frame(width: 80)
-                    /* .onTapGesture {
-                         state.showModal(for: .dataTable)
-                     } */
                     Spacer()
                 }
                 .padding(.top, 8)
                 .padding(.trailing, 8)
+                .zIndex(2)
 
                 if state.animatedBackground {
                     SpriteView(scene: spriteScene, options: [.allowsTransparency])
                         .ignoresSafeArea()
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                        .zIndex(0)
                 }
 
                 MainChartView(
@@ -766,6 +760,7 @@ extension Home {
                 colorScheme == .dark ? Color.black.opacity(0.5) :
                     Color.white
             )
+            .zIndex(1)
         }
 
         private func selectedProfile() -> (name: String, isOn: Bool) {
@@ -805,7 +800,7 @@ extension Home {
                 Rectangle().fill(
                     colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
                 )
-                .frame(height: 87)
+                .frame(height: 80)
                 .shadow(
                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
@@ -828,7 +823,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 21)
+                                .padding(.top, 16)
                                 .padding(.bottom, 9)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -859,7 +854,7 @@ extension Home {
                                  .padding(.bottom, 6)
                                  .padding(.leading, 9)
                                  .padding(.trailing, 6) */
-                                .padding(.top, 20)
+                                .padding(.top, 15)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -892,7 +887,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.insulin)
-                                .padding(.top, 20)
+                                .padding(.top, 15)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -918,7 +913,7 @@ extension Home {
                                 // .resizable()
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .padding(.top, 20)
+                                .padding(.top, 15)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -934,7 +929,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.cyan)
-                                .padding(.top, 20)
+                                .padding(.top, 15)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -959,7 +954,7 @@ extension Home {
                                 // .resizable()
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .padding(.top, 20)
+                                .padding(.top, 15)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -972,7 +967,7 @@ extension Home {
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 25)
+                .padding(.bottom, 30)
             }
         }
 
