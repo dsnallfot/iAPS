@@ -1008,7 +1008,7 @@ extension Home {
 
                     Image(systemName: "xmark.square.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white, .red)
+                        .foregroundStyle(.red, .white)
                         .font(.system(size: 25, weight: .bold))
                         .onTapGesture { state.cancelBolus() }
                         .offset(x: 15, y: 0)
