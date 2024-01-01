@@ -43,6 +43,7 @@ extension Home {
         @Published var errorMessage: String? = nil
         @Published var errorDate: Date? = nil
         @Published var bolusProgress: Decimal?
+        @Published var bolusAmount: Decimal?
         @Published var eventualBG: Int?
         @Published var carbsRequired: Decimal?
         @Published var allowManualTemp = false
@@ -61,7 +62,7 @@ extension Home {
         @Published var displayYgridLines: Bool = false
         @Published var thresholdLines: Bool = false
         @Published var timeZone: TimeZone?
-        @Published var hours: Int16 = 6
+        @Published var hours: Int16 = 4
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -158,6 +159,11 @@ extension Home {
             apsManager.bolusProgress
                 .receive(on: DispatchQueue.main)
                 .weakAssign(to: \.bolusProgress, on: self)
+                .store(in: &lifetime)
+
+            apsManager.bolusAmount
+                .receive(on: DispatchQueue.main)
+                .weakAssign(to: \.bolusAmount, on: self)
                 .store(in: &lifetime)
 
             apsManager.pumpDisplayState

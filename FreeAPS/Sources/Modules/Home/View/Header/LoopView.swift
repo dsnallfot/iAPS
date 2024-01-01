@@ -24,13 +24,13 @@ struct LoopView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
-    private let rect = CGRect(x: 0, y: 0, width: 32, height: 32)
+    private let rect = CGRect(x: 0, y: 0, width: 36, height: 36)
 
     var body: some View {
         VStack(alignment: .center) {
             ZStack {
                 Circle()
-                    .strokeBorder(color, lineWidth: 3)
+                    .strokeBorder(color, lineWidth: 4)
                     .frame(width: rect.width, height: rect.height, alignment: .bottom)
                     .mask(mask(in: rect).fill(style: FillStyle(eoFill: true)))
                     .shadow(
@@ -49,12 +49,12 @@ struct LoopView: View {
                  .offset(x: 0, y: -2)
                  }*/
                 else if actualSuggestion?.timestamp != nil {
-                    Text(timeString).font(.system(size: 9))
-                        .foregroundColor(.secondary)
-                        .offset(x: 0, y: -1)
+                    Text(timeString).font(.system(size: 11))
+                        .foregroundColor(.primary)
+                        .offset(x: 0, y: 0)
                 } else {
-                    Text("--").font(.system(size: 9)).foregroundColor(.secondary)
-                        .offset(x: 0, y: -1)
+                    Text("--").font(.system(size: 11)).foregroundColor(.primary)
+                        .offset(x: 0, y: 0)
                 }
             }
         }
