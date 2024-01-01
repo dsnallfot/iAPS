@@ -825,7 +825,7 @@ extension Home {
                             }
                         }
                         .padding(.trailing, 2)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 12, weight: .bold))
                     }
                     /* .background(
                          colorScheme == .dark ? Color.black.opacity(0.8) : Color.white.opacity(0.8)
