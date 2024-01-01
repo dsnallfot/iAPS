@@ -118,34 +118,34 @@ extension Home {
                         .padding(.bottom, 35)
                         .padding(.top, 15)
 
-                    HStack {
-                        if let eventualBG = state.eventualBG {
-                            if Decimal(state.eventualBG!) > state.highGlucose {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.caption2).foregroundColor(.loopYellow)
-                            } else if Decimal(state.eventualBG!) < state.lowGlucose {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.caption2).foregroundColor(.loopRed)
-                            } else {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.caption2).foregroundColor(.loopGreen)
-                            }
-                        }
-                    }
-                    .fontWeight(.bold)
-                    .offset(x: -5, y: 34)
+                    /* HStack {
+                         if let eventualBG = state.eventualBG {
+                             if Decimal(state.eventualBG!) > state.highGlucose {
+                                 Text(
+                                     "⇢ " + targetFormatter.string(
+                                         from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                     )!
+                                 )
+                                 .font(.caption2).foregroundColor(.loopYellow)
+                             } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                                 Text(
+                                     "⇢ " + targetFormatter.string(
+                                         from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                     )!
+                                 )
+                                 .font(.caption2).foregroundColor(.loopRed)
+                             } else {
+                                 Text(
+                                     "⇢ " + targetFormatter.string(
+                                         from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                     )!
+                                 )
+                                 .font(.caption2).foregroundColor(.loopGreen)
+                             }
+                         }
+                     }
+                     .fontWeight(.bold)
+                     .offset(x: -5, y: 34) */
                 }
 
                 HStack(alignment: .center) {
@@ -156,23 +156,23 @@ extension Home {
                     // Spacer()
 
                     /* HStack {
-                         if state.pumpSuspended {
-                             Text("Basal")
-                                 .font(.system(size: 11)).foregroundColor(.secondary)
-                             Text("--")
-                                 .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
-                                 .offset(x: -2, y: 0)
-                         } else if let tempBasalString = tempBasalString {
-                             Text("Basal")
-                                 .font(.system(size: 11)).foregroundColor(.secondary)
-                             Text(tempBasalString)
-                                 .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
-                                 .offset(x: -2, y: 0)
-                         }
+                     if state.pumpSuspended {
+                     Text("Basal")
+                     .font(.system(size: 11)).foregroundColor(.secondary)
+                     Text("--")
+                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                     .offset(x: -2, y: 0)
+                     } else if let tempBasalString = tempBasalString {
+                     Text("Basal")
+                     .font(.system(size: 11)).foregroundColor(.secondary)
+                     Text(tempBasalString)
+                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.primary)
+                     .offset(x: -2, y: 0)
+                     }
                      }
                      .frame(width: 80)
                      .onTapGesture {
-                         state.showModal(for: .dataTable)
+                     state.showModal(for: .dataTable)
                      } */
 
                     Spacer()
@@ -614,11 +614,11 @@ extension Home {
                             .clear
                     )
                     /* .overlay(
-                         button.active ?
-                             RoundedRectangle(cornerRadius: 13)
-                             .stroke(Color.secondary.opacity(1.0), lineWidth: 1) :
-                             RoundedRectangle(cornerRadius: 13)
-                             .stroke(Color.clear, lineWidth: 1)
+                     button.active ?
+                     RoundedRectangle(cornerRadius: 13)
+                     .stroke(Color.secondary.opacity(1.0), lineWidth: 1) :
+                     RoundedRectangle(cornerRadius: 13)
+                     .stroke(Color.clear, lineWidth: 1)
                      ) */
                     .cornerRadius(13)
                 }
@@ -650,81 +650,81 @@ extension Home {
                 Spacer()
             }
             /* HStack(alignment: .center) {
-                 HStack(spacing: 4) {
-                     Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
-                     Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
-                 }
-                 .frame(width: 44)
+             HStack(spacing: 4) {
+             Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
+             Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
+             }
+             .frame(width: 44)
 
-                 Spacer()
+             Spacer()
 
-                 HStack(spacing: 4) {
-                     Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
-                     Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
-                 }
-                 .frame(width: 44)
+             HStack(spacing: 4) {
+             Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
+             Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
+             }
+             .frame(width: 44)
 
-                 Spacer()
+             Spacer()
 
-                 HStack(spacing: 4) {
-                     Circle().fill(Color.uam).frame(width: 5, height: 5)
-                     Text("UAM")
-                         .font(.system(size: 12)).foregroundColor(.uam)
-                 }
-                 .frame(width: 44)
+             HStack(spacing: 4) {
+             Circle().fill(Color.uam).frame(width: 5, height: 5)
+             Text("UAM")
+             .font(.system(size: 12)).foregroundColor(.uam)
+             }
+             .frame(width: 44)
 
-                 Spacer()
+             Spacer()
 
-                 loopView
-                     .offset(x: 0, y: 0)
+             loopView
+             .offset(x: 0, y: 0)
 
-                 Spacer()
+             Spacer()
 
-                 HStack(spacing: 4) {
-                     Circle().fill(Color.insulin).frame(width: 5, height: 5)
-                     Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
-                 }
-                 .frame(width: 44)
+             HStack(spacing: 4) {
+             Circle().fill(Color.insulin).frame(width: 5, height: 5)
+             Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
+             }
+             .frame(width: 44)
 
-                 Spacer()
+             Spacer()
 
-                 HStack(spacing: 4) {
-                     Circle().fill(Color.zt).frame(width: 5, height: 5)
-                     Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
-                 }
-                 .frame(width: 44)
+             HStack(spacing: 4) {
+             Circle().fill(Color.zt).frame(width: 5, height: 5)
+             Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
+             }
+             .frame(width: 44)
 
-                 Spacer()
-                 HStack(spacing: 4) {
-                     if let eventualBG = state.eventualBG {
-                         if Decimal(state.eventualBG!) > state.highGlucose {
-                             Text(
-                                 "⇢ " + targetFormatter.string(
-                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                 )!
-                             )
-                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
-                         } else if Decimal(state.eventualBG!) < state.lowGlucose {
-                             Text(
-                                 "⇢ " + targetFormatter.string(
-                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                 )!
-                             )
-                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
-                         } else {
-                             Text(
-                                 "⇢ " + targetFormatter.string(
-                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                 )!
-                             )
-                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
-                         }
-                     }
-                 }
-                 .frame(width: 44)
-                 .onTapGesture {
-                     isStatusPopupPresented.toggle()
-                 }
+             Spacer()
+             HStack(spacing: 4) {
+             if let eventualBG = state.eventualBG {
+             if Decimal(state.eventualBG!) > state.highGlucose {
+             Text(
+             "⇢ " + targetFormatter.string(
+             from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+             )!
+             )
+             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+             } else if Decimal(state.eventualBG!) < state.lowGlucose {
+             Text(
+             "⇢ " + targetFormatter.string(
+             from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+             )!
+             )
+             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+             } else {
+             Text(
+             "⇢ " + targetFormatter.string(
+             from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+             )!
+             )
+             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+             }
+             }
+             }
+             .frame(width: 44)
+             .onTapGesture {
+             isStatusPopupPresented.toggle()
+             }
              } */
             .padding(.bottom, 14)
             .padding(.top, 4)
@@ -738,34 +738,11 @@ extension Home {
 
         var mainChart: some View {
             ZStack {
-                VStack {
-                    HStack(alignment: .center) {
-                        Spacer()
-                        if state.pumpSuspended {
-                            Text("Basal")
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
-                            Text("--")
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                                .offset(x: -2, y: 0)
-                        } else if let tempBasalString = tempBasalString {
-                            Text("Basal")
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
-                            Text(tempBasalString)
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                                .offset(x: -2, y: 0)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(.top, 8)
-                .padding(.trailing, 8)
-                .zIndex(2)
-
                 if state.animatedBackground {
                     SpriteView(scene: spriteScene, options: [.allowsTransparency])
                         .ignoresSafeArea()
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                        .zIndex(0)
+                        .zIndex(0) // Set a zIndex for the background
                 }
 
                 MainChartView(
@@ -792,14 +769,81 @@ extension Home {
                     displayYgridLines: $state.displayYgridLines,
                     thresholdLines: $state.thresholdLines
                 )
+                .zIndex(1)
+
+                VStack {
+                    HStack {
+                        Spacer()
+                        HStack {
+                            if state.pumpSuspended {
+                                Text(" Basal")
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                                Text("--")
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                                    .offset(x: -2, y: 0)
+                            } else if let tempBasalString = tempBasalString {
+                                Text(" Basal")
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                                Text(tempBasalString)
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                                    .offset(x: -2, y: 0)
+                            }
+                        }
+                        HStack {
+                            if let eventualBG = state.eventualBG {
+                                if Decimal(state.eventualBG!) > state.highGlucose {
+                                    Text(
+                                        "  ⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? eventualBG
+                                                    .asMmolL : Decimal(eventualBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .foregroundColor(.loopYellow)
+                                } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                                    Text(
+                                        "  ⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? eventualBG
+                                                    .asMmolL : Decimal(eventualBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .foregroundColor(.loopRed)
+                                } else {
+                                    Text(
+                                        "  ⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? eventualBG
+                                                    .asMmolL : Decimal(eventualBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .foregroundColor(.loopGreen)
+                                }
+                            }
+                        }
+                        .padding(.trailing, 2)
+                        .font(.system(size: 12, weight: .semibold))
+                    }
+                    /* .background(
+                         colorScheme == .dark ? Color.black.opacity(0.8) : Color.white.opacity(0.8)
+                     )
+                     .cornerRadius(13) */
+
+                    Spacer()
+                }
+                .padding(.top, 8)
+                .padding(.trailing, 8)
+                // .background(colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.1))
+                .zIndex(2) // Set a higher zIndex for the Basal part
             }
             // .padding(.bottom, 2)
             .modal(for: .dataTable, from: self)
             .background(
-                colorScheme == .dark ? Color.black.opacity(0.5) :
-                    Color.white
+                colorScheme == .dark ? Color.gray.opacity(0.1) : Color.white
             )
-            .zIndex(1)
         }
 
         private func selectedProfile() -> (name: String, isOn: Bool) {
@@ -846,8 +890,8 @@ extension Home {
                 )
                 /* .cornerRadius(10)
                  .shadow(
-                     color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
+                 color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
+                 radius: colorScheme == .dark ? 5 : 3
                  )
                  .padding([.leading, .trailing], 10) */
 

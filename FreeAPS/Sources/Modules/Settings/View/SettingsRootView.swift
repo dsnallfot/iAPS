@@ -10,6 +10,7 @@ extension Settings {
 
         var body: some View {
             Form {
+                
                 Section {
                     Toggle("Closed loop", isOn: $state.closedLoop)
                 } header: {
