@@ -14,7 +14,7 @@ extension Settings {
                     Toggle("Closed loop", isOn: $state.closedLoop)
                 } header: {
                     Text(
-                        "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)\(Bundle.main.profileExpiration)"
+                        "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)\nBuild Expires: \(Bundle.main.profileExpiration)"
                     ).textCase(nil)
                 }
 
