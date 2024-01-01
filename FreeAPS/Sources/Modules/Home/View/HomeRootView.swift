@@ -642,6 +642,10 @@ extension Home {
                 Spacer()
 
                 loopView
+                    .shadow(
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        radius: colorScheme == .dark ? 3 : 3
+                    )
 
                 Spacer()
             }
