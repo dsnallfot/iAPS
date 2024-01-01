@@ -113,9 +113,40 @@ extension Home {
 
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
             VStack(alignment: .center) {
-                glucoseView
-                    .padding(.bottom, 35)
-                    .padding(.top, 15)
+                ZStack {
+                    glucoseView
+                        .padding(.bottom, 35)
+                        .padding(.top, 15)
+
+                    HStack {
+                        if let eventualBG = state.eventualBG {
+                            if Decimal(state.eventualBG!) > state.highGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.caption2).foregroundColor(.loopYellow)
+                            } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.caption2).foregroundColor(.loopRed)
+                            } else {
+                                Text(
+                                    "⇢ " + targetFormatter.string(
+                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                    )!
+                                )
+                                .font(.caption2).foregroundColor(.loopGreen)
+                            }
+                        }
+                    }
+                    .fontWeight(.bold)
+                    .offset(x: -5, y: 34)
+                }
 
                 HStack(alignment: .center) {
                     Spacer()
@@ -554,17 +585,6 @@ extension Home {
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     Spacer()
                 }
-                /* if let progress = state.bolusProgress {
-                     HStack {
-                         Text("Bolusing")
-                             .font(.system(size: 12, weight: .regular)).foregroundColor(.insulin)
-                         ProgressView(value: Double(progress))
-                             .progressViewStyle(BolusProgressViewStyle())
-                     }
-                     .onTapGesture {
-                         state.cancelBolus()
-                     }
-                 } */
             }
             .frame(maxWidth: .infinity, maxHeight: 40)
             .background(Color.clear)
@@ -617,92 +637,99 @@ extension Home {
         }
 
         var legendPanel: some View {
-            ZStack {
-                HStack(alignment: .center) {
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
-                        Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
-                    }
-                    .frame(width: 44)
+            // ZStack {
+            HStack(alignment: .center) {
+                Spacer()
 
-                    Spacer()
+                loopView
 
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
-                        Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
-                    }
-                    .frame(width: 44)
-
-                    Spacer()
-
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.uam).frame(width: 5, height: 5)
-                        Text("UAM")
-                            .font(.system(size: 12)).foregroundColor(.uam)
-                    }
-                    .frame(width: 44)
-
-                    Spacer()
-
-                    loopView
-                        .offset(x: 0, y: 0)
-
-                    Spacer()
-
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.insulin).frame(width: 5, height: 5)
-                        Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
-                    }
-                    .frame(width: 44)
-
-                    Spacer()
-
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.zt).frame(width: 5, height: 5)
-                        Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
-                    }
-                    .frame(width: 44)
-
-                    Spacer()
-                    HStack(spacing: 4) {
-                        if let eventualBG = state.eventualBG {
-                            if Decimal(state.eventualBG!) > state.highGlucose {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
-                            } else if Decimal(state.eventualBG!) < state.lowGlucose {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
-                            } else {
-                                Text(
-                                    "⇢ " + targetFormatter.string(
-                                        from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
-                                    )!
-                                )
-                                .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
-                            }
-                        }
-                    }
-                    .frame(width: 44)
-                    .onTapGesture {
-                        isStatusPopupPresented.toggle()
-                    }
-                }
-                .padding(.bottom, 16)
-                .padding(.top, 8)
-                .padding(.leading, 10)
-                .padding(.trailing, 10)
-                .onTapGesture {
-                    isStatusPopupPresented.toggle()
-                }
+                Spacer()
             }
+            /* HStack(alignment: .center) {
+                 HStack(spacing: 4) {
+                     Circle().fill(Color.loopGreen).frame(width: 5, height: 5)
+                     Text("BG").font(.system(size: 12)).foregroundColor(.loopGreen)
+                 }
+                 .frame(width: 44)
+
+                 Spacer()
+
+                 HStack(spacing: 4) {
+                     Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
+                     Text("COB").font(.system(size: 12)).foregroundColor(.loopYellow)
+                 }
+                 .frame(width: 44)
+
+                 Spacer()
+
+                 HStack(spacing: 4) {
+                     Circle().fill(Color.uam).frame(width: 5, height: 5)
+                     Text("UAM")
+                         .font(.system(size: 12)).foregroundColor(.uam)
+                 }
+                 .frame(width: 44)
+
+                 Spacer()
+
+                 loopView
+                     .offset(x: 0, y: 0)
+
+                 Spacer()
+
+                 HStack(spacing: 4) {
+                     Circle().fill(Color.insulin).frame(width: 5, height: 5)
+                     Text("IOB").font(.system(size: 12)).foregroundColor(.insulin)
+                 }
+                 .frame(width: 44)
+
+                 Spacer()
+
+                 HStack(spacing: 4) {
+                     Circle().fill(Color.zt).frame(width: 5, height: 5)
+                     Text("ZT").font(.system(size: 12)).foregroundColor(.zt)
+                 }
+                 .frame(width: 44)
+
+                 Spacer()
+                 HStack(spacing: 4) {
+                     if let eventualBG = state.eventualBG {
+                         if Decimal(state.eventualBG!) > state.highGlucose {
+                             Text(
+                                 "⇢ " + targetFormatter.string(
+                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                 )!
+                             )
+                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                         } else if Decimal(state.eventualBG!) < state.lowGlucose {
+                             Text(
+                                 "⇢ " + targetFormatter.string(
+                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                 )!
+                             )
+                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+                         } else {
+                             Text(
+                                 "⇢ " + targetFormatter.string(
+                                     from: (state.units == .mmolL ? eventualBG.asMmolL : Decimal(eventualBG)) as NSNumber
+                                 )!
+                             )
+                             .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                         }
+                     }
+                 }
+                 .frame(width: 44)
+                 .onTapGesture {
+                     isStatusPopupPresented.toggle()
+                 }
+             } */
+            .padding(.bottom, 14)
+            .padding(.top, 4)
+            .padding(.leading, 10)
+            .padding(.trailing, 10)
+            .onTapGesture {
+                isStatusPopupPresented.toggle()
+            }
+            // }
         }
 
         var mainChart: some View {
@@ -831,7 +858,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 24, weight: .regular))
                                 .foregroundColor(.loopYellow)
-                                .padding(.top, 16)
+                                .padding(.top, 14)
                                 .padding(.bottom, 9)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -862,7 +889,7 @@ extension Home {
                                  .padding(.bottom, 6)
                                  .padding(.leading, 9)
                                  .padding(.trailing, 6) */
-                                .padding(.top, 15)
+                                .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -895,7 +922,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.insulin)
-                                .padding(.top, 15)
+                                .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -921,7 +948,7 @@ extension Home {
                                 // .resizable()
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .padding(.top, 15)
+                                .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -937,7 +964,7 @@ extension Home {
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
                                 .foregroundColor(.cyan)
-                                .padding(.top, 15)
+                                .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
@@ -962,7 +989,7 @@ extension Home {
                                 // .resizable()
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .padding(.top, 15)
+                                .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
