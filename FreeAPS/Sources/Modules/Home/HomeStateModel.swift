@@ -62,7 +62,7 @@ extension Home {
         @Published var displayYgridLines: Bool = false
         @Published var thresholdLines: Bool = false
         @Published var timeZone: TimeZone?
-        @Published var hours: Int16 = 6
+        @Published var hours: Int16 = 4
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 

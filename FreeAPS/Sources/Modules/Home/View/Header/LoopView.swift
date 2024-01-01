@@ -24,7 +24,7 @@ struct LoopView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
-    private let rect = CGRect(x: 0, y: 0, width: 34, height: 34)
+    private let rect = CGRect(x: 0, y: 0, width: 36, height: 36)
 
     var body: some View {
         VStack(alignment: .center) {
@@ -49,11 +49,11 @@ struct LoopView: View {
                  .offset(x: 0, y: -2)
                  }*/
                 else if actualSuggestion?.timestamp != nil {
-                    Text(timeString).font(.system(size: 9))
+                    Text(timeString).font(.system(size: 11))
                         .foregroundColor(.primary)
                         .offset(x: 0, y: 0)
                 } else {
-                    Text("--").font(.system(size: 9)).foregroundColor(.primary)
+                    Text("--").font(.system(size: 11)).foregroundColor(.primary)
                         .offset(x: 0, y: 0)
                 }
             }
