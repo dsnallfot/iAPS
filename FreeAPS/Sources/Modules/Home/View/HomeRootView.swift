@@ -545,7 +545,7 @@ extension Home {
 
             .background(
                 RoundedRectangle(cornerRadius: 13)
-                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
                             .stroke(Color.gray.opacity(1), lineWidth: 0.5)
@@ -703,7 +703,7 @@ extension Home {
                 )
                 .frame(height: 80)
                 .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                    color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
                     radius: colorScheme == .dark ? 1 : 1
                 )
 
