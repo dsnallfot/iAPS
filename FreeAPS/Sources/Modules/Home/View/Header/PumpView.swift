@@ -45,7 +45,7 @@ struct PumpView: View {
                         Image(systemName: "clock.badge.exclamationmark.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 134)
+                            .frame(maxHeight: 12)
                             .symbolRenderingMode(.multicolor)
                             .foregroundStyle(Color.warning, Color.red)
                     }

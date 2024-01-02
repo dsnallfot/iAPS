@@ -145,24 +145,8 @@ extension Home {
         var cobIobView: some View {
             HStack {
                 HStack {
-                    Text("IOB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" E", comment: "Insulin unit")
-                    )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                    .offset(x: -2, y: 0)
-                }
-                .frame(width: 85)
-                .onTapGesture {
-                    state.showModal(for: .dataTable)
-                }
-
-                Spacer()
-                HStack {
                     Text("COB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopYellow)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
@@ -171,6 +155,22 @@ extension Home {
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 75)
+                .onTapGesture {
+                    state.showModal(for: .dataTable)
+                }
+                Spacer()
+
+                HStack {
+                    Text("IOB")
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.insulin)
+                    Text(
+                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
+                            NSLocalizedString(" E", comment: "Insulin unit")
+                    )
+                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
+                }
+                .frame(width: 85)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -347,18 +347,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.secondary.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.secondary.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.pumpSuspended {
                     Spacer()
                 }
@@ -378,18 +381,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.loopYellow.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.carbsRequired != nil {
                     Spacer()
                 }
@@ -403,18 +409,21 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.loopGreen.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if tempTargetString != nil {
                     Spacer()
                 }
@@ -441,18 +450,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.insulin.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.insulin.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                     Spacer()
                 }
@@ -471,18 +483,21 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                         }
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1.5)
+                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1.5).shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                     )
-                    .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                        radius: colorScheme == .dark ? 5 : 3
-                    )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if overrideString != nil {
                     Spacer()
                 }
@@ -504,18 +519,21 @@ extension Home {
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
                             .padding(.trailing, 4)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                         }
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1.5)
+                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1.5).shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                     )
-                    .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                        radius: colorScheme == .dark ? 5 : 3
-                    )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     Spacer()
                 }
@@ -528,7 +546,7 @@ extension Home {
         }
 
         var timeInterval: some View {
-            let string = " \(state.hours) " + NSLocalizedString("h graf ", comment: "") + "   "
+            let string = "\(state.hours)" + NSLocalizedString("h graf ", comment: "") + "   "
 
             return Menu(string) {
                 Button("24 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 24 })
@@ -540,12 +558,20 @@ extension Home {
             }
             .foregroundColor(.secondary)
             .font(.system(size: 12).weight(.semibold))
-            .padding(.horizontal, 1)
+            .padding(.horizontal, 2)
             .padding(.vertical, 4)
             .background(
-                RoundedRectangle(cornerRadius: 10) // Adjust the corner radius as needed
-                    .fill(Color.basal)
-                    .opacity(0.5)
+                RoundedRectangle(cornerRadius: 13)
+                    .fill(Color.loopGray)
+                    .opacity(0.15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.gray.opacity(0.5), lineWidth: 1.5)
+                    )
+            )
+            .shadow(
+                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                radius: colorScheme == .dark ? 5 : 3
             )
         }
 
@@ -553,7 +579,7 @@ extension Home {
             HStack(alignment: .center) {
                 loopView
                     .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0),
                         radius: colorScheme == .dark ? 3 : 3
                     )
             }
@@ -662,7 +688,7 @@ extension Home {
             }
             .modal(for: .dataTable, from: self)
             .background(
-                colorScheme == .dark ? Color.gray.opacity(0.1) : Color.white
+                colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
             )
         }
 
@@ -695,11 +721,11 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
+                    colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white
                 )
                 .frame(height: 80)
                 .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
 
@@ -884,17 +910,29 @@ extension Home {
                     HStack(alignment: .center) {
                         Spacer()
                         timeInterval
-                            .frame(width: 70, height: 40, alignment: .center)
-                        legendPanel
-                            .frame(width: 60, height: 40, alignment: .center)
+                            .frame(width: 110, height: 40, alignment: .center)
 
-                        Image(systemName: "chart.bar.fill")
-                            .foregroundStyle(Color(.basal).opacity(0.8))
-                            .font(.system(size: 20))
+                        legendPanel
+                            .frame(width: 55, height: 40, alignment: .center)
+
+                        Image(systemName: "chart.bar")
+                            .foregroundStyle(Color(.ZT).opacity(0.7))
+                            .font(.system(size: 22))
+                            .shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                             .onTapGesture {
                                 state.showModal(for: .statistics)
                             }
-                            .frame(width: 70, height: 40, alignment: .center)
+                            .frame(width: 110, height: 40, alignment: .center)
+                        /* Image(systemName: "book.fill")
+                         .foregroundStyle(Color(.purple).opacity(0.4))
+                         .font(.system(size: 22))
+                         .onTapGesture {
+                             state.showModal(for: .dataTable)
+                         }
+                         .frame(width: 55, height: 40, alignment: .center)*/
                         Spacer()
                     }
                     .padding(.top, 20)
@@ -928,7 +966,7 @@ extension Home {
                     .offset(x: 0, y: 10)
                 }
             }
-            .background(Color.blue.opacity(0.0)) // 12))
+            .background(Color.loopGray.opacity(0.0)) // 12))
             .navigationTitle("Home")
             .navigationBarHidden(true)
             .ignoresSafeArea(.keyboard)
