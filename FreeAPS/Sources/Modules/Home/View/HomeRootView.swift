@@ -342,7 +342,7 @@ extension Home {
                                 .offset(x: -4, y: 0)
                         }
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
@@ -353,15 +353,12 @@ extension Home {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.secondary.opacity(1.0), lineWidth: 1.5).shadow(
-                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                            radius: colorScheme == .dark ? 5 : 3
+                        .stroke(Color.gray.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.gray.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
                         )
                 )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if state.pumpSuspended {
                     Spacer()
                 }
@@ -387,15 +384,12 @@ extension Home {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopYellow.opacity(1.0), lineWidth: 1.5).shadow(
-                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                            radius: colorScheme == .dark ? 5 : 3
+                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.loopYellow.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
                         )
                 )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if state.carbsRequired != nil {
                     Spacer()
                 }
@@ -415,15 +409,12 @@ extension Home {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1.0), lineWidth: 1.5).shadow(
-                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                            radius: colorScheme == .dark ? 5 : 3
+                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.loopGreen.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
                         )
                 )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if tempTargetString != nil {
                     Spacer()
                 }
@@ -456,15 +447,12 @@ extension Home {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.insulin.opacity(1.0), lineWidth: 1.5).shadow(
-                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                            radius: colorScheme == .dark ? 5 : 3
+                        .stroke(Color.insulin.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.insulin.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
                         )
                 )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                     Spacer()
                 }
@@ -489,15 +477,12 @@ extension Home {
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1.5).shadow(
-                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                                radius: colorScheme == .dark ? 5 : 3
+                            .stroke(Color.cyan.opacity(1), lineWidth: 1.5)
+                            .shadow(
+                                color: Color.cyan.opacity(colorScheme == .dark ? 1 : 1),
+                                radius: colorScheme == .dark ? 1 : 1
                             )
                     )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if overrideString != nil {
                     Spacer()
                 }
@@ -525,15 +510,12 @@ extension Home {
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1.5).shadow(
-                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                                radius: colorScheme == .dark ? 5 : 3
+                            .stroke(Color.loopRed.opacity(1), lineWidth: 1.5)
+                            .shadow(
+                                color: Color.loopRed.opacity(colorScheme == .dark ? 1 : 1),
+                                radius: colorScheme == .dark ? 1 : 1
                             )
                     )
-                /* .shadow(
-                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                     radius: colorScheme == .dark ? 5 : 3
-                 ) */
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     Spacer()
                 }
@@ -559,29 +541,25 @@ extension Home {
             .foregroundColor(.secondary)
             .font(.system(size: 12).weight(.semibold))
             .padding(.horizontal, 2)
-            .padding(.vertical, 4)
+            .padding(.vertical, 5)
+
             .background(
                 RoundedRectangle(cornerRadius: 13)
-                    .fill(Color.loopGray)
-                    .opacity(0.15)
+                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.gray.opacity(0.5), lineWidth: 1.5)
+                            .stroke(Color.gray.opacity(1), lineWidth: 0.5)
                     )
-            )
-            .shadow(
-                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                radius: colorScheme == .dark ? 5 : 3
+                    .shadow(
+                        color: Color.gray.opacity(colorScheme == .dark ? 0.5 : 0.5),
+                        radius: colorScheme == .dark ? 1 : 1
+                    )
             )
         }
 
         var legendPanel: some View {
             HStack(alignment: .center) {
                 loopView
-                    .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0),
-                        radius: colorScheme == .dark ? 3 : 3
-                    )
             }
             .onTapGesture {
                 isStatusPopupPresented.toggle()
@@ -721,12 +699,12 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white
+                    colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
                 )
                 .frame(height: 80)
                 .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
+                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                    radius: colorScheme == .dark ? 1 : 1
                 )
 
                 HStack {
@@ -786,7 +764,6 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                                 Circle().fill(Color.insulin).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
@@ -902,8 +879,8 @@ extension Home {
                         .overlay(mainChart)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .shadow(
-                            color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
-                            radius: colorScheme == .dark ? 5 : 3
+                            color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                            radius: colorScheme == .dark ? 1 : 1
                         )
                         .padding(.horizontal, 10)
                         .frame(maxHeight: UIScreen.main.bounds.height / 2.2)
@@ -919,8 +896,8 @@ extension Home {
                             .foregroundStyle(Color(.ZT).opacity(0.7))
                             .font(.system(size: 22))
                             .shadow(
-                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                                radius: colorScheme == .dark ? 5 : 3
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                radius: colorScheme == .dark ? 1 : 1
                             )
                             .onTapGesture {
                                 state.showModal(for: .statistics)
@@ -929,6 +906,10 @@ extension Home {
                         /* Image(systemName: "book.fill")
                          .foregroundStyle(Color(.purple).opacity(0.4))
                          .font(.system(size: 22))
+                         .shadow(
+                             color: Color.primary.opacity(colorScheme == .dark ? 0.5 : 0.5),
+                             radius: colorScheme == .dark ? 1 : 1
+                         )
                          .onTapGesture {
                              state.showModal(for: .dataTable)
                          }
@@ -957,8 +938,8 @@ extension Home {
                                     .stroke(Color.white, lineWidth: 3)
                             )
                             .shadow(
-                                color: Color.black.opacity(colorScheme == .dark ? 0.75 : 0.33),
-                                radius: colorScheme == .dark ? 5 : 3
+                                color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                radius: colorScheme == .dark ? 1 : 1
                             )
                         bolusProgressView(progress: progress, amount: amount)
                     }
@@ -1001,7 +982,7 @@ extension Home {
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
-                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.caption2).foregroundColor(.primary)
+                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote).foregroundColor(.primary)
 
                 } else {
                     Text("No suggestion found").font(.body).foregroundColor(.primary)
@@ -1013,7 +994,7 @@ extension Home {
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)
-                    Text(errorMessage).font(.caption2).foregroundColor(.loopRed)
+                    Text(errorMessage).font(.footnote).foregroundColor(.loopRed)
                 }
             }
         }

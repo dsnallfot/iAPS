@@ -181,7 +181,10 @@ struct TrendShape: View {
                 Group {
                     CircleShape(gradient: gradient)
                     TriangleShape(color: color)
-                }.shadow(color: Color.primary.opacity(colorScheme == .dark ? 0.5 : 0.33), radius: colorScheme == .dark ? 5 : 3)
+                }.shadow(
+                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                    radius: colorScheme == .dark ? 2 : 2
+                )
                 CircleShape(gradient: gradient)
             }
         }

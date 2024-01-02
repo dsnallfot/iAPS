@@ -448,6 +448,10 @@ extension Bolus {
                             .toggleStyle(CheckboxToggleStyle())
                             .font(.footnote)
                             .foregroundColor(.brown)
+                            .shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                radius: colorScheme == .dark ? 1 : 1
+                            )
                             .onChange(of: state.useFattyMealCorrectionFactor) { _ in
                                 state.insulinCalculated = state.calculateInsulin()
                                 if state.useFattyMealCorrectionFactor {
@@ -465,6 +469,10 @@ extension Bolus {
                             .toggleStyle(CheckboxToggleStyle())
                             .font(.footnote)
                             .foregroundColor(.cyan)
+                            .shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                radius: colorScheme == .dark ? 1 : 1
+                            )
                             .onChange(of: state.useSuperBolus) { _ in
                                 state.insulinCalculated = state.calculateInsulin()
                                 if state.useSuperBolus {
@@ -1230,10 +1238,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.purple)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else if roundedOrefInsulin <= 0 {
@@ -1260,10 +1274,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.loopRed)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else {
@@ -1290,10 +1310,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.insulin)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         }
@@ -1325,10 +1351,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.purple)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 && !state.useSuperBolus {
@@ -1355,10 +1387,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.loopRed)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else if state.error && state.insulinCalculated > 0 && !state.useSuperBolus {
@@ -1385,10 +1423,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.orange)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else if state.useSuperBolus {
@@ -1415,10 +1459,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.cyan)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         } else {
@@ -1445,10 +1495,16 @@ extension Bolus {
                                 .padding(.bottom, 2)
                                 .padding(.leading, 5)
                                 .padding(.trailing, 7)
+                                .frame(height: 24)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .stroke(Color.white, lineWidth: 2)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.white, lineWidth: 4)
                                         .background(Color.green)
+                                )
+                                .cornerRadius(8)
+                                .shadow(
+                                    color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
+                                    radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
                         }

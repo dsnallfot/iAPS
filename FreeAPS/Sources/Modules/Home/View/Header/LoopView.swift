@@ -24,7 +24,7 @@ struct LoopView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
-    private let rect = CGRect(x: 0, y: 0, width: 36, height: 36)
+    private let rect = CGRect(x: 0, y: 0, width: 40, height: 40)
 
     var body: some View {
         VStack(alignment: .center) {
@@ -34,8 +34,8 @@ struct LoopView: View {
                     .frame(width: rect.width, height: rect.height, alignment: .bottom)
                     .mask(mask(in: rect).fill(style: FillStyle(eoFill: true)))
                     .shadow(
-                        color: Color.white.opacity(colorScheme == .dark ? 0.5 : 0.33),
-                        radius: colorScheme == .dark ? 5 : 3
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                        radius: colorScheme == .dark ? 1 : 1
                     )
                 if isLooping {
                     ProgressView()
@@ -49,11 +49,11 @@ struct LoopView: View {
                  .offset(x: 0, y: -2)
                  }*/
                 else if actualSuggestion?.timestamp != nil {
-                    Text(timeString).font(.system(size: 11))
-                        .foregroundColor(.primary)
+                    Text(timeString).font(.system(size: 11).weight(.semibold))
+                        .foregroundColor(.secondary)
                         .offset(x: 0, y: 0)
                 } else {
-                    Text("--").font(.system(size: 11)).foregroundColor(.primary)
+                    Text("--").font(.system(size: 11).weight(.semibold))
                         .offset(x: 0, y: 0)
                 }
             }
