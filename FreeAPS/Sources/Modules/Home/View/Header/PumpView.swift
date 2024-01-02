@@ -83,7 +83,7 @@ struct PumpView: View {
 
     private func remainingTimeString(time: TimeInterval) -> String {
         guard time > 0 else {
-            return NSLocalizedString("Replace pod", comment: "View/Header when pod expired")
+            return NSLocalizedString("Byt ut", comment: "View/Header when pod expired")
         }
 
         var time = time
