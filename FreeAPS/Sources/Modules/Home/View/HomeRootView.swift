@@ -347,18 +347,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.secondary.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.secondary.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.pumpSuspended {
                     Spacer()
                 }
@@ -378,18 +381,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.loopYellow.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.carbsRequired != nil {
                     Spacer()
                 }
@@ -403,18 +409,21 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.loopGreen.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if tempTargetString != nil {
                     Spacer()
                 }
@@ -441,18 +450,21 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                         .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.insulin.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.insulin.opacity(1.0), lineWidth: 1.5).shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                            radius: colorScheme == .dark ? 5 : 3
+                        )
                 )
-                .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                    radius: colorScheme == .dark ? 5 : 3
-                )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                     Spacer()
                 }
@@ -471,18 +483,21 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                         }
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1.5)
+                            .stroke(Color.cyan.opacity(1.0), lineWidth: 1.5).shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                     )
-                    .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                        radius: colorScheme == .dark ? 5 : 3
-                    )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if overrideString != nil {
                     Spacer()
                 }
@@ -504,18 +519,21 @@ extension Home {
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
                             .padding(.trailing, 4)
-                            .background(colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                             .cornerRadius(13)
                         }
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1.5)
+                            .stroke(Color.loopRed.opacity(1.0), lineWidth: 1.5).shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                     )
-                    .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
-                        radius: colorScheme == .dark ? 5 : 3
-                    )
+                /* .shadow(
+                     color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                     radius: colorScheme == .dark ? 5 : 3
+                 ) */
                 if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
                     Spacer()
                 }
@@ -540,12 +558,20 @@ extension Home {
             }
             .foregroundColor(.secondary)
             .font(.system(size: 12).weight(.semibold))
-            .padding(.horizontal, 1)
+            .padding(.horizontal, 2)
             .padding(.vertical, 4)
             .background(
-                RoundedRectangle(cornerRadius: 10) // Adjust the corner radius as needed
+                RoundedRectangle(cornerRadius: 13)
                     .fill(Color.loopGray)
-                    .opacity(0.25)
+                    .opacity(0.15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(Color.gray.opacity(0.5), lineWidth: 1.5)
+                    )
+            )
+            .shadow(
+                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                radius: colorScheme == .dark ? 5 : 3
             )
         }
 
@@ -553,7 +579,7 @@ extension Home {
             HStack(alignment: .center) {
                 loopView
                     .shadow(
-                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                        color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0),
                         radius: colorScheme == .dark ? 3 : 3
                     )
             }
@@ -662,7 +688,7 @@ extension Home {
             }
             .modal(for: .dataTable, from: self)
             .background(
-                colorScheme == .dark ? Color.gray.opacity(0.1) : Color.white
+                colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
             )
         }
 
@@ -695,7 +721,7 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.basal.opacity(0.2) : Color.white
+                    colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white
                 )
                 .frame(height: 80)
                 .shadow(
@@ -889,9 +915,13 @@ extension Home {
                         legendPanel
                             .frame(width: 55, height: 40, alignment: .center)
 
-                        Image(systemName: "chart.bar.fill")
-                            .foregroundStyle(Color(.purple).opacity(0.6))
+                        Image(systemName: "chart.bar")
+                            .foregroundStyle(Color(.ZT).opacity(0.7))
                             .font(.system(size: 22))
+                            .shadow(
+                                color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                                radius: colorScheme == .dark ? 5 : 3
+                            )
                             .onTapGesture {
                                 state.showModal(for: .statistics)
                             }
@@ -936,7 +966,7 @@ extension Home {
                     .offset(x: 0, y: 10)
                 }
             }
-            .background(Color.blue.opacity(0.0)) // 12))
+            .background(Color.loopGray.opacity(0.0)) // 12))
             .navigationTitle("Home")
             .navigationBarHidden(true)
             .ignoresSafeArea(.keyboard)
