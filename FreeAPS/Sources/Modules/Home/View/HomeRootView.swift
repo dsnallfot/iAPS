@@ -539,9 +539,9 @@ extension Home {
                 Button("2 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 2 })
             }
             .foregroundColor(.secondary)
-            .font(.system(size: 11).weight(.semibold))
+            .font(.system(size: 12).weight(.semibold))
             .padding(.horizontal, 1)
-            .padding(.vertical, 3)
+            .padding(.vertical, 4)
             .background(
                 RoundedRectangle(cornerRadius: 10) // Adjust the corner radius as needed
                     .fill(Color.basal)
