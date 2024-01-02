@@ -145,24 +145,8 @@ extension Home {
         var cobIobView: some View {
             HStack {
                 HStack {
-                    Text("IOB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
-                    Text(
-                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" E", comment: "Insulin unit")
-                    )
-                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
-                    .offset(x: -2, y: 0)
-                }
-                .frame(width: 85)
-                .onTapGesture {
-                    state.showModal(for: .dataTable)
-                }
-
-                Spacer()
-                HStack {
                     Text("COB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.secondary)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopYellow)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
@@ -171,6 +155,22 @@ extension Home {
                     .offset(x: -2, y: 0)
                 }
                 .frame(width: 75)
+                .onTapGesture {
+                    state.showModal(for: .dataTable)
+                }
+                Spacer()
+
+                HStack {
+                    Text("IOB")
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.insulin)
+                    Text(
+                        (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
+                            NSLocalizedString(" E", comment: "Insulin unit")
+                    )
+                    .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
+                    .offset(x: -2, y: 0)
+                }
+                .frame(width: 85)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -528,7 +528,7 @@ extension Home {
         }
 
         var timeInterval: some View {
-            let string = " \(state.hours) " + NSLocalizedString("h graf ", comment: "") + "   "
+            let string = "\(state.hours)" + NSLocalizedString("h graf ", comment: "") + "   "
 
             return Menu(string) {
                 Button("24 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 24 })
@@ -544,8 +544,8 @@ extension Home {
             .padding(.vertical, 4)
             .background(
                 RoundedRectangle(cornerRadius: 10) // Adjust the corner radius as needed
-                    .fill(Color.basal)
-                    .opacity(0.5)
+                    .fill(Color.loopGray)
+                    .opacity(0.25)
             )
         }
 
@@ -695,11 +695,11 @@ extension Home {
         @ViewBuilder private func bottomPanel(_: GeometryProxy) -> some View {
             ZStack {
                 Rectangle().fill(
-                    colorScheme == .dark ? Color.basal.opacity(0.3) : Color.white
+                    colorScheme == .dark ? Color.basal.opacity(0.2) : Color.white
                 )
                 .frame(height: 80)
                 .shadow(
-                    color: Color.primary.opacity(colorScheme == .dark ? 0.33 : 0.33),
+                    color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.33),
                     radius: colorScheme == .dark ? 5 : 3
                 )
 
@@ -884,17 +884,25 @@ extension Home {
                     HStack(alignment: .center) {
                         Spacer()
                         timeInterval
-                            .frame(width: 70, height: 40, alignment: .center)
+                            .frame(width: 110, height: 40, alignment: .center)
+
                         legendPanel
-                            .frame(width: 60, height: 40, alignment: .center)
+                            .frame(width: 55, height: 40, alignment: .center)
 
                         Image(systemName: "chart.bar.fill")
-                            .foregroundStyle(Color(.basal).opacity(0.8))
-                            .font(.system(size: 20))
+                            .foregroundStyle(Color(.purple).opacity(0.6))
+                            .font(.system(size: 22))
                             .onTapGesture {
                                 state.showModal(for: .statistics)
                             }
-                            .frame(width: 70, height: 40, alignment: .center)
+                            .frame(width: 110, height: 40, alignment: .center)
+                        /* Image(systemName: "book.fill")
+                         .foregroundStyle(Color(.purple).opacity(0.4))
+                         .font(.system(size: 22))
+                         .onTapGesture {
+                             state.showModal(for: .dataTable)
+                         }
+                         .frame(width: 55, height: 40, alignment: .center)*/
                         Spacer()
                     }
                     .padding(.top, 20)
