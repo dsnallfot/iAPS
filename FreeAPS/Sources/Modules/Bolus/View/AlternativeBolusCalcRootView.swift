@@ -115,7 +115,7 @@ extension Bolus {
                             exceededMaxBolus3 = false
                         }
                     }
-                    .listRowBackground(Color(.basal).opacity(1))
+                    .listRowBackground(Color(.insulin).opacity(0.8))
                     // }
                 }
                 .overlay(
