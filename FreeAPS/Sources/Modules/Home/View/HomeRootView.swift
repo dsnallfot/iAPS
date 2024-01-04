@@ -528,30 +528,33 @@ extension Home {
         }
 
         var timeInterval: some View {
-            let string = "\(state.hours)" + NSLocalizedString("h graf ", comment: "") + "   "
+            HStack(alignment: .center) {
+                let string = "\(state.hours)" + NSLocalizedString("h", comment: "") + "   "
 
-            return Menu(string) {
-                Button("24 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 24 })
-                Button("12 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 12 })
-                Button("6 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 6 })
-                Button("4 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 4 })
-                Button("3 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 3 })
-                Button("2 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 2 })
+                return Menu(string) {
+                    Button("24 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 24 })
+                    Button("12 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 12 })
+                    Button("6 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 6 })
+                    Button("4 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 4 })
+                    Button("3 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 3 })
+                    Button("2 " + NSLocalizedString("hours", comment: ""), action: { state.hours = 2 })
+                }
             }
             .foregroundColor(.secondary)
             .font(.system(size: 12).weight(.semibold))
             .padding(.horizontal, 2)
             .padding(.vertical, 5)
+            .frame(width: 40, height: 25)
 
             .background(
                 RoundedRectangle(cornerRadius: 13)
-                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.gray.opacity(1), lineWidth: 0.5)
+                            .stroke(Color.clear.opacity(1), lineWidth: 0.5)
                     )
                     .shadow(
-                        color: Color.gray.opacity(colorScheme == .dark ? 0.5 : 0.5),
+                        color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
                         radius: colorScheme == .dark ? 1 : 1
                     )
             )
@@ -887,33 +890,48 @@ extension Home {
                     HStack(alignment: .center) {
                         Spacer()
                         timeInterval
-                            .frame(width: 110, height: 40, alignment: .center)
+                            .frame(width: 80, height: 40, alignment: .center)
 
                         legendPanel
-                            .frame(width: 55, height: 40, alignment: .center)
+                            .frame(width: 50, height: 40, alignment: .center)
 
-                        Image(systemName: "chart.bar")
-                            .foregroundStyle(Color(.ZT).opacity(0.7))
-                            .font(.system(size: 22))
-                            .shadow(
-                                color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
-                                radius: colorScheme == .dark ? 1 : 1
-                            )
-                            .onTapGesture {
-                                state.showModal(for: .statistics)
-                            }
-                            .frame(width: 110, height: 40, alignment: .center)
-                        /* Image(systemName: "book.fill")
-                         .foregroundStyle(Color(.purple).opacity(0.4))
-                         .font(.system(size: 22))
-                         .shadow(
+                        HStack(alignment: .center) {
+                            Image(systemName: "chart.bar")
+                                .foregroundStyle(.secondary.opacity(1))
+                                .font(.system(size: 13))
+                                /* .shadow(
+                                     color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                     radius: colorScheme == .dark ? 1 : 1
+                                 ) */
+                                .onTapGesture {
+                                    state.showModal(for: .statistics)
+                                }
+                                .frame(width: 40, height: 25, alignment: .center)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 13)
+                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 13)
+                                                .stroke(Color.clear.opacity(1), lineWidth: 0.5)
+                                        )
+                                        .shadow(
+                                            color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                                            radius: colorScheme == .dark ? 1 : 1
+                                        )
+                                )
+                            /* Image(systemName: "book.fill")
+                             .foregroundStyle(Color(.purple).opacity(0.4))
+                             .font(.system(size: 22))
+                             .shadow(
                              color: Color.primary.opacity(colorScheme == .dark ? 0.5 : 0.5),
                              radius: colorScheme == .dark ? 1 : 1
-                         )
-                         .onTapGesture {
+                             )
+                             .onTapGesture {
                              state.showModal(for: .dataTable)
-                         }
-                         .frame(width: 55, height: 40, alignment: .center)*/
+                             }
+                             .frame(width: 55, height: 40, alignment: .center)*/
+                        }
+                        .frame(width: 80, height: 40, alignment: .center)
                         Spacer()
                     }
                     .padding(.top, 20)
@@ -931,7 +949,7 @@ extension Home {
                 if let progress = state.bolusProgress, let amount = state.bolusAmount {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.insulin.opacity(0.9))
+                            .fill(Color.insulin.opacity(0.8))
                             .frame(width: 300, height: 60)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 15)

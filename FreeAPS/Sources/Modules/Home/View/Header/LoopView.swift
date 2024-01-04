@@ -49,11 +49,11 @@ struct LoopView: View {
                  .offset(x: 0, y: -2)
                  }*/
                 else if actualSuggestion?.timestamp != nil {
-                    Text(timeString).font(.system(size: 11).weight(.semibold))
-                        .foregroundColor(.secondary)
+                    Text(timeString).font(.system(size: 12).weight(.semibold))
+                        .foregroundColor(.primary)
                         .offset(x: 0, y: 0)
                 } else {
-                    Text("--").font(.system(size: 11).weight(.semibold))
+                    Text("--").font(.system(size: 12).weight(.semibold))
                         .offset(x: 0, y: 0)
                 }
             }
