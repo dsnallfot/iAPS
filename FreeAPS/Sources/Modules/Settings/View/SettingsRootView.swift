@@ -12,7 +12,7 @@ extension Settings {
             Form {
                 Section {
                     Toggle("Closed loop", isOn: $state.closedLoop)
-                } 
+                }
                 header: {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
