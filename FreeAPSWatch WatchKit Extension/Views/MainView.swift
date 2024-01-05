@@ -29,13 +29,16 @@ import SwiftUI
             if !completedLongPressOfBG {
                 if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
                     HStack {
+                        Spacer()
+
+                        Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
                         withAnimation {
                             BlinkingView(count: 5, size: 3)
-                                .frame(width: 14, height: 14)
-                                .padding(2)
+                                .frame(width: 10, height: 10)
                         }
-                        Text("Updating...").font(.system(size: 10)).foregroundColor(.secondary)
+                        Spacer()
                     }
+                    .offset(x: 0, y: 9)
                 }
             }
             VStack {
@@ -78,11 +81,12 @@ import SwiftUI
                         .font(.system(size: 45, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
-
+                    Spacer()
                     Text(state.trend)
                         .font(.system(size: 35, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
+                        .offset(x: -8, y: 0)
                     Spacer()
                     Circle().stroke(color, lineWidth: 5).frame(width: 26, height: 26).padding(10)
                 }
@@ -138,7 +142,7 @@ import SwiftUI
                                     .foregroundColor(.loopGreen)
                             }
                         }
-                        .frame(width: 60, alignment: .leading)
+                        .frame(width: 60, alignment: .center)
                     } else {
                         HStack {
                             Text(state.delta)
@@ -210,18 +214,18 @@ import SwiftUI
                                 .gesture(longPress)
                             }
                         }
-                        .frame(width: 60, alignment: .leading)
+                        .frame(width: 60, alignment: .center)
                     case .BGTarget:
                         if let eventualBG = state.eventualBG.nonEmpty {
                             Spacer()
                             HStack {
-                                Text(" " + eventualBG)
+                                Text(eventualBG)
                                     .font(.caption2)
                                     .scaledToFill()
                                     .foregroundColor(.white)
                                     .minimumScaleFactor(0.5)
                             }
-                            .frame(width: 60, alignment: .leading)
+                            .frame(width: 60, alignment: .center)
                         }
                     case .steps:
                         Spacer()
@@ -233,7 +237,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .leading)
+                        .frame(width: 60, alignment: .center)
                     case .isf:
                         Spacer()
                         let isf: String = state.isf != nil ? "\(state.isf ?? 0)" : "-"
@@ -250,7 +254,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .leading)
+                        .frame(width: 60, alignment: .center)
                     case .override:
                         Spacer()
                         let override: String = state.override != nil ? state.override! : "-"
@@ -267,7 +271,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .leading)
+                        .frame(width: 60, alignment: .center)
                     }
                     Spacer()
                     HStack {
@@ -345,8 +349,22 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 30, height: 30)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(.loopYellow)
+            }
+
+            Spacer()
+
+            NavigationLink(isActive: $state.isBolusViewActive) {
+                BolusView()
+                    .environmentObject(state)
+            } label: {
+                Image(systemName: "drop.circle")
+                    .renderingMode(.template)
+                    .resizable()
+                    .fontWeight(.light)
+                    .frame(width: 35, height: 35)
+                    .foregroundColor(.insulin)
             }
             Spacer()
 
@@ -359,7 +377,7 @@ import SwiftUI
                         .renderingMode(.template)
                         .resizable()
                         .fontWeight(.light)
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .foregroundColor(.loopGreen)
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
                         Text(until, style: .timer)
@@ -367,19 +385,6 @@ import SwiftUI
                             .font(.system(size: 8))
                     }
                 }
-            }
-            Spacer()
-
-            NavigationLink(isActive: $state.isBolusViewActive) {
-                BolusView()
-                    .environmentObject(state)
-            } label: {
-                Image(systemName: "drop.circle")
-                    .renderingMode(.template)
-                    .resizable()
-                    .fontWeight(.light)
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.insulin)
             }
         }
     }
