@@ -551,7 +551,10 @@ extension Home {
                     .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.clear.opacity(1), lineWidth: 0.5)
+                            .stroke(
+                                colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
+                                lineWidth: 0.5
+                            )
                     )
                     .shadow(
                         color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
@@ -912,7 +915,11 @@ extension Home {
                                         .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 13)
-                                                .stroke(Color.clear.opacity(1), lineWidth: 0.5)
+                                                .stroke(
+                                                    colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary
+                                                        .opacity(0),
+                                                    lineWidth: 0.5
+                                                )
                                         )
                                         .shadow(
                                             color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
