@@ -393,31 +393,6 @@ extension Home {
                 if state.carbsRequired != nil {
                     Spacer()
                 }
-                Button(action: {
-                    state.showModal(for: .addTempTarget)
-                }) {
-                    if let tempTargetString = tempTargetString {
-                        Text(tempTargetString)
-                            .font(.caption)
-                            .foregroundColor(.loopGreen)
-                            .frame(maxHeight: 20)
-                            .padding(.vertical, 3)
-                            .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
-                            .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
-                        .shadow(
-                            color: Color.loopGreen.opacity(colorScheme == .dark ? 1 : 1),
-                            radius: colorScheme == .dark ? 1 : 1
-                        )
-                )
-                if tempTargetString != nil {
-                    Spacer()
-                }
 
                 Button(action: {
                     state.showModal(for: .bolus(
@@ -454,6 +429,32 @@ extension Home {
                         )
                 )
                 if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                    Spacer()
+                }
+
+                Button(action: {
+                    state.showModal(for: .addTempTarget)
+                }) {
+                    if let tempTargetString = tempTargetString {
+                        Text(tempTargetString)
+                            .font(.caption)
+                            .foregroundColor(.loopGreen)
+                            .frame(maxHeight: 20)
+                            .padding(.vertical, 3)
+                            .padding(.horizontal, 9)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.loopGreen.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
+                        )
+                )
+                if tempTargetString != nil {
                     Spacer()
                 }
 
@@ -732,25 +733,7 @@ extension Home {
                             }
                         }
                     }.buttonStyle(.plain)
-                    Spacer()
-                    Button { state.showModal(for: .addTempTarget) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "target")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .light))
-                                .foregroundColor(.loopGreen)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if state.tempTarget != nil {
-                                Circle().fill(Color.loopGreen).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
-                            }
-                        }
-                    }.buttonStyle(.plain)
+
                     Spacer()
                     Button {
                         state.showModal(for: .bolus(
@@ -776,6 +759,7 @@ extension Home {
                             }
                         }
                     }
+
                     Spacer()
                     if state.allowManualTemp {
                         Button { state.showModal(for: .manualTempBasal) }
@@ -791,6 +775,28 @@ extension Home {
                         }.foregroundColor(.insulin)
                         Spacer()
                     }
+
+                    Button { state.showModal(for: .addTempTarget) }
+                    label: {
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                            Image(systemName: "target")
+                                .renderingMode(.template)
+                                .frame(width: 27, height: 27)
+                                .font(.system(size: 27, weight: .light))
+                                .foregroundColor(.loopGreen)
+                                .padding(.top, 13)
+                                .padding(.bottom, 7)
+                                .padding(.leading, 7)
+                                .padding(.trailing, 7)
+                            if state.tempTarget != nil {
+                                Circle().fill(Color.loopGreen).frame(width: 6, height: 6)
+                                    .offset(x: 0, y: 4)
+                            }
+                        }
+                    }.buttonStyle(.plain)
+
+                    Spacer()
+
                     Button { state.showModal(for: .overrideProfilesConfig) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
