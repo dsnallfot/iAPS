@@ -429,11 +429,11 @@ final class BaseAPSManager: APSManager, Injectable {
 
         guard let pump = pumpManager else { return }
 
-        let roundedAmout = pump.roundToSupportedBolusVolume(units: amount)
+        let roundedAmount = pump.roundToSupportedBolusVolume(units: amount)
 
-        debug(.apsManager, "Utför bolus \(roundedAmout), manuell \(!isSMB)")
+        debug(.apsManager, "Utför bolus \(roundedAmount), manuell \(!isSMB)")
 
-        pump.enactBolus(units: roundedAmout, automatic: isSMB).sink { completion in
+        pump.enactBolus(units: roundedAmount, automatic: isSMB).sink { completion in
             if case let .failure(error) = completion {
                 warning(.apsManager, "Bolus misslyckades med felorsak: \(error.localizedDescription)")
                 self.processError(APSError.pumpError(error))
@@ -450,7 +450,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     self.determineBasal().sink { _ in }.store(in: &self.lifetime)
                 }
                 self.bolusProgress.send(0)
-                self.bolusAmount.send(Decimal(roundedAmout))
+                self.bolusAmount.send(Decimal(roundedAmount))
             }
         } receiveValue: { _ in }
             .store(in: &lifetime)
@@ -490,13 +490,13 @@ final class BaseAPSManager: APSManager, Injectable {
 
         debug(.apsManager, "Utför temp basal \(rate) - \(duration)")
 
-        let roundedAmout = pump.roundToSupportedBasalRate(unitsPerHour: rate)
-        pump.enactTempBasal(unitsPerHour: roundedAmout, for: duration) { error in
+        let roundedAmount = pump.roundToSupportedBasalRate(unitsPerHour: rate)
+        pump.enactTempBasal(unitsPerHour: roundedAmount, for: duration) { error in
             if let error = error {
                 debug(.apsManager, "Temp basal misslyckades med felorsak: \(error.localizedDescription)")
                 self.processError(APSError.pumpError(error))
             } else {
-                debug(.apsManager, "Temp basal lyckdes")
+                debug(.apsManager, "Temp basal lyckades")
                 let temp = TempBasal(duration: Int(duration / 60), rate: Decimal(rate), temp: .absolute, timestamp: Date())
                 self.storage.save(temp, as: OpenAPS.Monitor.tempBasal)
                 if rate == 0, duration == 0 {

@@ -62,6 +62,7 @@ extension Home {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 2
             formatter.minimumFractionDigits = 2
+            formatter.roundingIncrement = 0.05
             return formatter
         }
 
