@@ -4,7 +4,12 @@ import SwiftUI
 extension OverrideProfilesConfig {
     final class StateModel: BaseStateModel<Provider> {
         @Published var percentage: Double = 100
-        @Published var isEnabled = false
+        @Published var isEnabled = false /* {
+             didSet {
+                 overrideActive = isEnabled
+             }
+         } */
+
         @Published var _indefinite = true
         @Published var duration: Decimal = 0
         @Published var target: Decimal = 0
@@ -27,6 +32,8 @@ extension OverrideProfilesConfig {
         @Published var defaultSmbMinutes: Decimal = 0
         @Published var defaultUamMinutes: Decimal = 0
 
+        @Published var overrideActive: Bool = false
+
         var units: GlucoseUnits = .mmolL
 
         override func subscribe() {
@@ -34,6 +41,8 @@ extension OverrideProfilesConfig {
             defaultSmbMinutes = settingsManager.preferences.maxSMBBasalMinutes
             defaultUamMinutes = settingsManager.preferences.maxUAMSMBBasalMinutes
             presets = [OverridePresets(context: coredataContext)]
+
+            subscribeSetting(\.overrideActive, on: $overrideActive) { overrideActive = $0 }
         }
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext

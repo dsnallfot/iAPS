@@ -53,6 +53,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var sweetMeals: Bool = false
     var sweetMealFactor: Decimal = 2
     var advancedCalc: Bool = false
+    var overrideActive: Bool = false
     var useLiveActivity: Bool = false
 }
 
@@ -166,6 +167,10 @@ extension FreeAPSSettings: Decodable {
 
         if let sweetMealFactor = try? container.decode(Decimal.self, forKey: .sweetMealFactor) {
             settings.sweetMealFactor = sweetMealFactor
+        }
+
+        if let overrideActive = try? container.decode(Bool.self, forKey: .overrideActive) {
+            settings.overrideActive = overrideActive
         }
 
         if let fattyMealTrigger = try? container.decode(Decimal.self, forKey: .fattyMealTrigger) {

@@ -62,6 +62,7 @@ extension Home {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 2
             formatter.minimumFractionDigits = 2
+            formatter.roundingIncrement = 0.05
             return formatter
         }
 
@@ -369,7 +370,7 @@ extension Home {
                         HStack {
                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
 
-                            Text("g kh krävs!")
+                            Text("g kh behövs!")
                                 .offset(x: -5, y: 0)
                         }
                         .font(.caption)
