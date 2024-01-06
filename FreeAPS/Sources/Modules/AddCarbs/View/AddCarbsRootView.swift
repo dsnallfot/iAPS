@@ -34,6 +34,22 @@ extension AddCarbs {
 
         var body: some View {
             Form {
+                if state.overrideActive {
+                    Section {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.orange)
+                                .padding(.trailing, 8)
+                            Text(
+                                "En aktiv override modifierar just nu dina inställningar för ISF och/eller CR. \nOm du inte vill att detta ska påverka insulinberäkningarna för måltiden bör du stänga av overriden innan du fortsätter."
+                            )
+                            .font(.caption).foregroundColor(.secondary)
+                        }
+                        .onTapGesture(perform: { state.showModal(for: .overrideProfilesConfig)
+                        })
+                    }
+                }
+
                 if let carbsReq = state.carbsRequired, state.carbs < carbsReq {
                     Section {
                         HStack {

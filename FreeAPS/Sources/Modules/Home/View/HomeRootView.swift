@@ -370,7 +370,7 @@ extension Home {
                         HStack {
                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
 
-                            Text("g kh krävs!")
+                            Text("g kh behövs!")
                                 .offset(x: -5, y: 0)
                         }
                         .font(.caption)

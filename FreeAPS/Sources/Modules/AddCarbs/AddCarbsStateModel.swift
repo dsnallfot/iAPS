@@ -22,12 +22,16 @@ extension AddCarbs {
         @Published var summary: String = ""
         @Published var skipBolus: Bool = false
 
+        @Published var overrideActive: Bool = false
+
         let now = Date.now
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         override func subscribe() {
             subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
+            overrideActive = settings.settings.overrideActive
+
             carbsRequired = provider.suggestion?.carbsReq
             maxCarbs = settings.settings.maxCarbs
             skipBolus = settingsManager.settings.skipBolusScreenAfterCarbs
