@@ -544,7 +544,7 @@ extension Home {
             .frame(maxWidth: .infinity, maxHeight: 26) // 40)
             .background(Color.clear)
             .padding(.horizontal, 10)
-            // .padding(.top, 5)
+            .padding(.top, 2)
             // .padding(.bottom, 8)
         }
 
