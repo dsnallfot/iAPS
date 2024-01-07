@@ -127,7 +127,7 @@ extension Home {
          .background(Color.clear)
          }*/
 
-        @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
+        @ViewBuilder func header(_: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
                     Spacer()
@@ -141,7 +141,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 0 + geo.safeAreaInsets.top)
+            .padding(.top, 48) // 0 + geo.safeAreaInsets.top)
             .padding(.horizontal, 10)
             .background(Color.clear)
         }
@@ -544,7 +544,7 @@ extension Home {
             .frame(maxWidth: .infinity, maxHeight: 26) // 40)
             .background(Color.clear)
             .padding(.horizontal, 10)
-            .padding(.top, 2)
+            .padding(.bottom, 15)
             // .padding(.bottom, 8)
         }
 
@@ -908,17 +908,13 @@ extension Home {
                         Rectangle().fill(
                             colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
                         )
-                        .frame(height: 116)
+                        .frame(height: 80) // 116)
                         .shadow(
                             color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
                             radius: colorScheme == .dark ? 1 : 1
                         )
-                        VStack {
-                            header(geo)
-                            infoAndActionPanel
-                        }
+                        header(geo)
                     }
-
                     // test rearranging glucoseview below header --->
                     ZStack {
                         glucoseView
@@ -926,6 +922,8 @@ extension Home {
                             .padding(.top, 40)
                     }
                     // <---
+                    infoAndActionPanel
+
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.clear)
                         .overlay(mainChart)
