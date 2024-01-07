@@ -334,8 +334,6 @@ extension Bolus {
 
             if deleteTwice {
                 nsManager.deleteCarbs(mealArray, complexMeal: true)
-            } else {
-                nsManager.deleteCarbs(mealArray, complexMeal: false)
             }
         }
     }
