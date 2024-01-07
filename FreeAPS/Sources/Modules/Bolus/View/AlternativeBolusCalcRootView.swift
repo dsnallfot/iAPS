@@ -211,7 +211,9 @@ extension Bolus {
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
-                    carbsView()
+                    if fetch {
+                        carbsView()
+                    }
                 }
                 label: {
                     if fetch {
@@ -219,9 +221,9 @@ extension Bolus {
                             .scaleEffect(0.61)
                             .font(Font.title.weight(.semibold))
                             .offset(x: -13, y: 0)
-                    }
+                        // }
 
-                    if fetch {
+                        // if fetch {
                         Text("Måltid")
                             .offset(x: -22, y: 0)
                     }
