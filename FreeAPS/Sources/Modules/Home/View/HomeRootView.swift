@@ -569,7 +569,7 @@ extension Home {
 
             .background(
                 RoundedRectangle(cornerRadius: 13)
-                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
                             .stroke(
@@ -917,6 +917,11 @@ extension Home {
                         )
                         header(geo)
                     }
+                    Rectangle().fill(
+                        colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary
+                            .opacity(0)
+                    ).frame(maxHeight: 0.5)
+
                     // test rearranging glucoseview below header --->
                     ZStack {
                         glucoseView
@@ -958,7 +963,7 @@ extension Home {
                                 .frame(width: 40, height: 25, alignment: .center)
                                 .background(
                                     RoundedRectangle(cornerRadius: 13)
-                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 13)
                                                 .stroke(
@@ -989,6 +994,11 @@ extension Home {
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 20)
+                    Rectangle().fill(
+                        colorScheme == .dark ? Color.secondary.opacity(0.5) : Color.secondary
+                            .opacity(0)
+                    ).frame(maxHeight: 0.5)
+
                     bottomPanel(geo)
                 }
                 .edgesIgnoringSafeArea(.all)
@@ -1014,7 +1024,7 @@ extension Home {
                                 ], startPoint: .leading, endPoint: .trailing)
                             )
 
-                            .frame(width: 280, height: 45)
+                            .frame(width: 280, height: 55)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 13)
                                     .stroke(Color.white, lineWidth: 2)
@@ -1025,8 +1035,8 @@ extension Home {
                             )
                         bolusProgressView(progress: progress, amount: amount)
                     }
-                    .frame(maxWidth: .infinity, alignment: .top) // Align at the top
-                    .offset(x: 0, y: 10) // -123) // Customize the offset on the y-axis
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .offset(x: 0, y: 20)
                 }
             }
             .background(Color.loopGray.opacity(0.0)) // 12))
