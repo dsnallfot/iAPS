@@ -869,9 +869,10 @@ extension Home {
                         HStack {
                             HStack {
                                 Text("Bolusing")
-                                    .foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.white).font(.system(size: 14, weight: .semibold))
 
                             }.frame(width: 70, alignment: .leading)
+                                .offset(x: 0, y: 3)
                             let bolused = bolusFormatter
                                 .string(from: (amount * progress) as NSNumber) ?? ""
 
@@ -879,16 +880,17 @@ extension Home {
                                 Text(
                                     bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
                                         .formatted() + NSLocalizedString(" E", comment: "")
-                                ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                                ).foregroundColor(.white).font(.system(size: 14, weight: .semibold))
                             }.frame(width: 104, alignment: .trailing)
+                                .offset(x: 0, y: 3)
                         }
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                             .frame(width: 180, alignment: .leading)
-                            .offset(x: 0, y: 0)
+                            .offset(x: 0, y: -3)
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, 20)
+                    // .padding(.top, 2)
+                    // .padding(.bottom, 2)
                     .padding(.trailing, 10)
 
                     Image(systemName: "xmark.circle.fill")
@@ -918,8 +920,8 @@ extension Home {
                     // test rearranging glucoseview below header --->
                     ZStack {
                         glucoseView
-                            .padding(.bottom, 40)
-                            .padding(.top, 40)
+                            .padding(.bottom, 35)
+                            .padding(.top, 35)
                     }
                     // <---
                     infoAndActionPanel
@@ -999,12 +1001,23 @@ extension Home {
             .overlay {
                 if let progress = state.bolusProgress, let amount = state.bolusAmount {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.insulin.opacity(0.8))
-                            .frame(width: 300, height: 60)
+                        RoundedRectangle(cornerRadius: 13)
+                            // .fill(Color.insulin.opacity(1))
+
+                            .fill(
+                                LinearGradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ], startPoint: .leading, endPoint: .trailing)
+                            )
+
+                            .frame(width: 280, height: 45)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.white, lineWidth: 3)
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color.white, lineWidth: 2)
                             )
                             .shadow(
                                 color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
@@ -1012,8 +1025,8 @@ extension Home {
                             )
                         bolusProgressView(progress: progress, amount: amount)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .offset(x: 0, y: 10)
+                    .frame(maxWidth: .infinity, alignment: .top) // Align at the top
+                    .offset(x: 0, y: 10) // -123) // Customize the offset on the y-axis
                 }
             }
             .background(Color.loopGray.opacity(0.0)) // 12))
