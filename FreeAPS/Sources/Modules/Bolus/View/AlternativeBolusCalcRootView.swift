@@ -211,22 +211,22 @@ extension Bolus {
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
-                    if fetch {
-                        carbsView()
-                    }
+                    // if fetch {
+                    carbsView()
+                    // }
                 }
                 label: {
-                    if fetch {
-                        Image(systemName: "chevron.left")
-                            .scaleEffect(0.61)
-                            .font(Font.title.weight(.semibold))
-                            .offset(x: -13, y: 0)
-                        // }
+                    // if fetch {
+                    Image(systemName: "chevron.left")
+                        .scaleEffect(0.61)
+                        .font(Font.title.weight(.semibold))
+                        .offset(x: -13, y: 0)
+                    // }
 
-                        // if fetch {
-                        Text("Måltid")
-                            .offset(x: -22, y: 0)
-                    }
+                    // if fetch {
+                    Text("Måltid")
+                        .offset(x: -22, y: 0)
+                    // }
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Cancel") }
