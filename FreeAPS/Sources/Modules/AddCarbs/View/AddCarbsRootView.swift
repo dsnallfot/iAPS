@@ -14,6 +14,7 @@ extension AddCarbs {
         @State var saved = false
         @State var pushed = false
         @State private var showAlert = false
+        @State private var isTapped: Bool = false
         @FocusState private var isFocused: Bool
 
         @Environment(\.colorScheme) var colorScheme
@@ -41,7 +42,7 @@ extension AddCarbs {
                                 .foregroundColor(.orange)
                                 .padding(.trailing, 8)
                             Text(
-                                "En aktiv override modifierar just nu dina inställningar för ISF och/eller CR. \nOm du inte vill att detta ska påverka insulinberäkningarna för måltiden bör du stänga av overriden innan du fortsätter."
+                                "En aktiv override modifierar just nu din insulinkänslighet och/eller kolhydratskvot. \nOm du inte vill att detta ska påverka hur insulindosen beräknas för måltiden bör du stänga av overriden innan du fortsätter."
                             )
                             .font(.caption).foregroundColor(.secondary)
                         }
@@ -56,6 +57,12 @@ extension AddCarbs {
                             Text("Carbs required").foregroundColor(.orange)
                             Spacer()
                             Text((formatter.string(from: carbsReq as NSNumber) ?? "") + " gram").foregroundColor(.orange)
+                                .gesture(TapGesture().onEnded {
+                                    self.isTapped.toggle()
+                                    if isTapped {
+                                        state.carbs = carbsReq
+                                    }
+                                })
                         }
                     }
                 }

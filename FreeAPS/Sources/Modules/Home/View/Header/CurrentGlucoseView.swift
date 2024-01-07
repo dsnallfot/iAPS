@@ -158,7 +158,7 @@ struct Triangle: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
 
-        path.move(to: CGPoint(x: rect.midX, y: rect.minY + 16))
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY + 14))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
 
         path.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY), control: CGPoint(x: rect.midX, y: rect.midY + 13))
@@ -204,7 +204,7 @@ struct CircleShape: View {
         ) : .white
 
         Circle()
-            .stroke(gradient, lineWidth: 6)
+            .stroke(gradient, lineWidth: 5)
             .background(Circle().fill(colorBackground))
             .frame(width: 130, height: 130)
     }

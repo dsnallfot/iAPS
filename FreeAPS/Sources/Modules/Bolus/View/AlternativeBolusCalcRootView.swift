@@ -1559,6 +1559,7 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
+                                .multilineTextAlignment(.center)
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
@@ -1573,6 +1574,7 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
+                                .multilineTextAlignment(.center)
                         }
                     }
                 }

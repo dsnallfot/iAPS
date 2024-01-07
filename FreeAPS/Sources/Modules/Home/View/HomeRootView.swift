@@ -141,7 +141,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 48) // 0 + geo.safeAreaInsets.top)
+            .padding(.top, 50) // 0 + geo.safeAreaInsets.top)
             .padding(.horizontal, 10)
             .background(Color.clear)
         }
