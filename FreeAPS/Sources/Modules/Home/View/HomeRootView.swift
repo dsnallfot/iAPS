@@ -102,14 +102,33 @@ extension Home {
             return scene
         }
 
+        /* @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
+         VStack(alignment: .center) {
+         ZStack {
+         glucoseView
+         .padding(.bottom, 35)
+         .padding(.top, 15)
+         }
+
+         HStack(alignment: .center) {
+         Spacer()
+         cobIobView
+
+         Spacer()
+
+         pumpView
+
+         Spacer()
+         }
+         }
+         .frame(maxWidth: .infinity)
+         .padding(.top, 10 + geo.safeAreaInsets.top)
+         .padding(.horizontal, 10)
+         .background(Color.clear)
+         }*/
+
         @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
             VStack(alignment: .center) {
-                ZStack {
-                    glucoseView
-                        .padding(.bottom, 35)
-                        .padding(.top, 15)
-                }
-
                 HStack(alignment: .center) {
                     Spacer()
                     cobIobView
@@ -122,7 +141,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 10 + geo.safeAreaInsets.top)
+            .padding(.top, 0 + geo.safeAreaInsets.top)
             .padding(.horizontal, 10)
             .background(Color.clear)
         }
@@ -326,7 +345,7 @@ extension Home {
             return percentString + comma1 + targetString + comma2 + durationString + comma3 + smbToggleString
         }
 
-        var infoPanel: some View {
+        var infoAndActionPanel: some View {
             HStack(alignment: .center) {
                 Spacer()
                 Button(action: {
@@ -348,7 +367,7 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -379,7 +398,7 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -417,7 +436,7 @@ extension Home {
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -443,7 +462,7 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                     }
                 }
@@ -473,7 +492,7 @@ extension Home {
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                         }
                     }
@@ -506,7 +525,7 @@ extension Home {
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
                             .padding(.trailing, 4)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                         }
                     }
@@ -522,11 +541,11 @@ extension Home {
                     Spacer()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 40)
+            .frame(maxWidth: .infinity, maxHeight: 26) // 40)
             .background(Color.clear)
             .padding(.horizontal, 10)
-            .padding(.top, 5)
-            .padding(.bottom, 8)
+            // .padding(.top, 5)
+            // .padding(.bottom, 8)
         }
 
         var timeInterval: some View {
@@ -565,7 +584,7 @@ extension Home {
             )
         }
 
-        var legendPanel: some View {
+        var loopPanel: some View {
             HStack(alignment: .center) {
                 loopView
             }
@@ -885,8 +904,28 @@ extension Home {
         var body: some View {
             GeometryReader { geo in
                 VStack(spacing: 0) {
-                    header(geo)
-                    infoPanel
+                    ZStack(alignment: .top) {
+                        Rectangle().fill(
+                            colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
+                        )
+                        .frame(height: 116)
+                        .shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                            radius: colorScheme == .dark ? 1 : 1
+                        )
+                        VStack {
+                            header(geo)
+                            infoAndActionPanel
+                        }
+                    }
+
+                    // test rearranging glucoseview below header --->
+                    ZStack {
+                        glucoseView
+                            .padding(.bottom, 40)
+                            .padding(.top, 40)
+                    }
+                    // <---
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.clear)
                         .overlay(mainChart)
@@ -902,7 +941,7 @@ extension Home {
                         timeInterval
                             .frame(width: 80, height: 40, alignment: .center)
 
-                        legendPanel
+                        loopPanel
                             .frame(width: 50, height: 40, alignment: .center)
 
                         HStack(alignment: .center) {
