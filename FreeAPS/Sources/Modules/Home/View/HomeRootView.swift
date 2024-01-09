@@ -178,7 +178,7 @@ extension Home {
             HStack {
                 HStack {
                     Text("COB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopYellow)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .loopYellow : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
@@ -194,7 +194,7 @@ extension Home {
 
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.insulin)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .insulin : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" E", comment: "Insulin unit")
@@ -470,7 +470,7 @@ extension Home {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
                             .font(.caption)
-                            .foregroundColor(.loopGreen)
+                            .foregroundColor(.cyan)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
@@ -480,9 +480,9 @@ extension Home {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.cyan.opacity(1), lineWidth: 1.5)
                         .shadow(
-                            color: Color.loopGreen.opacity(colorScheme == .dark ? 1 : 1),
+                            color: Color.cyan.opacity(colorScheme == .dark ? 1 : 1),
                             radius: colorScheme == .dark ? 1 : 1
                         )
                 )
@@ -500,7 +500,7 @@ extension Home {
                                 Text(overrideString)
                             }
                             .font(.caption)
-                            .foregroundColor(.cyan)
+                            .foregroundColor(.zt)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
@@ -510,9 +510,9 @@ extension Home {
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.cyan.opacity(1), lineWidth: 1.5)
+                            .stroke(Color.zt.opacity(1), lineWidth: 1.5)
                             .shadow(
-                                color: Color.cyan.opacity(colorScheme == .dark ? 1 : 1),
+                                color: Color.zt.opacity(colorScheme == .dark ? 1 : 1),
                                 radius: colorScheme == .dark ? 1 : 1
                             )
                     )
@@ -754,13 +754,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(.loopYellow)
+                                .foregroundColor(state.disco ? .loopYellow : .gray)
                                 .padding(.top, 14)
                                 .padding(.bottom, 9)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if state.carbsRequired != nil {
-                                Circle().fill(Color.loopYellow).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 1, y: 2.5)
                             }
                         }
@@ -780,13 +780,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(.insulin)
+                                .foregroundColor(state.disco ? .insulin : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
-                                Circle().fill(Color.insulin).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -804,7 +804,7 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-                        }.foregroundColor(.insulin)
+                        }.foregroundColor(state.disco ? .insulin : .gray)
                         Spacer()
                     }
 
@@ -815,13 +815,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .light))
-                                .foregroundColor(.loopGreen)
+                                .foregroundColor(state.disco ? .cyan : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if state.tempTarget != nil {
-                                Circle().fill(Color.loopGreen).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -836,13 +836,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(.cyan)
+                                .foregroundColor(state.disco ? .zt : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if selectedProfile().isOn {
-                                Circle().fill(Color.cyan).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -861,9 +861,9 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-                                .foregroundColor(.gray)
+                                .foregroundColor(state.disco ? .gray : .gray)
                             if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
-                                Circle().fill(Color.gray).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.gray : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -966,8 +966,8 @@ extension Home {
                                 .foregroundStyle(.secondary.opacity(1))
                                 .font(.system(size: 13))
                                 /* .shadow(
-                                     color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
-                                     radius: colorScheme == .dark ? 1 : 1
+                                 color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                 radius: colorScheme == .dark ? 1 : 1
                                  ) */
                                 .onTapGesture {
                                     state.showModal(for: .statistics)
@@ -1016,9 +1016,7 @@ extension Home {
                 .edgesIgnoringSafeArea(.all)
             }
             .onAppear {
-                configureView {
-                    // highlightButtons()
-                }
+                configureView {}
             }
             .overlay {
                 if let progress = state.bolusProgress, let amount = state.bolusAmount {
@@ -1027,13 +1025,19 @@ extension Home {
                             // .fill(Color.insulin.opacity(1))
 
                             .fill(
-                                LinearGradient(colors: [
-                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
-                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
-                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
-                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
-                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                                ], startPoint: .leading, endPoint: .trailing)
+                                state.disco ?
+                                    AnyShapeStyle(
+                                        LinearGradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ], startPoint: .leading, endPoint: .trailing)
+                                    ) :
+                                    AnyShapeStyle(
+                                        Color(UIColor.systemGray4)
+                                    )
                             )
 
                             .frame(width: 280, height: 55)
@@ -1060,8 +1064,23 @@ extension Home {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color(UIColor.systemGray4))
+                            .fill(
+                                state.disco ?
+                                    AnyShapeStyle(
+                                        LinearGradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ], startPoint: .leading, endPoint: .trailing)
+                                    ) :
+                                    AnyShapeStyle(
+                                        Color(UIColor.systemGray4) // Use gray background when state.disco is false
+                                    )
+                            )
                     )
+
                     .offset(x: 0, y: 25)
                     .onTapGesture {
                         isStatusPopupPresented = false
@@ -1094,20 +1113,21 @@ extension Home {
                             ?? "--"
                     )
                 }
-                .font(.headline).foregroundColor(.primary)
+                .font(.headline).foregroundColor(.white)
                 .padding(.bottom, 4)
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
-                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote).foregroundColor(.primary)
+                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote)
+                        .foregroundColor(.white)
 
                 } else {
-                    Text("No suggestion found").font(.body).foregroundColor(.primary)
+                    Text("No suggestion found").font(.body).foregroundColor(.white)
                 }
 
                 if let errorMessage = state.errorMessage, let date = state.errorDate {
                     Text(NSLocalizedString("Error at", comment: "") + " " + dateFormatter.string(from: date))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.white)
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)

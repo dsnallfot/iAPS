@@ -54,8 +54,15 @@ extension StatConfig {
                 Section {
                     Toggle("Skip Bolus screen after carbs", isOn: $state.skipBolusScreenAfterCarbs)
                 } header: { Text("Vy för måltider") }
+
+                Section {
+                    Toggle("Använd färgglatt tema (kräver omstart)", isOn: $state.disco)
+                } header: { Text("Färg och form") }
             }
-            .onAppear(perform: configureView)
+            .onAppear(
+                perform:
+                configureView
+            )
             .navigationBarTitle("Anpassa utseende")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))

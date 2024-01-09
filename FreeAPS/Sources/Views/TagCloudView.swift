@@ -84,6 +84,7 @@ struct TagCloudView: View {
             .padding(.vertical, 2)
             .padding(.horizontal, 4)
             .font(.subheadline)
+            .fontWeight(.semibold)
             .background(colorOfTag.opacity(0.8))
             .foregroundColor(Color.white)
             .cornerRadius(3) }
