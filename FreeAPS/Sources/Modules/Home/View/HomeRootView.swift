@@ -75,6 +75,18 @@ extension Home {
             return formatter
         }
 
+        private var glucoseFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 0
+            if state.units == .mmolL {
+                formatter.minimumFractionDigits = 1
+                formatter.maximumFractionDigits = 1
+            }
+            formatter.roundingMode = .halfUp
+            return formatter
+        }
+
         private var targetFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -1050,6 +1062,7 @@ extension Home {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .fill(Color(UIColor.systemGray4))
                     )
+                    .offset(x: 0, y: 25)
                     .onTapGesture {
                         isStatusPopupPresented = false
                     }
@@ -1069,8 +1082,20 @@ extension Home {
 
         private var popup: some View {
             VStack(alignment: .leading, spacing: 4) {
-                Text(state.statusTitle).font(.headline).foregroundColor(.primary)
-                    .padding(.bottom, 4)
+                HStack {
+                    Text(state.statusTitle)
+                    Spacer()
+                    Text("BG")
+                    Text(
+                        (state.recentGlucose?.glucose ?? 100) == 400 ? "HIGH" : state.recentGlucose?.glucose
+                            .map {
+                                glucoseFormatter
+                                    .string(from: Double(state.units == .mmolL ? $0.asMmolL : Decimal($0)) as NSNumber)! }
+                            ?? "--"
+                    )
+                }
+                .font(.headline).foregroundColor(.primary)
+                .padding(.bottom, 4)
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
