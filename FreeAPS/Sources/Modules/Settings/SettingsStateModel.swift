@@ -8,7 +8,7 @@ extension Settings {
 
         @Published var closedLoop = false
         @Published var debugOptions = false
-        @Published var animatedBackground = false
+        // @Published var animatedBackground = false
 
         private(set) var buildNumber = ""
         private(set) var versionNumber = ""
@@ -48,7 +48,7 @@ extension Settings {
 
             copyrightNotice = Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String ?? ""
 
-            subscribeSetting(\.animatedBackground, on: $animatedBackground) { animatedBackground = $0 }
+            // subscribeSetting(\.animatedBackground, on: $animatedBackground) { animatedBackground = $0 }
         }
 
         func logItems() -> [URL] {

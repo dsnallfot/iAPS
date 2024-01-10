@@ -11,6 +11,7 @@ extension StatConfig {
         @Published var rulerMarks: Bool = false
         @Published var skipBolusScreenAfterCarbs: Bool = false
         @Published var disco: Bool = false
+        @Published var animatedBackground = false
 
         var units: GlucoseUnits = .mmolL
 
@@ -25,6 +26,7 @@ extension StatConfig {
             subscribeSetting(\.oneDimensionalGraph, on: $oneDimensionalGraph) { oneDimensionalGraph = $0 }
             subscribeSetting(\.skipBolusScreenAfterCarbs, on: $skipBolusScreenAfterCarbs) { skipBolusScreenAfterCarbs = $0 }
             subscribeSetting(\.disco, on: $disco) { disco = $0 }
+            subscribeSetting(\.animatedBackground, on: $animatedBackground) { animatedBackground = $0 }
 
             subscribeSetting(\.low, on: $low, initial: {
                 let value = max(min($0, 90), 40)

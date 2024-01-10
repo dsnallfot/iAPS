@@ -57,6 +57,7 @@ extension StatConfig {
 
                 Section {
                     Toggle("Använd färgglatt tema (kräver omstart)", isOn: $state.disco)
+                    Toggle("Animated Background", isOn: $state.animatedBackground)
                 } header: { Text("Färg och form") }
             }
             .onAppear(
