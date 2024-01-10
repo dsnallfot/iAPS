@@ -60,7 +60,7 @@ struct TagCloudView: View {
             case textTag where textTag.contains("Bolus"),
                  textTag where textTag.contains("TDD"),
                  textTag where textTag.contains("Tot 24h insulin:"):
-                return .green
+                return .loopGreen
             case textTag where textTag.contains("Total insulin:"),
                  textTag where textTag.contains("tdd_factor"),
                  textTag where textTag.contains("Sigmoid function"),
@@ -72,9 +72,12 @@ struct TagCloudView: View {
                  textTag where textTag.contains("Autosens gränsvärde:"),
                  textTag where textTag.contains("Dynamic ISF/CR"),
                  textTag where textTag.contains("Dynamisk ISF/CR"),
-                 textTag where textTag.contains("Basal Ratio"),
-                 textTag where textTag.contains("SMB Ratio"):
+                 textTag where textTag.contains("Basal Ratio"):
                 return .zt
+            case textTag where textTag.contains("Middleware:"):
+                return .loopRed
+            case textTag where textTag.contains("SMB Ratio"):
+                return .uam
             default:
                 return .insulin
             }
