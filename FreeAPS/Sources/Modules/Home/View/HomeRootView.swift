@@ -374,7 +374,7 @@ extension Home {
                                 .offset(x: -4, y: 0)
                         }
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
@@ -405,7 +405,7 @@ extension Home {
                                 .offset(x: -5, y: 0)
                         }
                         .font(.caption)
-                        .foregroundColor(.loopYellow)
+                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
@@ -443,7 +443,7 @@ extension Home {
                                 .offset(x: -5, y: 0)
                         }
                         .font(.caption)
-                        .foregroundColor(.insulin)
+                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
@@ -470,7 +470,7 @@ extension Home {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
                             .font(.caption)
-                            .foregroundColor(.cyan)
+                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
@@ -500,7 +500,7 @@ extension Home {
                                 Text(overrideString)
                             }
                             .font(.caption)
-                            .foregroundColor(.zt)
+                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
@@ -510,7 +510,13 @@ extension Home {
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.zt.opacity(1), lineWidth: 1.5)
+                            .stroke(LinearGradient(colors: [
+                                Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                            ], startPoint: .leading, endPoint: .trailing), lineWidth: 1.5)
                             .shadow(
                                 color: Color.zt.opacity(colorScheme == .dark ? 1 : 1),
                                 radius: colorScheme == .dark ? 1 : 1
@@ -532,7 +538,7 @@ extension Home {
                                     .offset(x: -4, y: 0)
                             }
                             .font(.caption)
-                            .foregroundColor(.loopRed)
+                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
