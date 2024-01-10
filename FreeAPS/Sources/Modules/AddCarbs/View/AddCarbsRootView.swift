@@ -237,8 +237,22 @@ extension AddCarbs {
                             .fat > state.maxCarbs || state.protein > state.maxCarbs
                     )
                     .listRowBackground(
-                        state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs || state
-                            .fat > state.maxCarbs || state.protein > state.maxCarbs ? Color(.systemGray4) : Color(.insulin)
+                        (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                            state.carbs > state.maxCarbs ||
+                            state.fat > state.maxCarbs ||
+                            state.protein > state.maxCarbs
+                            ? AnyView(Color(.systemGray4))
+                            : AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
                     )
                     .tint(.white)
                     .frame(maxWidth: .infinity, alignment: .center)

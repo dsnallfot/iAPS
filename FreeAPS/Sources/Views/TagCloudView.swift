@@ -55,7 +55,8 @@ struct TagCloudView: View {
     private func item(for textTag: String) -> some View {
         var colorOfTag: Color {
             switch textTag {
-            case textTag where textTag.contains("SMB Delivery Ratio:"):
+            case textTag where textTag.contains("SMB Delivery Ratio:"),
+                 textTag where textTag.contains("SMB Ratio"):
                 return .uam
             case textTag where textTag.contains("Bolus"),
                  textTag where textTag.contains("TDD"),
@@ -76,8 +77,6 @@ struct TagCloudView: View {
                 return .zt
             case textTag where textTag.contains("Middleware:"):
                 return .loopRed
-            case textTag where textTag.contains("SMB Ratio"):
-                return .uam
             default:
                 return .insulin
             }
