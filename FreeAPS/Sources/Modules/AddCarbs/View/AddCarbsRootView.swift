@@ -320,11 +320,12 @@ extension AddCarbs {
 
         var webCarbCalculator: some View {
             NavigationView {
-                ZStack(alignment: .top) {
+                ZStack(alignment: .bottom) {
                     // Use WebViewRepresentable to display the webpage
                     WebViewRepresentable(
                         urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
                     )
+                    .frame(maxHeight: .infinity)
                     .navigationBarTitle("Räkna kolhydrater")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(
@@ -345,10 +346,17 @@ extension AddCarbs {
                     .zIndex(0) // Ensure the WebView is at the bottom layer
 
                     .padding(.bottom, 10)
-                    Rectangle()
-                        .fill(Color(.systemBackground))
-                        .frame(height: 40) // Adjust the height as needed
-                        .zIndex(1)
+                    VStack {
+                        Rectangle()
+                            .fill(Color(.systemBackground))
+                            .frame(height: 40) // Adjust the height as needed
+                            .zIndex(1)
+                        Spacer()
+                        Rectangle()
+                            .fill(Color(.systemBackground))
+                            .frame(height: 10) // Adjust the height as needed
+                            .zIndex(1)
+                    }
                     HStack {
                         Rectangle()
                             .fill(Color(.systemBackground))
@@ -360,29 +368,6 @@ extension AddCarbs {
                             .frame(width: 2) // Adjust the height as needed
                             .zIndex(1)
                     }
-
-                    /* VStack {
-                         Rectangle()
-                             .fill(Color(.systemBackground))
-                             .frame(height: 40) // Adjust the height as needed
-                             .zIndex(1)
-                         Spacer()
-                         Rectangle()
-                             .fill(Color(.systemBackground))
-                             .frame(height: 15) // Adjust the height as needed
-                             .zIndex(1)
-                     }
-                     HStack {
-                         Rectangle()
-                             .fill(Color(.systemBackground))
-                             .frame(width: 3) // Adjust the height as needed
-                             .zIndex(1)
-                         Spacer()
-                         Rectangle()
-                             .fill(Color(.systemBackground))
-                             .frame(width: 3) // Adjust the height as needed
-                             .zIndex(1)
-                     } */
                 }
             }
         }
