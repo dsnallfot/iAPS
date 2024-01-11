@@ -1,8 +1,42 @@
 import CoreData
 import SwiftUI
 import Swinject
+import WebKit
 
 extension AddCarbs {
+    // WebViewRepresentable to wrap a WKWebView
+    struct WebViewRepresentable: UIViewControllerRepresentable {
+        let urlString: String
+
+        func makeUIViewController(context: Context) -> UIViewController {
+            let viewController = UIViewController()
+            let webView = WKWebView()
+            webView.navigationDelegate = context.coordinator
+            viewController.view = webView
+
+            if let url = URL(string: urlString) {
+                let request = URLRequest(url: url)
+                webView.load(request)
+            }
+
+            return viewController
+        }
+
+        func updateUIViewController(_: UIViewController, context _: Context) {}
+
+        func makeCoordinator() -> Coordinator {
+            Coordinator(self)
+        }
+
+        class Coordinator: NSObject, WKNavigationDelegate {
+            var parent: WebViewRepresentable
+
+            init(_ parent: WebViewRepresentable) {
+                self.parent = parent
+            }
+        }
+    }
+
     struct RootView: BaseView {
         let resolver: Resolver
         let editMode: Bool
@@ -11,6 +45,7 @@ extension AddCarbs {
         @State var dish: String = ""
         @State var isPromptPresented = false
         @State private var note: String = ""
+        @State private var showInfo = false
         @State var saved = false
         @State var pushed = false
         @State private var showAlert = false
@@ -264,9 +299,92 @@ extension AddCarbs {
                     state.loadEntries(editMode)
                 }
             }
+            .sheet(isPresented: $showInfo) {
+                webCarbCalculator
+            }
             .navigationTitle("Registrera måltid")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("Cancel", action: state.hideModal))
+            .navigationBarItems(
+                leading: Button {
+                    showInfo.toggle()
+                }
+                label: {
+                    Image(systemName: "list.number")
+
+                    // Text("Räkna kh")
+                },
+                trailing: Button { state.hideModal() }
+                label: { Text("Cancel") }
+            )
+        }
+
+        var webCarbCalculator: some View {
+            NavigationView {
+                ZStack(alignment: .top) {
+                    // Use WebViewRepresentable to display the webpage
+                    WebViewRepresentable(
+                        urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
+                    )
+                    .navigationBarTitle("Räkna kolhydrater")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(
+                        leading:
+                        HStack {
+                            Button(action: {
+                                showInfo.toggle()
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .scaleEffect(0.61)
+                                    .font(Font.title.weight(.semibold))
+                                    .offset(x: -13, y: 0)
+                                Text("Tillbaka")
+                                    .offset(x: -22, y: 0)
+                            }
+                        }
+                    )
+                    .zIndex(0) // Ensure the WebView is at the bottom layer
+
+                    .padding(.bottom, 10)
+                    Rectangle()
+                        .fill(Color(.systemBackground))
+                        .frame(height: 40) // Adjust the height as needed
+                        .zIndex(1)
+                    HStack {
+                        Rectangle()
+                            .fill(Color(.systemBackground))
+                            .frame(width: 2) // Adjust the height as needed
+                            .zIndex(1)
+                        Spacer()
+                        Rectangle()
+                            .fill(Color(.systemBackground))
+                            .frame(width: 2) // Adjust the height as needed
+                            .zIndex(1)
+                    }
+
+                    /* VStack {
+                         Rectangle()
+                             .fill(Color(.systemBackground))
+                             .frame(height: 40) // Adjust the height as needed
+                             .zIndex(1)
+                         Spacer()
+                         Rectangle()
+                             .fill(Color(.systemBackground))
+                             .frame(height: 15) // Adjust the height as needed
+                             .zIndex(1)
+                     }
+                     HStack {
+                         Rectangle()
+                             .fill(Color(.systemBackground))
+                             .frame(width: 3) // Adjust the height as needed
+                             .zIndex(1)
+                         Spacer()
+                         Rectangle()
+                             .fill(Color(.systemBackground))
+                             .frame(width: 3) // Adjust the height as needed
+                             .zIndex(1)
+                     } */
+                }
+            }
         }
 
         var presetPopover: some View {
