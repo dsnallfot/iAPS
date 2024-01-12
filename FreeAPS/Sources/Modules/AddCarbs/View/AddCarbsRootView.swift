@@ -311,12 +311,13 @@ extension AddCarbs {
                 label: {
                     // Image(systemName: "list.number")
                     // Image(systemName: "plusminus")
-                    Image(systemName: "plus.forwardslash.minus")
-                        .font(.footnote)
-                        .fontWeight(.bold)
-                    Image(systemName: "fork.knife")
-                        .font(.caption2)
-                        .offset(x: -7)
+                    /* Image(systemName: "plus.forwardslash.minus")
+                         .font(.caption2)
+                     // .fontWeight(.bold)
+                     Image(systemName: "fork.knife")
+                         .font(.caption2)
+                         .offset(x: -7) */
+                    Text("Räkna KH")
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Cancel") }
@@ -341,8 +342,10 @@ extension AddCarbs {
                             )
                             .frame(height: 660)
                             Spacer()
-                            Text("Här kan exempelvis länkar eller annan info läggas till")
+                            Text("Här kan exempelvis länkar eller annan info läggas till senare")
+                                .padding(.horizontal, 10)
                                 .font(.caption)
+                                .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
                                 .frame(height: 350)
                         }
