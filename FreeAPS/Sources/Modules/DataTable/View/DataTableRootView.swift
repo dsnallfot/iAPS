@@ -274,7 +274,7 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showNonPumpInsulin = true }, label: {
-                        Image(systemName: "plus.app")
+                        Image(systemName: "plus")
                         Text("Insulin")
                             .font(.subheadline)
                     })
@@ -345,7 +345,7 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showManualGlucose = true }, label: {
-                        Image(systemName: "plus.app")
+                        Image(systemName: "plus")
                         Text("Blodsocker")
                             .font(.subheadline)
                     })

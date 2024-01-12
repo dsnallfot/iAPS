@@ -310,15 +310,13 @@ extension AddCarbs {
                 }
                 label: {
                     // Image(systemName: "list.number")
+                    // Image(systemName: "plusminus")
+                    Image(systemName: "plus.forwardslash.minus")
+                        .font(.footnote)
+                        .fontWeight(.bold)
                     Image(systemName: "fork.knife")
-                        .font(.footnote)
-                    Image(systemName: "plusminus")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        // .foregroundColor(.secondary)
-                        .offset(x: -9)
-
-                    // Text("Räkna kh")
+                        .font(.caption2)
+                        .offset(x: -7)
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Cancel") }
@@ -575,9 +573,9 @@ extension AddCarbs {
 public extension Color {
     static func randomVibrantColor(randomOpacity: Bool = false) -> Color {
         let baseColor = Color(
-            red: Double.random(in: 0.5 ... 1),
-            green: Double.random(in: 0.4 ... 0.6),
-            blue: Double.random(in: 0.4 ... 1),
+            red: Double.random(in: 0.262745098 ... 0.7215686275),
+            green: Double.random(in: 0.3411764706 ... 0.7333333333),
+            blue: Double.random(in: 0.9137254902 ... 1),
             opacity: 1
         )
 
@@ -603,10 +601,10 @@ extension Color {
 
     func withRandomOpacity() -> Color {
         Color(
-            red: Double.random(in: 0 ... 1),
-            green: Double.random(in: 0 ... 1),
-            blue: Double.random(in: 0 ... 1),
-            opacity: Double.random(in: 0.8 ... 1)
+            red: Double.random(in: 0.8 ... 1),
+            green: Double.random(in: 0.8 ... 1),
+            blue: Double.random(in: 0.8 ... 1),
+            opacity: Double.random(in: 1 ... 1)
         )
     }
 }

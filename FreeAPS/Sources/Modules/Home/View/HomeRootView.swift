@@ -369,12 +369,13 @@ extension Home {
                         HStack {
                             Image(systemName: "exclamationmark.triangle")
                                 .offset(x: 0, y: 0)
+                                .foregroundColor(.orange)
 
                             Text("Pump suspended")
                                 .offset(x: -4, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
@@ -399,13 +400,17 @@ extension Home {
                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
                     if let carbsReq = state.carbsRequired {
                         HStack {
+                            Image(systemName: "fork.knife")
+                                .offset(x: 2, y: 0)
+                                .foregroundColor(.loopYellow)
                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                .foregroundColor(.primary)
 
                             Text("g kh behövs!")
                                 .offset(x: -5, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
@@ -435,15 +440,20 @@ extension Home {
                     state.apsManager.determineBasalSync() }) {
                     if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                         HStack {
-                            Text("Insulinbehov")
+                            Image(systemName: "drop.fill")
                                 .offset(x: 5, y: 0)
+                                .foregroundColor(.insulin)
+                            Text("Insulinbehov")
+                                .offset(x: 3, y: 0)
+                                .foregroundColor(.primary)
                             Text(numberFormatter.string(from: insulinRequested as NSNumber)!)
+                                .foregroundColor(.primary)
 
                             Text("E")
                                 .offset(x: -5, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.primary)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
@@ -533,12 +543,13 @@ extension Home {
                             HStack {
                                 Image(systemName: "exclamationmark.triangle")
                                     .offset(x: 0, y: 0)
+                                    .foregroundColor(.orange)
 
                                 Text("Max IOB: 0")
                                     .offset(x: -4, y: 0)
+                                    .foregroundColor(.primary)
                             }
                             .font(.caption)
-                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
