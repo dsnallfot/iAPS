@@ -52,6 +52,6 @@
   "sweetMealFactor": 2,
   "overrideActive": false,
   "advancedCalc": false,
-  "disco": false,
+  "disco": true,
 
 }

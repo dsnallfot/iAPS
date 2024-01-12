@@ -54,7 +54,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var sweetMealFactor: Decimal = 2
     var advancedCalc: Bool = false
     var overrideActive: Bool = false
-    var disco: Bool = false
+    var disco: Bool = true
     var useLiveActivity: Bool = false
 }
 

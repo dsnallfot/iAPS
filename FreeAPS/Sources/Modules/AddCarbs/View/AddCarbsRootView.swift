@@ -309,7 +309,14 @@ extension AddCarbs {
                     showInfo.toggle()
                 }
                 label: {
-                    Image(systemName: "list.number")
+                    // Image(systemName: "list.number")
+                    Image(systemName: "fork.knife")
+                        .font(.footnote)
+                    Image(systemName: "plusminus")
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        // .foregroundColor(.secondary)
+                        .offset(x: -9)
 
                     // Text("Räkna kh")
                 },
@@ -320,13 +327,31 @@ extension AddCarbs {
 
         var webCarbCalculator: some View {
             NavigationView {
-                ZStack(alignment: .bottom) {
-                    // Use WebViewRepresentable to display the webpage
-                    WebViewRepresentable(
-                        urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
-                    )
-                    .frame(maxHeight: .infinity)
-                    .navigationBarTitle("Räkna kolhydrater")
+                ScrollView {
+                    ZStack(alignment: .top) {
+                        VStack {
+                            Rectangle()
+                                .fill(Color(.systemBackground))
+                                .frame(height: 40) // Adjust the height as needed
+                            Spacer()
+                        }
+                        .zIndex(1)
+                        VStack {
+                            // Use WebViewRepresentable to display the webpage
+                            WebViewRepresentable(
+                                urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
+                            )
+                            .frame(height: 660)
+                            Spacer()
+                            Text("Här kan exempelvis länkar eller annan info läggas till")
+                                .font(.caption)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 350)
+                        }
+                        .zIndex(0)
+                    }
+
+                    .navigationBarTitle("Räkna KH")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarItems(
                         leading:
@@ -338,36 +363,11 @@ extension AddCarbs {
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
                                     .offset(x: -13, y: 0)
-                                Text("Tillbaka")
+                                Text("Reg måltid")
                                     .offset(x: -22, y: 0)
                             }
                         }
                     )
-                    .zIndex(0) // Ensure the WebView is at the bottom layer
-
-                    .padding(.bottom, 10)
-                    VStack {
-                        Rectangle()
-                            .fill(Color(.systemBackground))
-                            .frame(height: 40) // Adjust the height as needed
-                            .zIndex(1)
-                        Spacer()
-                        Rectangle()
-                            .fill(Color(.systemBackground))
-                            .frame(height: 10) // Adjust the height as needed
-                            .zIndex(1)
-                    }
-                    HStack {
-                        Rectangle()
-                            .fill(Color(.systemBackground))
-                            .frame(width: 2) // Adjust the height as needed
-                            .zIndex(1)
-                        Spacer()
-                        Rectangle()
-                            .fill(Color(.systemBackground))
-                            .frame(width: 2) // Adjust the height as needed
-                            .zIndex(1)
-                    }
                 }
             }
         }

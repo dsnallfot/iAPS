@@ -64,7 +64,7 @@ extension Home {
         @Published var thresholdLines: Bool = false
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 4
-        @Published var disco: Bool = false
+        @Published var disco: Bool = true
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 

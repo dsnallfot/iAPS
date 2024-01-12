@@ -10,7 +10,7 @@ extension StatConfig {
         @Published var oneDimensionalGraph = false
         @Published var rulerMarks: Bool = false
         @Published var skipBolusScreenAfterCarbs: Bool = false
-        @Published var disco: Bool = false
+        @Published var disco: Bool = true
         @Published var animatedBackground = false
 
         var units: GlucoseUnits = .mmolL
