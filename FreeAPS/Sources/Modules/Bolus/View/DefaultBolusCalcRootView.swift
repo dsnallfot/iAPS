@@ -144,17 +144,17 @@ extension Bolus {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button {
-                    if fetch {
-                        carbsView()
-                    }
+                    // if fetch {
+                    carbsView()
+                    // }
                 }
                 label: {
-                    if fetch {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                            Text("Meal")
-                        }
+                    // if fetch {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Meal")
                     }
+                    // }
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Close") }

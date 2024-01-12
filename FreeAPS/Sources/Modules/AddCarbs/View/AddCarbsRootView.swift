@@ -1,8 +1,42 @@
 import CoreData
 import SwiftUI
 import Swinject
+import WebKit
 
 extension AddCarbs {
+    // WebViewRepresentable to wrap a WKWebView
+    struct WebViewRepresentable: UIViewControllerRepresentable {
+        let urlString: String
+
+        func makeUIViewController(context: Context) -> UIViewController {
+            let viewController = UIViewController()
+            let webView = WKWebView()
+            webView.navigationDelegate = context.coordinator
+            viewController.view = webView
+
+            if let url = URL(string: urlString) {
+                let request = URLRequest(url: url)
+                webView.load(request)
+            }
+
+            return viewController
+        }
+
+        func updateUIViewController(_: UIViewController, context _: Context) {}
+
+        func makeCoordinator() -> Coordinator {
+            Coordinator(self)
+        }
+
+        class Coordinator: NSObject, WKNavigationDelegate {
+            var parent: WebViewRepresentable
+
+            init(_ parent: WebViewRepresentable) {
+                self.parent = parent
+            }
+        }
+    }
+
     struct RootView: BaseView {
         let resolver: Resolver
         let editMode: Bool
@@ -11,9 +45,11 @@ extension AddCarbs {
         @State var dish: String = ""
         @State var isPromptPresented = false
         @State private var note: String = ""
+        @State private var showInfo = false
         @State var saved = false
         @State var pushed = false
         @State private var showAlert = false
+        @State private var isTapped: Bool = false
         @FocusState private var isFocused: Bool
 
         @Environment(\.colorScheme) var colorScheme
@@ -41,7 +77,7 @@ extension AddCarbs {
                                 .foregroundColor(.orange)
                                 .padding(.trailing, 8)
                             Text(
-                                "En aktiv override modifierar just nu dina inställningar för ISF och/eller CR. \nOm du inte vill att detta ska påverka insulinberäkningarna för måltiden bör du stänga av overriden innan du fortsätter."
+                                "En aktiv override modifierar just nu din insulinkänslighet och/eller kolhydratskvot. \nOm du inte vill att detta ska påverka hur insulindosen beräknas för måltiden bör du stänga av overriden innan du fortsätter."
                             )
                             .font(.caption).foregroundColor(.secondary)
                         }
@@ -56,6 +92,12 @@ extension AddCarbs {
                             Text("Carbs required").foregroundColor(.orange)
                             Spacer()
                             Text((formatter.string(from: carbsReq as NSNumber) ?? "") + " gram").foregroundColor(.orange)
+                                .gesture(TapGesture().onEnded {
+                                    self.isTapped.toggle()
+                                    if isTapped {
+                                        state.carbs = carbsReq
+                                    }
+                                })
                         }
                     }
                 }
@@ -230,8 +272,22 @@ extension AddCarbs {
                             .fat > state.maxCarbs || state.protein > state.maxCarbs
                     )
                     .listRowBackground(
-                        state.carbs <= 0 && state.fat <= 0 && state.protein <= 0 || state.carbs > state.maxCarbs || state
-                            .fat > state.maxCarbs || state.protein > state.maxCarbs ? Color(.systemGray4) : Color(.insulin)
+                        (state.carbs <= 0 && state.fat <= 0 && state.protein <= 0) ||
+                            state.carbs > state.maxCarbs ||
+                            state.fat > state.maxCarbs ||
+                            state.protein > state.maxCarbs
+                            ? AnyView(Color(.systemGray4))
+                            : AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
                     )
                     .tint(.white)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -243,9 +299,75 @@ extension AddCarbs {
                     state.loadEntries(editMode)
                 }
             }
+            .sheet(isPresented: $showInfo) {
+                webCarbCalculator
+            }
             .navigationTitle("Registrera måltid")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("Cancel", action: state.hideModal))
+            .navigationBarItems(
+                leading: Button {
+                    showInfo.toggle()
+                }
+                label: {
+                    // Image(systemName: "list.number")
+                    // Image(systemName: "plusminus")
+                    Image(systemName: "plus.forwardslash.minus")
+                        .font(.footnote)
+                        .fontWeight(.bold)
+                    Image(systemName: "fork.knife")
+                        .font(.caption2)
+                        .offset(x: -7)
+                },
+                trailing: Button { state.hideModal() }
+                label: { Text("Cancel") }
+            )
+        }
+
+        var webCarbCalculator: some View {
+            NavigationView {
+                ScrollView {
+                    ZStack(alignment: .top) {
+                        VStack {
+                            Rectangle()
+                                .fill(Color(.systemBackground))
+                                .frame(height: 40) // Adjust the height as needed
+                            Spacer()
+                        }
+                        .zIndex(1)
+                        VStack {
+                            // Use WebViewRepresentable to display the webpage
+                            WebViewRepresentable(
+                                urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
+                            )
+                            .frame(height: 660)
+                            Spacer()
+                            Text("Här kan exempelvis länkar eller annan info läggas till")
+                                .font(.caption)
+                                .multilineTextAlignment(.center)
+                                .frame(height: 350)
+                        }
+                        .zIndex(0)
+                    }
+
+                    .navigationBarTitle("Räkna KH")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(
+                        leading:
+                        HStack {
+                            Button(action: {
+                                showInfo.toggle()
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .scaleEffect(0.61)
+                                    .font(Font.title.weight(.semibold))
+                                    .offset(x: -13, y: 0)
+                                Text("Reg måltid")
+                                    .offset(x: -22, y: 0)
+                            }
+                        }
+                    )
+                }
+            }
         }
 
         var presetPopover: some View {
@@ -451,9 +573,9 @@ extension AddCarbs {
 public extension Color {
     static func randomVibrantColor(randomOpacity: Bool = false) -> Color {
         let baseColor = Color(
-            red: Double.random(in: 0.5 ... 1),
-            green: Double.random(in: 0.4 ... 0.6),
-            blue: Double.random(in: 0.4 ... 1),
+            red: Double.random(in: 0.262745098 ... 0.7215686275),
+            green: Double.random(in: 0.3411764706 ... 0.7333333333),
+            blue: Double.random(in: 0.9137254902 ... 1),
             opacity: 1
         )
 
@@ -479,10 +601,10 @@ extension Color {
 
     func withRandomOpacity() -> Color {
         Color(
-            red: Double.random(in: 0 ... 1),
-            green: Double.random(in: 0 ... 1),
-            blue: Double.random(in: 0 ... 1),
-            opacity: Double.random(in: 0.8 ... 1)
+            red: Double.random(in: 0.8 ... 1),
+            green: Double.random(in: 0.8 ... 1),
+            blue: Double.random(in: 0.8 ... 1),
+            opacity: Double.random(in: 1 ... 1)
         )
     }
 }

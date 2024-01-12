@@ -139,7 +139,18 @@ extension DataTable {
                             .font(.title3)
                             .listRowBackground(
                                 state.manualGlucose < limitLow || state
-                                    .manualGlucose > limitHigh ? Color(.systemGray4) : Color(.insulin)
+                                    .manualGlucose > limitHigh ? AnyView(Color(.systemGray4))
+                                    : AnyView(LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
                             )
                             .tint(.white)
                             .disabled(
@@ -220,7 +231,18 @@ extension DataTable {
                             )
                             .listRowBackground(
                                 state.nonPumpInsulinAmount <= 0 || state.nonPumpInsulinAmount > state
-                                    .maxBolus * 3 ? Color(.systemGray4) : Color(.insulin)
+                                    .maxBolus * 3 ? AnyView(Color(.systemGray4))
+                                    : AnyView(LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
                             )
                             .tint(.white)
                         }
@@ -252,7 +274,7 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showNonPumpInsulin = true }, label: {
-                        Image(systemName: "plus.app")
+                        Image(systemName: "plus")
                         Text("Insulin")
                             .font(.subheadline)
                     })
@@ -323,7 +345,7 @@ extension DataTable {
             List {
                 HStack {
                     Button(action: { showManualGlucose = true }, label: {
-                        Image(systemName: "plus.app")
+                        Image(systemName: "plus")
                         Text("Blodsocker")
                             .font(.subheadline)
                     })

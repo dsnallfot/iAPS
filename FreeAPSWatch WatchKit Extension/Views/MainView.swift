@@ -88,7 +88,7 @@ import SwiftUI
                         .minimumScaleFactor(0.3)
                         .offset(x: -8, y: 0)
                     Spacer()
-                    Circle().stroke(color, lineWidth: 5).frame(width: 26, height: 26).padding(10)
+                    Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(5)
                 }
             }
             VStack {
@@ -115,6 +115,7 @@ import SwiftUI
                                 .foregroundColor(.gray)
                         }
                         .frame(width: 45, alignment: .leading)
+                        .padding(.leading, 5)
                         Spacer()
 
                         // Conditionally format the Image and Text
@@ -184,6 +185,22 @@ import SwiftUI
                             .minimumScaleFactor(0.5)
                     }
                     .frame(width: 45, alignment: .leading)
+                    .padding(.leading, 5)
+
+                    Spacer()
+                    HStack {
+                        Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .foregroundColor(Color.white)
+                            .minimumScaleFactor(0.5)
+
+                        Text("U").foregroundColor(.insulin)
+                            .font(.caption2)
+                            .scaledToFill()
+                            .minimumScaleFactor(0.5)
+                    }
+                    .frame(width: 60, alignment: .center)
 
                     switch state.displayOnWatch {
                     case .HR:
@@ -214,7 +231,7 @@ import SwiftUI
                                 .gesture(longPress)
                             }
                         }
-                        .frame(width: 60, alignment: .center)
+                        .frame(width: 50, alignment: .trailing)
                     case .BGTarget:
                         if let eventualBG = state.eventualBG.nonEmpty {
                             Spacer()
@@ -225,7 +242,7 @@ import SwiftUI
                                     .foregroundColor(.white)
                                     .minimumScaleFactor(0.5)
                             }
-                            .frame(width: 60, alignment: .center)
+                            .frame(width: 50, alignment: .trailing)
                         }
                     case .steps:
                         Spacer()
@@ -237,7 +254,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .center)
+                        .frame(width: 50, alignment: .trailing)
                     case .isf:
                         Spacer()
                         let isf: String = state.isf != nil ? "\(state.isf ?? 0)" : "-"
@@ -254,7 +271,7 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .center)
+                        .frame(width: 50, alignment: .trailing)
                     case .override:
                         Spacer()
                         let override: String = state.override != nil ? state.override! : "-"
@@ -271,22 +288,8 @@ import SwiftUI
                                 .foregroundColor(.white)
                                 .minimumScaleFactor(0.5)
                         }
-                        .frame(width: 60, alignment: .center)
+                        .frame(width: 50, alignment: .trailing)
                     }
-                    Spacer()
-                    HStack {
-                        Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .foregroundColor(Color.white)
-                            .minimumScaleFactor(0.5)
-
-                        Text("U").foregroundColor(.insulin)
-                            .font(.caption2)
-                            .scaledToFill()
-                            .minimumScaleFactor(0.5)
-                    }
-                    .frame(width: 50, alignment: .trailing)
                 }
                 Spacer()
                     .onAppear(perform: start)
@@ -307,7 +310,7 @@ import SwiftUI
             }.padding(.bottom, 30)
 
             HStack {
-                Circle().stroke(color, lineWidth: 5).frame(width: 30, height: 30).padding(10)
+                Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
             }
         }
         .gesture(longPresBGs)
@@ -378,7 +381,7 @@ import SwiftUI
                         .resizable()
                         .fontWeight(.light)
                         .frame(width: 35, height: 35)
-                        .foregroundColor(.loopGreen)
+                        .foregroundColor(.cyan)
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
                         Text(until, style: .timer)
                             .scaledToFill()

@@ -309,7 +309,7 @@
 "Inserted" = "Kanyl har förts in";
 
 /* Insert cannula action button accessibility label while pairing */
-"Inserting. Please wait." = "Nål förs in. Vänligen vänta.";
+"Inserting. Please wait." = "Kanyl förs in. Vänligen vänta.";
 
 /* Cannula insertion button text while inserting */
 "Inserting..." = "Kanylen förs in...";

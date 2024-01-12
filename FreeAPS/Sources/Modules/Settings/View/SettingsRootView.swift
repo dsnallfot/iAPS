@@ -59,7 +59,7 @@ extension Settings {
                     Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
                     Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
                     Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
-                    Toggle("Animated Background", isOn: $state.animatedBackground)
+                    // Toggle("Animated Background", isOn: $state.animatedBackground)
                 } header: { Text("Extra funktioner") }
 
                 Section {
@@ -123,11 +123,13 @@ extension Settings {
                                 }) {
                                     HStack {
                                         Image(systemName: "icloud.and.arrow.up")
-                                        Text("Nightscout")
+                                        Text("Nightscout ")
                                     }
                                 }
+                                .buttonStyle(DiscoButtonStyle())
+
                                 .frame(maxWidth: .infinity, alignment: .trailing)
-                                .buttonStyle(.borderedProminent)
+                                // .buttonStyle(.borderedProminent)
                             }
                         }
                     }
@@ -152,5 +154,24 @@ extension Settings {
             .navigationBarTitleDisplayMode(.inline)
             .onDisappear(perform: { state.uploadProfileAndSettings(false) })
         }
+    }
+}
+
+struct DiscoButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(6)
+            .background(
+                AnyShapeStyle(
+                    LinearGradient(colors: [
+                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                    ], startPoint: .leading, endPoint: .trailing)
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }

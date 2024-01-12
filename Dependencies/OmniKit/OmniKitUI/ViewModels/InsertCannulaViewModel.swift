@@ -30,7 +30,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         var actionButtonAccessibilityLabel: String {
             switch self {
             case .ready, .startingInsertion:
-                return LocalizedString("Insert Cannula", comment: "Insert cannula action button accessibility label while ready to pair")
+                return LocalizedString("Slide Button to insert Cannula", comment: "Insert cannula slider button accessibility label while ready to pair")
             case .inserting:
                 return LocalizedString("Inserting. Please wait.", comment: "Insert cannula action button accessibility label while pairing")
             case .checkingInsertion:
@@ -54,15 +54,15 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         var nextActionButtonDescription: String {
             switch self {
             case .ready:
-                return LocalizedString("Insert Cannula", comment: "Cannula insertion button text while ready to insert")
+                return LocalizedString("Svep för att föra in kanyl", comment: "Cannula insertion button text while ready to insert")
             case .error:
-                return LocalizedString("Retry", comment: "Cannula insertion button text while showing error")
+                return LocalizedString("Försök igen", comment: "Cannula insertion button text while showing error")
             case .inserting, .startingInsertion:
-                return LocalizedString("Inserting...", comment: "Cannula insertion button text while inserting")
+                return LocalizedString("För in kanyl...", comment: "Cannula insertion button text while inserting")
             case .checkingInsertion:
-                return LocalizedString("Checking...", comment: "Cannula insertion button text while checking insertion")
+                return LocalizedString("Kontrollerar...", comment: "Cannula insertion button text while checking insertion")
             case .finished:
-                return LocalizedString("Continue", comment: "Cannula insertion button text when inserted")
+                return LocalizedString("Fortsätt", comment: "Cannula insertion button text when inserted")
             }
         }
         
@@ -125,6 +125,14 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     }
 
     @Published var state: InsertCannulaViewModelState = .ready
+    public var stateNeedsDeliberateUserAcceptance : Bool {
+        switch state {
+        case .ready:
+            true
+        default:
+            false
+        }
+    }
     
     var didFinish: (() -> Void)?
     

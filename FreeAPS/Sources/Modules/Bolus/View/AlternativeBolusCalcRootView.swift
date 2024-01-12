@@ -151,7 +151,18 @@ extension Bolus {
                         .disabled(state.amount <= 0 || state.amount > state.maxBolus)
                         .listRowBackground(
                             state.amount <= 0 || state.amount > state
-                                .maxBolus ? Color(.systemGray4) : Color(.insulin)
+                                .maxBolus ? AnyView(Color(.systemGray4))
+                                : AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
                         )
                         .tint(.white)
                     }
@@ -211,22 +222,22 @@ extension Bolus {
             .navigationBarTitle("Enact Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
-                    if fetch {
-                        carbsView()
-                    }
+                    // if fetch {
+                    carbsView()
+                    // }
                 }
                 label: {
-                    if fetch {
-                        Image(systemName: "chevron.left")
-                            .scaleEffect(0.61)
-                            .font(Font.title.weight(.semibold))
-                            .offset(x: -13, y: 0)
-                        // }
+                    // if fetch {
+                    Image(systemName: "chevron.left")
+                        .scaleEffect(0.61)
+                        .font(Font.title.weight(.semibold))
+                        .offset(x: -13, y: 0)
+                    // }
 
-                        // if fetch {
-                        Text("Måltid")
-                            .offset(x: -22, y: 0)
-                    }
+                    // if fetch {
+                    Text("Måltid")
+                        .offset(x: -22, y: 0)
+                    // }
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Cancel") }
@@ -1559,6 +1570,7 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
+                                .multilineTextAlignment(.center)
                         }
                     } else if state.insulinCalculated > roundedOrefInsulin {
                         VStack {
@@ -1573,6 +1585,7 @@ extension Bolus {
                             Text(alertString())
                                 .foregroundColor(.secondary)
                                 .italic()
+                                .multilineTextAlignment(.center)
                         }
                     }
                 }

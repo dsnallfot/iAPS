@@ -75,6 +75,18 @@ extension Home {
             return formatter
         }
 
+        private var glucoseFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 0
+            if state.units == .mmolL {
+                formatter.minimumFractionDigits = 1
+                formatter.maximumFractionDigits = 1
+            }
+            formatter.roundingMode = .halfUp
+            return formatter
+        }
+
         private var targetFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -102,14 +114,33 @@ extension Home {
             return scene
         }
 
-        @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
-            VStack(alignment: .center) {
-                ZStack {
-                    glucoseView
-                        .padding(.bottom, 35)
-                        .padding(.top, 15)
-                }
+        /* @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
+         VStack(alignment: .center) {
+         ZStack {
+         glucoseView
+         .padding(.bottom, 35)
+         .padding(.top, 15)
+         }
 
+         HStack(alignment: .center) {
+         Spacer()
+         cobIobView
+
+         Spacer()
+
+         pumpView
+
+         Spacer()
+         }
+         }
+         .frame(maxWidth: .infinity)
+         .padding(.top, 10 + geo.safeAreaInsets.top)
+         .padding(.horizontal, 10)
+         .background(Color.clear)
+         }*/
+
+        @ViewBuilder func header(_: GeometryProxy) -> some View {
+            VStack(alignment: .center) {
                 HStack(alignment: .center) {
                     Spacer()
                     cobIobView
@@ -122,7 +153,7 @@ extension Home {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 10 + geo.safeAreaInsets.top)
+            .padding(.top, 50) // 0 + geo.safeAreaInsets.top)
             .padding(.horizontal, 10)
             .background(Color.clear)
         }
@@ -147,7 +178,7 @@ extension Home {
             HStack {
                 HStack {
                     Text("COB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.loopYellow)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .loopYellow : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
                             NSLocalizedString(" g", comment: "gram of carbs")
@@ -163,7 +194,7 @@ extension Home {
 
                 HStack {
                     Text("IOB")
-                        .font(.system(size: 14, weight: .semibold)).foregroundColor(.insulin)
+                        .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .insulin : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
                             NSLocalizedString(" E", comment: "Insulin unit")
@@ -326,7 +357,7 @@ extension Home {
             return percentString + comma1 + targetString + comma2 + durationString + comma3 + smbToggleString
         }
 
-        var infoPanel: some View {
+        var infoAndActionPanel: some View {
             HStack(alignment: .center) {
                 Spacer()
                 Button(action: {
@@ -338,17 +369,18 @@ extension Home {
                         HStack {
                             Image(systemName: "exclamationmark.triangle")
                                 .offset(x: 0, y: 0)
+                                .foregroundColor(.orange)
 
                             Text("Pump suspended")
                                 .offset(x: -4, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.gray)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -368,18 +400,22 @@ extension Home {
                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
                     if let carbsReq = state.carbsRequired {
                         HStack {
+                            Image(systemName: "fork.knife")
+                                .offset(x: 2, y: 0)
+                                .foregroundColor(.loopYellow)
                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                .foregroundColor(.primary)
 
                             Text("g kh behövs!")
                                 .offset(x: -5, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.loopYellow)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 9)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -404,20 +440,25 @@ extension Home {
                     state.apsManager.determineBasalSync() }) {
                     if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                         HStack {
-                            Text("Insulinbehov")
+                            Image(systemName: "drop.fill")
                                 .offset(x: 5, y: 0)
+                                .foregroundColor(.insulin)
+                            Text("Insulinbehov")
+                                .offset(x: 3, y: 0)
+                                .foregroundColor(.primary)
                             Text(numberFormatter.string(from: insulinRequested as NSNumber)!)
+                                .foregroundColor(.primary)
 
                             Text("E")
                                 .offset(x: -5, y: 0)
+                                .foregroundColor(.primary)
                         }
                         .font(.caption)
-                        .foregroundColor(.insulin)
                         .frame(maxHeight: 20)
                         .padding(.vertical, 3)
                         .padding(.leading, 4)
                         .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                         .cornerRadius(13)
                     }
                 }
@@ -439,19 +480,19 @@ extension Home {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
                             .font(.caption)
-                            .foregroundColor(.loopGreen)
+                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                     }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopGreen.opacity(1), lineWidth: 1.5)
+                        .stroke(Color.cyan.opacity(1), lineWidth: 1.5)
                         .shadow(
-                            color: Color.loopGreen.opacity(colorScheme == .dark ? 1 : 1),
+                            color: Color.cyan.opacity(colorScheme == .dark ? 1 : 1),
                             radius: colorScheme == .dark ? 1 : 1
                         )
                 )
@@ -469,19 +510,25 @@ extension Home {
                                 Text(overrideString)
                             }
                             .font(.caption)
-                            .foregroundColor(.cyan)
+                            .foregroundColor(.primary)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.horizontal, 9)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                         }
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.cyan.opacity(1), lineWidth: 1.5)
+                            .stroke(LinearGradient(colors: [
+                                Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                            ], startPoint: .leading, endPoint: .trailing), lineWidth: 1.5)
                             .shadow(
-                                color: Color.cyan.opacity(colorScheme == .dark ? 1 : 1),
+                                color: Color.zt.opacity(colorScheme == .dark ? 1 : 1),
                                 radius: colorScheme == .dark ? 1 : 1
                             )
                     )
@@ -496,17 +543,18 @@ extension Home {
                             HStack {
                                 Image(systemName: "exclamationmark.triangle")
                                     .offset(x: 0, y: 0)
+                                    .foregroundColor(.orange)
 
                                 Text("Max IOB: 0")
                                     .offset(x: -4, y: 0)
+                                    .foregroundColor(.primary)
                             }
                             .font(.caption)
-                            .foregroundColor(.loopRed)
                             .frame(maxHeight: 20)
                             .padding(.vertical, 3)
                             .padding(.leading, 9)
                             .padding(.trailing, 4)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
                         }
                     }
@@ -522,11 +570,11 @@ extension Home {
                     Spacer()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: 40)
+            .frame(maxWidth: .infinity, maxHeight: 26) // 40)
             .background(Color.clear)
             .padding(.horizontal, 10)
-            .padding(.top, 5)
-            .padding(.bottom, 8)
+            .padding(.bottom, 15)
+            // .padding(.bottom, 8)
         }
 
         var timeInterval: some View {
@@ -550,7 +598,7 @@ extension Home {
 
             .background(
                 RoundedRectangle(cornerRadius: 13)
-                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                    .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 13)
                             .stroke(
@@ -565,7 +613,7 @@ extension Home {
             )
         }
 
-        var legendPanel: some View {
+        var loopPanel: some View {
             HStack(alignment: .center) {
                 loopView
             }
@@ -723,13 +771,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(.loopYellow)
+                                .foregroundColor(state.disco ? .loopYellow : .gray)
                                 .padding(.top, 14)
                                 .padding(.bottom, 9)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if state.carbsRequired != nil {
-                                Circle().fill(Color.loopYellow).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 1, y: 2.5)
                             }
                         }
@@ -749,13 +797,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(.insulin)
+                                .foregroundColor(state.disco ? .insulin : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
-                                Circle().fill(Color.insulin).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -773,7 +821,7 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-                        }.foregroundColor(.insulin)
+                        }.foregroundColor(state.disco ? .insulin : .gray)
                         Spacer()
                     }
 
@@ -784,13 +832,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .light))
-                                .foregroundColor(.loopGreen)
+                                .foregroundColor(state.disco ? .cyan : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if state.tempTarget != nil {
-                                Circle().fill(Color.loopGreen).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -805,13 +853,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(.cyan)
+                                .foregroundColor(state.disco ? .zt : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if selectedProfile().isOn {
-                                Circle().fill(Color.cyan).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -830,9 +878,9 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-                                .foregroundColor(.gray)
+                                .foregroundColor(state.disco ? .gray : .gray)
                             if state.closedLoop && state.settingsManager.preferences.maxIOB == 0 || state.pumpSuspended == true {
-                                Circle().fill(Color.gray).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.gray : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
@@ -850,9 +898,10 @@ extension Home {
                         HStack {
                             HStack {
                                 Text("Bolusing")
-                                    .foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(.white).font(.system(size: 14, weight: .semibold))
 
                             }.frame(width: 70, alignment: .leading)
+                                .offset(x: 0, y: 3)
                             let bolused = bolusFormatter
                                 .string(from: (amount * progress) as NSNumber) ?? ""
 
@@ -860,16 +909,17 @@ extension Home {
                                 Text(
                                     bolused + " " + NSLocalizedString("av", comment: "") + " " + amount
                                         .formatted() + NSLocalizedString(" E", comment: "")
-                                ).foregroundColor(.white).font(.system(size: 15, weight: .semibold))
+                                ).foregroundColor(.white).font(.system(size: 14, weight: .semibold))
                             }.frame(width: 104, alignment: .trailing)
+                                .offset(x: 0, y: 3)
                         }
                         ProgressView(value: Double(progress))
                             .progressViewStyle(BolusProgressViewStyle())
                             .frame(width: 180, alignment: .leading)
-                            .offset(x: 0, y: 0)
+                            .offset(x: 0, y: -3)
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, 20)
+                    // .padding(.top, 2)
+                    // .padding(.bottom, 2)
                     .padding(.trailing, 10)
 
                     Image(systemName: "xmark.circle.fill")
@@ -885,8 +935,31 @@ extension Home {
         var body: some View {
             GeometryReader { geo in
                 VStack(spacing: 0) {
-                    header(geo)
-                    infoPanel
+                    ZStack(alignment: .top) {
+                        Rectangle().fill(
+                            colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white
+                        )
+                        .frame(height: 80) // 116)
+                        .shadow(
+                            color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                            radius: colorScheme == .dark ? 1 : 1
+                        )
+                        header(geo)
+                    }
+                    Rectangle().fill(
+                        colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary
+                            .opacity(0)
+                    ).frame(maxHeight: 0.5)
+
+                    // test rearranging glucoseview below header --->
+                    ZStack {
+                        glucoseView
+                            .padding(.bottom, 35)
+                            .padding(.top, 35)
+                    }
+                    // <---
+                    infoAndActionPanel
+
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.clear)
                         .overlay(mainChart)
@@ -902,7 +975,7 @@ extension Home {
                         timeInterval
                             .frame(width: 80, height: 40, alignment: .center)
 
-                        legendPanel
+                        loopPanel
                             .frame(width: 50, height: 40, alignment: .center)
 
                         HStack(alignment: .center) {
@@ -910,8 +983,8 @@ extension Home {
                                 .foregroundStyle(.secondary.opacity(1))
                                 .font(.system(size: 13))
                                 /* .shadow(
-                                     color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
-                                     radius: colorScheme == .dark ? 1 : 1
+                                 color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                 radius: colorScheme == .dark ? 1 : 1
                                  ) */
                                 .onTapGesture {
                                     state.showModal(for: .statistics)
@@ -919,7 +992,7 @@ extension Home {
                                 .frame(width: 40, height: 25, alignment: .center)
                                 .background(
                                     RoundedRectangle(cornerRadius: 13)
-                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.15) : Color.white)
+                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 13)
                                                 .stroke(
@@ -950,24 +1023,44 @@ extension Home {
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 20)
+                    Rectangle().fill(
+                        colorScheme == .dark ? Color.secondary.opacity(0.5) : Color.secondary
+                            .opacity(0)
+                    ).frame(maxHeight: 0.5)
+
                     bottomPanel(geo)
                 }
                 .edgesIgnoringSafeArea(.all)
             }
             .onAppear {
-                configureView {
-                    // highlightButtons()
-                }
+                configureView {}
             }
             .overlay {
                 if let progress = state.bolusProgress, let amount = state.bolusAmount {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.insulin.opacity(0.8))
-                            .frame(width: 300, height: 60)
+                        RoundedRectangle(cornerRadius: 13)
+                            // .fill(Color.insulin.opacity(1))
+
+                            .fill(
+                                state.disco ?
+                                    AnyShapeStyle(
+                                        LinearGradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ], startPoint: .leading, endPoint: .trailing)
+                                    ) :
+                                    AnyShapeStyle(
+                                        Color(UIColor.systemGray4)
+                                    )
+                            )
+
+                            .frame(width: 280, height: 55)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.white, lineWidth: 3)
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color.white, lineWidth: 2)
                             )
                             .shadow(
                                 color: Color.primary.opacity(colorScheme == .dark ? 1 : 0.5),
@@ -975,8 +1068,8 @@ extension Home {
                             )
                         bolusProgressView(progress: progress, amount: amount)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .offset(x: 0, y: 10)
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .offset(x: 0, y: 20)
                 }
             }
             .background(Color.loopGray.opacity(0.0)) // 12))
@@ -988,8 +1081,24 @@ extension Home {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color(UIColor.systemGray4))
+                            .fill(
+                                state.disco ?
+                                    AnyShapeStyle(
+                                        LinearGradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ], startPoint: .leading, endPoint: .trailing)
+                                    ) :
+                                    AnyShapeStyle(
+                                        Color(UIColor.systemGray4) // Use gray background when state.disco is false
+                                    )
+                            )
                     )
+
+                    .offset(x: 0, y: 25)
                     .onTapGesture {
                         isStatusPopupPresented = false
                     }
@@ -1009,20 +1118,33 @@ extension Home {
 
         private var popup: some View {
             VStack(alignment: .leading, spacing: 4) {
-                Text(state.statusTitle).font(.headline).foregroundColor(.primary)
-                    .padding(.bottom, 4)
+                HStack {
+                    Text(state.statusTitle)
+                    Spacer()
+                    Text("BG")
+                    Text(
+                        (state.recentGlucose?.glucose ?? 100) == 400 ? "HIGH" : state.recentGlucose?.glucose
+                            .map {
+                                glucoseFormatter
+                                    .string(from: Double(state.units == .mmolL ? $0.asMmolL : Decimal($0)) as NSNumber)! }
+                            ?? "--"
+                    )
+                }
+                .font(.headline).foregroundColor(.white)
+                .padding(.bottom, 4)
                 if let suggestion = state.suggestion {
                     TagCloudView(tags: suggestion.reasonParts).animation(.none, value: false)
 
-                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote).foregroundColor(.primary)
+                    Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote)
+                        .foregroundColor(.white)
 
                 } else {
-                    Text("No suggestion found").font(.body).foregroundColor(.primary)
+                    Text("No suggestion found").font(.body).foregroundColor(.white)
                 }
 
                 if let errorMessage = state.errorMessage, let date = state.errorDate {
                     Text(NSLocalizedString("Error at", comment: "") + " " + dateFormatter.string(from: date))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.white)
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)

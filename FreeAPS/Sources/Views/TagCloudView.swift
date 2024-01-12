@@ -55,12 +55,13 @@ struct TagCloudView: View {
     private func item(for textTag: String) -> some View {
         var colorOfTag: Color {
             switch textTag {
-            case textTag where textTag.contains("SMB Delivery Ratio:"):
+            case textTag where textTag.contains("SMB Delivery Ratio:"),
+                 textTag where textTag.contains("SMB Ratio"):
                 return .uam
             case textTag where textTag.contains("Bolus"),
                  textTag where textTag.contains("TDD"),
                  textTag where textTag.contains("Tot 24h insulin:"):
-                return .green
+                return .loopGreen
             case textTag where textTag.contains("Total insulin:"),
                  textTag where textTag.contains("tdd_factor"),
                  textTag where textTag.contains("Sigmoid function"),
@@ -72,9 +73,10 @@ struct TagCloudView: View {
                  textTag where textTag.contains("Autosens gränsvärde:"),
                  textTag where textTag.contains("Dynamic ISF/CR"),
                  textTag where textTag.contains("Dynamisk ISF/CR"),
-                 textTag where textTag.contains("Basal Ratio"),
-                 textTag where textTag.contains("SMB Ratio"):
+                 textTag where textTag.contains("Basal Ratio"):
                 return .zt
+            case textTag where textTag.contains("Middleware:"):
+                return .loopRed
             default:
                 return .insulin
             }
@@ -84,6 +86,7 @@ struct TagCloudView: View {
             .padding(.vertical, 2)
             .padding(.horizontal, 4)
             .font(.subheadline)
+            .fontWeight(.semibold)
             .background(colorOfTag.opacity(0.8))
             .foregroundColor(Color.white)
             .cornerRadius(3) }
