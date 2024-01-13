@@ -67,7 +67,6 @@ extension OverrideProfilesConfig {
                     Section {
                         Button {
                             state.cancelProfile()
-                            state.overrideActive = false
                             dismiss()
                         }
                         label: {
@@ -250,7 +249,6 @@ extension OverrideProfilesConfig {
                                 Button("Start Profile", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
-                                    state.overrideActive = true
                                     state.saveSettings()
                                     dismiss()
                                 }
@@ -340,7 +338,6 @@ extension OverrideProfilesConfig {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         state.selectProfile(id_: preset.id ?? "")
-                        state.overrideActive = true
                         state.hideModal()
                     }
                 }
