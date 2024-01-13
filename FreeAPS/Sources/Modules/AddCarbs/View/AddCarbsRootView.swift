@@ -338,7 +338,7 @@ extension AddCarbs {
                         VStack {
                             // Use WebViewRepresentable to display the webpage
                             WebViewRepresentable(
-                                urlString: "https://onedrive.live.com/view.aspx?resid=B2212F66CC04A6C1!81077&ithint=file%2cxlsx&authkey=!AO_L69Kyd35yMVo"
+                                urlString: "https://1drv.ms/x/s!AsGmBMxmLyGyhPk1uu2dfrrBLSauGw"
                             )
                             .frame(height: 660)
                             Spacer()
