@@ -324,7 +324,7 @@ extension AddCarbs {
                         VStack {
                             HStack {
                                 Spacer()
-                                Text("Insulinkvot (CR)")
+                                Text("Insulinkvot:")
                                     .foregroundColor(.secondary)
                                     .offset(x: 4)
                                 Text(state.carbRatio.formatted())
@@ -333,7 +333,7 @@ extension AddCarbs {
                                     .foregroundColor(.secondary)
                                     .offset(x: -6)
                                     .padding(.trailing, 10)
-                                Text("Aktiva KH (COB)")
+                                Text("Aktiva kolhydrater:")
                                     .foregroundColor(.secondary)
                                     .offset(x: 4)
                                 Text(state.cob.formatted())
