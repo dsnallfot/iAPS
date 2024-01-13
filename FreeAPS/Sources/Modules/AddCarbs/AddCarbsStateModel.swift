@@ -21,8 +21,7 @@ extension AddCarbs {
         @Published var id_: String = ""
         @Published var summary: String = ""
         @Published var skipBolus: Bool = false
-
-        @Published var overrideActive: Bool = false
+        @Published var isEnabled = false
 
         let now = Date.now
 
@@ -30,11 +29,21 @@ extension AddCarbs {
 
         override func subscribe() {
             subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
-            overrideActive = settings.settings.overrideActive
 
             carbsRequired = provider.suggestion?.carbsReq
             maxCarbs = settings.settings.maxCarbs
             skipBolus = settingsManager.settings.skipBolusScreenAfterCarbs
+        }
+
+        func savedSettings() {
+            coredataContext.performAndWait {
+                var overrideArray = [Override]()
+                let requestEnabled = Override.fetchRequest() as NSFetchRequest<Override>
+                let sortIsEnabled = NSSortDescriptor(key: "date", ascending: false)
+                requestEnabled.sortDescriptors = [sortIsEnabled]
+                try? overrideArray = coredataContext.fetch(requestEnabled)
+                isEnabled = overrideArray.first?.enabled ?? false
+            }
         }
 
         func add(_ continue_: Bool, fetch: Bool) {

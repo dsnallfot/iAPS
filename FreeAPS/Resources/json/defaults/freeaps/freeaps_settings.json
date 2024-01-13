@@ -50,7 +50,6 @@
   "fattyMealTrigger": 0.5
   "sweetMeals": false,
   "sweetMealFactor": 2,
-  "overrideActive": false,
   "advancedCalc": false,
   "disco": true,
 

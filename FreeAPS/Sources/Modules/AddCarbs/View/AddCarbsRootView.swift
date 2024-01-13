@@ -70,7 +70,7 @@ extension AddCarbs {
 
         var body: some View {
             Form {
-                if state.overrideActive {
+                if state.isEnabled {
                     Section {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -299,6 +299,7 @@ extension AddCarbs {
                     state.loadEntries(editMode)
                 }
             }
+            .onAppear { state.savedSettings() }
             .sheet(isPresented: $showInfo) {
                 webCarbCalculator
             }
