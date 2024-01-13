@@ -186,7 +186,7 @@ extension Home {
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 75)
+                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -202,7 +202,7 @@ extension Home {
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 85)
+                .frame(width: 80)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -1098,7 +1098,7 @@ extension Home {
                             )
                     )
 
-                    .offset(x: 0, y: 25)
+                    .offset(x: 0, y: 27)
                     .onTapGesture {
                         isStatusPopupPresented = false
                     }
@@ -1137,6 +1137,7 @@ extension Home {
 
                     Text(suggestion.reasonConclusion.capitalizingFirstLetter()).font(.footnote)
                         .foregroundColor(.white)
+                        .padding(.horizontal, 3)
 
                 } else {
                     Text("No suggestion found").font(.body).foregroundColor(.white)
