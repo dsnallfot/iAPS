@@ -322,9 +322,27 @@ extension AddCarbs {
                 ScrollView {
                     ZStack(alignment: .top) {
                         VStack {
-                            Rectangle()
-                                .fill(Color(.systemBackground))
-                                .frame(height: 40) // Adjust the height as needed
+                            HStack {
+                                Spacer()
+                                Text("Aktuell insulinkvot (IK):")
+                                Text(state.carbRatio.formatted())
+                                    .fontWeight(.semibold)
+                                Text("g/E")
+                                    .offset(x: -6)
+                                    .padding(.trailing, 10)
+                                Text("COB:")
+                                Text(state.cob.formatted())
+                                    .fontWeight(.semibold)
+                                Text("g")
+                                    .offset(x: -6)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 10)
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                            .frame(height: 40) // Adjust the height as needed
+                            .background(Color(.systemBackground))
                             Spacer()
                         }
                         .zIndex(1)
@@ -336,26 +354,26 @@ extension AddCarbs {
                             .frame(height: 660)
                             Spacer()
                             VStack {
-                                HStack {
-                                    Spacer()
-                                    Text("Aktuell insulinkvot (IK):")
-                                        .foregroundColor(.secondary)
-                                    Text(state.carbRatio.formatted())
-                                    Text("g/E")
-                                        .offset(x: -6)
-                                        .padding(.trailing, 10)
-                                    Text("COB:")
-                                        .foregroundColor(.secondary)
-                                    Text(state.cob.formatted())
-                                    Text("g")
-                                        .offset(x: -6)
-                                    Spacer()
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 50)
-                                .font(.footnote)
-                                .fontWeight(.semibold)
-                                Spacer()
+                                /* HStack {
+                                     Spacer()
+                                     Text("Aktuell insulinkvot (IK):")
+                                         .foregroundColor(.secondary)
+                                     Text(state.carbRatio.formatted())
+                                     Text("g/E")
+                                         .offset(x: -6)
+                                         .padding(.trailing, 10)
+                                     Text("COB:")
+                                         .foregroundColor(.secondary)
+                                     Text(state.cob.formatted())
+                                     Text("g")
+                                         .offset(x: -6)
+                                     Spacer()
+                                 }
+                                 .padding(.horizontal, 10)
+                                 .padding(.vertical, 50)
+                                 .font(.footnote)
+                                 .fontWeight(.semibold)
+                                 Spacer() */
                             }
                             .frame(height: 350)
                         }
