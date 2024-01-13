@@ -22,6 +22,8 @@ extension AddCarbs {
         @Published var summary: String = ""
         @Published var skipBolus: Bool = false
         @Published var isEnabled = false
+        @Published var carbRatio: Decimal = 0
+        @Published var cob: Decimal = 0
 
         let now = Date.now
 
@@ -31,6 +33,8 @@ extension AddCarbs {
             subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
 
             carbsRequired = provider.suggestion?.carbsReq
+            carbRatio = provider.suggestion?.carbRatio ?? 0
+            cob = provider.suggestion?.cob ?? 0
             maxCarbs = settings.settings.maxCarbs
             skipBolus = settingsManager.settings.skipBolusScreenAfterCarbs
         }

@@ -310,14 +310,6 @@ extension AddCarbs {
                     showInfo.toggle()
                 }
                 label: {
-                    // Image(systemName: "list.number")
-                    // Image(systemName: "plusminus")
-                    /* Image(systemName: "plus.forwardslash.minus")
-                         .font(.caption2)
-                     // .fontWeight(.bold)
-                     Image(systemName: "fork.knife")
-                         .font(.caption2)
-                         .offset(x: -7) */
                     Text("Räkna KH")
                 },
                 trailing: Button { state.hideModal() }
@@ -343,12 +335,29 @@ extension AddCarbs {
                             )
                             .frame(height: 660)
                             Spacer()
-                            Text("Här kan exempelvis länkar eller annan info läggas till senare")
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    Text("Aktuell insulinkvot (IK):")
+                                        .foregroundColor(.secondary)
+                                    Text(state.carbRatio.formatted())
+                                    Text("g/E")
+                                        .offset(x: -6)
+                                        .padding(.trailing, 10)
+                                    Text("COB:")
+                                        .foregroundColor(.secondary)
+                                    Text(state.cob.formatted())
+                                    Text("g")
+                                        .offset(x: -6)
+                                    Spacer()
+                                }
                                 .padding(.horizontal, 10)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .frame(height: 350)
+                                .padding(.vertical, 50)
+                                .font(.footnote)
+                                .fontWeight(.semibold)
+                                Spacer()
+                            }
+                            .frame(height: 350)
                         }
                         .zIndex(0)
                     }
