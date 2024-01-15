@@ -153,7 +153,7 @@ extension AddCarbs {
                             Button { showAlert.toggle() }
 
                             label: {
-                                // Image(systemName: "trash")
+                                Image(systemName: "trash")
                                 // .offset(x: 5, y: 0)
                                 Text("Radera favorit")
                             }
@@ -242,7 +242,7 @@ extension AddCarbs {
                     let formattedMaxAmountCarbs = String(format: "%.0f", maxamountcarbs)
                     Button {
                         if state.carbs <= state.maxCarbs {
-                            // Only allow button click if carbs are within maxCarbs
+                            // Only allow button click if carbs are below maxCarbs
                             state.add(override, fetch: editMode)
                         }
                     } label: {
@@ -324,29 +324,33 @@ extension AddCarbs {
                         VStack {
                             HStack {
                                 Spacer()
-                                Text("Insulinkvot:")
-                                    .foregroundColor(.secondary)
-                                    .offset(x: 4)
-                                Text(state.carbRatio.formatted())
-                                    .fontWeight(.semibold)
-                                Text("g/E")
-                                    .foregroundColor(.secondary)
-                                    .offset(x: -6)
-                                    .padding(.trailing, 10)
-                                Text("Aktiva kolhydrater:")
-                                    .foregroundColor(.secondary)
-                                    .offset(x: 4)
-                                Text(state.cob.formatted())
-                                    .fontWeight(.semibold)
-                                Text("g")
-                                    .foregroundColor(.secondary)
-                                    .offset(x: -6)
+                                HStack {
+                                    Text("Insulinkvot:")
+                                        .foregroundColor(.secondary)
+                                        .offset(x: 4)
+                                    Text(state.carbRatio.formatted())
+                                        .fontWeight(.semibold)
+                                    Text("g/E")
+                                        .foregroundColor(.secondary)
+                                        .offset(x: -6)
+                                        .padding(.trailing, 10)
+                                }
+                                HStack {
+                                    Text("Aktiva kolhydrater:")
+                                        .foregroundColor(.secondary)
+                                        .offset(x: 4)
+                                    Text(state.cob.formatted())
+                                        .fontWeight(.semibold)
+                                    Text("g")
+                                        .foregroundColor(.secondary)
+                                        .offset(x: -6)
+                                }
                                 Spacer()
                             }
                             .padding(.horizontal, 10)
                             .padding(.vertical, 10)
                             .font(.footnote)
-                            .frame(height: 40) // Adjust the height as needed
+                            .frame(height: 40)
                             .background(Color(.systemBackground))
                             Spacer()
                         }
@@ -358,29 +362,8 @@ extension AddCarbs {
                             )
                             .frame(height: 660)
                             Spacer()
-                            VStack {
-                                /* HStack {
-                                     Spacer()
-                                     Text("Aktuell insulinkvot (IK):")
-                                         .foregroundColor(.secondary)
-                                     Text(state.carbRatio.formatted())
-                                     Text("g/E")
-                                         .offset(x: -6)
-                                         .padding(.trailing, 10)
-                                     Text("COB:")
-                                         .foregroundColor(.secondary)
-                                     Text(state.cob.formatted())
-                                     Text("g")
-                                         .offset(x: -6)
-                                     Spacer()
-                                 }
-                                 .padding(.horizontal, 10)
-                                 .padding(.vertical, 50)
-                                 .font(.footnote)
-                                 .fontWeight(.semibold)
-                                 Spacer() */
-                            }
-                            .frame(height: 350)
+                            VStack {}
+                                .frame(height: 350)
                         }
                         .zIndex(0)
                     }
@@ -403,6 +386,11 @@ extension AddCarbs {
                         }
                     )
                 }
+            }
+            /* .onAppear {
+             } */
+            .onDisappear {
+                state.updateCurrentDate() // Daniel: Added to update the date in the datepicker when leaving räkna KH web view
             }
         }
 

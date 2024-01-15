@@ -436,8 +436,9 @@ extension Home {
                         waitForSuggestion: true,
                         fetch: false
                     ))
-                    // Daniel: Add determinebasalsync to force update before entering bolusview
-                    state.apsManager.determineBasalSync() }) {
+                    state.apsManager
+                        .determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
+                }) {
                     if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
                         HStack {
                             Image(systemName: "drop.fill")
@@ -789,8 +790,8 @@ extension Home {
                             waitForSuggestion: true,
                             fetch: false
                         ))
-                        // Daniel: Add determinebasalsync to force update before entering bolusview
-                        state.apsManager.determineBasalSync()
+                        state.apsManager
+                            .determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
                     } label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                             Image(systemName: "drop")

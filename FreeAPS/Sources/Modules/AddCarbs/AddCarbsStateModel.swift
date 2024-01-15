@@ -39,6 +39,10 @@ extension AddCarbs {
             skipBolus = settingsManager.settings.skipBolusScreenAfterCarbs
         }
 
+        func updateCurrentDate() {
+            date = Date()
+        }
+
         func savedSettings() {
             coredataContext.performAndWait {
                 var overrideArray = [Override]()
@@ -77,8 +81,8 @@ extension AddCarbs {
             } else if carbs > 0 {
                 saveToCoreData(carbsToStore)
                 showModal(for: .bolus(waitForSuggestion: true, fetch: true))
-                // Daniel: Add determinebasalsync to force update before entering bolusview
-                apsManager.determineBasalSync()
+                apsManager
+                    .determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview also when show bolusscreen after addcarbs are active
             } else {
                 hideModal()
             }

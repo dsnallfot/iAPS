@@ -78,7 +78,9 @@ extension DataTable {
                 historyContentView
             }
             .onAppear(perform: configureView)
-            .onDisappear { state.apsManager.determineBasalSync()
+            .onDisappear {
+                state.apsManager
+                    .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
             }
 
             .navigationTitle("History")
