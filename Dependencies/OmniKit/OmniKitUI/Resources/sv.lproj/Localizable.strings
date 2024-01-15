@@ -547,7 +547,7 @@
 "Remove Pump" = "Ta bort podd";
 
 /* Label text for step two of attach pod instructions */
-"Remove the Pod's blue needle cap and check cannula. Then remove paper backing." = "Ta bort det blå kanylskyddet och kontrollera att kanylen inte redan sticker ut. Ta sedan bort skyddspappret.";
+"Remove the Pods blue needle cap and check cannula. Then remove paper backing." = "Ta bort det blå kanylskyddet och kontrollera att kanylen inte redan sticker ut. Ta sedan bort skyddspappret.";
 
 /* Label indicating pod replacement necessary
    The title of the command to replace pod */

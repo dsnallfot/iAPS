@@ -362,8 +362,19 @@ extension AddCarbs {
                             )
                             .frame(height: 660)
                             Spacer()
-                            VStack {}
-                                .frame(height: 350)
+                            VStack {
+                                Button {
+                                    UIApplication.shared.open(
+                                        URL(
+                                            string: "livsmedel://"
+                                        )!,
+                                        options: [:],
+                                        completionHandler: nil
+                                    )
+                                }
+                                label: { Image(systemName: "questionmark.circle") }
+                            }
+                            .frame(height: 350)
                         }
                         .zIndex(0)
                     }
