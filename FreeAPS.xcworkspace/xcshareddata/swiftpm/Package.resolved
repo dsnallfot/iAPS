@@ -6,17 +6,8 @@
         "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift",
         "state": {
           "branch": null,
-          "revision": "db51c407d3be4a051484a141bf0bff36c43d3b1e",
-          "version": "1.8.0"
-        }
-      },
-      {
-        "package": "SlideButton",
-        "repositoryURL": "https://github.com/no-comment/SlideButton",
-        "state": {
-          "branch": "main",
-          "revision": "5eacebba4d7deeb693592bc9a62ab2d2181e133b",
-          "version": null
+          "revision": "7892a123f7e8d0fe62f9f03728b17bbd4f94df5c",
+          "version": "1.8.1"
         }
       },
       {
@@ -69,8 +60,8 @@
         "repositoryURL": "https://github.com/SwiftKickMobile/SwiftMessages",
         "state": {
           "branch": null,
-          "revision": "b29dd21090b708aa0ae9ecbaf6e2d0487028dc3f",
-          "version": "9.0.6"
+          "revision": "62e12e138fc3eedf88c7553dd5d98712aa119f40",
+          "version": "9.0.9"
         }
       },
       {
@@ -78,8 +69,8 @@
         "repositoryURL": "https://github.com/Swinject/Swinject",
         "state": {
           "branch": null,
-          "revision": "8bc503e60965298984fb58cf47b71c541449fe2a",
-          "version": "2.8.3"
+          "revision": "463cb2d659c8ae34899d18057ea5b1bb86fc3178",
+          "version": "2.8.4"
         }
       }
     ]

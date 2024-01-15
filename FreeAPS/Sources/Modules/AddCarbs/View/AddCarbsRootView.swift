@@ -325,7 +325,7 @@ extension AddCarbs {
                             HStack {
                                 Spacer()
                                 HStack {
-                                    Text("Insulinkvot:")
+                                    Text("Insulinkvot")
                                         .foregroundColor(.secondary)
                                         .offset(x: 4)
                                     Text(state.carbRatio.formatted())
@@ -336,7 +336,7 @@ extension AddCarbs {
                                         .padding(.trailing, 10)
                                 }
                                 HStack {
-                                    Text("Aktiva kolhydrater:")
+                                    Text("Aktiva kolhydrater")
                                         .foregroundColor(.secondary)
                                         .offset(x: 4)
                                     Text(state.cob.formatted())
@@ -362,8 +362,25 @@ extension AddCarbs {
                             )
                             .frame(height: 660)
                             Spacer()
-                            VStack {}
-                                .frame(height: 350)
+                            VStack {
+                                /* Button {
+                                     UIApplication.shared.open(
+                                         URL(
+                                             string: "https://soknaringsinnehall.livsmedelsverket.se"
+                                         )!,
+                                         options: [:],
+                                         completionHandler: nil
+                                     )
+                                 }
+                                 label: {
+                                     Image(systemName: "safari")
+                                     Text("Sök i livsmedelsverkets databas") }
+                                     .offset(x: -4)
+
+                                     .padding(.vertical, 30) */
+                                Spacer()
+                            }
+                            .frame(height: 350)
                         }
                         .zIndex(0)
                     }
@@ -382,6 +399,21 @@ extension AddCarbs {
                                     .offset(x: -13, y: 0)
                                 Text("Reg måltid")
                                     .offset(x: -22, y: 0)
+                            }
+                        },
+                        trailing:
+                        HStack {
+                            Button {
+                                UIApplication.shared.open(
+                                    URL(
+                                        string: "https://soknaringsinnehall.livsmedelsverket.se"
+                                    )!,
+                                    options: [:],
+                                    completionHandler: nil
+                                )
+                            }
+                            label: {
+                                Image(systemName: "magnifyingglass")
                             }
                         }
                     )
