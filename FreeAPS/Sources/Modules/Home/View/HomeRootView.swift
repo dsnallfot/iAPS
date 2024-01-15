@@ -142,14 +142,8 @@ extension Home {
         @ViewBuilder func header(_: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
-                    Spacer()
                     cobIobView
-
-                    Spacer()
-
                     pumpView
-
-                    Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
@@ -181,12 +175,12 @@ extension Home {
                         .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .loopYellow : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.cob ?? 0) as NSNumber) ?? "0") +
-                            NSLocalizedString(" g", comment: "gram of carbs")
+                            NSLocalizedString("g", comment: "gram of carbs")
                     )
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 80)
+                .frame(width: 82)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
@@ -197,12 +191,12 @@ extension Home {
                         .font(.system(size: 14, weight: .semibold)).foregroundColor(state.disco ? .insulin : .secondary)
                     Text(
                         (numberFormatter.string(from: (state.suggestion?.iob ?? 0) as NSNumber) ?? "0,00") +
-                            NSLocalizedString(" E", comment: "Insulin unit")
+                            NSLocalizedString("E", comment: "Insulin unit")
                     )
                     .font(.system(size: 14, weight: .semibold)).foregroundColor(.primary)
                     .offset(x: -2, y: 0)
                 }
-                .frame(width: 80)
+                .frame(width: 82)
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
