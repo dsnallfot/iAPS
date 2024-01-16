@@ -827,7 +827,7 @@ extension Home {
                     }
                 }
                 // .padding(.top, 7)
-                // .padding(.bottom, 30)
+                .padding(.bottom, 37)
                 .padding(.top, 6)
                 .padding(.trailing, 7)
                 .padding(.leading, 7)
