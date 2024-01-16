@@ -178,46 +178,12 @@ struct MainChartView: View {
         }
     }
 
-    var legendPanel: some View {
-        ZStack {
-            HStack {
-                Group {
-                    Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
-                        .offset(x: 4, y: 0)
-                    Text("COB")
-                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.loopYellow)
-                }
-                Group {
-                    Circle().fill(Color.uam).frame(width: 5, height: 5)
-                        .offset(x: 4, y: 0)
-                    Text("UAM")
-                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.uam)
-                }
-
-                Group {
-                    Circle().fill(Color.insulin).frame(width: 5, height: 5)
-                        .offset(x: 4, y: 0)
-                    Text("IOB")
-                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.insulin)
-                }
-                Group {
-                    Circle().fill(Color.zt).frame(width: 5, height: 5)
-                        .offset(x: 4, y: 0)
-                    Text("ZT")
-                        .font(.system(size: 11, weight: .semibold)).foregroundColor(.zt)
-                }
-            }
-        }
-    }
-
     private func mainScrollView(fullSize: CGSize) -> some View {
         ScrollViewReader { scroll in
             ScrollView(.horizontal, showsIndicators: false) {
                 ZStack(alignment: .top) {
                     tempTargetsView(fullSize: fullSize).drawingGroup()
                     basalView(fullSize: fullSize).drawingGroup()
-                    legendPanel.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        .padding(.trailing, 20).padding(.bottom, 34)
                     mainView(fullSize: fullSize).id(Config.endID)
                         .drawingGroup()
                 }
