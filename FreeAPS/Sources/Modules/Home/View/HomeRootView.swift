@@ -617,74 +617,74 @@ extension Home {
             }
         }
 
-        /* var legendPanel: some View {
-             ZStack {
-                 HStack {
-                     Group {
-                         // Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
-                         // .offset(x: 4, y: 0)
-                         Text("COB")
-                             .font(.system(size: 11, weight: .regular)).foregroundColor(.loopYellow)
-                     }
-                     Group {
-                         // Circle().fill(Color.uam).frame(width: 5, height: 5)
-                         // .offset(x: 4, y: 0)
-                         Text("UAM")
-                             .font(.system(size: 11, weight: .regular)).foregroundColor(.uam)
-                     }
+        var legendPanel: some View {
+            ZStack {
+                HStack {
+                    Group {
+                        Circle().fill(Color.loopYellow).frame(width: 5, height: 5)
+                            .offset(x: 4, y: 0)
+                        Text("COB")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                    }
+                    Group {
+                        Circle().fill(Color.uam).frame(width: 5, height: 5)
+                            .offset(x: 4, y: 0)
+                        Text("UAM")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.uam)
+                    }
 
-                     Group {
-                         // Circle().fill(Color.insulin).frame(width: 5, height: 5)
-                         // .offset(x: 4, y: 0)
-                         Text("IOB")
-                             .font(.system(size: 11, weight: .regular)).foregroundColor(.insulin)
-                     }
-                     Group {
-                         // Circle().fill(Color.zt).frame(width: 5, height: 5)
-                         // .offset(x: 4, y: 0)
-                         Text("ZT")
-                             .font(.system(size: 11, weight: .regular)).foregroundColor(.zt)
-                     }
-                     Group {
-                         HStack {
-                             if let evBG = state.eventualBG {
-                                 if Decimal(evBG) > state.highGlucose {
-                                     Text(
-                                         "⇢ " + targetFormatter.string(
-                                             from: (
-                                                 state.units == .mmolL ? evBG
-                                                     .asMmolL : Decimal(evBG)
-                                             ) as NSNumber
-                                         )!
-                                     )
-                                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.loopYellow)
-                                 } else if Decimal(evBG) < state.lowGlucose {
-                                     Text(
-                                         "⇢ " + targetFormatter.string(
-                                             from: (
-                                                 state.units == .mmolL ? evBG
-                                                     .asMmolL : Decimal(evBG)
-                                             ) as NSNumber
-                                         )!
-                                     )
-                                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.loopRed)
-                                 } else {
-                                     Text(
-                                         "⇢ " + targetFormatter.string(
-                                             from: (
-                                                 state.units == .mmolL ? evBG
-                                                     .asMmolL : Decimal(evBG)
-                                             ) as NSNumber
-                                         )!
-                                     )
-                                     .font(.system(size: 11, weight: .semibold)).foregroundColor(.loopGreen)
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-         } */
+                    Group {
+                        Circle().fill(Color.insulin).frame(width: 5, height: 5)
+                            .offset(x: 4, y: 0)
+                        Text("IOB")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.insulin)
+                    }
+                    Group {
+                        Circle().fill(Color.zt).frame(width: 5, height: 5)
+                            .offset(x: 4, y: 0)
+                        Text("ZT")
+                            .font(.system(size: 12, weight: .semibold)).foregroundColor(.zt)
+                    }
+                    Group {
+                        HStack {
+                            if let evBG = state.eventualBG {
+                                if Decimal(evBG) > state.highGlucose {
+                                    Text(
+                                        "⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? evBG
+                                                    .asMmolL : Decimal(evBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                                } else if Decimal(evBG) < state.lowGlucose {
+                                    Text(
+                                        "⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? evBG
+                                                    .asMmolL : Decimal(evBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+                                } else {
+                                    Text(
+                                        "⇢ " + targetFormatter.string(
+                                            from: (
+                                                state.units == .mmolL ? evBG
+                                                    .asMmolL : Decimal(evBG)
+                                            ) as NSNumber
+                                        )!
+                                    )
+                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         var mainChart: some View {
             ZStack {
@@ -694,31 +694,35 @@ extension Home {
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                         .zIndex(0) // Set a zIndex for the background
                 }
+                VStack {
+                    Rectangle().fill(.secondary).opacity(0.1).frame(maxHeight: 25)
 
-                MainChartView(
-                    glucose: $state.glucose,
-                    isManual: $state.isManual,
-                    suggestion: $state.suggestion,
-                    tempBasals: $state.tempBasals,
-                    boluses: $state.boluses,
-                    suspensions: $state.suspensions,
-                    announcement: $state.announcement,
-                    hours: .constant(state.filteredHours),
-                    maxBasal: $state.maxBasal,
-                    autotunedBasalProfile: $state.autotunedBasalProfile,
-                    basalProfile: $state.basalProfile,
-                    tempTargets: $state.tempTargets,
-                    carbs: $state.carbs,
-                    timerDate: $state.timerDate,
-                    units: $state.units,
-                    smooth: $state.smooth,
-                    highGlucose: $state.highGlucose,
-                    lowGlucose: $state.lowGlucose,
-                    screenHours: $state.hours,
-                    displayXgridLines: $state.displayXgridLines,
-                    displayYgridLines: $state.displayYgridLines,
-                    thresholdLines: $state.thresholdLines
-                )
+                    MainChartView(
+                        glucose: $state.glucose,
+                        isManual: $state.isManual,
+                        suggestion: $state.suggestion,
+                        tempBasals: $state.tempBasals,
+                        boluses: $state.boluses,
+                        suspensions: $state.suspensions,
+                        announcement: $state.announcement,
+                        hours: .constant(state.filteredHours),
+                        maxBasal: $state.maxBasal,
+                        autotunedBasalProfile: $state.autotunedBasalProfile,
+                        basalProfile: $state.basalProfile,
+                        tempTargets: $state.tempTargets,
+                        carbs: $state.carbs,
+                        timerDate: $state.timerDate,
+                        units: $state.units,
+                        smooth: $state.smooth,
+                        highGlucose: $state.highGlucose,
+                        lowGlucose: $state.lowGlucose,
+                        screenHours: $state.hours,
+                        displayXgridLines: $state.displayXgridLines,
+                        displayYgridLines: $state.displayYgridLines,
+                        thresholdLines: $state.thresholdLines
+                    )
+                    .offset(y: -7)
+                }
                 .zIndex(1)
 
                 VStack {
@@ -739,19 +743,23 @@ extension Home {
                                     .offset(x: -2, y: 0)
                             }
                         }
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 3)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(
-                                            colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
-                                            lineWidth: 0.5
-                                        )
-                                )
-                        )
+                        // .padding(.horizontal, 5)
+                        // .padding(.vertical, 3)
+                        /* .background(
+                             RoundedRectangle(cornerRadius: 10)
+                                 .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
+                                 .overlay(
+                                     RoundedRectangle(cornerRadius: 10)
+                                         .stroke(
+                                             colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
+                                             lineWidth: 0.5
+                                         )
+                                 )
+                                 .shadow(
+                                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                                     radius: colorScheme == .dark ? 1 : 1
+                                 )
+                         ) */
                         // .padding(.trailing, 2)
                         .font(.system(size: 12, weight: .bold))
                         Spacer()
@@ -791,31 +799,38 @@ extension Home {
                             }
                         }
                         .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(
-                                            colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
-                                            lineWidth: 0.5
-                                        )
-                                )
-                        )
+                        // .padding(.vertical, 3)
+                        /* .background(
+                             RoundedRectangle(cornerRadius: 10)
+                                 .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
+                                 .overlay(
+                                     RoundedRectangle(cornerRadius: 10)
+                                         .stroke(
+                                             colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
+                                             lineWidth: 0.5
+                                         )
+                                 )
+                                 .shadow(
+                                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                                     radius: colorScheme == .dark ? 1 : 1
+                                 )
+                         ) */
                     }
 
                     Spacer()
-                    /* HStack {
-                         Spacer()
-                         legendPanel
-                         // Spacer()
-                     } */
+                    HStack {
+                        Spacer()
+                        if isStatusPopupPresented {
+                            legendPanel
+                        }
+                        Spacer()
+                    }
                 }
+                // .padding(.top, 7)
+                // .padding(.bottom, 30)
                 .padding(.top, 6)
-                .padding(.bottom, 30)
-                .padding(.trailing, 6)
-                .padding(.leading, 6)
+                .padding(.trailing, 7)
+                .padding(.leading, 7)
                 .zIndex(2) // Set a higher zIndex for the Basal part
             }
             .modal(for: .dataTable, from: self)
@@ -1060,7 +1075,9 @@ extension Home {
 
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.clear)
-                        .overlay(mainChart)
+                        .overlay(
+                            mainChart
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .shadow(
                             color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
@@ -1236,7 +1253,8 @@ extension Home {
                         .font(.headline)
                         .padding(.bottom, 4)
                         .padding(.top, 8)
-                    Text(errorMessage).font(.footnote).foregroundColor(.loopRed)
+                    Text(errorMessage).font(.footnote).foregroundColor(.white)
+                        .background(Color(.loopRed))
                 }
             }
         }
