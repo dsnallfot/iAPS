@@ -695,7 +695,7 @@ extension Home {
                         .zIndex(0) // Set a zIndex for the background
                 }
                 VStack {
-                    Rectangle().fill(.secondary).opacity(0.1).frame(maxHeight: 25)
+                    Rectangle().fill(colorScheme == .dark ? Color.clear : Color.white).frame(maxHeight: 25)
 
                     MainChartView(
                         glucose: $state.glucose,
@@ -721,7 +721,7 @@ extension Home {
                         displayYgridLines: $state.displayYgridLines,
                         thresholdLines: $state.thresholdLines
                     )
-                    .offset(y: -7)
+                    .offset(y: -8)
                 }
                 .zIndex(1)
 
@@ -827,7 +827,7 @@ extension Home {
                     }
                 }
                 // .padding(.top, 7)
-                // .padding(.bottom, 30)
+                .padding(.bottom, 37)
                 .padding(.top, 6)
                 .padding(.trailing, 7)
                 .padding(.leading, 7)
