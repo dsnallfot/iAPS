@@ -334,9 +334,6 @@ extension Bolus {
 
             if deleteTwice {
                 nsManager.deleteCarbs(mealArray, complexMeal: true)
-                // add back else part since removal seems to break deletion of changed posts in nightscout
-            } else {
-                nsManager.deleteCarbs(mealArray, complexMeal: false)
             }
         }
     }

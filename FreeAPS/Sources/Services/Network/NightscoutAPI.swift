@@ -160,7 +160,7 @@ extension NightscoutAPI {
 
         components.queryItems = [
             // Removed below because it prevented all futire entries to be deleted. Don't know why?
-            /* URLQueryItem(name: "find[carbs][$exists]", value: "true"), */
+            URLQueryItem(name: "find[carbs][$exists]", value: "true"),
             URLQueryItem(
                 name: arguments,
                 value: value
