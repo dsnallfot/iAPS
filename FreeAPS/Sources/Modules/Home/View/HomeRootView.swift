@@ -730,13 +730,13 @@ extension Home {
                         // Spacer()
                         HStack {
                             if state.pumpSuspended {
-                                Text(" Basal")
+                                Text("Basal")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                                 Text("--")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                                     .offset(x: -2, y: 0)
                             } else if let tempBasalString = tempBasalString {
-                                Text(" Basal")
+                                Text("Basal")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                                 Text(tempBasalString)
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
@@ -798,8 +798,8 @@ extension Home {
                                 }
                             }
                         }
-                        //.padding(.leading, 6)
-                        //.padding(.trailing, 2)
+                        // .padding(.leading, 6)
+                        // .padding(.trailing, 2)
                         // .padding(.vertical, 3)
                         /* .background(
                              RoundedRectangle(cornerRadius: 10)
