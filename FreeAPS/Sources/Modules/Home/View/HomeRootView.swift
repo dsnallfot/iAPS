@@ -798,7 +798,8 @@ extension Home {
                                 }
                             }
                         }
-                        .padding(.horizontal, 6)
+                        //.padding(.leading, 6)
+                        //.padding(.trailing, 2)
                         // .padding(.vertical, 3)
                         /* .background(
                              RoundedRectangle(cornerRadius: 10)
