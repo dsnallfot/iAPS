@@ -727,40 +727,21 @@ extension Home {
 
                 VStack {
                     HStack {
-                        // Spacer()
                         HStack {
                             if state.pumpSuspended {
-                                Text(" Basal")
+                                Text("Basal")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                                 Text("--")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                                     .offset(x: -2, y: 0)
                             } else if let tempBasalString = tempBasalString {
-                                Text(" Basal")
+                                Text("Basal")
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
                                 Text(tempBasalString)
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                                     .offset(x: -2, y: 0)
                             }
                         }
-                        // .padding(.horizontal, 5)
-                        // .padding(.vertical, 3)
-                        /* .background(
-                             RoundedRectangle(cornerRadius: 10)
-                                 .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
-                                 .overlay(
-                                     RoundedRectangle(cornerRadius: 10)
-                                         .stroke(
-                                             colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
-                                             lineWidth: 0.5
-                                         )
-                                 )
-                                 .shadow(
-                                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
-                                     radius: colorScheme == .dark ? 1 : 1
-                                 )
-                         ) */
-                        // .padding(.trailing, 2)
                         .font(.system(size: 12, weight: .bold))
                         Spacer()
                         HStack {
@@ -798,23 +779,6 @@ extension Home {
                                 }
                             }
                         }
-                        .padding(.horizontal, 6)
-                        // .padding(.vertical, 3)
-                        /* .background(
-                             RoundedRectangle(cornerRadius: 10)
-                                 .fill(Color(colorScheme == .dark ? .systemGray6 : .white))
-                                 .overlay(
-                                     RoundedRectangle(cornerRadius: 10)
-                                         .stroke(
-                                             colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary.opacity(0),
-                                             lineWidth: 0.5
-                                         )
-                                 )
-                                 .shadow(
-                                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
-                                     radius: colorScheme == .dark ? 1 : 1
-                                 )
-                         ) */
                     }
 
                     Spacer()
