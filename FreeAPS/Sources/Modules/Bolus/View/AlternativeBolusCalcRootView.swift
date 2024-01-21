@@ -225,7 +225,10 @@ extension Bolus {
                     if fetch { // fix to hide carbsView when entering from bolusview without beeing at carbsview first
                         carbsView()
                     } else {
-                        state.showModal(for: .addCarbs(editMode: false, override: false))
+                        state.showModal(for: .addCarbs(
+                            editMode: false,
+                            override: false
+                        )) // Note! this "else" breaks functionality to start at bolusview -> go to carbsview -> and back to bolusview when "show bolusscreen after carbs" are disabled
                     }
                 }
                 label: {
@@ -241,10 +244,8 @@ extension Bolus {
                             .offset(x: -13, y: 0)
                     }
 
-                    // if fetch {
                     Text("Måltid")
                         .offset(x: -22, y: 0)
-                    // }
 
                 },
                 trailing: Button { state.hideModal() }
