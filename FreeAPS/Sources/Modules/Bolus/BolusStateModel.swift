@@ -334,6 +334,12 @@ extension Bolus {
 
             if deleteTwice {
                 nsManager.deleteCarbs(mealArray, complexMeal: true)
+            } else {
+                nsManager
+                    .deleteCarbs(
+                        mealArray,
+                        complexMeal: false
+                    ) // Jon deleted this line to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
             }
         }
     }
