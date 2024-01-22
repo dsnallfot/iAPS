@@ -75,7 +75,7 @@ extension AddTempTarget {
                 }
 
                 if state.viewPercantage {
-                    Section(header: Text("Ställ in en procentuell override")) {
+                    Section {
                         VStack {
                             Text("\(state.percentage.formatted(.number)) % Insulin")
                                 .foregroundColor(isEditing ? .orange : .blue)
@@ -114,6 +114,13 @@ extension AddTempTarget {
                             }
                         }
                     }
+                    header: { Text("Ställ in en procentuell override") }
+                    footer: {
+                        Text(
+                            "Ditt målvärde justeras automatiskt ovan för att motsvara den procentuella ökning/minskning av insulintillförsel du anger. \nBeräkningen utgår från OpenAPS-formeln för 'Halvera basaldosen vid tillfälligt målvärde 160 mg/dl (8.9 mmol/L)'"
+                        )
+                    }
+
                 } else {
                     Section(header: Text("Ställ in ett tillfälligt mål")) {
                         HStack {
