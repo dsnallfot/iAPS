@@ -775,7 +775,7 @@ extension Bolus {
                             .foregroundColor(.secondary)
                     }
                     HStack {
-                        let dynamicRatio = (state.provider.suggestion?.sensitivityRatio)! * 100
+                        let dynamicRatio = (state.provider.suggestion?.sensitivityRatio ?? 0) * 100
                         Text("Aktuell dynamisk känslighet:")
                             .foregroundColor(.secondary)
                         Spacer()
