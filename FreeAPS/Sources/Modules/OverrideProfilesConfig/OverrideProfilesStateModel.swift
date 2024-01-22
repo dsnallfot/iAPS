@@ -5,7 +5,7 @@ extension OverrideProfilesConfig {
     final class StateModel: BaseStateModel<Provider> {
         @Published var percentage: Double = 100
         @Published var isEnabled = false
-        @Published var _indefinite = true
+        @Published var _indefinite = false
         @Published var duration: Decimal = 0
         @Published var target: Decimal = 0
         @Published var override_target: Bool = false
@@ -170,7 +170,7 @@ extension OverrideProfilesConfig {
                 try? overrideArray = coredataContext.fetch(requestEnabled)
                 isEnabled = overrideArray.first?.enabled ?? false
                 percentage = overrideArray.first?.percentage ?? 100
-                _indefinite = overrideArray.first?.indefinite ?? true
+                _indefinite = overrideArray.first?.indefinite ?? false
                 duration = (overrideArray.first?.duration ?? 0) as Decimal
                 smbIsOff = overrideArray.first?.smbIsOff ?? false
                 advancedSettings = overrideArray.first?.advancedSettings ?? false
@@ -216,7 +216,7 @@ extension OverrideProfilesConfig {
                 if newDuration < 0 { newDuration = 0 } else { duration = Decimal(newDuration) }
 
                 if !isEnabled {
-                    _indefinite = true
+                    _indefinite = false
                     percentage = 100
                     duration = 0
                     target = 0
@@ -230,7 +230,7 @@ extension OverrideProfilesConfig {
         }
 
         func cancelProfile() {
-            _indefinite = true
+            _indefinite = false
             isEnabled = false
             percentage = 100
             duration = 0
