@@ -620,49 +620,20 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
         print("meals 4: ID: " + syncID + " FPU ID: " + fpuID)
 
-        /* if syncID != "" {
-             let predicate = HKQuery.predicateForObjects(
-                 withMetadataKey: HKMetadataKeySyncIdentifier,
-                 operatorType: .equalTo,
-                 value: syncID
-             )
-
-             healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                 guard let error = error else { return }
-                 warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
-             }
-         }
-
-         if fpuID != "" {
-              processQueue.async {
-                  let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                  let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
-                  let predicate = HKQuery.predicateForObjects(
-                      withMetadataKey: HKMetadataKeyExternalUUID,
-                      allowedValues: ids
-                  )
-                  print("found IDs: " + ids.description)
-                  self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                      guard let error = error else { return }
-                      warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
-                  }
-              }
-          } */
-        // I nedan version funkar följande: Raderar alla fpu i HK om man raderad dem i datatable. Raderar Carb + ev fpu om man raderar carbs i data table
+        // Enda som inte funkar med nedan delete-funktion är när man anger fpu och hoppar fram och tillbaka mellan addcarbs och bolus-vyerna
         if fpuID != "" {
-            processQueue.async {
-                let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                let ids = recentCarbs.filter { $0.fpuID != "" }.compactMap(\.fpuID)
-                let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeyExternalUUID, // OBS! Måste ändra .id till .fpuID på rad 206
-                    allowedValues: ids
-                )
-                print("found IDs: " + ids.description)
-                self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                    guard let error = error else { return }
-                    warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
-                }
+            // processQueue.async {
+
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeyExternalUUID,
+                operatorType: .equalTo,
+                value: fpuID
+            )
+            healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                guard let error = error else { return }
+                warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
             }
+            // }
         }
         if syncID != "" {
             let predicate = HKQuery.predicateForObjects(
