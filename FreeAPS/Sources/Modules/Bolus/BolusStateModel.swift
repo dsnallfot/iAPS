@@ -13,7 +13,7 @@ extension Bolus {
         @Injected() var glucoseStorage: GlucoseStorage!
         @Injected() var settings: SettingsManager!
         @Injected() var nsManager: NightscoutManager!
-        @Injected() var hkManager: HealthKitManager! //Daniel added to enable deletion of fpus in apple health
+        @Injected() var hkManager: HealthKitManager! // Daniel added to enable deletion of fpus in apple health
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -328,10 +328,22 @@ extension Bolus {
 
             if deleteTwice {
                 nsManager.deleteCarbs(mealArray, complexMeal: true)
-                hkManager.deleteCarbs(syncID: meals.id ?? "", fpuID: (meals.fpuID ?? meals.id) ?? "") //Daniel added to enable deletion of fpus in apple health
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             } else {
-                nsManager.deleteCarbs(mealArray, complexMeal: false) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
-                hkManager.deleteCarbs(syncID: meals.id ?? "", fpuID: (meals.fpuID ?? meals.id) ?? "") //Daniel added to enable deletion of fpus in apple health
+                nsManager
+                    .deleteCarbs(
+                        mealArray,
+                        complexMeal: false
+                    ) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             }
         }
     }
