@@ -13,6 +13,7 @@ extension Bolus {
         @Injected() var glucoseStorage: GlucoseStorage!
         @Injected() var settings: SettingsManager!
         @Injected() var nsManager: NightscoutManager!
+        @Injected() var hkManager: HealthKitManager! // Daniel added to enable deletion of fpus in apple health
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -33,14 +34,7 @@ extension Bolus {
         @Published var minDelta: Decimal = 0
         @Published var expectedDelta: Decimal = 0
         @Published var minPredBG: Decimal = 0
-        @Published var waitForSuggestion: Bool = false /* {
-             didSet {
-                 if !waitForSuggestion, !oldValue {
-                     calculateInsulin() // Daniel: Re-calculate insulin when waitForSuggestion becomes false
-                 }
-             }
-         } */
-
+        @Published var waitForSuggestion: Bool = false
         @Published var maxCarbs: Decimal = 0
         @Published var carbRatio: Decimal = 0
 
@@ -334,12 +328,22 @@ extension Bolus {
 
             if deleteTwice {
                 nsManager.deleteCarbs(mealArray, complexMeal: true)
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             } else {
                 nsManager
                     .deleteCarbs(
                         mealArray,
                         complexMeal: false
-                    ) // Jon deleted this line to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
+                    ) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             }
         }
     }

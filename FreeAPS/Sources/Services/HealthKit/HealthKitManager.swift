@@ -19,9 +19,9 @@ protocol HealthKitManager: GlucoseSource {
     func saveIfNeeded(carbs: [CarbsEntry])
     /// Save Insulin to Health store
     func saveIfNeeded(pumpEvents events: [PumpHistoryEvent])
-    /// Create observer for data passing beetwen Health Store and FreeAPS
+    /// Create observer for data passing between Health Store and iAPS
     func createBGObserver()
-    /// Enable background delivering objects from Apple Health to FreeAPS
+    /// Enable background delivering objects from Apple Health to iAPS
     func enableBackgroundDelivery()
     /// Delete glucose with syncID
     func deleteGlucose(syncID: String)
@@ -169,7 +169,19 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     )
                 }
 
-            healthKitStore.save(samplesToSave) { _, _ in }
+            healthKitStore.save(samplesToSave) { (success: Bool, error: Error?) -> Void in
+                if success {
+                    for sample in samplesToSave {
+                        debug(
+                            .service,
+                            "Stored blood glucose \(sample.quantity) in HealthKit Store! Metadata: \(String(describing: sample.metadata?.values))"
+                        )
+                    }
+                } else {
+                    debug(.service, "Failed to store blood glucose in HealthKit Store!")
+                    debug(.service, error?.localizedDescription ?? "Unknown error")
+                }
+            }
         }
 
         loadSamplesFromHealth(sampleType: sampleType, withIDs: bloodGlucose.map(\.id))
@@ -196,7 +208,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
             let samplesToSave = carbsWithId
                 .filter { !sampleIDs.contains($0.id ?? "") }
-                .filter { !sampleDates.contains($0.actualDate ?? $0.createdAt) }
+                .filter { !sampleDates.contains($0.actualDate ?? $0.createdAt) } // not id but exactly the same datetime
                 .map {
                     var metadata: [String: Any] = [
                         HKMetadataKeySyncIdentifier: $0.id ?? "_id",
@@ -218,7 +230,19 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     )
                 }
 
-            healthKitStore.save(samplesToSave) { _, _ in }
+            healthKitStore.save(samplesToSave) { (success: Bool, error: Error?) -> Void in
+                if success {
+                    for sample in samplesToSave {
+                        debug(
+                            .service,
+                            "Stored carb entry \(sample.quantity) in HealthKit Store! Metadata: \(String(describing: sample.metadata?.values))"
+                        )
+                    }
+                } else {
+                    debug(.service, "Failed to store carb entry in HealthKit Store!")
+                    debug(.service, error?.localizedDescription ?? "Unknown error")
+                }
+            }
         }
 
         loadSamplesFromHealth(sampleType: sampleType)
@@ -283,7 +307,19 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     )
                 }
 
-            healthKitStore.save(bolusSamples + basalSamples) { _, _ in }
+            healthKitStore.save(bolusSamples + basalSamples) { (success: Bool, error: Error?) -> Void in
+                if success {
+                    for sample in bolusSamples + basalSamples {
+                        debug(
+                            .service,
+                            "Stored insulin entry in HealthKit Store! Metadata: \(String(describing: sample.metadata?.values))"
+                        )
+                    }
+                } else {
+                    debug(.service, "Failed to store insulin entry in HealthKit Store!")
+                    debug(.service, error?.localizedDescription ?? "Unknown error")
+                }
+            }
         }
 
         loadSamplesFromHealth(sampleType: sampleType, withIDs: events.map(\.id))
@@ -584,49 +620,20 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
         print("meals 4: ID: " + syncID + " FPU ID: " + fpuID)
 
-        /* if syncID != "" {
-             let predicate = HKQuery.predicateForObjects(
-                 withMetadataKey: HKMetadataKeySyncIdentifier,
-                 operatorType: .equalTo,
-                 value: syncID
-             )
-
-             healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                 guard let error = error else { return }
-                 warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
-             }
-         }
-
-         if fpuID != "" {
-              processQueue.async {
-                  let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                  let ids = recentCarbs.filter { $0.fpuID == fpuID }.compactMap(\.id)
-                  let predicate = HKQuery.predicateForObjects(
-                      withMetadataKey: HKMetadataKeyExternalUUID,
-                      allowedValues: ids
-                  )
-                  print("found IDs: " + ids.description)
-                  self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                      guard let error = error else { return }
-                      warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
-                  }
-              }
-          } */
-        // I nedan version funkar följande: Raderar alla fpu i HK om man raderad dem i datatable. Raderar Carb + ev fpu om man raderar carbs i data table
+        // Enda som inte funkar med nedan delete-funktion är när man anger fpu och hoppar fram och tillbaka mellan addcarbs och bolus-vyerna och eller avbryter utan att spara,  endast carbs raderas
         if fpuID != "" {
-            processQueue.async {
-                let recentCarbs: [CarbsEntry] = self.carbsStorage.recent()
-                let ids = recentCarbs.filter { $0.fpuID != "" }.compactMap(\.fpuID)
-                let predicate = HKQuery.predicateForObjects(
-                    withMetadataKey: HKMetadataKeyExternalUUID, // OBS! Måste ändra .id till .fpuID på rad 206
-                    allowedValues: ids
-                )
-                print("found IDs: " + ids.description)
-                self.healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
-                    guard let error = error else { return }
-                    warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
-                }
+            // processQueue.async {
+
+            let predicate = HKQuery.predicateForObjects(
+                withMetadataKey: HKMetadataKeyExternalUUID,
+                operatorType: .equalTo,
+                value: fpuID
+            )
+            healthKitStore.deleteObjects(of: sampleType, predicate: predicate) { _, _, error in
+                guard let error = error else { return }
+                warning(.service, "Cannot delete sample with fpuID: \(fpuID)", error: error)
             }
+            // }
         }
         if syncID != "" {
             let predicate = HKQuery.predicateForObjects(

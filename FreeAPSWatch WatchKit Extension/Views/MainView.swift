@@ -104,7 +104,7 @@ import SwiftUI
                     if let glucoseValue = Double(cleanedGlucose),
                        let deltaValue = Double(cleanedDelta)
                     {
-                        let computedValue = glucoseValue + deltaValue * 3
+                        let computedValue = glucoseValue + deltaValue * 2.5
                         let formattedComputedValue = String(format: "%.1f", computedValue)
                         let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
 

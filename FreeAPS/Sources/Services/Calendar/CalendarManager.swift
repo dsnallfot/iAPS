@@ -158,7 +158,7 @@ final class BaseCalendarManager: CalendarManager, Injectable {
         let glucoseValueFifteen = Double(cleanedGlucose)
         let deltaValue = Double(cleanedDelta)!
 
-        let computedValue = glucoseValueFifteen! + deltaValue * 3
+        let computedValue = glucoseValueFifteen! + deltaValue * 2.5
 
         // Use string interpolation with format specifier to display one decimal place
         let formattedComputedValue = String(format: "%.1f", computedValue)

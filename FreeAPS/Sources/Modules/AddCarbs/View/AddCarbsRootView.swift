@@ -298,8 +298,9 @@ extension AddCarbs {
                 configureView {
                     state.loadEntries(editMode)
                 }
+                state.savedSettings()
             }
-            .onAppear { state.savedSettings() }
+            // .onAppear { state.savedSettings() }
             .sheet(isPresented: $showInfo) {
                 webCarbCalculator
             }
