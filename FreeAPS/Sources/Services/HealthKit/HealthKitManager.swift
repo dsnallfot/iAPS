@@ -620,7 +620,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
         print("meals 4: ID: " + syncID + " FPU ID: " + fpuID)
 
-        // Enda som inte funkar med nedan delete-funktion är när man anger fpu och hoppar fram och tillbaka mellan addcarbs och bolus-vyerna
+        // Enda som inte funkar med nedan delete-funktion är när man anger fpu och hoppar fram och tillbaka mellan addcarbs och bolus-vyerna och eller avbryter utan att spara,  endast carbs raderas
         if fpuID != "" {
             // processQueue.async {
 
