@@ -354,41 +354,6 @@ extension Home {
         var infoAndActionPanel: some View {
             HStack(alignment: .center) {
                 Spacer()
-                Button(action: {
-                    if state.pumpDisplayState != nil {
-                        state.setupPump = true
-                    }
-                }) {
-                    if state.pumpSuspended {
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle")
-                                .offset(x: 0, y: 0)
-                                .foregroundColor(.orange)
-
-                            Text("Pump suspended")
-                                .offset(x: -4, y: 0)
-                                .foregroundColor(.primary)
-                        }
-                        .font(.caption)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 9)
-                        .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.gray.opacity(1), lineWidth: 1.5)
-                        .shadow(
-                            color: Color.gray.opacity(colorScheme == .dark ? 1 : 1),
-                            radius: colorScheme == .dark ? 1 : 1
-                        )
-                )
-                if state.pumpSuspended {
-                    Spacer()
-                }
 
                 Button(action: {
                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
@@ -530,6 +495,43 @@ extension Home {
                 if overrideString != nil {
                     Spacer()
                 }
+
+                Button(action: {
+                    if state.pumpDisplayState != nil {
+                        state.setupPump = true
+                    }
+                }) {
+                    if state.pumpSuspended {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .offset(x: 0, y: 0)
+                                .foregroundColor(.orange)
+
+                            Text("Pump suspended")
+                                .offset(x: -4, y: 0)
+                                .foregroundColor(.primary)
+                        }
+                        .font(.caption)
+                        .frame(maxHeight: 20)
+                        .padding(.vertical, 3)
+                        .padding(.leading, 9)
+                        .padding(.trailing, 5)
+                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                        .cornerRadius(13)
+                    }
+                }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(Color.gray.opacity(1), lineWidth: 1.5)
+                        .shadow(
+                            color: Color.gray.opacity(colorScheme == .dark ? 1 : 1),
+                            radius: colorScheme == .dark ? 1 : 1
+                        )
+                )
+                if state.pumpSuspended {
+                    Spacer()
+                }
+
                 Button(action: {
                     state.showModal(for: .preferencesEditor)
                 })
