@@ -189,19 +189,6 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             return
         }
 
-        /* var arg1 = ""
-         var arg2 = ""
-         if complexMeal {
-             arg1 = treatement.id ?? ""
-             arg2 = treatement.id ?? ""
-         } else if treatement.isFPU ?? false {
-             arg1 = ""
-             arg2 = treatement.fpuID ?? ""
-         } else {
-             arg1 = treatement.id
-             arg2 = ""
-         } */
-
         if complexMeal {
             nightscout.deleteCarbs(treatement)
                 .collect()

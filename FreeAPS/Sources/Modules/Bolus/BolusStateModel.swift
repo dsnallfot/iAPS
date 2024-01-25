@@ -304,18 +304,18 @@ extension Bolus {
                 return
             }
 
-            var date = Date()
+            /* var date = Date()
 
-            if let mealDate = meals.actualDate {
-                date = mealDate
-            } else if let mealdate = meals.createdAt {
-                date = mealdate
-            }
+             if let mealDate = meals.actualDate {
+                 date = mealDate
+             } else if let mealdate = meals.createdAt {
+                 date = mealdate
+             } */
 
             let mealArray = DataTable.Treatment(
                 units: units,
                 type: .carbs,
-                date: date,
+                date: (deleteTwice ? (meals.createdAt ?? Date()) : meals.actualDate) ?? Date(),
                 id: meals.id ?? "",
                 isFPU: deleteTwice ? true : false,
                 fpuID: deleteTwice ? (meals.fpuID ?? "") : ""
