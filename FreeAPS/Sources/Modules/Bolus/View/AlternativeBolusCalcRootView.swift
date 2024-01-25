@@ -536,11 +536,20 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.loopRed)
+                            /* Text(
+                                 formatter
+                                     .string(from: state.insulinCalculated as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.loopRed) */
+
+                            // Refactored to avoid force unwrapping
+                            if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.loopRed)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.loopRed)
+                            }
                         }
                     } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
                         HStack {
@@ -575,11 +584,21 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: roundedOrefInsulin as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.orange)
+                            /* Text(
+                                 formatter
+                                     .string(from: roundedOrefInsulin as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.orange) */
+
+                            // Refactored to avoid force unwrapping
+
+                            if let insulinString = formatter.string(from: roundedOrefInsulin as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            }
                         }
                     } else if state.roundedWholeCalc > roundedOrefInsulin && state.useSuperBolus {
                         HStack {
@@ -595,11 +614,21 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.orange)
+                            /* Text(
+                                 formatter
+                                     .string(from: state.insulinCalculated as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.orange) */
+
+                            // Refactored to avoid force unwrapping
+
+                            if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            }
                         }
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
@@ -615,11 +644,21 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.orange)
+                            /* Text(
+                                 formatter
+                                     .string(from: state.insulinCalculated as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.orange) */
+
+                            // Refactored to avoid force unwrapping
+
+                            if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.orange)
+                            }
                         }
                     } else if state.useSuperBolus {
                         HStack {
@@ -635,11 +674,21 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.cyan)
+                            /* Text(
+                                 formatter
+                                     .string(from: state.insulinCalculated as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.cyan) */
+
+                            // Refactored to avoid force unwrapping
+
+                            if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.cyan)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.cyan)
+                            }
                         }
                     } else {
                         HStack {
@@ -655,11 +704,21 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            Text(
-                                formatter
-                                    .string(from: state.insulinCalculated as NSNumber)! +
-                                    NSLocalizedString(" U", comment: "Insulin unit")
-                            ).foregroundColor(.green)
+                            /* Text(
+                                 formatter
+                                     .string(from: state.insulinCalculated as NSNumber)! +
+                                     NSLocalizedString(" U", comment: "Insulin unit")
+                             ).foregroundColor(.green) */
+
+                            // Refactored to avoid force unwrapping
+
+                            if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
+                                Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.green)
+                            } else {
+                                Text("0" + NSLocalizedString(" U", comment: "Insulin unit"))
+                                    .foregroundColor(.green)
+                            }
                         }
                     }
                 }
@@ -987,40 +1046,71 @@ extension Bolus {
                 .padding(.top, 2)
                 .padding(.bottom, 4)
 
-                let carbs = meal.first?.carbs
-                let formattedCarbs = Decimal(carbs!)
+                /* let carbs = meal.first?.carbs
+                 let formattedCarbs = Decimal(carbs!) */
 
-                if fetch {
-                    if let carbs = meal.first?.carbs, carbs > 0 {
-                        HStack(alignment: .center, spacing: nil) {
-                            Text("• Aktuell måltid Kh:")
-                                .foregroundColor(.secondary)
-                                .frame(minWidth: 120, alignment: .leading)
+                // Refactored to avoid force unwrapping
 
-                            Text(formattedCarbs.formatted())
-                                .frame(minWidth: 40, alignment: .trailing)
+                if let carbs = meal.first?.carbs {
+                    let formattedCarbs = Decimal(carbs)
 
-                            Text("g").foregroundColor(.secondary)
-                                .frame(minWidth: 60, alignment: .leading)
+                    if fetch {
+                        if let carbs = meal.first?.carbs, carbs > 0 {
+                            HStack(alignment: .center, spacing: nil) {
+                                Text("• Aktuell måltid Kh:")
+                                    .foregroundColor(.secondary)
+                                    .frame(minWidth: 120, alignment: .leading)
 
-                            Image(systemName: "arrow.right")
-                                .frame(minWidth: 15, alignment: .trailing)
-                            Spacer()
-                            let insulinMeal = formattedCarbs / state.carbRatio
-                            // rounding
-                            let insulinMealAsDouble = NSDecimalNumber(decimal: insulinMeal)
-                                .doubleValue
-                            let roundedInsulinMeal = Decimal(round(100 * insulinMealAsDouble) / 100)
-                            Text(roundedInsulinMeal.formatted())
-                            Text("E")
-                                .foregroundColor(.secondary)
+                                Text(formattedCarbs.formatted())
+                                    .frame(minWidth: 40, alignment: .trailing)
+
+                                Text("g").foregroundColor(.secondary)
+                                    .frame(minWidth: 60, alignment: .leading)
+
+                                Image(systemName: "arrow.right")
+                                    .frame(minWidth: 15, alignment: .trailing)
+                                Spacer()
+                                let insulinMeal = formattedCarbs / state.carbRatio
+                                // rounding
+                                let insulinMealAsDouble = NSDecimalNumber(decimal: insulinMeal)
+                                    .doubleValue
+                                let roundedInsulinMeal = Decimal(round(100 * insulinMealAsDouble) / 100)
+                                Text(roundedInsulinMeal.formatted())
+                                Text("E")
+                                    .foregroundColor(.secondary)
+                            }
+                            HStack(alignment: .center, spacing: nil) {
+                                Text("• COB:")
+                                    .foregroundColor(.secondary)
+                                    .frame(minWidth: 120, alignment: .leading)
+
+                                let cob = state.cob - formattedCarbs
+                                Text(cob.formatted())
+                                    .frame(minWidth: 40, alignment: .trailing)
+
+                                let unitGrams = NSLocalizedString("g", comment: "grams")
+                                Text(unitGrams).foregroundColor(.secondary)
+                                    .frame(minWidth: 60, alignment: .leading)
+
+                                Image(systemName: "arrow.right")
+                                    .frame(minWidth: 15, alignment: .trailing)
+                                Spacer()
+                                let insulinCob = state.wholeCobInsulin - formattedCarbs / state.carbRatio
+                                // rounding
+                                let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
+                                let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
+                                Text(roundedInsulinCob.formatted())
+                                Text("E")
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                    } else {
                         HStack(alignment: .center, spacing: nil) {
                             Text("• COB:")
                                 .foregroundColor(.secondary)
                                 .frame(minWidth: 120, alignment: .leading)
 
-                            let cob = state.cob - formattedCarbs
+                            let cob = state.cob
                             Text(cob.formatted())
                                 .frame(minWidth: 40, alignment: .trailing)
 
@@ -1031,7 +1121,7 @@ extension Bolus {
                             Image(systemName: "arrow.right")
                                 .frame(minWidth: 15, alignment: .trailing)
                             Spacer()
-                            let insulinCob = state.wholeCobInsulin - formattedCarbs / state.carbRatio
+                            let insulinCob = state.wholeCobInsulin
                             // rounding
                             let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
                             let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
@@ -1041,30 +1131,8 @@ extension Bolus {
                         }
                     }
                 } else {
-                    HStack(alignment: .center, spacing: nil) {
-                        Text("• COB:")
-                            .foregroundColor(.secondary)
-                            .frame(minWidth: 120, alignment: .leading)
-
-                        let cob = state.cob
-                        Text(cob.formatted())
-                            .frame(minWidth: 40, alignment: .trailing)
-
-                        let unitGrams = NSLocalizedString("g", comment: "grams")
-                        Text(unitGrams).foregroundColor(.secondary)
-                            .frame(minWidth: 60, alignment: .leading)
-
-                        Image(systemName: "arrow.right")
-                            .frame(minWidth: 15, alignment: .trailing)
-                        Spacer()
-                        let insulinCob = state.wholeCobInsulin
-                        // rounding
-                        let insulinCobAsDouble = NSDecimalNumber(decimal: insulinCob).doubleValue
-                        let roundedInsulinCob = Decimal(round(100 * insulinCobAsDouble) / 100)
-                        Text(roundedInsulinCob.formatted())
-                        Text("E")
-                            .foregroundColor(.secondary)
-                    }
+                    // Handle the case where meal.first?.carbs is nil
+                    // You can provide a default value or handle it in a way that makes sense for your application.
                 }
                 HStack(alignment: .center, spacing: nil) {
                     Text("• IOB:")
