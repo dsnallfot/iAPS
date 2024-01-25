@@ -146,7 +146,7 @@ extension Home {
                     pumpView
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: 328)
             .padding(.top, 50) // 0 + geo.safeAreaInsets.top)
             .padding(.horizontal, 10)
             .background(Color.clear)
@@ -184,7 +184,7 @@ extension Home {
                 .onTapGesture {
                     state.showModal(for: .dataTable)
                 }
-                Spacer()
+                // Spacer()
 
                 HStack {
                     Text("IOB")

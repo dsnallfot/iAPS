@@ -144,20 +144,34 @@ extension Bolus {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button {
-                    // if fetch {
-                    carbsView()
-                    // }
+                    if fetch { // fix to hide carbsView when entering from bolusview without beeing at carbsview first
+                        carbsView()
+                    } else {
+                        state.showModal(for: .addCarbs(
+                            editMode: false,
+                            override: false
+                        )) // Note! this "else" breaks functionality to start at bolusview -> go to carbsview -> and back to bolusview when "show bolusscreen after carbs" are disabled
+                    }
                 }
                 label: {
-                    // if fetch {
-                    HStack {
-                        Image(systemName: "chevron.backward")
-                        Text("Meal")
+                    if fetch {
+                        Image(systemName: "chevron.left")
+                            .scaleEffect(0.61)
+                            .font(Font.title.weight(.semibold))
+                            .offset(x: -13, y: 0)
+                    } else {
+                        Image(systemName: "plus")
+                            .scaleEffect(0.61)
+                            .font(Font.title.weight(.semibold))
+                            .offset(x: -13, y: 0)
                     }
-                    // }
+
+                    Text("Måltid")
+                        .offset(x: -22, y: 0)
+
                 },
                 trailing: Button { state.hideModal() }
-                label: { Text("Close") }
+                label: { Text("Cancel") }
             )
             .popup(isPresented: presentInfo, alignment: .center, direction: .bottom) {
                 bolusInfo
