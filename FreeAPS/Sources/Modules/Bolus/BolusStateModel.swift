@@ -327,18 +327,21 @@ extension Bolus {
             )
 
             if deleteTwice {
-                nsManager.deleteCarbs(mealArray, complexMeal: true)
+                // nsManager.deleteCarbs(mealArray, complexMeal: true)
+                nsManager.deleteNormalCarbs(mealArray)
+                nsManager.deleteFPUs(mealArray)
                 hkManager
                     .deleteCarbs(
                         syncID: meals.id ?? "",
                         fpuID: (meals.fpuID ?? meals.id) ?? ""
                     ) // Daniel added to enable deletion of fpus in apple health
             } else {
-                nsManager
-                    .deleteCarbs(
-                        mealArray,
-                        complexMeal: false
-                    ) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
+                /* nsManager
+                 .deleteCarbs(
+                     mealArray,
+                     complexMeal: false
+                 ) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view */
+                nsManager.deleteNormalCarbs(mealArray)
                 hkManager
                     .deleteCarbs(
                         syncID: meals.id ?? "",
