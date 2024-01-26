@@ -206,6 +206,58 @@ extension AddTempTarget {
                 low = low?.asMmolL
                 high = high?.asMmolL
             }
+            /* return HStack {
+             VStack {
+             HStack {
+             Text(preset.displayName)
+             Spacer()
+             }
+             HStack(spacing: 2) {
+             Text(
+             "\(formatter.string(from: (low ?? 0) as NSNumber)!)"
+             )
+             .foregroundColor(.secondary)
+             .font(.caption)
+
+             Text(state.units.rawValue)
+             .foregroundColor(.secondary)
+             .font(.caption)
+             Text("for")
+             .foregroundColor(.secondary)
+             .font(.caption)
+             Text("\(formatter.string(from: preset.duration as NSNumber)!)")
+             .foregroundColor(.secondary)
+             .font(.caption)
+             Text("min")
+             .foregroundColor(.secondary)
+             .font(.caption)
+
+             Spacer()
+             }.padding(.top, 2)
+             }
+             .contentShape(Rectangle())
+             .onTapGesture {
+             state.enactPreset(id: preset.id)
+             } */
+
+            /* Image(systemName: "xmark.circle").foregroundColor(.secondary)
+             .contentShape(Rectangle())
+             .padding(.vertical)
+             .onTapGesture {
+             removeAlert = Alert(
+             title: Text("Are you sure?"),
+             message: Text("Delete preset \"\(preset.displayName)\""),
+             primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
+             secondaryButton: .cancel()
+             )
+             isRemoveAlertPresented = true
+             }
+             .alert(isPresented: $isRemoveAlertPresented) {
+             removeAlert!
+             } */
+
+            // Refactored to avoid force unwrapping
+
             return HStack {
                 VStack {
                     HStack {
@@ -213,48 +265,40 @@ extension AddTempTarget {
                         Spacer()
                     }
                     HStack(spacing: 2) {
-                        Text(
-                            "\(formatter.string(from: (low ?? 0) as NSNumber)!)"
-                        )
-                        .foregroundColor(.secondary)
-                        .font(.caption)
+                        if let lowValue = low,
+                           let formattedLow = formatter.string(from: lowValue as NSNumber)
+                        {
+                            Text(formattedLow)
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
 
                         Text(state.units.rawValue)
                             .foregroundColor(.secondary)
                             .font(.caption)
+
                         Text("for")
                             .foregroundColor(.secondary)
                             .font(.caption)
-                        Text("\(formatter.string(from: preset.duration as NSNumber)!)")
+
+                        let durationValue = preset.duration
+                        let formattedDuration = formatter.string(from: durationValue as NSNumber)
+                        Text(formattedDuration ?? "")
                             .foregroundColor(.secondary)
                             .font(.caption)
+
                         Text("min")
                             .foregroundColor(.secondary)
                             .font(.caption)
 
                         Spacer()
-                    }.padding(.top, 2)
+                    }
+                    .padding(.top, 2)
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
                     state.enactPreset(id: preset.id)
                 }
-
-                /* Image(systemName: "xmark.circle").foregroundColor(.secondary)
-                 .contentShape(Rectangle())
-                 .padding(.vertical)
-                 .onTapGesture {
-                 removeAlert = Alert(
-                 title: Text("Are you sure?"),
-                 message: Text("Delete preset \"\(preset.displayName)\""),
-                 primaryButton: .destructive(Text("Delete"), action: { state.removePreset(id: preset.id) }),
-                 secondaryButton: .cancel()
-                 )
-                 isRemoveAlertPresented = true
-                 }
-                 .alert(isPresented: $isRemoveAlertPresented) {
-                 removeAlert!
-                 } */
             }
         }
 

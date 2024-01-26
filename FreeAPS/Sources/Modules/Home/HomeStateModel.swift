@@ -65,6 +65,7 @@ extension Home {
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 4
         @Published var disco: Bool = true
+        @Published var insulinRecommended: Decimal = 0
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
