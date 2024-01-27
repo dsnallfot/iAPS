@@ -63,7 +63,7 @@ extension Bolus {
 
                             Text(
                                 formatter
-                                    .string(from: state.insulinRecommended as NSNumber)! +
+                                    .string(from: state.insulinRecommended as NSNumber) ?? "N/A" +
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor((state.error && state.insulinRecommended > 0) ? .red : .secondary)
                                 .onTapGesture {

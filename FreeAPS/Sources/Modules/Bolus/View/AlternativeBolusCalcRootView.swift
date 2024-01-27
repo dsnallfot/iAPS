@@ -17,8 +17,8 @@ extension Bolus {
         @State private var presentInfo = false
         @Environment(\.colorScheme) var colorScheme
 
-        var roundedOrefInsulin: Decimal {
-            let insulinAsDouble = NSDecimalNumber(decimal: state.insulin).doubleValue
+        var roundedOrefInsulinRec: Decimal {
+            let insulinAsDouble = NSDecimalNumber(decimal: state.insulinRecommended).doubleValue
             let roundedInsulinAsDouble = (insulinAsDouble / 0.05).rounded() * 0.05
             return Decimal(roundedInsulinAsDouble)
         }
@@ -74,12 +74,12 @@ extension Bolus {
                     bolusSuggestion
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
+                            if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 {
                                 showInfo.toggle()
                                 state.insulinCalculated = state.calculateInsulin()
                             } else if state.error && state.insulinCalculated > 0 {
                                 displayError = true
-                            } else if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
+                            } else if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
                                 displayError = true
                             } else {
                                 state.amount = state.insulinCalculated
@@ -184,18 +184,18 @@ extension Bolus {
                     primaryButton: .destructive(
                         Text("Add"),
                         action: {
-                            if state.insulinCalculated > roundedOrefInsulin {
-                                if roundedOrefInsulin <= 0, !state.useSuperBolus {
+                            if state.insulinCalculated > roundedOrefInsulinRec {
+                                if roundedOrefInsulinRec <= 0, !state.useSuperBolus {
                                     state.amount = 0
                                     displayError = false
-                                } else if roundedOrefInsulin <= 0, state.useSuperBolus {
+                                } else if roundedOrefInsulinRec <= 0, state.useSuperBolus {
                                     state.amount = state.insulinCalculated
                                     displayError = false
                                 } else if state.useSuperBolus {
                                     state.amount = state.insulinCalculated
                                     displayError = false
                                 } else {
-                                    state.amount = roundedOrefInsulin
+                                    state.amount = roundedOrefInsulinRec
                                     displayError = false
                                 }
                             } else {
@@ -520,7 +520,7 @@ extension Bolus {
                             Spacer()
                             ActivityIndicator(isAnimating: .constant(true), style: .medium)
                         }
-                    } else if state.insulinCalculated <= 0 && state.useSuperBolus || roundedOrefInsulin <= 0 && state
+                    } else if state.insulinCalculated <= 0 && state.useSuperBolus || roundedOrefInsulinRec <= 0 && state
                         .useSuperBolus
                     {
                         HStack {
@@ -551,7 +551,7 @@ extension Bolus {
                                     .foregroundColor(.loopRed)
                             }
                         }
-                    } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 {
+                    } else if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 {
                         HStack {
                             // Image(systemName: "x.circle.fill")
                             Image(systemName: "info.circle.fill")
@@ -570,7 +570,7 @@ extension Bolus {
                                     NSLocalizedString(" U", comment: "Insulin unit")
                             ).foregroundColor(.loopRed)
                         }
-                    } else if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
+                    } else if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "info.circle.fill")
@@ -586,13 +586,13 @@ extension Bolus {
                             Spacer()
                             /* Text(
                                  formatter
-                                     .string(from: roundedOrefInsulin as NSNumber)! +
+                                     .string(from: roundedOrefInsulinRec as NSNumber)! +
                                      NSLocalizedString(" U", comment: "Insulin unit")
                              ).foregroundColor(.orange) */
 
                             // Refactored to avoid force unwrapping
 
-                            if let insulinString = formatter.string(from: roundedOrefInsulin as NSNumber) {
+                            if let insulinString = formatter.string(from: roundedOrefInsulinRec as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.orange)
                             } else {
@@ -600,7 +600,7 @@ extension Bolus {
                                     .foregroundColor(.orange)
                             }
                         }
-                    } else if state.roundedWholeCalc > roundedOrefInsulin && state.useSuperBolus {
+                    } else if state.roundedWholeCalc > roundedOrefInsulinRec && state.useSuperBolus {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "info.circle.fill")
@@ -936,21 +936,21 @@ extension Bolus {
                 }
 
                 HStack {
-                    if state.insulinCalculated > roundedOrefInsulin && state
-                        .insulinCalculated > 0 && roundedOrefInsulin > 0 && !state.useSuperBolus
+                    if state.insulinCalculated > roundedOrefInsulinRec && state
+                        .insulinCalculated > 0 && roundedOrefInsulinRec > 0 && !state.useSuperBolus
                     {
                         Text("Insulinbehov:")
                             .foregroundColor(.insulin)
                         Spacer()
-                        Text(roundedOrefInsulin.formatted())
+                        Text(roundedOrefInsulinRec.formatted())
                             .foregroundColor(.insulin)
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.insulin)
-                    } else if roundedOrefInsulin != 0 {
+                    } else if roundedOrefInsulinRec != 0 {
                         Text("Insulinbehov:")
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text(roundedOrefInsulin.formatted())
+                        Text(roundedOrefInsulinRec.formatted())
 
                         Text(NSLocalizedString("E", comment: " grams per Unit"))
                             .foregroundColor(.secondary)
@@ -968,7 +968,7 @@ extension Bolus {
                 .foregroundColor(.primary).fontWeight(.semibold)
                 HStack {
                     if state.insulinCalculated >= state.maxBolus && state
-                        .maxBolus <= (roundedOrefInsulin + state.superBolusInsulin)
+                        .maxBolus <= (roundedOrefInsulinRec + state.superBolusInsulin)
                     {
                         Text("Inställd maxbolus:")
                             .foregroundColor(.purple)
@@ -1228,7 +1228,9 @@ extension Bolus {
         var resultsPart: some View {
             VStack {
                 HStack {
-                    if state.insulinCalculated <= 0 && !state.useSuperBolus || roundedOrefInsulin <= 0 && !state.useSuperBolus {
+                    if state.insulinCalculated <= 0 && !state.useSuperBolus || roundedOrefInsulinRec <= 0 && !state
+                        .useSuperBolus
+                    {
                         Text("Ingen bolus rekommenderas:")
                             .fontWeight(.bold)
                             .foregroundColor(.loopRed)
@@ -1238,7 +1240,7 @@ extension Bolus {
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
                             .font(.system(size: 16))
-                    } else if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
+                    } else if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
                         Text("Vänta med bolus?:")
                             .fontWeight(.bold)
                             .foregroundColor(.orange)
@@ -1307,17 +1309,17 @@ extension Bolus {
                         }
                     }
                     // Result calculations
-                    if state.insulinCalculated > roundedOrefInsulin && !state.useSuperBolus {
-                        if roundedOrefInsulin >= state.maxBolus {
+                    if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
+                        if roundedOrefInsulinRec >= state.maxBolus {
                             Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.purple)
                             Button(action: {
-                                state.amount = roundedOrefInsulin
+                                state.amount = roundedOrefInsulinRec
                                 showInfo.toggle()
                             }) {
                                 HStack {
-                                    Text(roundedOrefInsulin.formatted())
+                                    Text(roundedOrefInsulinRec.formatted())
                                         .fontWeight(.bold)
                                         .font(.system(size: 16))
                                         .foregroundColor(.white)
@@ -1344,7 +1346,7 @@ extension Bolus {
                                     radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
-                        } else if roundedOrefInsulin <= 0 {
+                        } else if roundedOrefInsulinRec <= 0 {
                             Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
@@ -1385,11 +1387,11 @@ extension Bolus {
                                 .fontWeight(.semibold)
                                 .foregroundColor(.insulin)
                             Button(action: {
-                                state.amount = roundedOrefInsulin
+                                state.amount = roundedOrefInsulinRec
                                 showInfo.toggle()
                             }) {
                                 HStack {
-                                    Text(roundedOrefInsulin.formatted())
+                                    Text(roundedOrefInsulinRec.formatted())
                                         .fontWeight(.bold)
                                         .font(.system(size: 16))
                                         .foregroundColor(.white)
@@ -1457,7 +1459,7 @@ extension Bolus {
                                     radius: colorScheme == .dark ? 1 : 1
                                 )
                             }
-                        } else if state.insulinCalculated <= 0 || roundedOrefInsulin <= 0 && !state.useSuperBolus {
+                        } else if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 && !state.useSuperBolus {
                             Text("≠ ")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.secondary)
@@ -1612,12 +1614,12 @@ extension Bolus {
             VStack {
                 let maxamountbolus = Double(state.maxBolus)
                 let formattedMaxAmountBolus = String(maxamountbolus)
-                let orefamountbolus = Double(roundedOrefInsulin)
+                let orefamountbolus = Double(roundedOrefInsulinRec)
                 let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus).replacingOccurrences(of: ".", with: ",")
 
                 VStack {
-                    if state.insulinCalculated > roundedOrefInsulin && state
-                        .insulinCalculated > 0 && roundedOrefInsulin > 0 && !state.useSuperBolus
+                    if state.insulinCalculated > roundedOrefInsulinRec && state
+                        .insulinCalculated > 0 && roundedOrefInsulinRec > 0 && !state.useSuperBolus
                     {
                         Text("Obs! Förslaget begränsas av insulinbehov (oref): \(formattedOrefAmountBolus) E")
                             .foregroundColor(.insulin).italic()
@@ -1649,7 +1651,7 @@ extension Bolus {
                                 .italic()
                                 .multilineTextAlignment(.center)
                         }
-                    } else if state.insulinCalculated > roundedOrefInsulin {
+                    } else if state.insulinCalculated > roundedOrefInsulinRec {
                         VStack {
                             HStack {
                                 Image(systemName: "exclamationmark.triangle")

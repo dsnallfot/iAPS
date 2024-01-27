@@ -74,9 +74,8 @@ struct TagCloudView: View {
                  textTag where textTag.contains("Dynamic ISF/CR"),
                  textTag where textTag.contains("Dynamisk ISF/CR"),
                  textTag where textTag.contains("Basal ratio"),
-                 textTag where
-                     textTag.contains("Basal Ratio"):
-                return .zt
+                 textTag where textTag.contains("Basal Ratio"):
+                 textTag.contains("Basal Ratio"):
             case textTag where textTag.contains("Middleware:"):
                 return .loopRed
             default:

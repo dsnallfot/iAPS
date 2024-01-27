@@ -57,6 +57,16 @@ extension Home {
             return formatter
         }
 
+        private var insulinNeededFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 2
+            // formatter.roundingIncrement = 0.05
+            // formatter.roundingMode = .halfDown
+            return formatter
+        }
+
         private var bolusFormatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -112,6 +122,12 @@ extension Home {
             scene.scaleMode = .resizeFill
             scene.backgroundColor = .clear
             return scene
+        }
+
+        var roundedOrefInsulinRec: Decimal {
+            let insulinAsDouble = NSDecimalNumber(decimal: state.suggestion?.insulinForManualBolus ?? 0).doubleValue
+            let roundedInsulinAsDouble = (insulinAsDouble / 0.05).rounded() * 0.05
+            return Decimal(roundedInsulinAsDouble)
         }
 
         /* @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
@@ -398,7 +414,7 @@ extension Home {
                     state.apsManager
                         .determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
                 }) {
-                    if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                    if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
                         HStack {
                             Image(systemName: "drop.fill")
                                 .offset(x: 5, y: 0)
@@ -406,7 +422,8 @@ extension Home {
                             Text("Insulinbehov")
                                 .offset(x: 3, y: 0)
                                 .foregroundColor(.primary)
-                            Text(numberFormatter.string(from: insulinRequested as NSNumber)!)
+                            // Text(insulinNeededFormatter.string(from: insulinNeeded as NSNumber) ?? "N/A")
+                            Text(roundedOrefInsulinRec.formatted())
                                 .foregroundColor(.primary)
 
                             Text("E")
@@ -430,7 +447,7 @@ extension Home {
                             radius: colorScheme == .dark ? 1 : 1
                         )
                 )
-                if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
                     Spacer()
                 }
 
@@ -881,7 +898,7 @@ extension Home {
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
-                            if let insulinRequested = state.suggestion?.insulinReq, insulinRequested > 0.3 {
+                            if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
                                 Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
