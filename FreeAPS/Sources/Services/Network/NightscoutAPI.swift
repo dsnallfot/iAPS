@@ -109,11 +109,11 @@ extension NightscoutAPI {
             URLQueryItem(
                 name: "find[enteredBy][$ne]",
                 value: CarbsEntry.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            ) /* ,
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             ) */
+            ),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            )
         ]
         if let date = sinceDate {
             let dateItem = URLQueryItem(
