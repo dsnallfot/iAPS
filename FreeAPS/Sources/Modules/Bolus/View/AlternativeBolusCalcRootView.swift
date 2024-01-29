@@ -300,25 +300,28 @@ extension Bolus {
                                     VStack {
                                         if fetch {
                                             mealParts
-                                            if fetch {
-                                                Divider()
-                                                    .frame(height: 1)
-                                                    .background(Color.secondary) // .padding(1)
-                                            }
+                                                .padding(.bottom, 4)
+                                            /* if fetch {
+                                                 Divider()
+                                                     .frame(height: 1)
+                                                     .background(Color.secondary) // .padding(1)
+                                             } */
                                         }
 
                                         VStack {
                                             variableParts
+                                                .padding(.bottom, 4)
 
-                                            Divider()
-                                                .frame(height: 1)
-                                                .background(Color.secondary) // .padding(1)
+                                            /* Divider()
+                                             .frame(height: 1)
+                                             .background(Color.secondary) // .padding(1) */
 
                                             guardRailParts
+                                                .padding(.bottom, 4)
 
-                                            Divider()
-                                                .frame(height: 1)
-                                                .background(Color.secondary) // .padding(1)
+                                            /* Divider()
+                                             .frame(height: 1)
+                                             .background(Color.secondary) // .padding(1) */
                                         }
                                         VStack {
                                             if state.advancedCalc {
@@ -333,7 +336,7 @@ extension Bolus {
                                         }
                                         VStack {
                                             HStack {
-                                                Text("Summa beräknat bolusbehov:")
+                                                Text("SUMMA BERÄKNAT BOLUSBEHOV:")
                                                     .foregroundColor(.primary)
                                                 Spacer()
                                                 let insulin = state.roundedWholeCalc
@@ -343,7 +346,7 @@ extension Bolus {
                                                     .foregroundColor(.primary)
                                             }
                                             .fontWeight(.semibold)
-                                            .padding(.bottom, 1)
+                                            .padding(.bottom, 3)
                                             .padding(.top, 1)
                                         }
                                         Divider()
@@ -802,7 +805,7 @@ extension Bolus {
         var variableParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    Text("Variabler")
+                    Text("Indata & Variabler")
                         .fontWeight(.semibold)
                     Spacer()
                 }
@@ -894,7 +897,7 @@ extension Bolus {
         var orefParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    Text("Prognos (oref)")
+                    Text("Prognos (Oref algoritm)")
                         .fontWeight(.semibold)
                     Spacer()
                 }
@@ -1038,9 +1041,9 @@ extension Bolus {
         var calculationParts: some View {
             VStack(spacing: 2) {
                 HStack {
-                    Text("Bolusberäkning")
+                    Text("BOLUSBERÄKNING")
                     Spacer()
-                    Text("Behov  +/-  E")
+                    Text("BEHOV  +/-   E")
                 }
                 .foregroundColor(.primary).fontWeight(.semibold)
                 .padding(.top, 2)
@@ -1608,6 +1611,7 @@ extension Bolus {
                 }
             }
             .padding(.bottom, 8)
+            .padding(.top, 2)
         }
 
         var warningParts: some View {
