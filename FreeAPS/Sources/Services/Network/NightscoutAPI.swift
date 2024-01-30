@@ -16,7 +16,7 @@ class NightscoutAPI {
         static let treatmentsPath = "/api/v1/treatments.json"
         static let statusPath = "/api/v1/devicestatus.json"
         static let profilePath = "/api/v1/profile.json"
-        static let retryCount = 1
+        static let retryCount = 2
         static let timeout: TimeInterval = 60
     }
 
@@ -109,11 +109,11 @@ extension NightscoutAPI {
             URLQueryItem(
                 name: "find[enteredBy][$ne]",
                 value: CarbsEntry.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            ) /* ,
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             ) */
+            ),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            )
         ]
         if let date = sinceDate {
             let dateItem = URLQueryItem(

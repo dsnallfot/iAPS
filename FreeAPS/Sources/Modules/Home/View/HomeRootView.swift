@@ -381,7 +381,7 @@ extension Home {
                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
                                 .foregroundColor(.primary)
 
-                            Text("g kh behövs!")
+                            Text("g kh behövs")
                                 .offset(x: -5, y: 0)
                                 .foregroundColor(.primary)
                         }

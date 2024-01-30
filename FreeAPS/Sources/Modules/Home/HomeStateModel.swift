@@ -63,7 +63,7 @@ extension Home {
         @Published var displayYgridLines: Bool = false
         @Published var thresholdLines: Bool = false
         @Published var timeZone: TimeZone?
-        @Published var hours: Int16 = 4
+        @Published var hours: Int16 = 3
         @Published var disco: Bool = true
         @Published var insulinRecommended: Decimal = 0
 

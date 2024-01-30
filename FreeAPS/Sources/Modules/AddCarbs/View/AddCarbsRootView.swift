@@ -311,7 +311,12 @@ extension AddCarbs {
                     showInfo.toggle()
                 }
                 label: {
-                    Text("Räkna KH")
+                    Image(systemName: "list.bullet.circle")
+                        .scaleEffect(0.61)
+                        .font(Font.title.weight(.semibold))
+                        .offset(x: -13, y: 0)
+                    Text("Räkna")
+                        .offset(x: -24, y: 0)
                 },
                 trailing: Button { state.hideModal() }
                 label: { Text("Cancel") }

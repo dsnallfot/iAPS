@@ -122,7 +122,7 @@
 "grams" = "gram";
 
 /*  */
-"Carbs required" = "Kolhydrater som krävs!";
+"Carbs required" = "Behov kolhydrater";
 
 /* Saved Food Presets */
 "Saved Food" = "Sparad mat";
@@ -1062,10 +1062,10 @@ Enact a temp Basal or a temp target */
 "Also add source info" = "Lägg till info om CGM";
 
 /* */
-"Carbs Required Threshold" = "Tröskelvärde för kolhydrater som krävs";
+"Carbs Required Threshold" = "Tröskelvärde för att visa beräknat behov kh";
 
 /* */
-"Carbs required: %d g" = "Kolhydrater som krävs: %d g";
+"Carbs required: %d g" = "Behov kolhydrater: %d g";
 
 /* */
 "To prevent LOW required %d g of carbs" = "För att förhindra ett lågt blodsocker krävs uppskattningsvis %d g kolhydrater";
@@ -2032,10 +2032,10 @@ Enact a temp Basal or a temp target */
 "Time of maximum blood glucose lowering effect of insulin, in minutes. Beware: Oref assumes for ultra-rapid (Lyumjev) & rapid-acting (Fiasp) curves minimal (35 & 50 min) and maximal (100 & 120 min) applicable insulinPeakTimes. Using a custom insulinPeakTime outside these bounds will result in issues with iAPS, longer loop calculations and possible red loops." = "Tid i minuter för när insulinet har som störst blodsockersänkande effekt. Observera att inte ange ett lägre värde än 35 min för Lyumjev eller 50 min för Fiasp, eller högre än 100, respektive 120 min. Om du gör så kommer det att leda till problem med iAPS, som röda loopar, långa Loop-beräkningar och överdrivet stora loggfiler.";
 
 /* Headline "Carbs Req Threshold" */
-"Carbs Req Threshold" = "Tröskelvärde för notis om kolhydrater som krävs";
+"Carbs Req Threshold" = "Tröskelvärde för notis om behov kolhydrater";
 
 /* "Carbs Req Threshold" */
-"Grams of carbsReq to trigger a pushover. Defaults to 1 (for 1 gram of carbohydrate). Can be increased if you only want to get Pushover for carbsReq at X threshold." = "Antal kolhydrater för att utlösa en pushover-notis, av det totala antal kolhydrater nödvändiga (carbsReq) för att undvika ett lågt blodsockervärde, som krävs. Standardvärde är 1 (gram kolhydrater). Kan ökas om du bara vill få en Pushover-notis vid en större mängd nödvändiga kolhydrater.";
+"Grams of carbsReq to trigger a pushover. Defaults to 1 (for 1 gram of carbohydrate). Can be increased if you only want to get Pushover for carbsReq at X threshold." = "Tröskelvärde för när en notis visas kring hur många kolhydrater som krävs (carbsReq) för att undvika ett lågt blodsockervärde. Standardvärdet är 1 (gram kolhydrater).";
 
 /* Headline "Noisy CGM Target Multiplier" */
 "Noisy CGM Target Multiplier" = "Multipel ökat målvärde vid CGM-brus";

@@ -19,7 +19,8 @@ import Foundation
             [CarbsEntry(
                 id: UUID().uuidString,
                 createdAt: dateAdded,
-                actualDate: dateAdded,
+                actualDate: nil,
+                // testar nil ist för dateAdded för att se om det löser intermittent problem med uopladdning till nightscout
                 carbs: carbs,
                 fat: Decimal(quantityFat),
                 protein: Decimal(quantityProtein),
