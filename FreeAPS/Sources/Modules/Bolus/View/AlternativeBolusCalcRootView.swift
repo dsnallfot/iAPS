@@ -238,7 +238,7 @@ extension Bolus {
                             .font(Font.title.weight(.semibold))
                             .offset(x: -13, y: 0)
                     } else {
-                        Image(systemName: "plus.circle.fill")
+                        Image(systemName: "plus.circle")
                             .scaleEffect(0.61)
                             .font(Font.title.weight(.semibold))
                             .offset(x: -13, y: 0)

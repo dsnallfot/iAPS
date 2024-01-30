@@ -93,7 +93,7 @@ extension DataTable {
                             action: { showNonPumpInsulin = true
                                 state.nonPumpInsulinDate = Date() },
                             label: {
-                                Image(systemName: "plus.circle.fill")
+                                Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
                                     .offset(x: -13, y: 0)
@@ -113,7 +113,7 @@ extension DataTable {
                             action: { showManualGlucose = true
                                 state.manualGlucose = 0 },
                             label: {
-                                Image(systemName: "plus.circle.fill")
+                                Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
                                     .offset(x: -13, y: 0)
