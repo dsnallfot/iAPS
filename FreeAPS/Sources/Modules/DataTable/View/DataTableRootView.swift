@@ -85,11 +85,58 @@ extension DataTable {
 
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: HStack {
-                    Button("Close", action: state.hideModal)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    switch state.mode {
+                    case .treatments:
+                        Button(
+                            action: { showNonPumpInsulin = true
+                                state.nonPumpInsulinDate = Date() },
+                            label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .scaleEffect(0.61)
+                                    .font(Font.title.weight(.semibold))
+                                    .offset(x: -13, y: 0)
+                                Text("Insulin")
+                                    .offset(x: -24, y: 0)
+                            }
+                        )
+                    case .basals:
+                        Button(
+                            action: {},
+                            label: {
+                                Text("")
+                            }
+                        )
+                    case .glucose:
+                        Button(
+                            action: { showManualGlucose = true
+                                state.manualGlucose = 0 },
+                            label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .scaleEffect(0.61)
+                                    .font(Font.title.weight(.semibold))
+                                    .offset(x: -13, y: 0)
+                                Text("Glukos")
+                                    .offset(x: -24, y: 0)
+                            }
+                        )
+                    }
                 }
-            )
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: { state.hideModal() },
+                        label: {
+                            Text("Close")
+                        }
+                    )
+                }
+            }
+            /* .navigationBarItems(
+                 trailing: HStack {
+                     Button("Close", action: state.hideModal)
+                 }
+             ) */
             .sheet(isPresented: $showManualGlucose, onDismiss: { if isAmountUnconfirmed { state.manualGlucose = 0 } }) {
                 addManualGlucoseView
             }
@@ -274,17 +321,17 @@ extension DataTable {
 
         private var treatmentsList: some View {
             List {
-                HStack {
-                    Button(action: { showNonPumpInsulin = true }, label: {
-                        Image(systemName: "plus")
-                        Text("Insulin")
-                            .font(.subheadline)
-                    })
-                        .buttonStyle(.borderless)
+                if state.treatments.contains(where: { $0.date > Date() }) {
+                    HStack {
+                        /* Button(action: { showNonPumpInsulin = true }, label: {
+                             Image(systemName: "plus")
+                             Text("Insulin")
+                                 .font(.subheadline)
+                         })
+                             .buttonStyle(.borderless) */
 
-                    Spacer()
+                        Spacer()
 
-                    if state.treatments.contains(where: { $0.date > Date() }) {
                         Button(action: { showFutureEntries.toggle() }, label: {
                             Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
                                 .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
@@ -298,8 +345,8 @@ extension DataTable {
                         })
                             .buttonStyle(.borderless)
                     }
+                    .listRowBackground(Color(.tertiarySystemFill))
                 }
-                .listRowBackground(Color(.tertiarySystemFill))
 
                 if !state.treatments.isEmpty {
                     if !showFutureEntries {
@@ -345,15 +392,15 @@ extension DataTable {
 
         private var glucoseList: some View {
             List {
-                HStack {
-                    Button(action: { showManualGlucose = true }, label: {
-                        Image(systemName: "plus")
-                        Text("Blodsocker")
-                            .font(.subheadline)
-                    })
-                        .buttonStyle(.borderless)
-                }
-                .listRowBackground(Color(.tertiarySystemFill))
+                /* HStack {
+                     Button(action: { showManualGlucose = true }, label: {
+                         Image(systemName: "plus")
+                         Text("Blodsocker")
+                             .font(.subheadline)
+                     })
+                         .buttonStyle(.borderless)
+                 }
+                 .listRowBackground(Color(.tertiarySystemFill))*/
 
                 if !state.glucose.isEmpty {
                     ForEach(state.glucose) { item in
