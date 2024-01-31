@@ -34,7 +34,7 @@ extension WatchConfig {
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Konfigurera klocka")
+            .navigationTitle("Watch")
             .navigationBarTitleDisplayMode(.automatic)
         }
 
