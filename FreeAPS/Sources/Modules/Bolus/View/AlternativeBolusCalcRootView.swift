@@ -219,7 +219,7 @@ extension Bolus {
                 )
             }
 
-            .navigationBarTitle("Enact Bolus", displayMode: .inline)
+            .navigationBarTitle("Bolus", displayMode: .inline)
             .navigationBarItems(
                 leading: Button {
                     if fetch { // fix to hide carbsView when entering from bolusview without beeing at carbsview first
