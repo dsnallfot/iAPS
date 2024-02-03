@@ -304,7 +304,7 @@ extension AddCarbs {
             .sheet(isPresented: $showInfo) {
                 webCarbCalculator
             }
-            .navigationTitle("Registrera måltid")
+            .navigationTitle("Måltid")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button {
@@ -315,7 +315,7 @@ extension AddCarbs {
                         .scaleEffect(0.61)
                         .font(Font.title.weight(.semibold))
                         .offset(x: -11, y: 0)
-                    Text("Räkna")
+                    Text("Räkna KH")
                         .offset(x: -22, y: 0)
                 },
                 trailing: Button { state.hideModal() }
@@ -403,7 +403,7 @@ extension AddCarbs {
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
                                     .offset(x: -13, y: 0)
-                                Text("Reg måltid")
+                                Text("Måltid")
                                     .offset(x: -22, y: 0)
                             }
                         },
