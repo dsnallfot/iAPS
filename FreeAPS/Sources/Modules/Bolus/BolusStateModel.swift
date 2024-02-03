@@ -304,14 +304,6 @@ extension Bolus {
                 return
             }
 
-            /* var date = Date()
-
-             if let mealDate = meals.actualDate {
-                 date = mealDate
-             } else if let mealdate = meals.createdAt {
-                 date = mealdate
-             } */
-
             let mealArray = DataTable.Treatment(
                 units: units,
                 type: .carbs,
@@ -336,11 +328,7 @@ extension Bolus {
                         fpuID: (meals.fpuID ?? meals.id) ?? ""
                     ) // Daniel added to enable deletion of fpus in apple health
             } else {
-                /* nsManager
-                 .deleteCarbs(
-                     mealArray,
-                     complexMeal: false
-                 ) // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view */
+                // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
                 nsManager.deleteNormalCarbs(mealArray)
                 hkManager
                     .deleteCarbs(
