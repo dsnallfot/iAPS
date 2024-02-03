@@ -125,7 +125,7 @@ extension NightscoutConfig {
                 } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
-            .navigationBarTitle("Nightscout Config")
+            .navigationTitle("Nightscout")
             .navigationBarTitleDisplayMode(.automatic)
             .alert(isPresented: $isImportAlertPresented) {
                 importAlert!

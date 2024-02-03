@@ -86,7 +86,7 @@ extension ISFEditor {
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Insulin Sensitivities")
+            .navigationBarTitle("Insulin Sensitivities")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(
                 trailing: EditButton()

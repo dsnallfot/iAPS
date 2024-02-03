@@ -96,9 +96,9 @@ extension DataTable {
                                 Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
-                                    .offset(x: -13, y: 0)
+                                    .offset(x: -11, y: 0)
                                 Text("Insulin")
-                                    .offset(x: -24, y: 0)
+                                    .offset(x: -22, y: 0)
                             }
                         )
                     case .basals:
@@ -116,9 +116,9 @@ extension DataTable {
                                 Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
                                     .font(Font.title.weight(.semibold))
-                                    .offset(x: -13, y: 0)
+                                    .offset(x: -11, y: 0)
                                 Text("Glukos")
-                                    .offset(x: -24, y: 0)
+                                    .offset(x: -22, y: 0)
                             }
                         )
                     }
@@ -216,7 +216,7 @@ extension DataTable {
                 }
                 .navigationTitle("Blodsockermätning")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing: Button("Close", action: { showManualGlucose = false
+                .navigationBarItems(trailing: Button("Cancel", action: { showManualGlucose = false
                     state.manualGlucose = 0 }))
             }
         }
@@ -304,7 +304,7 @@ extension DataTable {
                 }
                 .navigationTitle("Externt insulin")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing: Button("Close", action: { showNonPumpInsulin = false
+                .navigationBarItems(trailing: Button("Cancel", action: { showNonPumpInsulin = false
                     state.nonPumpInsulinAmount = 0 }))
             }
         }
