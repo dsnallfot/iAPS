@@ -330,22 +330,23 @@ extension DataTable {
                          })
                              .buttonStyle(.borderless) */
 
-                        Spacer()
-
                         Button(action: { showFutureEntries.toggle() }, label: {
-                            Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
-                                .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                            Text("")
+                            Spacer()
+                            Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
+                                .foregroundColor(colorScheme == .dark ? .accentColor : .accentColor)
                                 .font(.footnote)
                             Image(
                                 systemName: showFutureEntries ? "chevron.up.circle" : "chevron.down.circle"
                             )
-                            .foregroundColor(colorScheme == .dark ? .secondary : .secondary)
+                            .foregroundColor(colorScheme == .dark ? .accentColor : .accentColor)
                             .font(.footnote)
+                            Spacer()
 
                         })
                             .buttonStyle(.borderless)
                     }
-                    .listRowBackground(Color(.tertiarySystemFill))
+                    // .listRowBackground(Color(.tertiarySystemFill))
                 }
 
                 if !state.treatments.isEmpty {
@@ -354,16 +355,16 @@ extension DataTable {
                             item.date <= Date()
                         }) { item in
                             treatmentView(item)
-                                .listRowBackground(
-                                    item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
-                                )
+                            /* .listRowBackground(
+                                 item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
+                             ) */
                         }
                     } else {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
-                                .listRowBackground(
-                                    item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
-                                )
+                            /* .listRowBackground(
+                                 item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
+                             ) */
                         }
                     }
                 } else {
@@ -380,7 +381,7 @@ extension DataTable {
                     ForEach(state.basals) { item in
                         basalView(item)
                     }
-                    .listRowBackground(Color(.tertiarySystemBackground))
+                    // .listRowBackground(Color(.tertiarySystemBackground))
 
                 } else {
                     HStack {
@@ -406,7 +407,7 @@ extension DataTable {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
-                    .listRowBackground(Color(.tertiarySystemBackground))
+                    // .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
                         Text("Ingen data.")
