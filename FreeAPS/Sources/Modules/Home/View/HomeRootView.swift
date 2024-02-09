@@ -162,6 +162,7 @@ extension Home {
                      pumpView */
                     // To add: Fetch IOB & COB from NS
                     Text("iAPS Caregiver")
+                        .font(.system(size: 16, weight: .bold))
                 }
             }
             .frame(maxWidth: 328)
