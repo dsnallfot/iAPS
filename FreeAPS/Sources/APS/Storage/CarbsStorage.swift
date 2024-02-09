@@ -116,7 +116,8 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
                     fpuID: ""
                 )
                 self.storage.transaction { storage in
-                    storage.append(onlyCarbs, to: file, uniqBy: \.id)
+                    //storage.append(onlyCarbs, to: file, uniqBy: \.id)
+                    storage.append(entries, to: file, uniqBy: \.id) // this code line with all "entries" resolves fetching problem from NS but affects proper handling of carbs/FPUs -> All Carbs and FPUs gets deleted in a chunk if code is used.
                     uniqEvents = storage.retrieve(file, as: [CarbsEntry].self)?
                         .filter { $0.createdAt.addingTimeInterval(1.days.timeInterval) > Date() }
                         .sorted { $0.createdAt > $1.createdAt } ?? []

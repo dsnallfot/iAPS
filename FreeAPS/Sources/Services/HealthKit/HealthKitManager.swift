@@ -211,9 +211,9 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                         Config.freeAPSMetaKey: true
                     ]
 
-                    // Check if fpuID is not empty, then set HKMetadataKeyExternalUUID
-                    if !$0.fpuID!.isEmpty {
-                        metadata[HKMetadataKeyExternalUUID] = $0.fpuID
+                    // Check if fpuID is not nil and not empty, then set HKMetadataKeyExternalUUID
+                    if let fpuID = $0.fpuID, !fpuID.isEmpty {
+                        metadata[HKMetadataKeyExternalUUID] = fpuID
                     }
 
                     return HKQuantitySample(
