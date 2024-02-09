@@ -115,23 +115,23 @@ extension Settings {
                             Text("Ändra inställningar (json)")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
                         }
-                        Group {
-                            HStack {
-                                Text("Profil & inställningar")
-                                Button(action: {
-                                    state.uploadProfileAndSettings(true)
-                                }) {
-                                    HStack {
-                                        Image(systemName: "icloud.and.arrow.up")
-                                        Text("Nightscout ")
-                                    }
-                                }
-                                .buttonStyle(DiscoButtonStyle())
+                        /* Group {
+                             HStack {
+                                 Text("Profil & inställningar")
+                                 Button(action: {
+                                     state.uploadProfileAndSettings(true)
+                                 }) {
+                                     HStack {
+                                         Image(systemName: "icloud.and.arrow.up")
+                                         Text("Nightscout ")
+                                     }
+                                 }
+                                 .buttonStyle(DiscoButtonStyle())
 
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                // .buttonStyle(.borderedProminent)
-                            }
-                        }
+                                 .frame(maxWidth: .infinity, alignment: .trailing)
+                                 // .buttonStyle(.borderedProminent)
+                             }
+                         } */
                     }
                 } header: { Text("Utvecklare") }
 
@@ -152,7 +152,7 @@ extension Settings {
             .navigationTitle("Settings")
             .navigationBarItems(trailing: Button("Close", action: state.hideSettingsModal))
             .navigationBarTitleDisplayMode(.inline)
-            .onDisappear(perform: { state.uploadProfileAndSettings(false) })
+            // .onDisappear(perform: { state.uploadProfileAndSettings(false) })
         }
     }
 }

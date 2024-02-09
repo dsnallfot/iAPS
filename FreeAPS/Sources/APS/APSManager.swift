@@ -237,11 +237,11 @@ final class BaseAPSManager: APSManager, Injectable {
 
                 // Open loop completed
                 guard self.settings.closedLoop else {
-                    self.nightscout.uploadStatus()
+                    // self.nightscout.uploadStatus()
                     return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }
 
-                self.nightscout.uploadStatus()
+                // self.nightscout.uploadStatus()
 
                 // Closed loop - enact suggested
                 return self.enactSuggested()
@@ -578,7 +578,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     } else {
                         debug(.apsManager, "Pump suspended by Announcement")
                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                        self.nightscout.uploadStatus()
+                        // self.nightscout.uploadStatus()
                     }
                 }
             case .resume:
@@ -591,7 +591,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     } else {
                         debug(.apsManager, "Pump resumed by Announcement")
                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                        self.nightscout.uploadStatus()
+                        // self.nightscout.uploadStatus()
                     }
                 }
             }
@@ -729,7 +729,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     $0.enactedSuggestionDidUpdate(enacted)
                 }
             }
-            nightscout.uploadStatus()
+            // nightscout.uploadStatus()
             statistics()
         }
     }
@@ -1200,7 +1200,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     )
                 )
                 storage.save(dailystat, as: file)
-                nightscout.uploadStatistics(dailystat: dailystat)
+                // nightscout.uploadStatistics(dailystat: dailystat)
 
                 let saveStatsCoreData = StatsData(context: self.coredataContext)
                 saveStatsCoreData.lastrun = Date()

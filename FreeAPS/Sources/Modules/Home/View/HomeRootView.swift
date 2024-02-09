@@ -158,8 +158,10 @@ extension Home {
         @ViewBuilder func header(_: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
-                    cobIobView
-                    pumpView
+                    /* cobIobView
+                     pumpView */
+                    // To add: Fetch IOB & COB from NS
+                    Text("iAPS Caregiver")
                 }
             }
             .frame(maxWidth: 328)
@@ -371,84 +373,84 @@ extension Home {
             HStack(alignment: .center) {
                 Spacer()
 
-                Button(action: {
-                    state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
-                    if let carbsReq = state.carbsRequired {
-                        HStack {
-                            Image(systemName: "fork.knife")
-                                .offset(x: 2, y: 0)
-                                .foregroundColor(.loopYellow)
-                            Text(numberFormatter.string(from: carbsReq as NSNumber)!)
-                                .foregroundColor(.primary)
+                /* Button(action: {
+                     state.showModal(for: .addCarbs(editMode: false, override: false)) }) {
+                     if let carbsReq = state.carbsRequired {
+                         HStack {
+                             Image(systemName: "fork.knife")
+                                 .offset(x: 2, y: 0)
+                                 .foregroundColor(.loopYellow)
+                             Text(numberFormatter.string(from: carbsReq as NSNumber)!)
+                                 .foregroundColor(.primary)
 
-                            Text("g kh behövs")
-                                .offset(x: -5, y: 0)
-                                .foregroundColor(.primary)
-                        }
-                        .font(.caption)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 9)
-                        .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.loopYellow.opacity(1), lineWidth: 1.5)
-                        .shadow(
-                            color: Color.loopYellow.opacity(colorScheme == .dark ? 1 : 1),
-                            radius: colorScheme == .dark ? 1 : 1
-                        )
-                )
-                if state.carbsRequired != nil {
-                    Spacer()
-                }
+                             Text("g kh behövs")
+                                 .offset(x: -5, y: 0)
+                                 .foregroundColor(.primary)
+                         }
+                         .font(.caption)
+                         .frame(maxHeight: 20)
+                         .padding(.vertical, 3)
+                         .padding(.leading, 9)
+                         .padding(.trailing, 4)
+                         .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                         .cornerRadius(13)
+                     }
+                 }
+                 .overlay(
+                     RoundedRectangle(cornerRadius: 13)
+                         .stroke(Color.loopYellow.opacity(1), lineWidth: 1.5)
+                         .shadow(
+                             color: Color.loopYellow.opacity(colorScheme == .dark ? 1 : 1),
+                             radius: colorScheme == .dark ? 1 : 1
+                         )
+                 )
+                 if state.carbsRequired != nil {
+                     Spacer()
+                 } */
 
-                Button(action: {
-                    state.showModal(for: .bolus(
-                        waitForSuggestion: true,
-                        fetch: false
-                    ))
-                    // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
-                }) {
-                    if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
-                        HStack {
-                            Image(systemName: "drop.fill")
-                                .offset(x: 5, y: 0)
-                                .foregroundColor(.insulin)
-                            Text("Insulinbehov")
-                                .offset(x: 3, y: 0)
-                                .foregroundColor(.primary)
-                            // Text(insulinNeededFormatter.string(from: insulinNeeded as NSNumber) ?? "N/A")
-                            Text(roundedOrefInsulinRec.formatted())
-                                .foregroundColor(.primary)
+                /* Button(action: {
+                     state.showModal(for: .bolus(
+                         waitForSuggestion: true,
+                         fetch: false
+                     ))
+                     // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
+                 }) {
+                     if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
+                         HStack {
+                             Image(systemName: "drop.fill")
+                                 .offset(x: 5, y: 0)
+                                 .foregroundColor(.insulin)
+                             Text("Insulinbehov")
+                                 .offset(x: 3, y: 0)
+                                 .foregroundColor(.primary)
+                             // Text(insulinNeededFormatter.string(from: insulinNeeded as NSNumber) ?? "N/A")
+                             Text(roundedOrefInsulinRec.formatted())
+                                 .foregroundColor(.primary)
 
-                            Text("E")
-                                .offset(x: -5, y: 0)
-                                .foregroundColor(.primary)
-                        }
-                        .font(.caption)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 4)
-                        .padding(.trailing, 4)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.insulin.opacity(1), lineWidth: 1.5)
-                        .shadow(
-                            color: Color.insulin.opacity(colorScheme == .dark ? 1 : 1),
-                            radius: colorScheme == .dark ? 1 : 1
-                        )
-                )
-                if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
-                    Spacer()
-                }
+                             Text("E")
+                                 .offset(x: -5, y: 0)
+                                 .foregroundColor(.primary)
+                         }
+                         .font(.caption)
+                         .frame(maxHeight: 20)
+                         .padding(.vertical, 3)
+                         .padding(.leading, 4)
+                         .padding(.trailing, 4)
+                         .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                         .cornerRadius(13)
+                     }
+                 }
+                 .overlay(
+                     RoundedRectangle(cornerRadius: 13)
+                         .stroke(Color.insulin.opacity(1), lineWidth: 1.5)
+                         .shadow(
+                             color: Color.insulin.opacity(colorScheme == .dark ? 1 : 1),
+                             radius: colorScheme == .dark ? 1 : 1
+                         )
+                 )
+                 if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
+                     Spacer()
+                 } */
 
                 Button(action: {
                     state.showModal(for: .addTempTarget)
@@ -512,76 +514,76 @@ extension Home {
                     Spacer()
                 }
 
-                Button(action: {
-                    if state.pumpDisplayState != nil {
-                        state.setupPump = true
-                    }
-                }) {
-                    if state.pumpSuspended {
-                        HStack {
-                            Image(systemName: "exclamationmark.triangle")
-                                .offset(x: 0, y: 0)
-                                .foregroundColor(.orange)
+                /* Button(action: {
+                     if state.pumpDisplayState != nil {
+                         state.setupPump = true
+                     }
+                 }) {
+                     if state.pumpSuspended {
+                         HStack {
+                             Image(systemName: "exclamationmark.triangle")
+                                 .offset(x: 0, y: 0)
+                                 .foregroundColor(.orange)
 
-                            Text("Pump suspended")
-                                .offset(x: -4, y: 0)
-                                .foregroundColor(.primary)
-                        }
-                        .font(.caption)
-                        .frame(maxHeight: 20)
-                        .padding(.vertical, 3)
-                        .padding(.leading, 9)
-                        .padding(.trailing, 5)
-                        .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                        .cornerRadius(13)
-                    }
-                }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 13)
-                        .stroke(Color.gray.opacity(1), lineWidth: 1.5)
-                        .shadow(
-                            color: Color.gray.opacity(colorScheme == .dark ? 1 : 1),
-                            radius: colorScheme == .dark ? 1 : 1
-                        )
-                )
-                if state.pumpSuspended {
-                    Spacer()
-                }
+                             Text("Pump suspended")
+                                 .offset(x: -4, y: 0)
+                                 .foregroundColor(.primary)
+                         }
+                         .font(.caption)
+                         .frame(maxHeight: 20)
+                         .padding(.vertical, 3)
+                         .padding(.leading, 9)
+                         .padding(.trailing, 5)
+                         .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                         .cornerRadius(13)
+                     }
+                 }
+                 .overlay(
+                     RoundedRectangle(cornerRadius: 13)
+                         .stroke(Color.gray.opacity(1), lineWidth: 1.5)
+                         .shadow(
+                             color: Color.gray.opacity(colorScheme == .dark ? 1 : 1),
+                             radius: colorScheme == .dark ? 1 : 1
+                         )
+                 )
+                 if state.pumpSuspended {
+                     Spacer()
+                 } */
 
-                Button(action: {
-                    state.showModal(for: .preferencesEditor)
-                })
-                    {
-                        if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle")
-                                    .offset(x: 0, y: 0)
-                                    .foregroundColor(.orange)
+                /* Button(action: {
+                     state.showModal(for: .preferencesEditor)
+                 })
+                     {
+                         if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                             HStack {
+                                 Image(systemName: "exclamationmark.triangle")
+                                     .offset(x: 0, y: 0)
+                                     .foregroundColor(.orange)
 
-                                Text("Max IOB: 0")
-                                    .offset(x: -4, y: 0)
-                                    .foregroundColor(.primary)
-                            }
-                            .font(.caption)
-                            .frame(maxHeight: 20)
-                            .padding(.vertical, 3)
-                            .padding(.leading, 9)
-                            .padding(.trailing, 4)
-                            .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                            .cornerRadius(13)
-                        }
-                    }
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 13)
-                            .stroke(Color.loopRed.opacity(1), lineWidth: 1.5)
-                            .shadow(
-                                color: Color.loopRed.opacity(colorScheme == .dark ? 1 : 1),
-                                radius: colorScheme == .dark ? 1 : 1
-                            )
-                    )
-                if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
-                    Spacer()
-                }
+                                 Text("Max IOB: 0")
+                                     .offset(x: -4, y: 0)
+                                     .foregroundColor(.primary)
+                             }
+                             .font(.caption)
+                             .frame(maxHeight: 20)
+                             .padding(.vertical, 3)
+                             .padding(.leading, 9)
+                             .padding(.trailing, 4)
+                             .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                             .cornerRadius(13)
+                         }
+                     }
+                     .overlay(
+                         RoundedRectangle(cornerRadius: 13)
+                             .stroke(Color.loopRed.opacity(1), lineWidth: 1.5)
+                             .shadow(
+                                 color: Color.loopRed.opacity(colorScheme == .dark ? 1 : 1),
+                                 radius: colorScheme == .dark ? 1 : 1
+                             )
+                     ) */
+                /* if state.closedLoop, state.settingsManager.preferences.maxIOB == 0 {
+                     Spacer()
+                 } */
             }
             .frame(maxWidth: .infinity, maxHeight: 26) // 40)
             .background(Color.clear)
@@ -744,60 +746,60 @@ extension Home {
                 .zIndex(1)
 
                 VStack {
-                    HStack {
-                        HStack {
-                            if state.pumpSuspended {
-                                Text("Basal")
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
-                                Text("--")
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                                    .offset(x: -2, y: 0)
-                            } else if let tempBasalString = tempBasalString {
-                                Text("Basal")
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
-                                Text(tempBasalString)
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
-                                    .offset(x: -2, y: 0)
-                            }
-                        }
-                        .font(.system(size: 12, weight: .bold))
-                        Spacer()
-                        HStack {
-                            if let evBG = state.eventualBG {
-                                if Decimal(evBG) > state.highGlucose {
-                                    Text(
-                                        "⇢ " + targetFormatter.string(
-                                            from: (
-                                                state.units == .mmolL ? evBG
-                                                    .asMmolL : Decimal(evBG)
-                                            ) as NSNumber
-                                        )!
-                                    )
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
-                                } else if Decimal(evBG) < state.lowGlucose {
-                                    Text(
-                                        "⇢ " + targetFormatter.string(
-                                            from: (
-                                                state.units == .mmolL ? evBG
-                                                    .asMmolL : Decimal(evBG)
-                                            ) as NSNumber
-                                        )!
-                                    )
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
-                                } else {
-                                    Text(
-                                        "⇢ " + targetFormatter.string(
-                                            from: (
-                                                state.units == .mmolL ? evBG
-                                                    .asMmolL : Decimal(evBG)
-                                            ) as NSNumber
-                                        )!
-                                    )
-                                    .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
-                                }
-                            }
-                        }
-                    }
+                    /* HStack {
+                         HStack {
+                             if state.pumpSuspended {
+                                 Text("Basal")
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                                 Text("--")
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                                     .offset(x: -2, y: 0)
+                             } else if let tempBasalString = tempBasalString {
+                                 Text("Basal")
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
+                                 Text(tempBasalString)
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
+                                     .offset(x: -2, y: 0)
+                             }
+                         }
+                         .font(.system(size: 12, weight: .bold))
+                         Spacer()
+                         HStack {
+                             if let evBG = state.eventualBG {
+                                 if Decimal(evBG) > state.highGlucose {
+                                     Text(
+                                         "⇢ " + targetFormatter.string(
+                                             from: (
+                                                 state.units == .mmolL ? evBG
+                                                     .asMmolL : Decimal(evBG)
+                                             ) as NSNumber
+                                         )!
+                                     )
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopYellow)
+                                 } else if Decimal(evBG) < state.lowGlucose {
+                                     Text(
+                                         "⇢ " + targetFormatter.string(
+                                             from: (
+                                                 state.units == .mmolL ? evBG
+                                                     .asMmolL : Decimal(evBG)
+                                             ) as NSNumber
+                                         )!
+                                     )
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopRed)
+                                 } else {
+                                     Text(
+                                         "⇢ " + targetFormatter.string(
+                                             from: (
+                                                 state.units == .mmolL ? evBG
+                                                     .asMmolL : Decimal(evBG)
+                                             ) as NSNumber
+                                         )!
+                                     )
+                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
+                                 }
+                             }
+                         }
+                     } */
 
                     Spacer()
                     HStack {
@@ -878,46 +880,46 @@ extension Home {
                         }
                     }.buttonStyle(.plain)
 
-                    Spacer()
-                    Button {
-                        state.showModal(for: .bolus(
-                            waitForSuggestion: true,
-                            fetch: false
-                        ))
-                        // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
-                    } label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "drop")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(state.disco ? .insulin : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
-                                Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
-                            }
-                        }
-                    }
+                    /* Spacer()
+                     Button {
+                         state.showModal(for: .bolus(
+                             waitForSuggestion: true,
+                             fetch: false
+                         ))
+                         // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
+                     } label: {
+                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                             Image(systemName: "drop")
+                                 .renderingMode(.template)
+                                 .frame(width: 27, height: 27)
+                                 .font(.system(size: 27, weight: .regular))
+                                 .foregroundColor(state.disco ? .insulin : .gray)
+                                 .padding(.top, 13)
+                                 .padding(.bottom, 7)
+                                 .padding(.leading, 7)
+                                 .padding(.trailing, 7)
+                             if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
+                                 Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
+                                     .offset(x: 0, y: 4)
+                             }
+                         }
+                     } */
 
                     Spacer()
-                    if state.allowManualTemp {
-                        Button { state.showModal(for: .manualTempBasal) }
-                        label: {
-                            Image(systemName: "hexagon")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .regular))
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                        }.foregroundColor(state.disco ? .insulin : .gray)
-                        Spacer()
-                    }
+                    /* if state.allowManualTemp {
+                         Button { state.showModal(for: .manualTempBasal) }
+                         label: {
+                             Image(systemName: "hexagon")
+                                 .renderingMode(.template)
+                                 .frame(width: 27, height: 27)
+                                 .font(.system(size: 27, weight: .regular))
+                                 .padding(.top, 13)
+                                 .padding(.bottom, 7)
+                                 .padding(.leading, 7)
+                                 .padding(.trailing, 7)
+                         }.foregroundColor(state.disco ? .insulin : .gray)
+                         Spacer()
+                     } */
 
                     Button { state.showModal(for: .addTempTarget) }
                     label: {
@@ -940,25 +942,25 @@ extension Home {
 
                     Spacer()
 
-                    Button { state.showModal(for: .overrideProfilesConfig) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "person")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(state.disco ? .zt : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if selectedProfile().isOn {
-                                Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
-                            }
-                        }
-                    }.buttonStyle(.plain)
-                    Spacer()
+                    /* Button { state.showModal(for: .overrideProfilesConfig) }
+                      label: {
+                          ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                              Image(systemName: "person")
+                                  .renderingMode(.template)
+                                  .frame(width: 27, height: 27)
+                                  .font(.system(size: 27, weight: .regular))
+                                  .foregroundColor(state.disco ? .zt : .gray)
+                                  .padding(.top, 13)
+                                  .padding(.bottom, 7)
+                                  .padding(.leading, 7)
+                                  .padding(.trailing, 7)
+                              if selectedProfile().isOn {
+                                  Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
+                                      .offset(x: 0, y: 4)
+                              }
+                          }
+                      }.buttonStyle(.plain)
+                     Spacer()*/
                     Button { state.showModal(for: .settings) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
@@ -1071,7 +1073,7 @@ extension Home {
                         timeInterval
                             .frame(width: 80, height: 40, alignment: .center)
 
-                        loopPanel
+                            // loopPanel
                             .frame(width: 50, height: 40, alignment: .center)
 
                         HStack(alignment: .center) {

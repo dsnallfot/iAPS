@@ -28,7 +28,7 @@ struct MainChartView: View {
         static let basalHeight: CGFloat = 65
         static let topYPadding: CGFloat = 10
         static let bottomYPadding: CGFloat = 65
-        static let minAdditionalWidth: CGFloat = 150
+        static let minAdditionalWidth: CGFloat = 40 // 150
         static let maxGlucose = 324
         static let minGlucose = 36
         static let yLinesCount = 4
@@ -183,7 +183,7 @@ struct MainChartView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 ZStack(alignment: .top) {
                     tempTargetsView(fullSize: fullSize).drawingGroup()
-                    basalView(fullSize: fullSize).drawingGroup()
+                    // basalView(fullSize: fullSize).drawingGroup()
                     mainView(fullSize: fullSize).id(Config.endID)
                         .drawingGroup()
                 }
@@ -306,7 +306,7 @@ struct MainChartView: View {
                 manualGlucoseView(fullSize: fullSize)
                 manualGlucoseCenterView(fullSize: fullSize)
                 announcementView(fullSize: fullSize)
-                predictionsView(fullSize: fullSize)
+                // predictionsView(fullSize: fullSize)
             }
             timeLabelsView(fullSize: fullSize)
         }
@@ -339,7 +339,7 @@ struct MainChartView: View {
         let additionalTime = CGFloat(TimeInterval(max) * 5.minutes.timeInterval - lastDeltaTime)
         let oneSecondWidth = oneSecondStep(viewWidth: viewWidth) / CGFloat(screenHours)
 
-        return Swift.min(Swift.max(additionalTime * oneSecondWidth, Config.minAdditionalWidth), 275)
+        return Swift.min(Swift.max(additionalTime * oneSecondWidth, Config.minAdditionalWidth), 40) // 275)
     }
 
     @Environment(\.colorScheme) var colorScheme
