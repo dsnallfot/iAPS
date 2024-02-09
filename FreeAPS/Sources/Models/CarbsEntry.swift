@@ -32,7 +32,7 @@ extension CarbsEntry {
         case carbs
         case fat
         case protein
-        case note
+        case note = "notes"
         case enteredBy
         case isFPU
         case fpuID
