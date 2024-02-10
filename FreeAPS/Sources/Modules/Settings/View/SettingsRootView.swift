@@ -68,7 +68,7 @@ extension Settings {
                         Group {
                             Text("Preferences")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
-                            Text("Pump Settings")
+                            Text("Pumpkonfiguration")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
                             Text("Autosense")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autosense), from: self)

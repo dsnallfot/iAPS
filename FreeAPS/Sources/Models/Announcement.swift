@@ -5,7 +5,7 @@ struct Announcement: JSON, Equatable, Hashable {
     let enteredBy: String
     let notes: String
 
-    static let remote = "iaps-remote"
+    static let remote = "remote"
 
     var action: AnnouncementAction? {
         let components = notes.replacingOccurrences(of: " ", with: "").split(separator: ":")
