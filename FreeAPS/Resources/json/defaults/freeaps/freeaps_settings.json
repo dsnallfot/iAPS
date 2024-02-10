@@ -9,7 +9,7 @@
   "localGlucosePort" : 8080,
   "debugOptions" : false,
   "insulinReqPercentage" : 70,
-  "skipBolusScreenAfterCarbs" : false,
+  "skipBolusScreenAfterCarbs" : true,
   "displayHR" : false,
   "cgm" : "nightscout",
   "uploadGlucose" : true,
@@ -52,5 +52,6 @@
   "sweetMealFactor": 2,
   "advancedCalc": false,
   "disco": true,
+  "carbsUrl" : "https://dn.se"
 
 }

@@ -1074,39 +1074,39 @@ extension Home {
                         timeInterval
                             .frame(width: 80, height: 40, alignment: .center)
 
-                            // loopPanel
-                            .frame(width: 50, height: 40, alignment: .center)
+                        /*    // loopPanel
+                             .frame(width: 50, height: 40, alignment: .center)
 
-                        HStack(alignment: .center) {
-                            Image(systemName: "chart.bar")
-                                .foregroundStyle(.secondary.opacity(1))
-                                .font(.system(size: 13))
-                                /* .shadow(
-                                 color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
-                                 radius: colorScheme == .dark ? 1 : 1
-                                 ) */
-                                .onTapGesture {
-                                    state.showModal(for: .statistics)
-                                }
-                                .frame(width: 40, height: 25, alignment: .center)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 13)
-                                        .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 13)
-                                                .stroke(
-                                                    colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary
-                                                        .opacity(0),
-                                                    lineWidth: 0.5
-                                                )
-                                        )
-                                        .shadow(
-                                            color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
-                                            radius: colorScheme == .dark ? 1 : 1
-                                        )
-                                )
-                        }
-                        .frame(width: 80, height: 40, alignment: .center)
+                         HStack(alignment: .center) {
+                             Image(systemName: "chart.bar")
+                                 .foregroundStyle(.secondary.opacity(1))
+                                 .font(.system(size: 13))
+                                 /* .shadow(
+                                  color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
+                                  radius: colorScheme == .dark ? 1 : 1
+                                  ) */
+                                 .onTapGesture {
+                                     state.showModal(for: .statistics)
+                                 }
+                                 .frame(width: 40, height: 25, alignment: .center)
+                                 .background(
+                                     RoundedRectangle(cornerRadius: 13)
+                                         .fill(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
+                                         .overlay(
+                                             RoundedRectangle(cornerRadius: 13)
+                                                 .stroke(
+                                                     colorScheme == .dark ? Color.secondary.opacity(0.3) : Color.secondary
+                                                         .opacity(0),
+                                                     lineWidth: 0.5
+                                                 )
+                                         )
+                                         .shadow(
+                                             color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
+                                             radius: colorScheme == .dark ? 1 : 1
+                                         )
+                                 )
+                         }
+                         .frame(width: 80, height: 40, alignment: .center)*/
                         Spacer()
                     }
                     .padding(.top, 20)
