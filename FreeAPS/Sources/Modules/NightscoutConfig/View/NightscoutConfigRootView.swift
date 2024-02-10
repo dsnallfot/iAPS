@@ -121,8 +121,8 @@ extension NightscoutConfig {
                 }
 
                 Section {
-                     Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
-                 } header: { Text("Tillåt fjärrstyrning av iAPS") }
+                    Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
+                } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
             .navigationTitle("Nightscout")
