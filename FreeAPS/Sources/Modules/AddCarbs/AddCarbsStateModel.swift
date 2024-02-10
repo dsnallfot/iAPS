@@ -20,7 +20,7 @@ extension AddCarbs {
         @Published var note: String = ""
         @Published var id_: String = ""
         @Published var summary: String = ""
-        @Published var skipBolus: Bool = false
+        @Published var skipBolus: Bool = true
         @Published var isEnabled = false
         @Published var carbRatio: Decimal = 0
         @Published var cob: Decimal = 0

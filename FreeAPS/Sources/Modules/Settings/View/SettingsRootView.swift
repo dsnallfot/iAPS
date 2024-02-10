@@ -11,13 +11,13 @@ extension Settings {
         var body: some View {
             Form {
                 Section {
-                    Toggle("Closed loop", isOn: $state.closedLoop)
+                    // Toggle("Closed loop", isOn: $state.closedLoop)
                 }
                 header: {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
                             "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
-                                "\nBuild Expires: " + expirationDate
+                                "\nBuild Expires: " + expirationDate + "\nAnvändare: Pappa"
                         ).textCase(nil)
                     } else {
                         Text(
@@ -27,37 +27,37 @@ extension Settings {
                 }
 
                 Section {
-                    Text("Pump").navigationLink(to: .pumpConfig, from: self)
+                    // Text("Pump").navigationLink(to: .pumpConfig, from: self)
                     Text("CGM").navigationLink(to: .cgm, from: self)
                     Text("Watch").navigationLink(to: .watch, from: self)
                 } header: { Text("Devices") }
 
                 Section {
                     Text("Nightscout").navigationLink(to: .nighscoutConfig, from: self)
-                    if HKHealthStore.isHealthDataAvailable() {
-                        Text("Apple Health").navigationLink(to: .healthkit, from: self)
-                    }
+                    /* if HKHealthStore.isHealthDataAvailable() {
+                         Text("Apple Health").navigationLink(to: .healthkit, from: self)
+                     } */
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
                 } header: { Text("Services") }
 
-                Section {
-                    Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
-                    Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
-                    Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
-                    Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
-                    Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
-                } header: { Text("Konfigurera") }
+                /* Section {
+                     Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
+                     Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
+                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
+                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
+                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
+                 } header: { Text("Konfigurera") }
 
-                Section {
-                    Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
-                    Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
-                } header: { Text("OpenAPS") }
+                 Section {
+                     Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
+                     Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
+                 } header: { Text("OpenAPS") }*/
 
                 Section {
                     Text("App ikoner").navigationLink(to: .iconConfig, from: self)
                     Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
-                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
-                    Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
+                    // Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
+                    // Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
                     Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
                     // Toggle("Animated Background", isOn: $state.animatedBackground)
                 } header: { Text("Extra funktioner") }
@@ -68,7 +68,7 @@ extension Settings {
                         Group {
                             Text("Preferences")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
-                            Text("Pump Settings")
+                            Text("Pumpkonfiguration")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
                             Text("Autosense")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autosense), from: self)

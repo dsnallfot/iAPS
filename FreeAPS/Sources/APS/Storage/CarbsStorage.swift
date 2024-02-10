@@ -165,7 +165,7 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
 
     // Test to just sync -6h instead of -24 to reduce data uploads every loop
     func syncDate() -> Date {
-        Date().addingTimeInterval(-6.hours.timeInterval)
+        Date().addingTimeInterval(-24.hours.timeInterval)
     }
 
     func recent() -> [CarbsEntry] {
