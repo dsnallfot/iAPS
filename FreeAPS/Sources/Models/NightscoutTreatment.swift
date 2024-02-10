@@ -26,7 +26,7 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     var fpuID: String?
 
     static let local =
-        "caregiver" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version
+        "Pappa" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version
 
     static let empty = NigtscoutTreatment(from: "{}")!
 

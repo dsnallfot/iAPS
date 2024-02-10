@@ -11,8 +11,8 @@ struct TempTarget: JSON, Identifiable, Equatable, Hashable {
     let reason: String?
 
     static let manual =
-        "caregiver" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version
-    static let custom = "Temp target"
+        "Pappa" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version
+    static let custom = "Tillfälligt mål"
     static let cancel = "Cancel"
 
     var displayName: String {
