@@ -201,7 +201,7 @@ extension AddTempTarget {
 
         private func presetView(for preset: TempTarget) -> some View {
             var low = preset.targetBottom
-            var high = preset.targetTop
+            var high = preset.targetBottom // change to only use targetBottom instead of targetTop
             if state.units == .mmolL {
                 low = low?.asMmolL
                 high = high?.asMmolL

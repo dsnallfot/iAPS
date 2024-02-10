@@ -134,9 +134,9 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
                     }
                 }
             }
-            
+
             // MARK: Save to CoreData. TEST
-            
+
             var cbs: Decimal = 0
             var carbDate = Date()
             if entries.isNotEmpty {
@@ -146,10 +146,10 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
             if cbs != 0 {
                 self.coredataContext.perform {
                     let carbDataForStats = Carbohydrates(context: self.coredataContext)
-                    
+
                     carbDataForStats.date = carbDate
                     carbDataForStats.carbs = cbs as NSDecimalNumber
-                    
+
                     try? self.coredataContext.save()
                 }
             }
