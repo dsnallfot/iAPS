@@ -790,14 +790,14 @@ extension BaseNightscoutManager: PumpHistoryObserver {
 extension BaseNightscoutManager: CarbsObserver {
     func carbsDidUpdate(_: [CarbsEntry]) {
         uploadCarbs()
-        uploadTempTargets() //Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
+        uploadTempTargets() // Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
     }
 }
 
 extension BaseNightscoutManager: TempTargetsObserver {
     func tempTargetsDidUpdate(_: [TempTarget]) {
         uploadTempTargets()
-        uploadCarbs() //Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
+        uploadCarbs() // Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
     }
 }
 

@@ -12,6 +12,7 @@ extension OverrideProfilesConfig {
         @State private var showingDetail = false
         @State private var alertSring = ""
         @State var isSheetPresented: Bool = false
+        @State var index: Int = 1
 
         @Environment(\.dismiss) var dismiss
         @Environment(\.managedObjectContext) var moc
@@ -292,6 +293,9 @@ extension OverrideProfilesConfig {
                 .asMmolL : (preset.target ?? 0) as Decimal
             let duration = (preset.duration ?? 0) as Decimal
             let name = ((preset.name ?? "") == "") || (preset.name?.isEmpty ?? true) ? "" : preset.name!
+            let identifier = ((preset.emoji ?? "") == "") || (preset.emoji?.isEmpty ?? true) ||
+                (preset.emoji ?? "") == "\u{0022}\u{0022}" ?
+                "" : preset.emoji!
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"

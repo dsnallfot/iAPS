@@ -66,6 +66,7 @@ extension Home {
         @Published var hours: Int16 = 3
         @Published var disco: Bool = true
         @Published var insulinRecommended: Decimal = 0
+        @Published var overrideHistory: [OverrideHistory] = []
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -82,8 +83,10 @@ extension Home {
             setupReservoir()
             setupAnnouncements()
             setupCurrentPumpTimezone()
+            setupOverrideHistory()
 
             suggestion = provider.suggestion
+            overrideHistory = provider.overrideHistory()
             uploadStats = settingsManager.settings.uploadStats
             enactedSuggestion = provider.enactedSuggestion
             units = settingsManager.settings.units
@@ -117,6 +120,7 @@ extension Home {
             broadcaster.register(EnactedSuggestionObserver.self, observer: self)
             broadcaster.register(PumpBatteryObserver.self, observer: self)
             broadcaster.register(PumpReservoirObserver.self, observer: self)
+            broadcaster.register(OverrideObserver.self, observer: self)
 
             animatedBackground = settingsManager.settings.animatedBackground
 
@@ -221,12 +225,14 @@ extension Home {
         }
 
         func cancelProfile() {
-            coredataContext.perform { [self] in
-                let profiles = Override(context: self.coredataContext)
-                profiles.enabled = false
-                profiles.date = Date()
-                try? self.coredataContext.save()
-            }
+            /* coredataContext.perform { [self] in
+                 let profiles = Override(context: self.coredataContext)
+                 profiles.enabled = false
+                 profiles.date = Date()
+                 try? self.coredataContext.save()
+             } */
+            OverrideStorage().cancelProfile()
+            setupOverrideHistory()
         }
 
         func saveSettings() {
@@ -332,6 +338,13 @@ extension Home {
             }
         }
 
+        private func setupOverrideHistory() {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.overrideHistory = self.provider.overrideHistory()
+            }
+        }
+
         private func setupAnnouncements() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -424,7 +437,8 @@ extension Home.StateModel:
     EnactedSuggestionObserver,
     PumpBatteryObserver,
     PumpReservoirObserver,
-    PumpTimeZoneObserver
+    PumpTimeZoneObserver,
+    OverrideObserver
 {
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
@@ -434,6 +448,11 @@ extension Home.StateModel:
         self.suggestion = suggestion
         carbsRequired = suggestion.carbsReq
         setStatusTitle()
+        setupOverrideHistory()
+    }
+
+    func overrideHistoryDidUpdate(_: [OverrideHistory]) {
+        setupOverrideHistory()
     }
 
     func settingsDidChange(_ settings: FreeAPSSettings) {
@@ -453,6 +472,7 @@ extension Home.StateModel:
         thresholdLines = settingsManager.settings.rulerMarks
 
         setupGlucose()
+        setupOverrideHistory()
     }
 
     func pumpHistoryDidUpdate(_: [PumpHistoryEvent]) {
@@ -481,6 +501,7 @@ extension Home.StateModel:
     func enactedSuggestionDidUpdate(_ suggestion: Suggestion) {
         enactedSuggestion = suggestion
         setStatusTitle()
+        setupOverrideHistory()
     }
 
     func pumpBatteryDidChange(_: Battery) {
