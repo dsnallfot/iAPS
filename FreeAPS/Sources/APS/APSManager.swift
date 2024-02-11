@@ -621,6 +621,45 @@ final class BaseAPSManager: APSManager, Injectable {
                     self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
                 }
             }
+
+        case let .meal(carbs, fat, protein):
+            let date = announcement.createdAt.date
+
+            guard carbs > 0 || fat > 0 || protein > 0 else {
+                return
+            }
+
+            carbsStorage.storeCarbs([CarbsEntry(
+                id: UUID().uuidString,
+                createdAt: date,
+                actualDate: date,
+                carbs: carbs,
+                fat: fat,
+                protein: protein,
+                note: "Remote",
+                enteredBy: "Nightscout operator",
+                isFPU: fat > 0 || protein > 0,
+                fpuID: (fat > 0 || protein > 0) ? UUID().uuidString : nil
+            )])
+
+            announcementsStorage.storeAnnouncements([announcement], enacted: true)
+            debug(
+                .apsManager,
+                "Remote Meal by Announcement succeeded. Carbs: \(carbs), fat: \(fat), protein: \(protein)."
+            )
+        case let .override(name):
+            guard !name.isEmpty else { return }
+            if name.lowercased() == "cancel" {
+                OverrideStorage().cancelProfile()
+                announcementsStorage.storeAnnouncements([announcement], enacted: true)
+                debug(.apsManager, "Override Canceled by Announcement succeeded.")
+                return
+            }
+
+            guard let override = CoreDataStorage().fetchProfile(name) else { return }
+            CoreDataStorage().activateOverride(override)
+            announcementsStorage.storeAnnouncements([announcement], enacted: true)
+            debug(.apsManager, "Remote Override by Announcement succeeded.")
         }
     }
 
