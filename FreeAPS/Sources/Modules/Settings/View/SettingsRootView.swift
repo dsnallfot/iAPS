@@ -17,7 +17,8 @@ extension Settings {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
                             "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
-                                "\nBuild Expires: " + expirationDate + "\nAnvändare: Pappa"
+                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + NightscoutConfig.Config
+                                .userKey // Testar enhetlig userKey
                         ).textCase(nil)
                     } else {
                         Text(

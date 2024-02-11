@@ -46,6 +46,18 @@ extension NightscoutConfig {
                             ProgressView()
                         }
                     }
+                } header: {
+                    Text("Nightscout URL och Secret")
+                }
+
+                Section {
+                    TextField("Räkna KH URL", text: $state.carbsUrl)
+                        .disableAutocorrection(true)
+                        .textContentType(.URL)
+                        .autocapitalization(.none)
+                        .keyboardType(.URL)
+                } header: {
+                    Text("URL till Räkna KH")
                 }
 
                 Section {
@@ -60,6 +72,8 @@ extension NightscoutConfig {
                          Toggle("Ladda även upp statistik", isOn: $state.uploadStats)
                          Toggle("Ladda även upp glukosvärden", isOn: $state.uploadGlucose)
                      } */
+                    /* TextField("enteredBy", text: $state.enteringUser)
+                     .disableAutocorrection(true) */
                 } header: {
                     Text("Tillåt uppladdning")
                 }
