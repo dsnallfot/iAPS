@@ -252,7 +252,15 @@ extension AddCarbs {
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                (state.skipBolus && !override && !editMode) ? "Save" :
+                                (state.skipBolus && !override && !editMode) ? (
+                                    (
+                                        state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state
+                                            .protein <= state
+                                            .maxCarbs
+                                    ) ?
+                                        "Spara" :
+                                        "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
+                                ) :
                                     (
                                         (
                                             state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state

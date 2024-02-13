@@ -10,9 +10,8 @@ struct TempTarget: JSON, Identifiable, Equatable, Hashable {
     let enteredBy: String?
     let reason: String?
 
-    /* static let manual =
-     "Pappa" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version */
-    static var manual = NightscoutConfig.Config.userKey // Testar enhetlig userKey
+    // static var manual = NightscoutConfig.Config.userKey // Testar enhetlig userKey
+    static var manual = FreeAPSSettings().caregiver
     static let custom = "Tillfälligt mål"
     static let cancel = "Cancel"
 

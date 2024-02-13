@@ -15,39 +15,39 @@ extension PumpSettingsEditor {
         var body: some View {
             Form {
                 Section(header: Text("Delivery limits")) {
-                    HStack {
-                        Text("Max Basal")
-                        DecimalTextField("U/hr", value: $state.maxBasal, formatter: formatter)
-                    }
-                    HStack {
-                        Text("Max Bolus")
-                        DecimalTextField("U", value: $state.maxBolus, formatter: formatter)
-                    }
+                    /* HStack {
+                         Text("Max Basal")
+                         DecimalTextField("U/hr", value: $state.maxBasal, formatter: formatter)
+                     }
+                     HStack {
+                         Text("Max Bolus")
+                         DecimalTextField("U", value: $state.maxBolus, formatter: formatter)
+                     } */
                     HStack {
                         Text("Max Carbs")
                         DecimalTextField("g", value: $state.maxCarbs, formatter: formatter)
                     }
                 }
 
-                Section(header: Text("Duration of Insulin Action")) {
-                    HStack {
-                        Text("DIA")
-                        DecimalTextField("hours", value: $state.dia, formatter: formatter)
-                    }
-                }
+                /* Section(header: Text("Duration of Insulin Action")) {
+                     HStack {
+                         Text("DIA")
+                         DecimalTextField("hours", value: $state.dia, formatter: formatter)
+                     }
+                 }
 
-                Section {
-                    HStack {
-                        if state.syncInProgress {
-                            ProgressView().padding(.trailing, 10)
-                        }
-                        Button { state.save() }
-                        label: {
-                            Text(state.syncInProgress ? "Saving..." : "Save on Pump")
-                        }
-                        .disabled(state.syncInProgress)
-                    }
-                }
+                 Section {
+                     HStack {
+                         if state.syncInProgress {
+                             ProgressView().padding(.trailing, 10)
+                         }
+                         Button { state.save() }
+                         label: {
+                             Text(state.syncInProgress ? "Saving..." : "Save on Pump")
+                         }
+                         .disabled(state.syncInProgress)
+                     }
+                 } */
             }
             .onAppear(perform: configureView)
             .navigationTitle("Pumpinställningar")

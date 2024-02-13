@@ -12,10 +12,8 @@ struct CarbsEntry: JSON, Equatable, Hashable {
     let isFPU: Bool?
     let fpuID: String?
 
-    /* static let manual =
-     "Pappa" // Default: "iAPS" Change to "Caregiver" when/if implementing Caregiver remote controll sim version */
-
-    static var manual = NightscoutConfig.Config.userKey // Testar enhetlig userKey
+    // static var manual = NightscoutConfig.Config.userKey // Testar enhetlig userKey
+    static var manual = FreeAPSSettings().caregiver
     static let appleHealth = "applehealth"
 
     static func == (lhs: CarbsEntry, rhs: CarbsEntry) -> Bool {

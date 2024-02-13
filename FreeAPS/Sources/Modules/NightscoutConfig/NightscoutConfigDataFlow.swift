@@ -6,7 +6,6 @@ enum NightscoutConfig {
         static let urlKey = "NightscoutConfig.url"
         static let secretKey = "NightscoutConfig.secret"
         static let carbsUrlKey = "NightscoutConfig.carbsUrl"
-        static let userKey = "Pappa" // Uppdatera här så uppdateras enteredBy överallt
     }
 }
 

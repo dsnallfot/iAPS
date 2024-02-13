@@ -42,7 +42,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var yGridLines: Bool = true
     var oneDimensionalGraph: Bool = false
     var rulerMarks: Bool = false
-    var maxCarbs: Decimal = 1000
+    var maxCarbs: Decimal = 30
     var displayFatAndProteinOnWatch: Bool = false
     var onlyAutotuneBasals: Bool = false
     var overrideFactor: Decimal = 0.8
@@ -55,6 +55,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var advancedCalc: Bool = false
     var disco: Bool = true
     var useLiveActivity: Bool = false
+    var caregiver: String = "Pappa" // change string to show as enteredBy in all NS related
 }
 
 extension FreeAPSSettings: Decodable {
@@ -282,6 +283,10 @@ extension FreeAPSSettings: Decodable {
 
         if let useLiveActivity = try? container.decode(Bool.self, forKey: .useLiveActivity) {
             settings.useLiveActivity = useLiveActivity
+        }
+
+        if let caregiver = try? container.decode(String.self, forKey: .caregiver) {
+            settings.caregiver = caregiver
         }
 
         self = settings

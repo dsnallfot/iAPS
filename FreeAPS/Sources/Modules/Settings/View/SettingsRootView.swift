@@ -17,8 +17,8 @@ extension Settings {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
                             "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
-                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + NightscoutConfig.Config
-                                .userKey // Testar enhetlig userKey
+                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + FreeAPSSettings().caregiver
+                            // Testar enhetlig userKey
                         ).textCase(nil)
                     } else {
                         Text(
@@ -41,18 +41,18 @@ extension Settings {
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
                 } header: { Text("Services") }
 
-                /* Section {
-                     Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
-                     Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
-                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
-                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
-                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
-                 } header: { Text("Konfigurera") }
+                Section {
+                    Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
+                    // Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
+                    // Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
+                    // Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
+                    // Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
+                } header: { Text("Konfigurera") }
 
-                 Section {
+                /* Section {
                      Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
                      Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
-                 } header: { Text("OpenAPS") }*/
+                 } header: { Text("OpenAPS") } */
 
                 Section {
                     Text("App ikoner").navigationLink(to: .iconConfig, from: self)
