@@ -330,27 +330,27 @@ extension AddCarbs {
                         VStack {
                             HStack {
                                 Spacer()
-                                HStack {
-                                    Text("Insulinkvot")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: 4)
-                                    Text(state.carbRatio.formatted())
-                                        .fontWeight(.semibold)
-                                    Text("g/E")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: -6)
-                                        .padding(.trailing, 10)
-                                }
-                                HStack {
-                                    Text("Aktiva kolhydrater")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: 4)
-                                    Text(state.cob.formatted())
-                                        .fontWeight(.semibold)
-                                    Text("g")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: -6)
-                                }
+                                /* HStack {
+                                     Text("Insulinkvot")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: 4)
+                                     Text(state.carbRatio.formatted())
+                                         .fontWeight(.semibold)
+                                     Text("g/E")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: -6)
+                                         .padding(.trailing, 10)
+                                 }
+                                 HStack {
+                                     Text("Aktiva kolhydrater")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: 4)
+                                     Text(state.cob.formatted())
+                                         .fontWeight(.semibold)
+                                     Text("g")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: -6)
+                                 } */
                                 Spacer()
                             }
                             .padding(.horizontal, 10)

@@ -233,20 +233,18 @@ extension Home {
                 highGlucose: $state.highGlucose
             )
             .onTapGesture {
-                if state.alarm == nil {
-                    state.showModal(for: .snooze)
-                } else {
-                    state.showModal(for: .snooze)
-                }
+                UIApplication.shared.open(
+                    URL(
+                        string: "loop://"
+                    )!,
+                    options: [:],
+                    completionHandler: nil
+                )
             }
             .onLongPressGesture {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
-                if state.alarm == nil {
-                    state.openCGM()
-                } else {
-                    state.openCGM()
-                }
+                state.showModal(for: .snooze)
             }
         }
 
@@ -881,30 +879,38 @@ extension Home {
                         }
                     }.buttonStyle(.plain)
 
-                    /* Spacer()
-                     Button {
-                         state.showModal(for: .bolus(
+                    Spacer()
+                    Button {
+                        UIApplication.shared.open(
+                            URL(
+                                string: "shortcuts://run-shortcut?name=Remote%20Bolus"
+                            )!,
+                            options: [:],
+                            completionHandler: nil
+                        )
+
+                        /* state.showModal(for: .bolus(
                              waitForSuggestion: true,
                              fetch: false
-                         ))
-                         // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
-                     } label: {
-                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                             Image(systemName: "drop")
-                                 .renderingMode(.template)
-                                 .frame(width: 27, height: 27)
-                                 .font(.system(size: 27, weight: .regular))
-                                 .foregroundColor(state.disco ? .insulin : .gray)
-                                 .padding(.top, 13)
-                                 .padding(.bottom, 7)
-                                 .padding(.leading, 7)
-                                 .padding(.trailing, 7)
-                             if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
-                                 Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
-                                     .offset(x: 0, y: 4)
-                             }
-                         }
-                     } */
+                         )) */
+                        // state.apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview
+                    } label: {
+                        // ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "drop")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .regular))
+                            .foregroundColor(state.disco ? .insulin : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                        /* if let insulinNeeded = state.suggestion?.insulinForManualBolus, insulinNeeded > 0.2 {
+                             Circle().fill(state.disco ? Color.insulin : Color.gray).frame(width: 6, height: 6)
+                                 .offset(x: 0, y: 4)
+                         } */
+                        // }
+                    }
 
                     Spacer()
                     /* if state.allowManualTemp {
@@ -943,25 +949,35 @@ extension Home {
 
                     Spacer()
 
-                    /* Button { state.showModal(for: .overrideProfilesConfig) }
-                      label: {
-                          ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                              Image(systemName: "person")
-                                  .renderingMode(.template)
-                                  .frame(width: 27, height: 27)
-                                  .font(.system(size: 27, weight: .regular))
-                                  .foregroundColor(state.disco ? .zt : .gray)
-                                  .padding(.top, 13)
-                                  .padding(.bottom, 7)
-                                  .padding(.leading, 7)
-                                  .padding(.trailing, 7)
-                              if selectedProfile().isOn {
-                                  Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
-                                      .offset(x: 0, y: 4)
-                              }
-                          }
-                      }.buttonStyle(.plain)
-                     Spacer()*/
+                    Button {
+                        UIApplication.shared.open(
+                            URL(
+                                string: "shortcuts://run-shortcut?name=Remote%20Override"
+                            )!,
+                            options: [:],
+                            completionHandler: nil
+                        )
+
+                        // state.showModal(for: .overrideProfilesConfig)
+                    }
+                    label: {
+                        // ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "person")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .regular))
+                            .foregroundColor(state.disco ? .zt : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                        /* if selectedProfile().isOn {
+                             Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
+                                 .offset(x: 0, y: 4)
+                         } */
+                        // }
+                    }.buttonStyle(.plain)
+                    Spacer()
                     Button { state.showModal(for: .settings) }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
