@@ -17,12 +17,13 @@ extension Settings {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
                             "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
-                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + FreeAPSSettings().caregiver
-                            // Testar enhetlig userKey
+                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + FreeAPSSettings()
+                                .caregiver // Testar enhetlig userKey
                         ).textCase(nil)
                     } else {
                         Text(
-                            "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)"
+                            "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
+                                "\nAnvändare: " + FreeAPSSettings().caregiver
                         )
                     }
                 }
@@ -38,6 +39,12 @@ extension Settings {
                     /* if HKHealthStore.isHealthDataAvailable() {
                          Text("Apple Health").navigationLink(to: .healthkit, from: self)
                      } */
+                    /* HStack {
+                         Text("Användare:")
+                         Spacer()
+                         TextField("...", text: $state.caregiver)
+                             .multilineTextAlignment(.trailing) // Align text to the right
+                     }*/
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
                 } header: { Text("Services") }
 
