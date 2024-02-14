@@ -883,7 +883,8 @@ extension Home {
                     Button {
                         UIApplication.shared.open(
                             URL(
-                                string: "shortcuts://run-shortcut?name=Remote%20Bolus"
+                                // string: "shortcuts://run-shortcut?name=Remote%20Bolus"
+                                string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Bolus&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
                             )!,
                             options: [:],
                             completionHandler: nil
@@ -952,7 +953,8 @@ extension Home {
                     Button {
                         UIApplication.shared.open(
                             URL(
-                                string: "shortcuts://run-shortcut?name=Remote%20Override"
+                                // string: "shortcuts://run-shortcut?name=Remote%20Override"
+                                string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Override&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
                             )!,
                             options: [:],
                             completionHandler: nil
@@ -1135,7 +1137,8 @@ extension Home {
                                 .onTapGesture {
                                     UIApplication.shared.open(
                                         URL(
-                                            string: "shortcuts://run-shortcut?name=Hälsologgning"
+                                            // string: "shortcuts://run-shortcut?name=Hälsologgning"
+                                            string: "shortcuts://x-callback-url/run-shortcut?name=Hälsologgning&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
                                         )!,
                                         options: [:],
                                         completionHandler: nil
