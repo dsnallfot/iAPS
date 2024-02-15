@@ -97,6 +97,8 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
                             Text("Genomförda meddelanden")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
+                            Text("Overrides Not Uploaded")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Nightscout.notUploadedOverrides), from: self)
                             Text("Autotune")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
                             Text("Glucose")
@@ -116,6 +118,21 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
                         }
                         Group {
+                            HStack {
+                                Text("Radera alla NS overrides")
+                                Button("Delete") { state.deleteOverrides() }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.red)
+                            }
+
+                            HStack {
+                                Text("Radera senaste NS override")
+                                Button("Delete") { state.deleteOverride() }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.red)
+                            }
                             HStack {
                                 Text("Profil & inställningar")
                                 Button(action: {

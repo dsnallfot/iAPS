@@ -225,13 +225,17 @@ extension Home {
         }
 
         func cancelProfile() {
-            /* coredataContext.perform { [self] in
-                 let profiles = Override(context: self.coredataContext)
-                 profiles.enabled = false
-                 profiles.date = Date()
-                 try? self.coredataContext.save()
-             } */
-            OverrideStorage().cancelProfile()
+            let storage = OverrideStorage()
+            // let duration = storage.cancelProfile()
+
+            if let activeOveride = storage.fetchLatestOverride().first {
+                let presetName = storage.isPresetName()
+                let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+
+                if let duration = storage.cancelProfile() {
+                    nightscoutManager.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+                }
+            }
             setupOverrideHistory()
         }
 
