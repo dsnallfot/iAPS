@@ -36,8 +36,13 @@ extension DataTable {
             maxBolus = provider.pumpSettings().maxBolus
         }
 
+        private let processQueue =
+            DispatchQueue(label: "setupTreatments.processQueue") // Ensure that only one instance of this function can execute at a time
+
         private func setupTreatments() {
-            DispatchQueue.global().async {
+            // DispatchQueue.global().async {
+            // Ensure that only one instance of this function can execute at a time
+            processQueue.async {
                 let units = self.settingsManager.settings.units
 
                 var date = Date.now
