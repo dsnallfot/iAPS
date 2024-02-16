@@ -40,12 +40,15 @@ extension DataTable {
             DispatchQueue(label: "setupTreatments.processQueue") // Ensure that only one instance of this function can execute at a time
 
         private func setupTreatments() {
+            // Log that the function is starting
+            debug(.service, "setupTreatments() started")
+
             // DispatchQueue.global().async {
             // Ensure that only one instance of this function can execute at a time
             processQueue.async {
                 let units = self.settingsManager.settings.units
 
-                var date = Date.now
+                // var date = Date.now
 
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }
@@ -148,6 +151,9 @@ extension DataTable {
                     self.basals = [tempBasals]
                         .flatMap { $0 }
                         .sorted { $0.date > $1.date }
+
+                    // Log that the function has finished
+                    debug(.service, "setupTreatments() finished")
                 }
             }
         }
