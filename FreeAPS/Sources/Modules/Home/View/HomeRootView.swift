@@ -883,8 +883,8 @@ extension Home {
                     Button {
                         UIApplication.shared.open(
                             URL(
-                                // string: "shortcuts://run-shortcut?name=Remote%20Bolus"
-                                string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Bolus&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
+                                string: "shortcuts://run-shortcut?name=Remote%20Bolus" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Bolus ist för x-callback
+                                /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Bolus&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                             )!,
                             options: [:],
                             completionHandler: nil
@@ -953,8 +953,8 @@ extension Home {
                     Button {
                         UIApplication.shared.open(
                             URL(
-                                // string: "shortcuts://run-shortcut?name=Remote%20Override"
-                                string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Override&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
+                                string: "shortcuts://run-shortcut?name=Remote%20Override" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Override ist för x-callback
+                                /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Override&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                             )!,
                             options: [:],
                             completionHandler: nil
@@ -1137,8 +1137,8 @@ extension Home {
                                 .onTapGesture {
                                     UIApplication.shared.open(
                                         URL(
-                                            // string: "shortcuts://run-shortcut?name=Hälsologgning"
-                                            string: "shortcuts://x-callback-url/run-shortcut?name=Hälsologgning&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://"
+                                            string: "shortcuts://run-shortcut?name=Hälsologgning" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Hälsologgning ist för x-callback
+                                            /* string: "shortcuts://x-callback-url/run-shortcut?name=Hälsologgning&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                                         )!,
                                         options: [:],
                                         completionHandler: nil
