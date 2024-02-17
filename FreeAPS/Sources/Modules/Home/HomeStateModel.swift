@@ -248,7 +248,8 @@ extension Home {
                 try? self.coredataContext.save()
             }
         }
-        //Added to require passcode/faceID before entering settings
+
+        // Added to require passcode/faceID before entering settings
         func secureShowSettings() {
             unlockmanager.unlock()
                 .sink { _ in } receiveValue: { [weak self] _ in
