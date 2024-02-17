@@ -259,6 +259,16 @@ extension Home {
                 .store(in: &lifetime)
         }
 
+        // Added to require passcode/faceID before entering settings
+        func securePumpSettings() {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    setupPump = true
+                }
+                .store(in: &lifetime)
+        }
+
         private func setupGlucose() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }

@@ -258,7 +258,7 @@ extension Home {
             )
             .onTapGesture {
                 if state.pumpDisplayState != nil {
-                    state.setupPump = true
+                    state.securePumpSettings()
                 }
             }
         }
