@@ -20,6 +20,12 @@ struct AnnouncementDot {
     let note: String
 }
 
+struct OverrideStruct {
+    let start: Date
+    let end: Date
+    let glucose: Int
+}
+
 typealias GlucoseYRange = (minValue: Int, minY: CGFloat, maxValue: Int, maxY: CGFloat)
 
 struct MainChartView: View {
@@ -80,6 +86,8 @@ struct MainChartView: View {
     @Binding var displayXgridLines: Bool
     @Binding var displayYgridLines: Bool
     @Binding var thresholdLines: Bool
+    @Binding var triggerUpdate: Bool
+    @Binding var overrideHistory: [OverrideHistory]
 
     @State var didAppearTrigger = false
     @State private var glucoseDots: [CGRect] = []
@@ -93,6 +101,7 @@ struct MainChartView: View {
     @State private var tempBasalPath = Path()
     @State private var regularBasalPath = Path()
     @State private var tempTargetsPath = Path()
+    @State private var overridesPath = Path()
     @State private var suspensionsPath = Path()
     @State private var carbsDots: [DotInfo] = []
     @State private var fpuDots: [DotInfo] = []
@@ -181,33 +190,34 @@ struct MainChartView: View {
     }
 
     private func mainScrollView(fullSize: CGSize) -> some View {
-        ScrollViewReader { scroll in
-            ScrollView(.horizontal, showsIndicators: false) {
+        ScrollView(.horizontal, showsIndicators: false) {
+            ScrollViewReader { scroll in
                 ZStack(alignment: .top) {
                     tempTargetsView(fullSize: fullSize).drawingGroup()
+                    overridesView(fullSize: fullSize).drawingGroup()
                     basalView(fullSize: fullSize).drawingGroup()
                     mainView(fullSize: fullSize).id(Config.endID)
                         .drawingGroup()
-                }
-            }
+                        .onChange(of: glucose) { _ in
+                            scroll.scrollTo(Config.endID, anchor: .trailing)
+                        }
+                        .onChange(of: suggestion) { _ in
+                            scroll.scrollTo(Config.endID, anchor: .trailing)
+                        }
+                        .onChange(of: tempBasals) { _ in
+                            scroll.scrollTo(Config.endID, anchor: .trailing)
+                        }
+                        .onChange(of: screenHours) { _ in
+                            scroll.scrollTo(Config.endID, anchor: .trailing)
+                        }
 
-            .onChange(of: glucose) { _ in
-                scroll.scrollTo(Config.endID, anchor: .trailing)
-            }
-            .onChange(of: suggestion) { _ in
-                scroll.scrollTo(Config.endID, anchor: .trailing)
-            }
-            .onChange(of: tempBasals) { _ in
-                scroll.scrollTo(Config.endID, anchor: .trailing)
-            }
-            .onChange(of: screenHours) { _ in
-                scroll.scrollTo(Config.endID, anchor: .trailing)
-            }
-            .onAppear {
-                // add trigger to the end of main queue
-                DispatchQueue.main.async {
-                    scroll.scrollTo(Config.endID, anchor: .trailing)
-                    didAppearTrigger = true
+                        .onAppear {
+                            // add trigger to the end of main queue
+                            DispatchQueue.main.async {
+                                scroll.scrollTo(Config.endID, anchor: .trailing)
+                                didAppearTrigger = true
+                            }
+                        }
                 }
             }
         }
@@ -623,6 +633,32 @@ struct MainChartView: View {
         CGRect(origin: CGPoint(x: rect.midX * zoomScale - rect.width / 2, y: rect.origin.y), size: rect.size)
     }
 
+    private func overridesView(fullSize: CGSize) -> some View {
+        ZStack {
+            overridesPath
+                .scale(x: zoomScale, anchor: .zero)
+                .fill(Color.purple.opacity(colorScheme == .light ? 0.1 : 0.3))
+            overridesPath
+                .scale(x: zoomScale, anchor: .zero)
+                .stroke(Color.purple.opacity(0.7), lineWidth: 1)
+        }
+        .onChange(of: glucose) { _ in
+            calculateOverridesRects(fullSize: fullSize)
+        }
+        .onChange(of: suggestion) { _ in
+            calculateOverridesRects(fullSize: fullSize)
+        }
+        .onChange(of: overrideHistory) { _ in
+            calculateOverridesRects(fullSize: fullSize)
+        }
+        .onChange(of: triggerUpdate) { _ in
+            calculateOverridesRects(fullSize: fullSize)
+        }
+        .onChange(of: didAppearTrigger) { _ in
+            calculateOverridesRects(fullSize: fullSize)
+        }
+    }
+
     private func predictionsView(fullSize: CGSize) -> some View {
         Group {
             Path { path in
@@ -676,6 +712,7 @@ extension MainChartView {
         calculateFPUsDots(fullSize: fullSize)
         calculateTempTargetsRects(fullSize: fullSize)
         calculateBasalPoints(fullSize: fullSize)
+        calculateOverridesRects(fullSize: fullSize)
         calculateSuspensions(fullSize: fullSize)
     }
 
@@ -1003,7 +1040,7 @@ extension MainChartView {
                     x: x0,
                     y: y0 - 3,
                     width: x1 - x0,
-                    height: y1 - y0 + 6
+                    height: y1 - y0 + 7
                 )
             }
             if rects.count > 1 {
@@ -1027,6 +1064,141 @@ extension MainChartView {
             }
         }
     }
+
+    // Original version
+    private func calculateOverridesRects(fullSize: CGSize) {
+        calculationQueue.async {
+            let latest = OverrideStorage().fetchLatestOverride().first
+            let rects = overrideHistory.compactMap { each -> CGRect in
+                let duration = each.duration
+                let xStart = timeToXCoordinate(each.date!.timeIntervalSince1970, fullSize: fullSize)
+                let xEnd = timeToXCoordinate(
+                    each.date!.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
+                    fullSize: fullSize
+                )
+                let y = glucoseToYCoordinate(Int(each.target), fullSize: fullSize)
+                return CGRect(
+                    x: xStart,
+                    y: y - 3,
+                    width: xEnd - xStart,
+                    height: 7
+                )
+            }
+            if latest?.enabled ?? false {
+                var old = Array(rects)
+                let duration = Double(latest?.duration ?? 0)
+                if duration > 0 {
+                    let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
+                    let plusNow = (latest?.date ?? Date.now)
+                        .addingTimeInterval(Int(latest?.duration ?? 0).minutes.timeInterval)
+                    let x2 = timeToXCoordinate(plusNow.timeIntervalSince1970, fullSize: fullSize)
+                    let oneMore = CGRect(
+                        x: x1,
+                        y: glucoseToYCoordinate(
+                            Int(Double(latest?.target ?? 100)),
+                            fullSize: fullSize
+                        ),
+                        width: x2 - x1,
+                        height: 8
+                    )
+                    old.append(oneMore)
+                    let path = Path { path in
+                        path.addRects(old)
+                    }
+                    return DispatchQueue.main.async {
+                        overridesPath = path
+                    }
+                } else {
+                    let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
+                    let x2 = timeToXCoordinate(Date.now.timeIntervalSince1970, fullSize: fullSize)
+                    let oneMore = CGRect(
+                        x: x1,
+                        y: glucoseToYCoordinate(Int(Double(latest?.target ?? 100)), fullSize: fullSize),
+                        width: x2 - x1 + additionalWidth(viewWidth: fullSize.width),
+                        height: 8
+                    )
+                    old.append(oneMore)
+                    let path = Path { path in
+                        path.addRects(old)
+                    }
+                    return DispatchQueue.main.async {
+                        overridesPath = path
+                    }
+                }
+            }
+            let path = Path { path in
+                path.addRects(rects)
+            }
+            DispatchQueue.main.async {
+                overridesPath = path
+            }
+        }
+    }
+
+    // Version without force unwrapping
+    /* private func calculateOverridesRects(fullSize: CGSize) {
+         calculationQueue.async {
+             let latest = OverrideStorage().fetchLatestOverride().first
+             let rects = overrideHistory.compactMap { each -> CGRect? in
+                 guard let date = each.date else { return nil }
+                 let duration = each.duration
+                 let xStart = timeToXCoordinate(date.timeIntervalSince1970, fullSize: fullSize)
+                 let xEnd = timeToXCoordinate(
+                     date.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
+                     fullSize: fullSize
+                 )
+                 let y = glucoseToYCoordinate(Int(each.target), fullSize: fullSize)
+                 return CGRect(
+                     x: xStart,
+                     y: y - 3,
+                     width: xEnd - xStart,
+                     height: 8
+                 )
+             }
+             if let latestOverride = latest, latestOverride.enabled {
+                 var old = Array(rects)
+                 let duration = Double(truncating: latestOverride.duration ?? 0)
+                 if duration > 0 {
+                     let overrideStartDate = latestOverride.date ?? Date()
+                     let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
+                     let plusNow = overrideStartDate
+                         .addingTimeInterval(Int(truncating: latestOverride.duration ?? 0).minutes.timeInterval)
+                     let x2 = timeToXCoordinate(plusNow.timeIntervalSince1970, fullSize: fullSize)
+                     let oneMore = CGRect(
+                         x: x1,
+                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
+                         width: x2 - x1,
+                         height: 8
+                     )
+                     old.append(oneMore)
+                 } else {
+                     let overrideStartDate = latestOverride.date ?? Date()
+                     let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
+                     let x2 = timeToXCoordinate(Date().timeIntervalSince1970, fullSize: fullSize)
+                     let oneMore = CGRect(
+                         x: x1,
+                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
+                         width: x2 - x1 + additionalWidth(viewWidth: fullSize.width),
+                         height: 8
+                     )
+                     old.append(oneMore)
+                 }
+                 let path = Path { path in
+                     path.addRects(old)
+                 }
+                 DispatchQueue.main.async {
+                     overridesPath = path
+                 }
+             } else {
+                 let path = Path { path in
+                     path.addRects(rects)
+                 }
+                 DispatchQueue.main.async {
+                     overridesPath = path
+                 }
+             }
+         }
+     } */
 
     private func findRegularBasalPoints(
         timeBegin: TimeInterval,
@@ -1100,6 +1272,27 @@ extension MainChartView {
 
     private func fullGlucoseWidth(viewWidth: CGFloat) -> CGFloat {
         viewWidth * CGFloat(hours)
+    }
+
+    private func additionalWidth(viewWidth: CGFloat) -> CGFloat {
+        guard let predictions = suggestion?.predictions,
+              let deliveredAt = suggestion?.deliverAt,
+              let last = glucose.last
+        else {
+            return Config.minAdditionalWidth
+        }
+
+        let iob = predictions.iob?.count ?? 0
+        let zt = predictions.zt?.count ?? 0
+        let cob = predictions.cob?.count ?? 0
+        let uam = predictions.uam?.count ?? 0
+        let max = [iob, zt, cob, uam].max() ?? 0
+
+        let lastDeltaTime = last.dateString.timeIntervalSince(deliveredAt)
+        let additionalTime = CGFloat(TimeInterval(max) * 5.minutes.timeInterval - lastDeltaTime)
+        let oneSecondWidth = oneSecondStep(viewWidth: viewWidth)
+
+        return Swift.min(Swift.max(additionalTime * oneSecondWidth, Config.minAdditionalWidth), 275)
     }
 
     private func oneSecondStep(viewWidth: CGFloat) -> CGFloat {

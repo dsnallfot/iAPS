@@ -11,6 +11,7 @@ extension Home {
         @StateObject var state = StateModel()
         @State var isStatusPopupPresented = false
         @State var showCancelAlert = false
+        @State var triggerUpdate = false
 
         struct Buttons: Identifiable {
             let label: String
@@ -275,10 +276,12 @@ extension Home {
                 timeZone: $state.timeZone
             ).onTapGesture {
                 isStatusPopupPresented.toggle()
+                triggerUpdate.toggle()
             }.onLongPressGesture {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
                 state.runLoop()
+                triggerUpdate.toggle()
             }
         }
 
@@ -737,7 +740,9 @@ extension Home {
                         screenHours: $state.hours,
                         displayXgridLines: $state.displayXgridLines,
                         displayYgridLines: $state.displayYgridLines,
-                        thresholdLines: $state.thresholdLines
+                        thresholdLines: $state.thresholdLines,
+                        triggerUpdate: $triggerUpdate,
+                        overrideHistory: $state.overrideHistory
                     )
                     .offset(y: -8)
                 }
@@ -809,7 +814,7 @@ extension Home {
                     }
                 }
                 // .padding(.top, 7)
-                .padding(.bottom, 37)
+                .padding(.bottom, 65) // 37)
                 .padding(.top, 6)
                 .padding(.trailing, 7)
                 .padding(.leading, 7)
@@ -940,7 +945,10 @@ extension Home {
 
                     Spacer()
 
-                    Button { state.showModal(for: .overrideProfilesConfig) }
+                    Button {
+                        state.showModal(for: .overrideProfilesConfig)
+                        triggerUpdate.toggle()
+                    }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                             Image(systemName: "person")

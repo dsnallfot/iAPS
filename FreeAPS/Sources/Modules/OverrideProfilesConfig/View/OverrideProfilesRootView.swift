@@ -68,6 +68,7 @@ extension OverrideProfilesConfig {
                     Section {
                         Button {
                             state.cancelProfile()
+
                             dismiss()
                         }
                         label: {
