@@ -955,13 +955,13 @@ extension Home {
                                 .renderingMode(.template)
                                 .frame(width: 27, height: 27)
                                 .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(state.disco ? .zt : .gray)
+                                .foregroundColor(state.disco ? .purple.opacity(0.7) : .gray)
                                 .padding(.top, 13)
                                 .padding(.bottom, 7)
                                 .padding(.leading, 7)
                                 .padding(.trailing, 7)
                             if selectedProfile().isOn {
-                                Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
+                                Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
                                     .offset(x: 0, y: 4)
                             }
                         }
