@@ -10,6 +10,7 @@ extension Home {
         @Injected() var apsManager: APSManager!
         @Injected() var nightscoutManager: NightscoutManager!
         @Injected() var settings: SettingsManager!
+        @Injected() var unlockmanager: UnlockManager!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
         @Published var glucose: [BloodGlucose] = []
@@ -246,6 +247,15 @@ extension Home {
                 settings.date = Date.now
                 try? self.coredataContext.save()
             }
+        }
+        //Added to require passcode/faceID before entering settings
+        func secureShowSettings() {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    showModal(for: .settings)
+                }
+                .store(in: &lifetime)
         }
 
         private func setupGlucose() {

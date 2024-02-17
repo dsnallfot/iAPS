@@ -1819,10 +1819,10 @@ Enact a temp Basal or a temp target */
 */
 /* Headline Rewind Resets Autosens */
 
-"Rewind Resets Autosens" = "Återställ autosens vid reservoarbyte";
+"Rewind Resets Autosens" = "Återställ autosens vid poddbyte";
 
 /* ”Rewind Resets Autosens” */
-"This feature, enabled by default, resets the autosens ratio to neutral when you rewind your pump, on the assumption that this corresponds to a probable site change. Autosens will begin learning sensitivity anew from the time of the rewind, which may take up to 6 hours. If you usually rewind your pump independently of site changes, you may want to consider disabling this feature." = "Denna funktion, på som standard, återställer 'Autosens' kvot till neutralt läge vid reservoarbyten, då det antas att du vid detta tillfälle även byter infusionskanyl. 'Autosens' kommer nu börja lära sig din insulinkänslighet på nytt, vilket kan ta upp till 6 timmar. Om du vanligtvis gör reservoarbyten oberoende av kanylbyten, kanske du ska överväga att inaktivera denna funktion.";
+"This feature, enabled by default, resets the autosens ratio to neutral when you rewind your pump, on the assumption that this corresponds to a probable site change. Autosens will begin learning sensitivity anew from the time of the rewind, which may take up to 6 hours. If you usually rewind your pump independently of site changes, you may want to consider disabling this feature." = "Denna funktion, på som standard, återställer 'Autosens' kvot till neutralt läge vid poddbyte eftersom insulinabsorptionen kan förändras när du byter site. 'Autosens' kommer nu börja lära sig din insulinkänslighet på nytt, vilket kan ta upp till 6 timmar.";
 
 /* Headline "High Temptarget Raises Sensitivity" */
 "High Temptarget Raises Sensitivity" = "Högt målvärde höjer känsligheten";
@@ -1876,7 +1876,7 @@ Enact a temp Basal or a temp target */
 "Unsuspend If No Temp" = "Återaktivera om ingen temp. basal";
 
 /* "Unsuspend If No Temp” */
-"Many people occasionally forget to resume / unsuspend their pump after reconnecting it. If you’re one of them, and you are willing to reliably set a zero temp basal whenever suspending and disconnecting your pump, this feature has your back. If enabled, it will automatically resume / unsuspend the pump if you forget to do so before your zero temp expires. As long as the zero temp is still running, it will leave the pump suspended." = "Standardvärde Av för denna inställning. Alla eventuella temporära basaler som pågått under tider pumpen varit pausad kommer att raderas, dessutom kommer de ordinarie basaldoserna ersättas med temporära basaler på 0 IE/h.";
+"Many people occasionally forget to resume / unsuspend their pump after reconnecting it. If you’re one of them, and you are willing to reliably set a zero temp basal whenever suspending and disconnecting your pump, this feature has your back. If enabled, it will automatically resume / unsuspend the pump if you forget to do so before your zero temp expires. As long as the zero temp is still running, it will leave the pump suspended." = "Many people occasionally forget to resume / unsuspend their pump after reconnecting it. If you’re one of them, and you are willing to reliably set a zero temp basal whenever suspending and disconnecting your pump, this feature has your back. If enabled, it will automatically resume / unsuspend the pump if you forget to do so before your zero temp expires. As long as the zero temp is still running, it will leave the pump suspended.";
 
 /* Headline "Enable UAM" */
 "Enable UAM" = "Aktivera UAM";
@@ -2044,10 +2044,10 @@ Enact a temp Basal or a temp target */
 "Defaults to 1.3. Increase target by this amount when looping off raw/noisy CGM data" = "Standardvärde 1,3. Öka målvärdet med denna multipel när du loopar med ofiltrerad CGM-data med mycket brus";
 
 /* Headline "SMB DeliveryRatio" */
-"SMB DeliveryRatio" = "Max % SMB av beräknat insulinbehov";
+"SMB DeliveryRatio" = "Max andel SMB av beräknat insulinbehov";
 
 /* SMB DeliveryRatio */
-"Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. Increase this experimental value slowly and with caution." = "Standardvärde: 0.5 Den andel av det totala insulin som (beräknas) krävas som kan ges som en autobolus (SMB). Bör som regel iinte ändras. Ändras endast långsamt och med stor försiktighet.";
+"Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. Increase this experimental value slowly and with caution." = "Standardvärde: 0.5 Den andel av det totala insulin som just nu (beräknas) krävas som tillåts ges som en autobolus (SMB). Bör som regel inte ändras. Ändras endast långsamt och med stor försiktighet.";
 
 // Dynamic ISF + CR Settings:
 /* Headline "Adjust Dynamic ISF constant" */

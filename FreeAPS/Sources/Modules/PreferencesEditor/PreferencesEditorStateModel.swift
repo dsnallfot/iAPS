@@ -299,24 +299,24 @@ extension PreferencesEditor {
                     ),
                     settable: self
                 ),
-                Field(
-                    displayName: NSLocalizedString("Skip Neutral Temps", comment: "Skip Neutral Temps"),
-                    type: .boolean(keypath: \.skipNeutralTemps),
-                    infoText: NSLocalizedString(
-                        "Defaults to false, so that iAPS will set temps whenever it can, so it will be easier to see if the system is working, even when you are offline. This means iAPS will set a “neutral” temp (same as your default basal) if no adjustments are needed. This is an old setting for OpenAPS to have the options to minimise sounds and notifications from the 'rig', that may wake you up during the night.",
-                        comment: "Skip Neutral Temps"
+                /* Field(
+                        displayName: NSLocalizedString("Skip Neutral Temps", comment: "Skip Neutral Temps"),
+                        type: .boolean(keypath: \.skipNeutralTemps),
+                        infoText: NSLocalizedString(
+                            "Defaults to false, so that iAPS will set temps whenever it can, so it will be easier to see if the system is working, even when you are offline. This means iAPS will set a “neutral” temp (same as your default basal) if no adjustments are needed. This is an old setting for OpenAPS to have the options to minimise sounds and notifications from the 'rig', that may wake you up during the night.",
+                            comment: "Skip Neutral Temps"
+                        ),
+                        settable: self
                     ),
-                    settable: self
-                ),
-                Field(
-                    displayName: NSLocalizedString("Unsuspend If No Temp", comment: "Unsuspend If No Temp"),
-                    type: .boolean(keypath: \.unsuspendIfNoTemp),
-                    infoText: NSLocalizedString(
-                        "Many people occasionally forget to resume / unsuspend their pump after reconnecting it. If you’re one of them, and you are willing to reliably set a zero temp basal whenever suspending and disconnecting your pump, this feature has your back. If enabled, it will automatically resume / unsuspend the pump if you forget to do so before your zero temp expires. As long as the zero temp is still running, it will leave the pump suspended.",
-                        comment: "Unsuspend If No Temp"
-                    ),
-                    settable: self
-                ),
+                    Field(
+                        displayName: NSLocalizedString("Unsuspend If No Temp", comment: "Unsuspend If No Temp"),
+                        type: .boolean(keypath: \.unsuspendIfNoTemp),
+                        infoText: NSLocalizedString(
+                            "Many people occasionally forget to resume / unsuspend their pump after reconnecting it. If you’re one of them, and you are willing to reliably set a zero temp basal whenever suspending and disconnecting your pump, this feature has your back. If enabled, it will automatically resume / unsuspend the pump if you forget to do so before your zero temp expires. As long as the zero temp is still running, it will leave the pump suspended.",
+                            comment: "Unsuspend If No Temp"
+                        ),
+                        settable: self
+                    ), */
                 Field(
                     displayName: NSLocalizedString("Suspend Zeros IOB", comment: "Suspend Zeros IOB"),
                     type: .boolean(keypath: \.suspendZerosIOB),

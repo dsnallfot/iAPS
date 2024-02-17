@@ -133,21 +133,21 @@ extension Settings {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 // .buttonStyle(.borderedProminent)
                             }
-                            HStack {
-                                Text("NS Test: Radera alla overrides")
-                                Button("Delete") { state.deleteOverrides() }
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .buttonStyle(.borderedProminent)
-                                    .tint(.red)
-                            }
+                            /* HStack {
+                                 Text("NS Test: Radera alla overrides")
+                                 Button("Delete") { state.deleteOverrides() }
+                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                     .buttonStyle(.borderedProminent)
+                                     .tint(.red)
+                             }
 
-                            HStack {
-                                Text("NS Test: Radera senaste override")
-                                Button("Delete") { state.deleteOverride() }
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .buttonStyle(.borderedProminent)
-                                    .tint(.red)
-                            }
+                             HStack {
+                                 Text("NS Test: Radera senaste override")
+                                 Button("Delete") { state.deleteOverride() }
+                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                     .buttonStyle(.borderedProminent)
+                                     .tint(.red)
+                             } */
                         }
                     }
                 } header: { Text("Utvecklare") }
