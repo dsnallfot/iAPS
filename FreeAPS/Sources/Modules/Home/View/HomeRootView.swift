@@ -980,7 +980,7 @@ extension Home {
                         // }
                     }.buttonStyle(.plain)
                     Spacer()
-                    Button { state.showModal(for: .settings) }
+                    Button { state.secureShowSettings() }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                             Image(systemName: "gearshape")

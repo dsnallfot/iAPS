@@ -79,8 +79,8 @@ extension DataTable {
             }
             .onAppear(perform: configureView)
             .onDisappear {
-                state.apsManager
-                    .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
+                // state.apsManager
+                // .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
             }
 
             .navigationTitle("History")
@@ -375,7 +375,7 @@ extension DataTable {
                     }
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
@@ -391,7 +391,7 @@ extension DataTable {
 
                  } else { */
                 HStack {
-                    Text("Ingen data.")
+                    Text("Ingen data")
                 }
             }
         }
@@ -417,7 +417,7 @@ extension DataTable {
                     // .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
