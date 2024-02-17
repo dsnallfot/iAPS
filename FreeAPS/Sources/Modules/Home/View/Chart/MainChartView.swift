@@ -1099,7 +1099,7 @@ extension MainChartView {
                             fullSize: fullSize
                         ),
                         width: x2 - x1,
-                        height: 8
+                        height: 7
                     )
                     old.append(oneMore)
                     let path = Path { path in
@@ -1114,8 +1114,8 @@ extension MainChartView {
                     let oneMore = CGRect(
                         x: x1,
                         y: glucoseToYCoordinate(Int(Double(latest?.target ?? 100)), fullSize: fullSize),
-                        width: x2 - x1 + additionalWidth(viewWidth: fullSize.width),
-                        height: 8
+                        width: x2 - x1 + 6000, // additionalWidth(viewWidth: fullSize.width),
+                        height: 7
                     )
                     old.append(oneMore)
                     let path = Path { path in
