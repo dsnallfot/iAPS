@@ -4,7 +4,7 @@ import SwiftUI
 extension PreferencesEditor {
     final class StateModel: BaseStateModel<Provider>, PreferencesSettable { private(set) var preferences = Preferences()
         @Published var unitsIndex = 1
-        @Published var allowAnnouncements = false
+        // @Published var allowAnnouncements = false
         @Published var skipBolusScreenAfterCarbs = true
         @Published var sections: [FieldSection] = []
         @Published var useAlternativeBolusCalc: Bool = false

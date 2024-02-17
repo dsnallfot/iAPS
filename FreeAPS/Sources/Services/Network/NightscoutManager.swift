@@ -8,7 +8,7 @@ protocol NightscoutManager: GlucoseSource {
     func fetchGlucose(since date: Date) -> AnyPublisher<[BloodGlucose], Never>
     func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never>
     func fetchTempTargets() -> AnyPublisher<[TempTarget], Never>
-    func fetchAnnouncements() -> AnyPublisher<[Announcement], Never>
+    // func fetchAnnouncements() -> AnyPublisher<[Announcement], Never>
     func deleteCarbs(_ treatement: DataTable.Treatment, complexMeal: Bool)
     func deleteNormalCarbs(_ treatement: DataTable.Treatment)
     func deleteFPUs(_ treatement: DataTable.Treatment)
@@ -30,7 +30,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     @Injected() private var carbsStorage: CarbsStorage!
     @Injected() private var pumpHistoryStorage: PumpHistoryStorage!
     @Injected() private var storage: FileStorage!
-    @Injected() private var announcementsStorage: AnnouncementsStorage!
+    // @Injected() private var announcementsStorage: AnnouncementsStorage!
     @Injected() private var settingsManager: SettingsManager!
     @Injected() private var broadcaster: Broadcaster!
     @Injected() private var reachabilityManager: ReachabilityManager!
@@ -169,16 +169,16 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             .eraseToAnyPublisher()
     }
 
-    func fetchAnnouncements() -> AnyPublisher<[Announcement], Never> {
-        guard let nightscout = nightscoutAPI, isNetworkReachable else {
-            return Just([]).eraseToAnyPublisher()
-        }
+    /* func fetchAnnouncements() -> AnyPublisher<[Announcement], Never> {
+         guard let nightscout = nightscoutAPI, isNetworkReachable else {
+             return Just([]).eraseToAnyPublisher()
+         }
 
-        let since = announcementsStorage.syncDate()
-        return nightscout.fetchAnnouncement(sinceDate: since)
-            .replaceError(with: [])
-            .eraseToAnyPublisher()
-    }
+         let since = announcementsStorage.syncDate()
+         return nightscout.fetchAnnouncement(sinceDate: since)
+             .replaceError(with: [])
+             .eraseToAnyPublisher()
+     }*/
 
     func deleteCarbs(_ treatement: DataTable.Treatment, complexMeal: Bool) {
         guard let nightscout = nightscoutAPI, isUploadEnabled else {

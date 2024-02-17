@@ -3,7 +3,7 @@ import Foundation
 struct FreeAPSSettings: JSON, Equatable {
     var units: GlucoseUnits = .mmolL
     var closedLoop: Bool = false
-    var allowAnnouncements: Bool = false
+    // var allowAnnouncements: Bool = false
     var useAutotune: Bool = false
     var isUploadEnabled: Bool = false
     var useLocalGlucoseSource: Bool = false
@@ -72,9 +72,9 @@ extension FreeAPSSettings: Decodable {
             settings.closedLoop = closedLoop
         }
 
-        if let allowAnnouncements = try? container.decode(Bool.self, forKey: .allowAnnouncements) {
-            settings.allowAnnouncements = allowAnnouncements
-        }
+        /* if let allowAnnouncements = try? container.decode(Bool.self, forKey: .allowAnnouncements) {
+             settings.allowAnnouncements = allowAnnouncements
+         } */
 
         if let useAutotune = try? container.decode(Bool.self, forKey: .useAutotune) {
             settings.useAutotune = useAutotune

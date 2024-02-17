@@ -14,11 +14,11 @@ struct DotInfo {
     let value: Decimal
 }
 
-struct AnnouncementDot {
-    let rect: CGRect
-    let value: Decimal
-    let note: String
-}
+/* struct AnnouncementDot {
+     let rect: CGRect
+     let value: Decimal
+     let note: String
+ } */
 
 typealias GlucoseYRange = (minValue: Int, minY: CGFloat, maxValue: Int, maxY: CGFloat)
 
@@ -39,22 +39,22 @@ struct MainChartView: View {
         static let fpuSize: CGFloat = 7 // default 5
         static let carbsScale: CGFloat = 0.3
         static let fpuScale: CGFloat = 1
-        static let announcementSize: CGFloat = 8
-        static let announcementScale: CGFloat = 2.5
-        static let owlSeize: CGFloat = 25
-        static let owlOffset: CGFloat = 80
+        // static let announcementSize: CGFloat = 8
+        // static let announcementScale: CGFloat = 2.5
+        // static let owlSeize: CGFloat = 25
+        // static let owlOffset: CGFloat = 80
         static let carbsOffset: CGFloat = 55 // added to move carbs dots above glucose line
         static let bolusOffset: CGFloat = 15 // added to move bolus dots above glucose line
     }
 
-    private enum Command {
-        static let open = "🔴"
-        static let closed = "🟢"
-        static let suspend = "❌"
-        static let resume = "✅"
-        static let tempbasal = "basal"
-        static let bolus = "💧"
-    }
+    /* private enum Command {
+         static let open = "🔴"
+         static let closed = "🟢"
+         static let suspend = "❌"
+         static let resume = "✅"
+         static let tempbasal = "basal"
+         static let bolus = "💧"
+     } */
 
     @Binding var glucose: [BloodGlucose]
     @Binding var isManual: [BloodGlucose]
@@ -62,7 +62,7 @@ struct MainChartView: View {
     @Binding var tempBasals: [PumpHistoryEvent]
     @Binding var boluses: [PumpHistoryEvent]
     @Binding var suspensions: [PumpHistoryEvent]
-    @Binding var announcement: [Announcement]
+    // @Binding var announcement: [Announcement]
     @Binding var hours: Int
     @Binding var maxBasal: Decimal
     @Binding var autotunedBasalProfile: [BasalProfileEntry]
@@ -82,8 +82,8 @@ struct MainChartView: View {
     @State var didAppearTrigger = false
     @State private var glucoseDots: [CGRect] = []
     @State private var manualGlucoseDots: [CGRect] = []
-    @State private var announcementDots: [AnnouncementDot] = []
-    @State private var announcementPath = Path()
+    // @State private var announcementDots: [AnnouncementDot] = []
+    // @State private var announcementPath = Path()
     @State private var manualGlucoseDotsCenter: [CGRect] = []
     @State private var unSmoothedGlucoseDots: [CGRect] = []
     @State private var predictionDots: [PredictionType: [CGRect]] = [:]
@@ -305,7 +305,7 @@ struct MainChartView: View {
                 glucoseView(fullSize: fullSize)
                 manualGlucoseView(fullSize: fullSize)
                 manualGlucoseCenterView(fullSize: fullSize)
-                announcementView(fullSize: fullSize)
+                // announcementView(fullSize: fullSize)
                 // predictionsView(fullSize: fullSize)
             }
             timeLabelsView(fullSize: fullSize)
@@ -428,36 +428,36 @@ struct MainChartView: View {
         }
     }
 
-    private func announcementView(fullSize: CGSize) -> some View {
-        ZStack {
-            ForEach(announcementDots, id: \.rect.minX) { info -> AnyView in
-                let scaledRect = scaleCenter(rect: info.rect)
+    /* private func announcementView(fullSize: CGSize) -> some View {
+         ZStack {
+             ForEach(announcementDots, id: \.rect.minX) { info -> AnyView in
+                 let scaledRect = scaleCenter(rect: info.rect)
 
-                let position = CGPoint(x: scaledRect.midX + 5, y: scaledRect.maxY - Config.owlOffset)
-                let type: String =
-                    info.note.contains("true") ?
-                    Command.open :
-                    info.note.contains("false") ?
-                    Command.closed :
-                    info.note.contains("suspend") ?
-                    Command.suspend :
-                    info.note.contains("resume") ?
-                    Command.resume :
-                    info.note.contains("tempbasal") ?
-                    Command.tempbasal : Command.bolus
-                VStack {
-                    Text(type).font(.caption2).foregroundStyle(.orange)
-                    Image("owl").resizable().frame(maxWidth: Config.owlSeize, maxHeight: Config.owlSeize).scaledToFill()
-                }.position(position).asAny()
-            }
-        }
-        .onChange(of: announcement) { _ in
-            calculateAnnouncementDots(fullSize: fullSize)
-        }
-        .onChange(of: didAppearTrigger) { _ in
-            calculateAnnouncementDots(fullSize: fullSize)
-        }
-    }
+                 let position = CGPoint(x: scaledRect.midX + 5, y: scaledRect.maxY - Config.owlOffset)
+                 let type: String =
+                     info.note.contains("true") ?
+                     Command.open :
+                     info.note.contains("false") ?
+                     Command.closed :
+                     info.note.contains("suspend") ?
+                     Command.suspend :
+                     info.note.contains("resume") ?
+                     Command.resume :
+                     info.note.contains("tempbasal") ?
+                     Command.tempbasal : Command.bolus
+                 VStack {
+                     Text(type).font(.caption2).foregroundStyle(.orange)
+                     Image("owl").resizable().frame(maxWidth: Config.owlSeize, maxHeight: Config.owlSeize).scaledToFill()
+                 }.position(position).asAny()
+             }
+         }
+         .onChange(of: announcement) { _ in
+             calculateAnnouncementDots(fullSize: fullSize)
+         }
+         .onChange(of: didAppearTrigger) { _ in
+             calculateAnnouncementDots(fullSize: fullSize)
+         }
+     } */
 
     private func manualGlucoseCenterView(fullSize: CGSize) -> some View {
         Path { path in
@@ -657,7 +657,7 @@ extension MainChartView {
         calculateGlucoseDots(fullSize: fullSize)
         calculateManualGlucoseDots(fullSize: fullSize)
         calculateManualGlucoseDotsCenter(fullSize: fullSize)
-        calculateAnnouncementDots(fullSize: fullSize)
+        // calculateAnnouncementDots(fullSize: fullSize)
         calculateUnSmoothedGlucoseDots(fullSize: fullSize)
         calculateBolusDots(fullSize: fullSize)
         calculateCarbsDots(fullSize: fullSize)
@@ -715,29 +715,29 @@ extension MainChartView {
         }
     }
 
-    private func calculateAnnouncementDots(fullSize: CGSize) {
-        calculationQueue.async {
-            let dots = announcement.map { value -> AnnouncementDot in
-                let center = timeToInterpolatedPoint(value.createdAt.timeIntervalSince1970, fullSize: fullSize)
-                let size = Config.announcementSize * Config.announcementScale
-                let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
-                let note = value.notes
-                return AnnouncementDot(rect: rect, value: 10, note: note)
-            }
-            let path = Path { path in
-                for dot in dots {
-                    path.addEllipse(in: dot.rect)
-                }
-            }
-            let range = self.getGlucoseYRange(fullSize: fullSize)
+    /* private func calculateAnnouncementDots(fullSize: CGSize) {
+         calculationQueue.async {
+             let dots = announcement.map { value -> AnnouncementDot in
+                 let center = timeToInterpolatedPoint(value.createdAt.timeIntervalSince1970, fullSize: fullSize)
+                 let size = Config.announcementSize * Config.announcementScale
+                 let rect = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
+                 let note = value.notes
+                 return AnnouncementDot(rect: rect, value: 10, note: note)
+             }
+             let path = Path { path in
+                 for dot in dots {
+                     path.addEllipse(in: dot.rect)
+                 }
+             }
+             let range = self.getGlucoseYRange(fullSize: fullSize)
 
-            DispatchQueue.main.async {
-                glucoseYRange = range
-                announcementDots = dots
-                announcementPath = path
-            }
-        }
-    }
+             DispatchQueue.main.async {
+                 glucoseYRange = range
+                 announcementDots = dots
+                 announcementPath = path
+             }
+         }
+     } */
 
     private func calculateUnSmoothedGlucoseDots(fullSize: CGSize) {
         calculationQueue.async {
