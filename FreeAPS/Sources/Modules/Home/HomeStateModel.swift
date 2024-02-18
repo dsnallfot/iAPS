@@ -67,6 +67,7 @@ extension Home {
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 3
         @Published var disco: Bool = true
+        @Published var simulatorMode: Bool = true
         @Published var insulinRecommended: Decimal = 0
         @Published var overrideHistory: [OverrideHistory] = []
 
@@ -101,6 +102,7 @@ extension Home {
             setStatusTitle()
             setupCurrentTempTarget()
             smooth = settingsManager.settings.smoothGlucose
+            simulatorMode = settingsManager.settings.simulatorMode
             maxValue = settingsManager.preferences.autosensMax
             lowGlucose = settingsManager.settings.low
             highGlucose = settingsManager.settings.high
@@ -504,6 +506,7 @@ extension Home.StateModel:
         animatedBackground = settingsManager.settings.animatedBackground
         manualTempBasal = apsManager.isManualTempBasal
         smooth = settingsManager.settings.smoothGlucose
+        simulatorMode = settingsManager.settings.simulatorMode
         lowGlucose = settingsManager.settings.low
         highGlucose = settingsManager.settings.high
         overrideUnit = settingsManager.settings.overrideHbA1cUnit

@@ -789,10 +789,29 @@ extension Home {
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                                     .offset(x: -2, y: 0)
                             }
+                            Spacer()
                         }
+                        .frame(width: 100)
                         .font(.system(size: 12, weight: .bold))
                         Spacer()
+                        if state.simulatorMode {
+                            Button(action: {
+                                state.showModal(for: .cgm)
+                            }) {
+                                Text("SIMULATORLÄGE")
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .frame(width: 110)
+                                    .foregroundColor(.white)
+                                    .padding(2)
+                                    .background(Color.loopRed)
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top, -1.5)
+                            Spacer()
+                        }
+
                         HStack {
+                            Spacer()
                             if let evBG = state.eventualBG {
                                 if Decimal(evBG) > state.highGlucose {
                                     Text(
@@ -827,6 +846,7 @@ extension Home {
                                 }
                             }
                         }
+                        .frame(width: 100)
                     }
 
                     Spacer()
