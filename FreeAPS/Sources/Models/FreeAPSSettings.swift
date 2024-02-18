@@ -55,7 +55,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var advancedCalc: Bool = false
     var disco: Bool = true
     var useLiveActivity: Bool = false
-    var caregiver: String = "Mamma" // change string to show as enteredBy in all NS related
+    var caregiver: String = "Pappa" // change string to show as enteredBy in all NS related
     var remoteMode: Bool = true
 }
 

@@ -587,7 +587,7 @@ struct MainChartView: View {
         ZStack {
             tempTargetsPath
                 .scale(x: zoomScale, anchor: .zero)
-                .fill(Color.cyan.opacity(0.5))
+                .fill(Color.cyan.opacity(colorScheme == .light ? 0.1 : 0.3))
             tempTargetsPath
                 .scale(x: zoomScale, anchor: .zero)
                 .stroke(Color.cyan.opacity(0.8), lineWidth: 1)
@@ -991,7 +991,7 @@ extension MainChartView {
                     x: x0,
                     y: y0 - 3,
                     width: x1 - x0,
-                    height: y1 - y0 + 6
+                    height: y1 - y0 + 5
                 )
             }
             if rects.count > 1 {

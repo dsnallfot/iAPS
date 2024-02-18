@@ -9,6 +9,7 @@ extension Home {
         @Injected() var broadcaster: Broadcaster!
         @Injected() var apsManager: APSManager!
         @Injected() var nightscoutManager: NightscoutManager!
+        @Injected() var storage: TempTargetsStorage!
         @Injected() var settings: SettingsManager!
         @Injected() var unlockmanager: UnlockManager!
         private let timer = DispatchTimer(timeInterval: 5)
@@ -237,6 +238,21 @@ extension Home {
                 let settings = UXSettings(context: self.coredataContext)
                 settings.hours = self.hours
                 settings.date = Date.now
+                try? self.coredataContext.save()
+            }
+        }
+
+        func cancelTempTargets() {
+            storage.storeTempTargets([TempTarget.cancel(at: Date())])
+            coredataContext.performAndWait {
+                let saveToCoreData = TempTargets(context: self.coredataContext)
+                saveToCoreData.active = false
+                saveToCoreData.date = Date()
+                try? self.coredataContext.save()
+
+                let setHBT = TempTargetsSlider(context: self.coredataContext)
+                setHBT.enabled = false
+                setHBT.date = Date()
                 try? self.coredataContext.save()
             }
         }
