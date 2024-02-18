@@ -179,7 +179,7 @@ extension FreeAPSSettings: Decodable {
         }
 
         if let simulatorMode = try? container.decode(Bool.self, forKey: .simulatorMode) {
-            settings.disco = disco
+            settings.simulatorMode = simulatorMode
         }
 
         if let advancedCalc = try? container.decode(Bool.self, forKey: .advancedCalc) {
