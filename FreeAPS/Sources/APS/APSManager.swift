@@ -545,7 +545,6 @@ final class BaseAPSManager: APSManager, Injectable {
                 return
             }
             let roundedAmount = pump.roundToSupportedBolusVolume(units: Double(amount))
-
             pump.enactBolus(units: roundedAmount, activationType: .manualRecommendationAccepted) { error in
                 if let error = error {
                     // warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
@@ -685,11 +684,7 @@ final class BaseAPSManager: APSManager, Injectable {
             guard let id = preset.id, let preset_ = preset.preset else { return }
             CoreDataStorage().overrideFromPreset(preset_, id)
             let currentActiveOveride = CoreDataStorage().fetchLatestOverride().first
-            nightscout.uploadOverride(
-                name,
-                Double(preset.preset?.duration ?? 0),
-                currentActiveOveride?.date ?? Date.now
-            )
+            nightscout.uploadOverride(name, Double(preset.preset?.duration ?? 0), currentActiveOveride?.date ?? Date.now)
             announcementsStorage.storeAnnouncements([announcement], enacted: true)
             debug(.apsManager, "Remote Override by Announcement succeeded.")
         }

@@ -11,6 +11,7 @@ extension Home {
         @StateObject var state = StateModel()
         @State var isStatusPopupPresented = false
         @State var showCancelAlert = false
+        @State var showCancelTTAlert = false
         @State var triggerUpdate = false
 
         struct Buttons: Identifiable {
@@ -454,7 +455,7 @@ extension Home {
                 }
 
                 Button(action: {
-                    state.showModal(for: .addTempTarget)
+                    // state.showModal(for: .addTempTarget)
                 }) {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
@@ -465,6 +466,12 @@ extension Home {
                             .padding(.horizontal, 9)
                             .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
+                            .onTapGesture {
+                                showCancelTTAlert.toggle()
+                            }
+                            .onLongPressGesture {
+                                state.showModal(for: .addTempTarget)
+                            }
                     }
                 }
                 .overlay(
@@ -480,7 +487,7 @@ extension Home {
                 }
 
                 Button(action: {
-                    state.showModal(for: .overrideProfilesConfig)
+                    // state.showModal(for: .overrideProfilesConfig)
                 })
                     {
                         if let overrideString = overrideString {
@@ -495,6 +502,12 @@ extension Home {
                             .padding(.horizontal, 9)
                             .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
+                            .onTapGesture {
+                                showCancelAlert.toggle()
+                            }
+                            .onLongPressGesture {
+                                state.showModal(for: .overrideProfilesConfig)
+                            }
                         }
                     }
                     .overlay(
@@ -511,6 +524,7 @@ extension Home {
                                 radius: colorScheme == .dark ? 1 : 1
                             )
                     )
+
                 if overrideString != nil {
                     Spacer()
                 }
@@ -591,6 +605,17 @@ extension Home {
             .padding(.horizontal, 10)
             .padding(.bottom, 15)
             // .padding(.bottom, 8)
+            .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
+                Button("Avbryt override", role: .destructive) {
+                    state.cancelProfile()
+                    triggerUpdate.toggle()
+                }
+            }
+            .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
+                Button("Avbryt tillfälligt mål", role: .destructive) {
+                    state.cancelTempTargets()
+                }
+            }
         }
 
         var timeInterval: some View {
@@ -862,6 +887,8 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
                     radius: colorScheme == .dark ? 1 : 1
                 )
+                let isOverride = fetchedPercent.first?.enabled ?? false
+                let isTarget = (state.tempTarget != nil)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -924,48 +951,59 @@ extension Home {
                         Spacer()
                     }
 
-                    Button { state.showModal(for: .addTempTarget) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "target")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .light))
-                                .foregroundColor(state.disco ? .cyan : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if state.tempTarget != nil {
-                                Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
+                    ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "target")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .light))
+                            .foregroundColor(state.disco ? .cyan : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                            .onTapGesture {
+                                if isTarget {
+                                    showCancelTTAlert.toggle()
+                                } else {
+                                    state.showModal(for: .addTempTarget)
+                                }
                             }
+                            .onLongPressGesture {
+                                state.showModal(for: .addTempTarget)
+                            }
+                        if state.tempTarget != nil {
+                            Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
+                                .offset(x: 0, y: 4)
                         }
-                    }.buttonStyle(.plain)
+                    }
 
                     Spacer()
 
-                    Button {
-                        state.showModal(for: .overrideProfilesConfig)
-                        triggerUpdate.toggle()
-                    }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "person")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(state.disco ? .purple.opacity(0.7) : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if selectedProfile().isOn {
-                                Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
-                            }
+                    ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "person")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .regular))
+                            .foregroundColor(state.disco ? .purple.opacity(0.7) : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                        if selectedProfile().isOn {
+                            Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
+                                .offset(x: 0, y: 4)
                         }
-                    }.buttonStyle(.plain)
+                    }
+                    .onTapGesture {
+                        if isOverride {
+                            showCancelAlert.toggle()
+                        } else {
+                            state.showModal(for: .overrideProfilesConfig)
+                        }
+                    }
+                    .onLongPressGesture {
+                        state.showModal(for: .overrideProfilesConfig)
+                    }
                     Spacer()
                     Button { state.secureShowSettings() }
                     label: {
@@ -990,6 +1028,17 @@ extension Home {
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 30)
+            }
+            .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
+                Button("Avbryt override", role: .destructive) {
+                    state.cancelProfile()
+                    triggerUpdate.toggle()
+                }
+            }
+            .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
+                Button("Avbryt tillfälligt mål", role: .destructive) {
+                    state.cancelTempTargets()
+                }
             }
         }
 

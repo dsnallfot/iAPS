@@ -609,7 +609,7 @@ struct MainChartView: View {
         ZStack {
             tempTargetsPath
                 .scale(x: zoomScale, anchor: .zero)
-                .fill(Color.cyan.opacity(0.5))
+                .fill(Color.cyan.opacity(colorScheme == .light ? 0.1 : 0.3))
             tempTargetsPath
                 .scale(x: zoomScale, anchor: .zero)
                 .stroke(Color.cyan.opacity(0.8), lineWidth: 1)
@@ -1040,7 +1040,7 @@ extension MainChartView {
                     x: x0,
                     y: y0 - 3,
                     width: x1 - x0,
-                    height: y1 - y0 + 7
+                    height: y1 - y0 + 5
                 )
             }
             if rects.count > 1 {
@@ -1081,7 +1081,7 @@ extension MainChartView {
                     x: xStart,
                     y: y - 3,
                     width: xEnd - xStart,
-                    height: 7
+                    height: 5
                 )
             }
             if latest?.enabled ?? false {
@@ -1099,7 +1099,7 @@ extension MainChartView {
                             fullSize: fullSize
                         ),
                         width: x2 - x1,
-                        height: 7
+                        height: 5
                     )
                     old.append(oneMore)
                     let path = Path { path in
@@ -1115,7 +1115,7 @@ extension MainChartView {
                         x: x1,
                         y: glucoseToYCoordinate(Int(Double(latest?.target ?? 100)), fullSize: fullSize),
                         width: x2 - x1 + 6000, // additionalWidth(viewWidth: fullSize.width),
-                        height: 7
+                        height: 5
                     )
                     old.append(oneMore)
                     let path = Path { path in
