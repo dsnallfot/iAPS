@@ -8,7 +8,7 @@ extension Settings {
 
         @Published var closedLoop = false
         @Published var debugOptions = false
-        // @Published var caregiver: String = "Pappa"
+        // @Published var caregiver: String = "Caregiver"
         // @Published var animatedBackground = false
 
         private(set) var buildNumber = ""

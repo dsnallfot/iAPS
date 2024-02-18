@@ -66,6 +66,7 @@ extension Home {
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 3
         @Published var disco: Bool = true
+        @Published var remoteMode: Bool = false
         @Published var insulinRecommended: Decimal = 0
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
@@ -106,6 +107,7 @@ extension Home {
             thresholdLines = settingsManager.settings.rulerMarks
             timeZone = provider.timezone
             disco = settings.settings.disco
+            remoteMode = settings.settings.remoteMode
 
             broadcaster.register(GlucoseObserver.self, observer: self)
             broadcaster.register(SuggestionObserver.self, observer: self)
@@ -458,6 +460,7 @@ extension Home.StateModel:
         lowGlucose = settingsManager.settings.low
         highGlucose = settingsManager.settings.high
         overrideUnit = settingsManager.settings.overrideHbA1cUnit
+        remoteMode = settingsManager.settings.remoteMode
 
         displayXgridLines = settingsManager.settings.xGridLines
         displayYgridLines = settingsManager.settings.yGridLines

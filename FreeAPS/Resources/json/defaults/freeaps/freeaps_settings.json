@@ -52,6 +52,7 @@
   "sweetMealFactor": 2,
   "advancedCalc": false,
   "disco": true,
-  "caregiver" : "Pappa"
+  "caregiver" : "Caregiver",
+  "remoteMode": true,
 
 }

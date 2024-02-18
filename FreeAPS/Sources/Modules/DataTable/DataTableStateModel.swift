@@ -35,17 +35,17 @@ extension DataTable {
             broadcaster.register(GlucoseObserver.self, observer: self)
             maxBolus = provider.pumpSettings().maxBolus
         }
-        
+
         private let processQueue =
-                    DispatchQueue(label: "setupTreatments.processQueue") // Ensure that only one instance of this function can execute at a time
+            DispatchQueue(label: "setupTreatments.processQueue") // Ensure that only one instance of this function can execute at a time
 
         private func setupTreatments() {
             // DispatchQueue.global().async {
-                        // Ensure that only one instance of this function can execute at a time
-                        processQueue.async {
+            // Ensure that only one instance of this function can execute at a time
+            processQueue.async {
                 let units = self.settingsManager.settings.units
 
-                //var date = Date.now
+                // var date = Date.now
 
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }

@@ -745,8 +745,8 @@ extension Home {
                 .zIndex(1)
 
                 VStack {
-                    /* HStack {
-                         HStack {
+                    HStack {
+                        /* HStack {
                              if state.pumpSuspended {
                                  Text("Basal")
                                      .font(.system(size: 12, weight: .semibold)).foregroundColor(.secondary)
@@ -761,9 +761,24 @@ extension Home {
                                      .offset(x: -2, y: 0)
                              }
                          }
-                         .font(.system(size: 12, weight: .bold))
-                         Spacer()
-                         HStack {
+                         .font(.system(size: 12, weight: .bold)) */
+                        Spacer()
+                        if state.remoteMode {
+                            Button(action: {
+                                state.showModal(for: .cgm)
+                            }) {
+                                Text("REMOTE LÄGE")
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .frame(width: 110)
+                                    .foregroundColor(.white)
+                                    .padding(2)
+                                    .background(Color.loopGreen)
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top, -1.5)
+                            Spacer()
+                        }
+                        /* HStack {
                              if let evBG = state.eventualBG {
                                  if Decimal(evBG) > state.highGlucose {
                                      Text(
@@ -797,8 +812,8 @@ extension Home {
                                      .font(.system(size: 12, weight: .semibold)).foregroundColor(.loopGreen)
                                  }
                              }
-                         }
-                     } */
+                         }*/
+                    }
 
                     Spacer()
                     HStack {
@@ -806,7 +821,7 @@ extension Home {
                         if isStatusPopupPresented {
                             legendPanel
                         }
-                        Spacer()
+                        // Spacer()
                     }
                 }
                 // .padding(.top, 7)

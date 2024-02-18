@@ -55,7 +55,8 @@ struct FreeAPSSettings: JSON, Equatable {
     var advancedCalc: Bool = false
     var disco: Bool = true
     var useLiveActivity: Bool = false
-    var caregiver: String = "Pappa" // change string to show as enteredBy in all NS related
+    var caregiver: String = "Mamma" // change string to show as enteredBy in all NS related
+    var remoteMode: Bool = true
 }
 
 extension FreeAPSSettings: Decodable {
@@ -176,6 +177,10 @@ extension FreeAPSSettings: Decodable {
 
         if let disco = try? container.decode(Bool.self, forKey: .disco) {
             settings.disco = disco
+        }
+
+        if let remoteMode = try? container.decode(Bool.self, forKey: .remoteMode) {
+            settings.remoteMode = remoteMode
         }
 
         if let advancedCalc = try? container.decode(Bool.self, forKey: .advancedCalc) {

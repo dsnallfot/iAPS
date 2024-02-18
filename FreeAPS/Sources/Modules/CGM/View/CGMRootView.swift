@@ -82,6 +82,9 @@ extension CGM {
                 Section(header: Text("Experimental")) {
                     Toggle("Smooth Glucose Value", isOn: $state.smoothGlucose)
                 }
+                Section(header: Text("Remoteläge")) {
+                    Toggle("Denna enhet används som fjärrkontroll", isOn: $state.remoteMode)
+                }
             }
 
             .onAppear(perform: configureView)
