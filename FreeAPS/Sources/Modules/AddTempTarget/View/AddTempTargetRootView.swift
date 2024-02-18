@@ -32,7 +32,7 @@ extension AddTempTarget {
                             HStack {
                                 Image(systemName: "x.circle")
                                     .tint(.white)
-                                Text("Avbryt tillfälligt mål")
+                                Text("Avsluta tillfälligt mål")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                                     .tint(.white)
@@ -70,7 +70,7 @@ extension AddTempTarget {
                     }
                 }
                 HStack {
-                    Text("Override %")
+                    Text("Insulin %")
                     Toggle(isOn: $state.viewPercantage) {}.controlSize(.mini)
                 }
 
@@ -114,7 +114,7 @@ extension AddTempTarget {
                             }
                         }
                     }
-                    header: { Text("Ställ in en procentuell override") }
+                    header: { Text("Ställ in önskad insulinprocent") }
                     footer: {
                         Text(
                             "Ditt målvärde justeras automatiskt ovan för att motsvara den procentuella ökning/minskning av insulintillförsel du anger. \nBeräkningen utgår från OpenAPS-formeln för 'Halvera basaldosen vid tillfälligt målvärde 160 mg/dl (8.9 mmol/L)'"
@@ -162,7 +162,7 @@ extension AddTempTarget {
                         DatePicker("Date", selection: $state.date)
                         HStack {
                             Button { state.enact() }
-                            label: { Text("Aktivera override") }
+                            label: { Text("Aktivera tillfälligt mål") }
                                 .disabled(state.duration == 0)
                                 .controlSize(.mini)
                                 .buttonStyle(BorderlessButtonStyle())

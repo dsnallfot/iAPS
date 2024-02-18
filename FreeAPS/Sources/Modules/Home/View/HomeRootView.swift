@@ -605,14 +605,14 @@ extension Home {
             .padding(.horizontal, 10)
             .padding(.bottom, 15)
             // .padding(.bottom, 8)
-            .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
-                Button("Avbryt override", role: .destructive) {
+            .confirmationDialog("Avsluta override", isPresented: $showCancelAlert) {
+                Button("Avsluta override", role: .destructive) {
                     state.cancelProfile()
                     triggerUpdate.toggle()
                 }
             }
-            .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
-                Button("Avbryt tillfälligt mål", role: .destructive) {
+            .confirmationDialog("Avsluta tillfälligt mål", isPresented: $showCancelTTAlert) {
+                Button("Avsluta tillfälligt mål", role: .destructive) {
                     state.cancelTempTargets()
                 }
             }

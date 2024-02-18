@@ -1066,14 +1066,85 @@ extension MainChartView {
     }
 
     // Original version
+    /* private func calculateOverridesRects(fullSize: CGSize) {
+         calculationQueue.async {
+             let latest = OverrideStorage().fetchLatestOverride().first
+             let rects = overrideHistory.compactMap { each -> CGRect in
+                 let duration = each.duration
+                 let xStart = timeToXCoordinate(each.date!.timeIntervalSince1970, fullSize: fullSize)
+                 let xEnd = timeToXCoordinate(
+                     each.date!.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
+                     fullSize: fullSize
+                 )
+                 let y = glucoseToYCoordinate(Int(each.target), fullSize: fullSize)
+                 return CGRect(
+                     x: xStart,
+                     y: y - 3,
+                     width: xEnd - xStart,
+                     height: 5
+                 )
+             }
+             if latest?.enabled ?? false {
+                 var old = Array(rects)
+                 let duration = Double(latest?.duration ?? 0)
+                 if duration > 0 {
+                     let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
+                     let plusNow = (latest?.date ?? Date.now)
+                         .addingTimeInterval(Int(latest?.duration ?? 0).minutes.timeInterval)
+                     let x2 = timeToXCoordinate(plusNow.timeIntervalSince1970, fullSize: fullSize)
+                     let oneMore = CGRect(
+                         x: x1,
+                         y: glucoseToYCoordinate(
+                             Int(Double(latest?.target ?? 100)),
+                             fullSize: fullSize
+                         ),
+                         width: x2 - x1,
+                         height: 5
+                     )
+                     old.append(oneMore)
+                     let path = Path { path in
+                         path.addRects(old)
+                     }
+                     return DispatchQueue.main.async {
+                         overridesPath = path
+                     }
+                 } else {
+                     let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
+                     let x2 = timeToXCoordinate(Date.now.timeIntervalSince1970, fullSize: fullSize)
+                     let oneMore = CGRect(
+                         x: x1,
+                         y: glucoseToYCoordinate(Int(Double(latest?.target ?? 100)), fullSize: fullSize),
+                         width: x2 - x1 + 6000, // additionalWidth(viewWidth: fullSize.width),
+                         height: 5
+                     )
+                     old.append(oneMore)
+                     let path = Path { path in
+                         path.addRects(old)
+                     }
+                     return DispatchQueue.main.async {
+                         overridesPath = path
+                     }
+                 }
+             }
+             let path = Path { path in
+                 path.addRects(rects)
+             }
+             DispatchQueue.main.async {
+                 overridesPath = path
+             }
+         }
+     } */
+
+    // Version without force unwrapping
     private func calculateOverridesRects(fullSize: CGSize) {
         calculationQueue.async {
             let latest = OverrideStorage().fetchLatestOverride().first
-            let rects = overrideHistory.compactMap { each -> CGRect in
+            let rects = overrideHistory.compactMap { each -> CGRect? in
+                guard let date = each.date else { return nil }
                 let duration = each.duration
-                let xStart = timeToXCoordinate(each.date!.timeIntervalSince1970, fullSize: fullSize)
+                let xStart = timeToXCoordinate(date.timeIntervalSince1970, fullSize: fullSize)
                 let xEnd = timeToXCoordinate(
-                    each.date!.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
+                    date.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
                     fullSize: fullSize
                 )
                 let y = glucoseToYCoordinate(Int(each.target), fullSize: fullSize)
@@ -1084,121 +1155,50 @@ extension MainChartView {
                     height: 5
                 )
             }
-            if latest?.enabled ?? false {
+            if let latestOverride = latest, latestOverride.enabled {
                 var old = Array(rects)
-                let duration = Double(latest?.duration ?? 0)
+                let duration = Double(truncating: latestOverride.duration ?? 0)
                 if duration > 0 {
-                    let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
-                    let plusNow = (latest?.date ?? Date.now)
-                        .addingTimeInterval(Int(latest?.duration ?? 0).minutes.timeInterval)
+                    let overrideStartDate = latestOverride.date ?? Date()
+                    let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
+                    let plusNow = overrideStartDate
+                        .addingTimeInterval(Int(truncating: latestOverride.duration ?? 0).minutes.timeInterval)
                     let x2 = timeToXCoordinate(plusNow.timeIntervalSince1970, fullSize: fullSize)
                     let oneMore = CGRect(
                         x: x1,
-                        y: glucoseToYCoordinate(
-                            Int(Double(latest?.target ?? 100)),
-                            fullSize: fullSize
-                        ),
+                        y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
                         width: x2 - x1,
                         height: 5
                     )
                     old.append(oneMore)
-                    let path = Path { path in
-                        path.addRects(old)
-                    }
-                    return DispatchQueue.main.async {
-                        overridesPath = path
-                    }
                 } else {
-                    let x1 = timeToXCoordinate((latest?.date ?? Date.now).timeIntervalSince1970, fullSize: fullSize)
-                    let x2 = timeToXCoordinate(Date.now.timeIntervalSince1970, fullSize: fullSize)
+                    let overrideStartDate = latestOverride.date ?? Date()
+                    let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
+                    let x2 = timeToXCoordinate(Date().timeIntervalSince1970, fullSize: fullSize)
                     let oneMore = CGRect(
                         x: x1,
-                        y: glucoseToYCoordinate(Int(Double(latest?.target ?? 100)), fullSize: fullSize),
+                        y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
                         width: x2 - x1 + 6000, // additionalWidth(viewWidth: fullSize.width),
                         height: 5
                     )
                     old.append(oneMore)
-                    let path = Path { path in
-                        path.addRects(old)
-                    }
-                    return DispatchQueue.main.async {
-                        overridesPath = path
-                    }
                 }
-            }
-            let path = Path { path in
-                path.addRects(rects)
-            }
-            DispatchQueue.main.async {
-                overridesPath = path
+                let path = Path { path in
+                    path.addRects(old)
+                }
+                DispatchQueue.main.async {
+                    overridesPath = path
+                }
+            } else {
+                let path = Path { path in
+                    path.addRects(rects)
+                }
+                DispatchQueue.main.async {
+                    overridesPath = path
+                }
             }
         }
     }
-
-    // Version without force unwrapping
-    /* private func calculateOverridesRects(fullSize: CGSize) {
-         calculationQueue.async {
-             let latest = OverrideStorage().fetchLatestOverride().first
-             let rects = overrideHistory.compactMap { each -> CGRect? in
-                 guard let date = each.date else { return nil }
-                 let duration = each.duration
-                 let xStart = timeToXCoordinate(date.timeIntervalSince1970, fullSize: fullSize)
-                 let xEnd = timeToXCoordinate(
-                     date.addingTimeInterval(Int(duration).minutes.timeInterval).timeIntervalSince1970,
-                     fullSize: fullSize
-                 )
-                 let y = glucoseToYCoordinate(Int(each.target), fullSize: fullSize)
-                 return CGRect(
-                     x: xStart,
-                     y: y - 3,
-                     width: xEnd - xStart,
-                     height: 8
-                 )
-             }
-             if let latestOverride = latest, latestOverride.enabled {
-                 var old = Array(rects)
-                 let duration = Double(truncating: latestOverride.duration ?? 0)
-                 if duration > 0 {
-                     let overrideStartDate = latestOverride.date ?? Date()
-                     let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
-                     let plusNow = overrideStartDate
-                         .addingTimeInterval(Int(truncating: latestOverride.duration ?? 0).minutes.timeInterval)
-                     let x2 = timeToXCoordinate(plusNow.timeIntervalSince1970, fullSize: fullSize)
-                     let oneMore = CGRect(
-                         x: x1,
-                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
-                         width: x2 - x1,
-                         height: 8
-                     )
-                     old.append(oneMore)
-                 } else {
-                     let overrideStartDate = latestOverride.date ?? Date()
-                     let x1 = timeToXCoordinate(overrideStartDate.timeIntervalSince1970, fullSize: fullSize)
-                     let x2 = timeToXCoordinate(Date().timeIntervalSince1970, fullSize: fullSize)
-                     let oneMore = CGRect(
-                         x: x1,
-                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
-                         width: x2 - x1 + additionalWidth(viewWidth: fullSize.width),
-                         height: 8
-                     )
-                     old.append(oneMore)
-                 }
-                 let path = Path { path in
-                     path.addRects(old)
-                 }
-                 DispatchQueue.main.async {
-                     overridesPath = path
-                 }
-             } else {
-                 let path = Path { path in
-                     path.addRects(rects)
-                 }
-                 DispatchQueue.main.async {
-                     overridesPath = path
-                 }
-             }
-         }
-     } */
 
     private func findRegularBasalPoints(
         timeBegin: TimeInterval,

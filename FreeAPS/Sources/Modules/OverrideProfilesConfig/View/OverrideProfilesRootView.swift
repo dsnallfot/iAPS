@@ -45,8 +45,8 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Namn på profil", text: $state.profileName)
-                } header: { Text("Ange namn på profil") }
+                    TextField("Namn på override", text: $state.profileName)
+                } header: { Text("Ange namn på override") }
 
                 Section {
                     Button("Save") {
@@ -72,8 +72,8 @@ extension OverrideProfilesConfig {
                         }
                         label: {
                             HStack {
-                                Image(systemName: "arrow.uturn.backward")
-                                Text("Återgå till normal profil")
+                                Image(systemName: "x.circle")
+                                Text("Avsluta override")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
@@ -89,7 +89,7 @@ extension OverrideProfilesConfig {
                             profilesView(for: preset)
                         }.onDelete(perform: removeProfile)
                     }
-                    header: { Text("Aktivera sparad profil") }
+                    header: { Text("Aktivera sparad override") }
                 }
                 Section {
                     VStack {
@@ -202,7 +202,7 @@ extension OverrideProfilesConfig {
                     }
 
                     HStack {
-                        Button("Aktivera ny profil") {
+                        Button("Aktivera ny override") {
                             showAlert.toggle()
                             alertSring = "\(state.percentage.formatted(.number)) %, " +
                                 (
@@ -243,11 +243,11 @@ extension OverrideProfilesConfig {
                         .font(.callout)
                         .controlSize(.mini)
                         .alert(
-                            "Start Profile",
+                            "Starta override",
                             isPresented: $showAlert,
                             actions: {
                                 Button("Cancel", role: .cancel) { state.isEnabled = false }
-                                Button("Start Profile", role: .destructive) {
+                                Button("Starta override", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
                                     state.saveSettings()
@@ -261,7 +261,7 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Spara ny profil") }
+                        label: { Text("Spara ny override") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -274,7 +274,7 @@ extension OverrideProfilesConfig {
                     }
                 }
 
-                header: { Text("Ställ in ny profil") }
+                header: { Text("Ställ in ny override") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
@@ -283,7 +283,7 @@ extension OverrideProfilesConfig {
             }
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
-            .navigationBarTitle("Profiles")
+            .navigationBarTitle("Override")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
         }
