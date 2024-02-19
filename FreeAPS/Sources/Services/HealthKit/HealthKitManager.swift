@@ -248,10 +248,8 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
               events.isNotEmpty
         else { return }
 
-        func save(bolusToModify: [InsulinBolus], bolus: [InsulinBolus], basal: [InsulinBasal]) {
-            // first step : delete the HK value
-            // second step : recreate with the new value !
-            bolusToModify.forEach { syncID in
+        func delete(syncIds: [String]?) {
+            syncIds?.forEach { syncID in
                 let predicate = HKQuery.predicateForObjects(
                     withMetadataKey: HKMetadataKeySyncIdentifier,
                     operatorType: .equalTo,
@@ -262,8 +260,10 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     warning(.service, "Cannot delete sample with syncID: \(syncID)", error: error)
                 }
             }
-            let bolusTotal = bolus + bolusToModify
-            let bolusSamples = bolusTotal
+        }
+
+        func save(bolus: [InsulinBolus], basal: [InsulinBasal]) {
+            let bolusSamples = bolus
                 .map {
                     HKQuantitySample(
                         type: sampleType,
@@ -297,31 +297,32 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                     )
                 }
 
-            healthKitStore.save(bolusSamples + basalSamples) { (success: Bool, error: Error?) -> Void in
-                if !success, let error = error {
-                    debug(
-                        .service,
-                        "Failed to store insulin entry in HealthKit Store! Error: " + error.localizedDescription
-                    )
-                }
-            }
+            healthKitStore.save(bolusSamples + basalSamples) { _, _ in }
         }
-
+        // delete existing event in HK where the amount is not the last value in the pumphistory
         loadSamplesFromHealth(sampleType: sampleType, withIDs: events.map(\.id))
             .receive(on: processQueue)
-            .compactMap { samples -> ([InsulinBolus], [InsulinBolus], [InsulinBasal]) in
+            .compactMap { samples -> [String] in
                 let sampleIDs = samples.compactMap(\.syncIdentifier)
-                let bolusToModify = events
+                let bolusToDelete = events
                     .filter { $0.type == .bolus && sampleIDs.contains($0.id) }
-                    .compactMap { event -> InsulinBolus? in
+                    .compactMap { event -> String? in
                         guard let amount = event.amount else { return nil }
                         guard let sampleAmount = samples.first(where: { $0.syncIdentifier == event.id }) as? HKQuantitySample
                         else { return nil }
                         if Double(amount) != sampleAmount.quantity.doubleValue(for: .internationalUnit()) {
-                            return InsulinBolus(id: sampleAmount.syncIdentifier!, amount: amount, date: event.timestamp)
+                            return sampleAmount.syncIdentifier
                         } else { return nil }
                     }
+                return bolusToDelete
+            }
+            .sink(receiveValue: delete)
+            .store(in: &lifetime)
 
+        loadSamplesFromHealth(sampleType: sampleType, withIDs: events.map(\.id))
+            .receive(on: processQueue)
+            .compactMap { samples -> ([InsulinBolus], [InsulinBasal]) in
+                let sampleIDs = samples.compactMap(\.syncIdentifier)
                 let bolus = events
                     .filter { $0.type == .bolus && !sampleIDs.contains($0.id) }
                     .compactMap { event -> InsulinBolus? in
@@ -366,7 +367,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
                             endDelivery: nextBasalEvent.timestamp
                         )
                     }
-                return (bolusToModify, bolus, basal)
+                return (bolus, basal)
             }
             .sink(receiveValue: save)
             .store(in: &lifetime)
@@ -425,14 +426,13 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
 
     /// Try to load samples from Health store
     private func loadSamplesFromHealth(
-        sampleType: HKQuantityType,
-        limit: Int = 100
+        sampleType: HKQuantityType
     ) -> Future<[HKSample], Never> {
         Future { promise in
             let query = HKSampleQuery(
                 sampleType: sampleType,
                 predicate: nil,
-                limit: limit,
+                limit: 100, // 1000,
                 sortDescriptors: nil
             ) { _, results, _ in
                 promise(.success((results as? [HKQuantitySample]) ?? []))
@@ -444,8 +444,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
     /// Try to load samples from Health store with id and do some work
     private func loadSamplesFromHealth(
         sampleType: HKQuantityType,
-        withIDs ids: [String],
-        limit: Int = 100
+        withIDs ids: [String]
     ) -> Future<[HKSample], Never> {
         Future { promise in
             let predicate = HKQuery.predicateForObjects(
@@ -456,7 +455,7 @@ final class BaseHealthKitManager: HealthKitManager, Injectable, CarbsObserver, P
             let query = HKSampleQuery(
                 sampleType: sampleType,
                 predicate: predicate,
-                limit: limit,
+                limit: 100, // 1000,
                 sortDescriptors: nil
             ) { _, results, _ in
                 promise(.success((results as? [HKQuantitySample]) ?? []))

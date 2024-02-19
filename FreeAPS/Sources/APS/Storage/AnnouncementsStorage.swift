@@ -11,7 +11,7 @@ protocol AnnouncementsStorage {
 
 final class BaseAnnouncementsStorage: AnnouncementsStorage, Injectable {
     enum Config {
-        static let recentInterval = 10.minutes.timeInterval
+        static let recentInterval = 5.minutes.timeInterval
     }
 
     private let processQueue = DispatchQueue(label: "BaseAnnouncementsStorage.processQueue")
@@ -27,8 +27,8 @@ final class BaseAnnouncementsStorage: AnnouncementsStorage, Injectable {
             self.storage.transaction { storage in
                 storage.append(announcements, to: file, uniqBy: \.createdAt)
                 let uniqEvents = storage.retrieve(file, as: [Announcement].self)?
-                    .filter { $0.createdAt.addingTimeInterval(1.days.timeInterval) > Date() }
                     .sorted { $0.createdAt > $1.createdAt } ?? []
+                    .filter { $0.createdAt.addingTimeInterval(1.days.timeInterval) > Date() }
                 storage.save(Array(uniqEvents), as: file)
             }
         }

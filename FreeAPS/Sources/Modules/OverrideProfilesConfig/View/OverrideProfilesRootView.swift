@@ -12,6 +12,7 @@ extension OverrideProfilesConfig {
         @State private var showingDetail = false
         @State private var alertSring = ""
         @State var isSheetPresented: Bool = false
+        @State var index: Int = 1
 
         @Environment(\.dismiss) var dismiss
         @Environment(\.managedObjectContext) var moc
@@ -44,8 +45,8 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Namn på profil", text: $state.profileName)
-                } header: { Text("Ange namn på profil") }
+                    TextField("Namn på override", text: $state.profileName)
+                } header: { Text("Ange namn på override") }
 
                 Section {
                     Button("Save") {
@@ -71,8 +72,8 @@ extension OverrideProfilesConfig {
                         }
                         label: {
                             HStack {
-                                Image(systemName: "arrow.uturn.backward")
-                                Text("Återgå till normal profil")
+                                Image(systemName: "x.circle")
+                                Text("Avsluta override")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
@@ -88,7 +89,7 @@ extension OverrideProfilesConfig {
                             profilesView(for: preset)
                         }.onDelete(perform: removeProfile)
                     }
-                    header: { Text("Aktivera sparad profil") }
+                    header: { Text("Aktivera sparad override") }
                 }
                 Section {
                     VStack {
@@ -201,7 +202,7 @@ extension OverrideProfilesConfig {
                     }
 
                     HStack {
-                        Button("Aktivera ny profil") {
+                        Button("Aktivera ny override") {
                             showAlert.toggle()
                             alertSring = "\(state.percentage.formatted(.number)) %, " +
                                 (
@@ -242,11 +243,11 @@ extension OverrideProfilesConfig {
                         .font(.callout)
                         .controlSize(.mini)
                         .alert(
-                            "Start Profile",
+                            "Starta override",
                             isPresented: $showAlert,
                             actions: {
                                 Button("Cancel", role: .cancel) { state.isEnabled = false }
-                                Button("Start Profile", role: .destructive) {
+                                Button("Starta override", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
                                     state.saveSettings()
@@ -260,7 +261,7 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Spara ny profil") }
+                        label: { Text("Spara ny override") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -273,7 +274,7 @@ extension OverrideProfilesConfig {
                     }
                 }
 
-                header: { Text("Ställ in ny profil") }
+                header: { Text("Ställ in ny override") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
@@ -282,7 +283,7 @@ extension OverrideProfilesConfig {
             }
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
-            .navigationBarTitle("Profiles")
+            .navigationBarTitle("Override")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
         }
@@ -292,6 +293,9 @@ extension OverrideProfilesConfig {
                 .asMmolL : (preset.target ?? 0) as Decimal
             let duration = (preset.duration ?? 0) as Decimal
             let name = ((preset.name ?? "") == "") || (preset.name?.isEmpty ?? true) ? "" : preset.name!
+            let identifier = ((preset.emoji ?? "") == "") || (preset.emoji?.isEmpty ?? true) ||
+                (preset.emoji ?? "") == "\u{0022}\u{0022}" ?
+                "" : preset.emoji!
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"

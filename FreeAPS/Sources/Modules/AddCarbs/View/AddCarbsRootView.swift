@@ -364,7 +364,7 @@ extension AddCarbs {
                         VStack {
                             // Use WebViewRepresentable to display the webpage
                             WebViewRepresentable(
-                                urlString: "https://1drv.ms/x/s!AsGmBMxmLyGyhPk1uu2dfrrBLSauGw"
+                                urlString: state.carbsUrl
                             )
                             .frame(height: 660)
                             Spacer()

@@ -11,6 +11,8 @@ extension Home {
         @StateObject var state = StateModel()
         @State var isStatusPopupPresented = false
         @State var showCancelAlert = false
+        @State var showCancelTTAlert = false
+        @State var triggerUpdate = false
 
         struct Buttons: Identifiable {
             let label: String
@@ -258,7 +260,7 @@ extension Home {
             )
             .onTapGesture {
                 if state.pumpDisplayState != nil {
-                    state.setupPump = true
+                    state.securePumpSettings()
                 }
             }
         }
@@ -275,10 +277,12 @@ extension Home {
                 timeZone: $state.timeZone
             ).onTapGesture {
                 isStatusPopupPresented.toggle()
+                triggerUpdate.toggle()
             }.onLongPressGesture {
                 let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                 impactHeavy.impactOccurred()
                 state.runLoop()
+                triggerUpdate.toggle()
             }
         }
 
@@ -451,7 +455,7 @@ extension Home {
                 }
 
                 Button(action: {
-                    state.showModal(for: .addTempTarget)
+                    // state.showModal(for: .addTempTarget)
                 }) {
                     if let tempTargetString = tempTargetString {
                         Text(tempTargetString)
@@ -462,6 +466,12 @@ extension Home {
                             .padding(.horizontal, 9)
                             .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
+                            .onTapGesture {
+                                showCancelTTAlert.toggle()
+                            }
+                            .onLongPressGesture {
+                                state.showModal(for: .addTempTarget)
+                            }
                     }
                 }
                 .overlay(
@@ -477,7 +487,7 @@ extension Home {
                 }
 
                 Button(action: {
-                    state.showModal(for: .overrideProfilesConfig)
+                    // state.showModal(for: .overrideProfilesConfig)
                 })
                     {
                         if let overrideString = overrideString {
@@ -492,6 +502,12 @@ extension Home {
                             .padding(.horizontal, 9)
                             .background(colorScheme == .dark ? Color.loopGray.opacity(0.1) : Color.white)
                             .cornerRadius(13)
+                            .onTapGesture {
+                                showCancelAlert.toggle()
+                            }
+                            .onLongPressGesture {
+                                state.showModal(for: .overrideProfilesConfig)
+                            }
                         }
                     }
                     .overlay(
@@ -508,6 +524,7 @@ extension Home {
                                 radius: colorScheme == .dark ? 1 : 1
                             )
                     )
+
                 if overrideString != nil {
                     Spacer()
                 }
@@ -588,6 +605,17 @@ extension Home {
             .padding(.horizontal, 10)
             .padding(.bottom, 15)
             // .padding(.bottom, 8)
+            .confirmationDialog("Avsluta override", isPresented: $showCancelAlert) {
+                Button("Avsluta override", role: .destructive) {
+                    state.cancelProfile()
+                    triggerUpdate.toggle()
+                }
+            }
+            .confirmationDialog("Avsluta tillfälligt mål", isPresented: $showCancelTTAlert) {
+                Button("Avsluta tillfälligt mål", role: .destructive) {
+                    state.cancelTempTargets()
+                }
+            }
         }
 
         var timeInterval: some View {
@@ -737,7 +765,9 @@ extension Home {
                         screenHours: $state.hours,
                         displayXgridLines: $state.displayXgridLines,
                         displayYgridLines: $state.displayYgridLines,
-                        thresholdLines: $state.thresholdLines
+                        thresholdLines: $state.thresholdLines,
+                        triggerUpdate: $triggerUpdate,
+                        overrideHistory: $state.overrideHistory
                     )
                     .offset(y: -8)
                 }
@@ -759,10 +789,29 @@ extension Home {
                                     .font(.system(size: 12, weight: .semibold)).foregroundColor(.primary)
                                     .offset(x: -2, y: 0)
                             }
+                            Spacer()
                         }
+                        .frame(width: 100)
                         .font(.system(size: 12, weight: .bold))
                         Spacer()
+                        if state.simulatorMode {
+                            Button(action: {
+                                state.showModal(for: .cgm)
+                            }) {
+                                Text("SIMULATORLÄGE")
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .frame(width: 110)
+                                    .foregroundColor(.white)
+                                    .padding(2)
+                                    .background(Color.loopRed)
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top, -1.5)
+                            Spacer()
+                        }
+
                         HStack {
+                            Spacer()
                             if let evBG = state.eventualBG {
                                 if Decimal(evBG) > state.highGlucose {
                                     Text(
@@ -797,6 +846,7 @@ extension Home {
                                 }
                             }
                         }
+                        .frame(width: 100)
                     }
 
                     Spacer()
@@ -809,7 +859,7 @@ extension Home {
                     }
                 }
                 // .padding(.top, 7)
-                .padding(.bottom, 37)
+                .padding(.bottom, 65) // 37)
                 .padding(.top, 6)
                 .padding(.trailing, 7)
                 .padding(.leading, 7)
@@ -857,6 +907,8 @@ extension Home {
                     color: Color.primary.opacity(colorScheme == .dark ? 0 : 0.5),
                     radius: colorScheme == .dark ? 1 : 1
                 )
+                let isOverride = fetchedPercent.first?.enabled ?? false
+                let isTarget = (state.tempTarget != nil)
 
                 HStack {
                     Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
@@ -919,47 +971,61 @@ extension Home {
                         Spacer()
                     }
 
-                    Button { state.showModal(for: .addTempTarget) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "target")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .light))
-                                .foregroundColor(state.disco ? .cyan : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if state.tempTarget != nil {
-                                Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
+                    ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "target")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .light))
+                            .foregroundColor(state.disco ? .cyan : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                            .onTapGesture {
+                                if isTarget {
+                                    showCancelTTAlert.toggle()
+                                } else {
+                                    state.showModal(for: .addTempTarget)
+                                }
                             }
+                            .onLongPressGesture {
+                                state.showModal(for: .addTempTarget)
+                            }
+                        if state.tempTarget != nil {
+                            Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
+                                .offset(x: 0, y: 4)
                         }
-                    }.buttonStyle(.plain)
+                    }
 
                     Spacer()
 
-                    Button { state.showModal(for: .overrideProfilesConfig) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "person")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 27, weight: .regular))
-                                .foregroundColor(state.disco ? .zt : .gray)
-                                .padding(.top, 13)
-                                .padding(.bottom, 7)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if selectedProfile().isOn {
-                                Circle().fill(state.disco ? Color.zt : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 0, y: 4)
-                            }
+                    ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "person")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 27, weight: .regular))
+                            .foregroundColor(state.disco ? .purple.opacity(0.7) : .gray)
+                            .padding(.top, 13)
+                            .padding(.bottom, 7)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                        if selectedProfile().isOn {
+                            Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
+                                .offset(x: 0, y: 4)
                         }
-                    }.buttonStyle(.plain)
+                    }
+                    .onTapGesture {
+                        if isOverride {
+                            showCancelAlert.toggle()
+                        } else {
+                            state.showModal(for: .overrideProfilesConfig)
+                        }
+                    }
+                    .onLongPressGesture {
+                        state.showModal(for: .overrideProfilesConfig)
+                    }
                     Spacer()
-                    Button { state.showModal(for: .settings) }
+                    Button { state.secureShowSettings() }
                     label: {
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                             Image(systemName: "gearshape")
@@ -982,6 +1048,17 @@ extension Home {
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 30)
+            }
+            .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
+                Button("Avbryt override", role: .destructive) {
+                    state.cancelProfile()
+                    triggerUpdate.toggle()
+                }
+            }
+            .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
+                Button("Avbryt tillfälligt mål", role: .destructive) {
+                    state.cancelTempTargets()
+                }
             }
         }
 

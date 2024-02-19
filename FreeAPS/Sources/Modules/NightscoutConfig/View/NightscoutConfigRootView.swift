@@ -46,6 +46,18 @@ extension NightscoutConfig {
                             ProgressView()
                         }
                     }
+                } header: {
+                    Text("Nightscout URL och Secret")
+                }
+
+                Section {
+                    TextField("Räkna KH URL", text: $state.carbsUrl)
+                        .disableAutocorrection(true)
+                        .textContentType(.URL)
+                        .autocapitalization(.none)
+                        .keyboardType(.URL)
+                } header: {
+                    Text("URL till Räkna KH")
                 }
 
                 Section {
@@ -120,9 +132,9 @@ extension NightscoutConfig {
                         .disabled(state.url.isEmpty || state.connecting || state.backfilling)
                 }
 
-                /* Section {
-                     Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
-                 } header: { Text("Tillåt fjärrstyrning av iAPS") } */
+                Section {
+                    Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
+                } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
             .navigationTitle("Nightscout")

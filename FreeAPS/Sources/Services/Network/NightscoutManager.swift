@@ -20,6 +20,11 @@ protocol NightscoutManager: GlucoseSource {
     func uploadStatistics(dailystat: Statistics)
     func uploadPreferences(_ preferences: Preferences)
     func uploadProfileAndSettings(_: Bool)
+    func uploadOverride(_ profile: String, _ duration: Double, _ date: Date)
+    func deleteAnnouncements()
+    func deleteAllNSoverrrides()
+    func deleteOverride()
+    func editOverride(_ profile: String, _ duration_: Double, _ date: Date)
     var cgmURL: URL? { get }
 }
 
@@ -290,15 +295,37 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         }
     }
 
+    func deleteAnnouncements() {
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
+            return
+        }
+        nightscout.deleteAnnouncements()
+            .collect()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    debug(.nightscout, "Annuncement(s) deleted from NS.")
+
+                case let .failure(error):
+                    info(
+                        .nightscout,
+                        "Deletion of Announcements not possible \(error.localizedDescription)",
+                        type: MessageType.warning
+                    )
+                }
+            } receiveValue: { _ in }
+            .store(in: &lifetime)
+    }
+
     func deleteNormalCarbs(_ treatement: DataTable.Treatment) {
         guard let nightscout = nightscoutAPI, isUploadEnabled else {
             carbsStorage.deleteCarbs(at: treatement.id, fpuID: "", complex: false)
             return
         }
 
-        carbsStorage.deleteCarbs(at: treatement.id, fpuID: "", complex: false)
-
         healthkitManager.deleteCarbs(syncID: treatement.id, fpuID: "")
+
+        carbsStorage.deleteCarbs(at: "", fpuID: treatement.fpuID ?? "", complex: false)
 
         nightscout.deleteCarbs(treatement, _isFPU: false)
             .collect()
@@ -512,6 +539,35 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
                 } receiveValue: {}
                 .store(in: &self.lifetime)
         }
+
+        uploadPodAge()
+    }
+
+    private func uploadPodAge() {
+        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
+        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
+           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
+        {
+            let siteTreatment = NigtscoutTreatment(
+                duration: nil,
+                rawDuration: nil,
+                rawRate: nil,
+                absolute: nil,
+                rate: nil,
+                eventType: .nsSiteChange,
+                createdAt: podAge,
+                enteredBy: NigtscoutTreatment.local,
+                bolus: nil,
+                insulin: nil,
+                notes: nil,
+                carbs: nil,
+                fat: nil,
+                protein: nil,
+                targetTop: nil,
+                targetBottom: nil
+            )
+            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
+        }
     }
 
     func uploadProfileAndSettings(_ force: Bool) {
@@ -677,6 +733,136 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         )
     }
 
+    func editOverride(_ profile: String, _ duration_: Double, _ date: Date) {
+        let duration = Int(duration_ == 0 ? 2880 : duration_)
+        let exercise =
+            [NigtscoutExercise(
+                duration: duration,
+                eventType: EventType.nsExercise,
+                createdAt: date,
+                enteredBy: NigtscoutTreatment.local,
+                notes: profile
+            )]
+
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
+            return
+        }
+
+        processQueue.async {
+            nightscout.deleteOverride(at: date)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        debug(.nightscout, "Old Override deleted in NS, date: \(date)")
+                        nightscout.uploadEcercises(exercise)
+                            .sink { completion in
+                                switch completion {
+                                case .finished:
+                                    debug(.nightscout, "Override Uploaded to NS, date: \(date)")
+                                case let .failure(error):
+                                    CoreDataStorage().addToNotUploaded(1)
+                                    self.notUploaded(overrides: exercise)
+                                    debug(.nightscout, "Upload of Override failed: " + error.localizedDescription)
+                                }
+                            } receiveValue: {}
+                            .store(in: &self.lifetime)
+                    case let .failure(error):
+                        debug(.nightscout, "Deletion of Old Override failed: " + error.localizedDescription)
+                        CoreDataStorage().addToNotUploaded(1)
+                        self.notUploaded(overrides: exercise)
+                    }
+                } receiveValue: {}
+                .store(in: &self.lifetime)
+        }
+    }
+
+    func uploadOverride(_ profile: String, _ duration_: Double, _ date: Date) {
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
+            return
+        }
+        let duration = Int(duration_ == 0 ? 2880 : duration_)
+
+        let exercise =
+            [NigtscoutExercise(
+                duration: duration,
+                eventType: EventType.nsExercise,
+                createdAt: date,
+                enteredBy: NigtscoutTreatment.local,
+                notes: profile
+            )]
+
+        print("Override uploaded: \(exercise)")
+
+        processQueue.async {
+            nightscout.uploadEcercises(exercise)
+                // nightscout.uploadTreatments(override)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        debug(.nightscout, "Override Uploaded to NS, date: \(date)")
+                    case let .failure(error):
+                        debug(.nightscout, "Upload of Override failed: " + error.localizedDescription)
+                    }
+                } receiveValue: {}
+                .store(in: &self.lifetime)
+        }
+    }
+
+    func deleteOverride() {
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
+            return
+        }
+        nightscout.deleteNSoverride()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    debug(.nightscout, "Override deleted in NS")
+                case let .failure(error):
+                    debug(.nightscout, "Override deletion in NS failed: " + error.localizedDescription)
+                }
+            } receiveValue: {}
+            .store(in: &lifetime)
+    }
+
+    func deleteAllNSoverrrides() {
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
+            return
+        }
+        nightscout.deleteAllNSoverrrides()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    debug(.nightscout, "All Overrides deleted in NS")
+                case let .failure(error):
+                    debug(.nightscout, "Deletion of all overrides in NS failed: " + error.localizedDescription)
+                }
+            } receiveValue: {}
+            .store(in: &lifetime)
+    }
+
+    private func notUploaded(overrides: [NigtscoutExercise]) {
+        let file = OpenAPS.Nightscout.notUploadedOverrides
+        var uniqEvents: [NigtscoutExercise] = []
+
+        storage.transaction { storage in
+            storage.append(overrides, to: file, uniqBy: \.createdAt)
+            uniqEvents = storage.retrieve(file, as: [NigtscoutExercise].self)?
+                .filter { $0.createdAt.addingTimeInterval(2.days.timeInterval) > Date() }
+                .sorted { $0.createdAt > $1.createdAt } ?? []
+            storage.save(Array(uniqEvents), as: file)
+            debug(.nightscout, "\(uniqEvents.count) Overide added to list ot not uploaded Overrides.")
+        }
+    }
+
+    private func removeFromNotUploaded() {
+        let file = OpenAPS.Nightscout.notUploadedOverrides
+        storage.transaction { storage in
+            let newFile: [NigtscoutExercise] = []
+            storage.save(newFile, as: file)
+            debug(.nightscout, "Override(s) deleted from list of not uploaded Overrides.")
+        }
+    }
+
     private func uploadPumpHistory() {
         uploadTreatments(pumpHistoryStorage.nightscoutTretmentsNotUploaded(), fileToSave: OpenAPS.Nightscout.uploadedPumphistory)
     }
@@ -714,6 +900,9 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
                     case .finished:
                         self.storage.save(glucose, as: fileToSave)
                         debug(.nightscout, "Glucose uploaded")
+
+                        // self.checkForNoneUploadedOverides() // To do : Move somewhere else
+
                     case let .failure(error):
                         debug(.nightscout, "Upload of glucose failed: " + error.localizedDescription)
                     }
@@ -722,37 +911,47 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         }
     }
 
-    private func uploadPodAge() {
-        let uploadedPodAge = storage.retrieve(OpenAPS.Nightscout.uploadedPodAge, as: [NigtscoutTreatment].self) ?? []
-        if let podAge = storage.retrieve(OpenAPS.Monitor.podAge, as: Date.self),
-           uploadedPodAge.last?.createdAt == nil || podAge != uploadedPodAge.last!.createdAt!
-        {
-            let siteTreatment = NigtscoutTreatment(
-                duration: nil,
-                rawDuration: nil,
-                rawRate: nil,
-                absolute: nil,
-                rate: nil,
-                eventType: .nsSiteChange,
-                createdAt: podAge,
-                enteredBy: NigtscoutTreatment.local,
-                bolus: nil,
-                insulin: nil,
-                notes: nil,
-                carbs: nil,
-                fat: nil,
-                protein: nil,
-                targetTop: nil,
-                targetBottom: nil
-            )
-            uploadTreatments([siteTreatment], fileToSave: OpenAPS.Nightscout.uploadedPodAge)
-        }
+    private func checkForNoneUploadedOverides() {
+        guard let nightscout = nightscoutAPI, isUploadEnabled else { return }
+        guard let count = CoreDataStorage().countNotUploaded() else { return }
+
+        let file = storage.retrieve(OpenAPS.Nightscout.notUploadedOverrides, as: [NigtscoutExercise].self) ?? []
+        guard file.isNotEmpty else { return }
+
+        let deleteLast = file[0] // To do: Not always needed, but try everytime for now...
+        nightscout.deleteOverride(at: deleteLast.createdAt)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    self.removeFromNotUploaded()
+                    CoreDataStorage().addToNotUploaded(0)
+                    debug(.nightscout, "Last Override deleted from NS")
+                case let .failure(error):
+                    debug(.nightscout, "Last Override deleteion from NS failed! " + error.localizedDescription)
+                }
+            } receiveValue: {}
+            .store(in: &lifetime)
+
+        nightscout.uploadEcercises(file)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    self.removeFromNotUploaded()
+                    CoreDataStorage().addToNotUploaded(0)
+                    debug(.nightscout, "\(count) Override(s) from list of not uploaded now uploaded!")
+                case let .failure(error):
+                    debug(.nightscout, "Upload of Override from list of not uploaded failed: " + error.localizedDescription)
+                }
+            } receiveValue: {}
+            .store(in: &lifetime)
     }
 
     private func uploadTreatments(_ treatments: [NigtscoutTreatment], fileToSave: String) {
-        guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {
-            return
-        }
+        guard let nightscout = nightscoutAPI, isUploadEnabled else { return }
+
+        checkForNoneUploadedOverides() // To do : Move somewhere else
+
+        guard !treatments.isEmpty else { return }
 
         processQueue.async {
             treatments.chunks(ofCount: 100)
@@ -783,25 +982,26 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 extension BaseNightscoutManager: PumpHistoryObserver {
     func pumpHistoryDidUpdate(_: [PumpHistoryEvent]) {
         uploadPumpHistory()
-        uploadPodAge()
     }
 }
 
 extension BaseNightscoutManager: CarbsObserver {
     func carbsDidUpdate(_: [CarbsEntry]) {
         uploadCarbs()
+        uploadTempTargets() // Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
     }
 }
 
 extension BaseNightscoutManager: TempTargetsObserver {
     func tempTargetsDidUpdate(_: [TempTarget]) {
         uploadTempTargets()
+        uploadCarbs() // Daniel: Testa trigga uppladdning av både TT och Carbs om ngn av dem uppdateras (ibland missas uppladdning till ns om man både aktiverar tt och reggar kh samtidigt)
     }
 }
 
 extension BaseNightscoutManager: GlucoseObserver {
     func glucoseDidUpdate(_: [BloodGlucose]) {
-        uploadGlucose()
+        // uploadGlucose()
         uploadManualGlucose()
     }
 }

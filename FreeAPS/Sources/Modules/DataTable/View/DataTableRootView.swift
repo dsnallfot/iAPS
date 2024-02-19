@@ -369,7 +369,7 @@ extension DataTable {
                     }
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
@@ -385,7 +385,7 @@ extension DataTable {
 
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
@@ -410,7 +410,7 @@ extension DataTable {
                     // .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }

@@ -19,6 +19,7 @@ extension NightscoutConfig {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         @Published var url = ""
+        @Published var carbsUrl = ""
         @Published var secret = ""
         @Published var message = ""
         @Published var connecting = false
@@ -36,6 +37,7 @@ extension NightscoutConfig {
 
         override func subscribe() {
             url = keychain.getValue(String.self, forKey: Config.urlKey) ?? ""
+            carbsUrl = keychain.getValue(String.self, forKey: Config.carbsUrlKey) ?? ""
             secret = keychain.getValue(String.self, forKey: Config.secretKey) ?? ""
             units = settingsManager.settings.units
             dia = settingsManager.pumpSettings.insulinActionCurve
@@ -84,6 +86,7 @@ extension NightscoutConfig {
                     self.message = "Connected!"
                     self.keychain.setValue(self.url, forKey: Config.urlKey)
                     self.keychain.setValue(self.secret, forKey: Config.secretKey)
+                    self.keychain.setValue(self.carbsUrl, forKey: Config.carbsUrlKey)
                 }
                 .store(in: &lifetime)
         }

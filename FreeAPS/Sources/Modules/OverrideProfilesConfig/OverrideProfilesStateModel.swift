@@ -5,7 +5,7 @@ extension OverrideProfilesConfig {
     final class StateModel: BaseStateModel<Provider> {
         @Published var percentage: Double = 100
         @Published var isEnabled = false
-        @Published var _indefinite = false
+        @Published var _indefinite = true
         @Published var duration: Decimal = 0
         @Published var target: Decimal = 0
         @Published var override_target: Bool = false
@@ -26,7 +26,10 @@ extension OverrideProfilesConfig {
         @Published var uamMinutes: Decimal = 0
         @Published var defaultSmbMinutes: Decimal = 0
         @Published var defaultUamMinutes: Decimal = 0
+        @Published var emoji: String = ""
 
+        @Injected() var broadcaster: Broadcaster!
+        @Injected() var ns: NightscoutManager!
         var units: GlucoseUnits = .mmolL
 
         override func subscribe() {
@@ -39,6 +42,9 @@ extension OverrideProfilesConfig {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         func saveSettings() {
+            // Is other override already active?
+            let last = CoreDataStorage().fetchLatestOverride().last
+
             coredataContext.perform { [self] in
                 let saveOverride = Override(context: self.coredataContext)
                 saveOverride.duration = self.duration as NSDecimalNumber
@@ -57,6 +63,12 @@ extension OverrideProfilesConfig {
                     }
                     saveOverride.target = target as NSDecimalNumber
                 } else { saveOverride.target = 0 }
+                /* saveOverride.target = (
+                         units == .mmolL
+                             ? target.asMgdL
+                             : target
+                     ) as NSDecimalNumber
+                 } else { saveOverride.target = 6 } */
 
                 if advancedSettings {
                     saveOverride.advancedSettings = true
@@ -75,7 +87,24 @@ extension OverrideProfilesConfig {
                     saveOverride.smbMinutes = smbMinutes as NSDecimalNumber
                     saveOverride.uamMinutes = uamMinutes as NSDecimalNumber
                 }
+
+                if let active = last, active.enabled {
+                    if let preset = OverrideStorage().isPresetName(), let duration = OverrideStorage().cancelProfile() {
+                        ns.editOverride(preset, duration, last?.date ?? Date.now)
+                    } else if let duration = OverrideStorage().cancelProfile() {
+                        ns.editOverride("Custom", duration, last?.date ?? Date.now)
+                    }
+                } else {
+                    let duration = (self.duration as NSDecimalNumber) == 0 ? 2880 : Int(self.duration as NSDecimalNumber)
+                    ns.uploadOverride(self.percentage.formatted(), Double(duration), saveOverride.date ?? Date.now)
+                }
+
                 try? self.coredataContext.save()
+            }
+            DispatchQueue.main.async {
+                self.broadcaster.notify(OverrideObserver.self, on: .main) {
+                    $0.overrideHistoryDidUpdate(OverrideStorage().fetchOverrideHistory(interval: DateFilter().today))
+                }
             }
         }
 
@@ -87,6 +116,7 @@ extension OverrideProfilesConfig {
                 saveOverride.percentage = self.percentage
                 saveOverride.smbIsOff = self.smbIsOff
                 saveOverride.name = self.profileName
+                saveOverride.emoji = self.emoji
                 id = UUID().uuidString
                 self.isPreset.toggle()
                 saveOverride.id = id
@@ -98,6 +128,7 @@ extension OverrideProfilesConfig {
                             : target
                     ) as NSDecimalNumber
                 } else { saveOverride.target = 0 }
+                // } else { saveOverride.target = 6 }
 
                 if advancedSettings {
                     saveOverride.advancedSettings = true
@@ -122,6 +153,10 @@ extension OverrideProfilesConfig {
 
         func selectProfile(id_: String) {
             guard id_ != "" else { return }
+
+            // Is other already active?
+            let last = CoreDataStorage().fetchLatestOverride().last
+
             coredataContext.performAndWait {
                 var profileArray = [OverridePresets]()
                 let requestProfiles = OverridePresets.fetchRequest() as NSFetchRequest<OverridePresets>
@@ -140,6 +175,12 @@ extension OverrideProfilesConfig {
                 saveOverride.target = profile.target
                 saveOverride.id = id_
 
+                /* if let tar = profile.target, tar == 0 {
+                     saveOverride.target = 6
+                 } else {
+                     saveOverride.target = profile.target
+                 } */
+
                 if profile.advancedSettings {
                     saveOverride.advancedSettings = true
                     if !isfAndCr {
@@ -156,6 +197,13 @@ extension OverrideProfilesConfig {
                     saveOverride.smbMinutes = (profile.smbMinutes ?? 0) as NSDecimalNumber
                     saveOverride.uamMinutes = (profile.uamMinutes ?? 0) as NSDecimalNumber
                 }
+
+                if let alreadyActive = last, alreadyActive.enabled, let duration = OverrideStorage().cancelProfile() {
+                    ns.editOverride(profile.name ?? "Custom", duration, alreadyActive.date ?? Date.now)
+                } else {
+                    ns.uploadOverride(profile.name ?? "", Double(saveOverride.duration ?? 0), saveOverride.date ?? Date())
+                }
+
                 try? self.coredataContext.save()
             }
         }
@@ -170,7 +218,7 @@ extension OverrideProfilesConfig {
                 try? overrideArray = coredataContext.fetch(requestEnabled)
                 isEnabled = overrideArray.first?.enabled ?? false
                 percentage = overrideArray.first?.percentage ?? 100
-                _indefinite = overrideArray.first?.indefinite ?? false
+                _indefinite = overrideArray.first?.indefinite ?? true
                 duration = (overrideArray.first?.duration ?? 0) as Decimal
                 smbIsOff = overrideArray.first?.smbIsOff ?? false
                 advancedSettings = overrideArray.first?.advancedSettings ?? false
@@ -207,8 +255,7 @@ extension OverrideProfilesConfig {
                         isEnabled = false
                     }
                     newDuration = Date().distance(to: date.addingTimeInterval(addedMinutes.minutes.timeInterval)).minutes
-                    if overrideTarget != 0 {
-                        override_target = true
+                    if override_target {
                         target = units == .mmolL ? overrideTarget.asMmolL : overrideTarget
                     }
                 }
@@ -216,7 +263,7 @@ extension OverrideProfilesConfig {
                 if newDuration < 0 { newDuration = 0 } else { duration = Decimal(newDuration) }
 
                 if !isEnabled {
-                    _indefinite = false
+                    _indefinite = true
                     percentage = 100
                     duration = 0
                     target = 0
@@ -230,7 +277,7 @@ extension OverrideProfilesConfig {
         }
 
         func cancelProfile() {
-            _indefinite = false
+            _indefinite = true
             isEnabled = false
             percentage = 100
             duration = 0
@@ -238,14 +285,29 @@ extension OverrideProfilesConfig {
             override_target = false
             smbIsOff = false
             advancedSettings = false
-            coredataContext.perform { [self] in
-                let profiles = Override(context: self.coredataContext)
-                profiles.enabled = false
-                profiles.date = Date()
-                try? self.coredataContext.save()
-            }
             smbMinutes = defaultSmbMinutes
             uamMinutes = defaultUamMinutes
+
+            /* let storage = OverrideStorage()
+             let duration_ = storage.cancelProfile()
+
+             let last_ = storage.fetchLatestOverride().last
+             let name = storage.isPresetName()
+             if let last = last_, let duration = duration_ {
+                 ns.editOverride(name ?? "", duration, last.date ?? Date.now)
+             } */
+
+            let storage = OverrideStorage()
+            // let duration = storage.cancelProfile()
+
+            if let activeOveride = storage.fetchLatestOverride().first {
+                let presetName = storage.isPresetName()
+                let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+
+                if let duration = storage.cancelProfile() {
+                    ns.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+                }
+            }
         }
     }
 }

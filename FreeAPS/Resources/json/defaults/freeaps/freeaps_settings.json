@@ -52,5 +52,6 @@
   "sweetMealFactor": 2,
   "advancedCalc": false,
   "disco": true,
+  "simulatorMode": true,
 
 }

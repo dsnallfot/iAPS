@@ -82,6 +82,10 @@ extension CGM {
                 Section(header: Text("Experimental")) {
                     Toggle("Smooth Glucose Value", isOn: $state.smoothGlucose)
                 }
+
+                Section(header: Text("Simulatorläge")) {
+                    Toggle("Denna enhet används som simulator", isOn: $state.simulatorMode)
+                }
             }
 
             .onAppear(perform: configureView)

@@ -33,7 +33,7 @@ struct Preferences: JSON {
     var maxSMBBasalMinutes: Decimal = 30
     var maxUAMSMBBasalMinutes: Decimal = 30
     var smbInterval: Decimal = 3
-    var bolusIncrement: Decimal = 0.1
+    var bolusIncrement: Decimal = 0.05
     var curve: InsulinCurve = .rapidActing
     var useCustomPeakTime: Bool = false
     var insulinPeakTime: Decimal = 75

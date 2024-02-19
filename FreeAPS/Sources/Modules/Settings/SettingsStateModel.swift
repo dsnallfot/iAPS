@@ -74,6 +74,14 @@ extension Settings {
             nightscoutManager.uploadProfileAndSettings(false)
             hideModal()
         }
+
+        /* func deleteOverrides() {
+             nightscoutManager.deleteAllNSoverrrides() // For testing
+         }
+
+         func deleteOverride() {
+             nightscoutManager.deleteOverride() // For testing
+         } */
     }
 }
 

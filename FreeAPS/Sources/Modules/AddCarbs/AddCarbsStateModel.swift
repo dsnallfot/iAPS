@@ -7,6 +7,7 @@ extension AddCarbs {
         @Injected() var carbsStorage: CarbsStorage!
         @Injected() var apsManager: APSManager!
         @Injected() var settings: SettingsManager!
+        @Injected() private var keychain: Keychain!
         @Published var carbs: Decimal = 0
         @Published var date = Date()
         @Published var protein: Decimal = 0
@@ -24,6 +25,7 @@ extension AddCarbs {
         @Published var isEnabled = false
         @Published var carbRatio: Decimal = 0
         @Published var cob: Decimal = 0
+        @Published var carbsUrl = ""
 
         let now = Date.now
 
@@ -31,6 +33,7 @@ extension AddCarbs {
 
         override func subscribe() {
             subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
+            carbsUrl = keychain.getValue(String.self, forKey: NightscoutConfig.Config.carbsUrlKey) ?? ""
 
             carbsRequired = provider.suggestion?.carbsReq
             carbRatio = provider.suggestion?.carbRatio ?? 0

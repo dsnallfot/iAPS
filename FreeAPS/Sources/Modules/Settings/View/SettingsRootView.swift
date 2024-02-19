@@ -66,56 +66,58 @@ extension Settings {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
                         Group {
-                            Text("Preferences")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
-                            Text("Pump Settings")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
                             Text("Autosense")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autosense), from: self)
-                            Text("Pump History")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.pumpHistory), from: self)
+                            Text("Autotune")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
                             Text("Basal profile")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.basalProfile), from: self)
-                            Text("Målområden")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
-                            Text("Temp targets")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.tempTargets), from: self)
-                            Text("Meal")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.meal), from: self)
+                            Text("Logg: Glukos")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.glucose), from: self)
+                            Text("Logg: Kalibreringar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.calibrations), from: self)
+                            Text("Logg: Kolhydrater")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.carbHistory), from: self)
                         }
 
+                        Group {
+                            Text("Logg: Måltid")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.meal), from: self)
+                            Text("Logg: Pumphistorik")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.pumpHistory), from: self)
+                            Text("Logg: Tillfälliga målvärden")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.tempTargets), from: self)
+                            Text("Målinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
+                            Text("NS: Announcements")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
+                            Text("NS: Announcements - Utförda")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
+                        }
+
+                        Group {
+                            Text("NS: Ej uppladdade overrides")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Nightscout.notUploadedOverrides), from: self)
+                            Text("Oref: Inställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
+                            Text("Oref: Middleware")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Middleware.determineBasal), from: self)
+                            Text("Oref: Utfört")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Enact.enacted), from: self)
+                            Text("Profilinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.profile), from: self)
+                            Text("Pumpinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
+                        }
                         Group {
                             Text("Pump profile")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.pumpProfile), from: self)
-                            Text("Profile")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.profile), from: self)
-                            Text("Carbs")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.carbHistory), from: self)
-                            Text("Enacted")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Enact.enacted), from: self)
-                            Text("Announcements")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
-                            Text("Genomförda meddelanden")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
-                            Text("Autotune")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
-                            Text("Glucose")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.glucose), from: self)
-                        }
-
-                        Group {
-                            Text("TF målvärden, förinställda")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
-                            Text("Calibrations")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.calibrations), from: self)
-                            Text("Middleware")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Middleware.determineBasal), from: self)
                             Text("Statistics")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
+                            Text("TF mål: Lista Förval")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
                             Text("Ändra inställningar (json)")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
-                        }
-                        Group {
                             HStack {
                                 Text("Profil & inställningar")
                                 Button(action: {
@@ -131,6 +133,21 @@ extension Settings {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 // .buttonStyle(.borderedProminent)
                             }
+                            /* HStack {
+                                 Text("NS Test: Radera alla overrides")
+                                 Button("Delete") { state.deleteOverrides() }
+                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                     .buttonStyle(.borderedProminent)
+                                     .tint(.red)
+                             }
+
+                             HStack {
+                                 Text("NS Test: Radera senaste override")
+                                 Button("Delete") { state.deleteOverride() }
+                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                     .buttonStyle(.borderedProminent)
+                                     .tint(.red)
+                             } */
                         }
                     }
                 } header: { Text("Utvecklare") }

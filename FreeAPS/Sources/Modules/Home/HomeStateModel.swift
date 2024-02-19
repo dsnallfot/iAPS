@@ -9,7 +9,9 @@ extension Home {
         @Injected() var broadcaster: Broadcaster!
         @Injected() var apsManager: APSManager!
         @Injected() var nightscoutManager: NightscoutManager!
+        @Injected() var storage: TempTargetsStorage!
         @Injected() var settings: SettingsManager!
+        @Injected() var unlockmanager: UnlockManager!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
         @Published var glucose: [BloodGlucose] = []
@@ -65,7 +67,9 @@ extension Home {
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 3
         @Published var disco: Bool = true
+        @Published var simulatorMode: Bool = true
         @Published var insulinRecommended: Decimal = 0
+        @Published var overrideHistory: [OverrideHistory] = []
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -82,8 +86,10 @@ extension Home {
             setupReservoir()
             setupAnnouncements()
             setupCurrentPumpTimezone()
+            setupOverrideHistory()
 
             suggestion = provider.suggestion
+            overrideHistory = provider.overrideHistory()
             uploadStats = settingsManager.settings.uploadStats
             enactedSuggestion = provider.enactedSuggestion
             units = settingsManager.settings.units
@@ -96,6 +102,7 @@ extension Home {
             setStatusTitle()
             setupCurrentTempTarget()
             smooth = settingsManager.settings.smoothGlucose
+            simulatorMode = settingsManager.settings.simulatorMode
             maxValue = settingsManager.preferences.autosensMax
             lowGlucose = settingsManager.settings.low
             highGlucose = settingsManager.settings.high
@@ -117,6 +124,7 @@ extension Home {
             broadcaster.register(EnactedSuggestionObserver.self, observer: self)
             broadcaster.register(PumpBatteryObserver.self, observer: self)
             broadcaster.register(PumpReservoirObserver.self, observer: self)
+            broadcaster.register(OverrideObserver.self, observer: self)
 
             animatedBackground = settingsManager.settings.animatedBackground
 
@@ -221,10 +229,31 @@ extension Home {
         }
 
         func cancelProfile() {
-            coredataContext.perform { [self] in
-                let profiles = Override(context: self.coredataContext)
-                profiles.enabled = false
-                profiles.date = Date()
+            let storage = OverrideStorage()
+            // let duration = storage.cancelProfile()
+
+            if let activeOveride = storage.fetchLatestOverride().first {
+                let presetName = storage.isPresetName()
+                let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+
+                if let duration = storage.cancelProfile() {
+                    nightscoutManager.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+                }
+            }
+            setupOverrideHistory()
+        }
+
+        func cancelTempTargets() {
+            storage.storeTempTargets([TempTarget.cancel(at: Date())])
+            coredataContext.performAndWait {
+                let saveToCoreData = TempTargets(context: self.coredataContext)
+                saveToCoreData.active = false
+                saveToCoreData.date = Date()
+                try? self.coredataContext.save()
+
+                let setHBT = TempTargetsSlider(context: self.coredataContext)
+                setHBT.enabled = false
+                setHBT.date = Date()
                 try? self.coredataContext.save()
             }
         }
@@ -236,6 +265,26 @@ extension Home {
                 settings.date = Date.now
                 try? self.coredataContext.save()
             }
+        }
+
+        // Added to require passcode/faceID before entering settings
+        func secureShowSettings() {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    showModal(for: .settings)
+                }
+                .store(in: &lifetime)
+        }
+
+        // Added to require passcode/faceID before entering settings
+        func securePumpSettings() {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    setupPump = true
+                }
+                .store(in: &lifetime)
         }
 
         private func setupGlucose() {
@@ -332,6 +381,13 @@ extension Home {
             }
         }
 
+        private func setupOverrideHistory() {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.overrideHistory = self.provider.overrideHistory()
+            }
+        }
+
         private func setupAnnouncements() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -424,7 +480,8 @@ extension Home.StateModel:
     EnactedSuggestionObserver,
     PumpBatteryObserver,
     PumpReservoirObserver,
-    PumpTimeZoneObserver
+    PumpTimeZoneObserver,
+    OverrideObserver
 {
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
@@ -434,6 +491,11 @@ extension Home.StateModel:
         self.suggestion = suggestion
         carbsRequired = suggestion.carbsReq
         setStatusTitle()
+        setupOverrideHistory()
+    }
+
+    func overrideHistoryDidUpdate(_: [OverrideHistory]) {
+        setupOverrideHistory()
     }
 
     func settingsDidChange(_ settings: FreeAPSSettings) {
@@ -444,6 +506,7 @@ extension Home.StateModel:
         animatedBackground = settingsManager.settings.animatedBackground
         manualTempBasal = apsManager.isManualTempBasal
         smooth = settingsManager.settings.smoothGlucose
+        simulatorMode = settingsManager.settings.simulatorMode
         lowGlucose = settingsManager.settings.low
         highGlucose = settingsManager.settings.high
         overrideUnit = settingsManager.settings.overrideHbA1cUnit
@@ -453,6 +516,7 @@ extension Home.StateModel:
         thresholdLines = settingsManager.settings.rulerMarks
 
         setupGlucose()
+        setupOverrideHistory()
     }
 
     func pumpHistoryDidUpdate(_: [PumpHistoryEvent]) {
@@ -476,11 +540,13 @@ extension Home.StateModel:
 
     func carbsDidUpdate(_: [CarbsEntry]) {
         setupCarbs()
+        setupAnnouncements()
     }
 
     func enactedSuggestionDidUpdate(_ suggestion: Suggestion) {
         enactedSuggestion = suggestion
         setStatusTitle()
+        setupOverrideHistory()
     }
 
     func pumpBatteryDidChange(_: Battery) {

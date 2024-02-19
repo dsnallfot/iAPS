@@ -11,7 +11,7 @@ struct TempTarget: JSON, Identifiable, Equatable, Hashable {
     let reason: String?
 
     static let manual = "iAPS"
-    static let custom = "Temp target"
+    static let custom = "Tillfälligt mål"
     static let cancel = "Cancel"
 
     var displayName: String {
