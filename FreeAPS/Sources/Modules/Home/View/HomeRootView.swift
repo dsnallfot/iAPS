@@ -810,8 +810,8 @@ extension Home {
                                 .padding(.top, -1.5)
 
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.white, lineWidth: 1)
-                                    .frame(width: 112, height: 16) // Adjust size as needed
+                                    .stroke(Color.secondary, lineWidth: 1)
+                                    .frame(width: 114, height: 16) // Adjust size as needed
                                     .padding(.top, -1.5)
                             }
                             Spacer()
