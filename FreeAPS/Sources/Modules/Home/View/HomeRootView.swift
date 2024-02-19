@@ -795,18 +795,25 @@ extension Home {
                         .font(.system(size: 12, weight: .bold))
                         Spacer()
                         if state.simulatorMode {
-                            Button(action: {
-                                state.showModal(for: .cgm)
-                            }) {
-                                Text("SIMULATORLÄGE")
-                                    .font(.system(size: 10, weight: .semibold))
-                                    .frame(width: 110)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Color.loopRed)
-                                    .cornerRadius(8)
+                            ZStack {
+                                Button(action: {
+                                    state.showModal(for: .cgm)
+                                }) {
+                                    Text("SIMULATORLÄGE")
+                                        .font(.system(size: 10, weight: .semibold))
+                                        .frame(width: 110)
+                                        .foregroundColor(.white)
+                                        .padding(2)
+                                        .background(Color.loopRed)
+                                        .cornerRadius(8)
+                                }
+                                .padding(.top, -1.5)
+
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.white, lineWidth: 1)
+                                    .frame(width: 112, height: 16) // Adjust size as needed
+                                    .padding(.top, -1.5)
                             }
-                            .padding(.top, -1.5)
                             Spacer()
                         }
 
@@ -859,7 +866,7 @@ extension Home {
                     }
                 }
                 // .padding(.top, 7)
-                .padding(.bottom, 65) // 37)
+                .padding(.bottom, 60)
                 .padding(.top, 6)
                 .padding(.trailing, 7)
                 .padding(.leading, 7)

@@ -11,7 +11,7 @@ protocol AnnouncementsStorage {
 
 final class BaseAnnouncementsStorage: AnnouncementsStorage, Injectable {
     enum Config {
-        static let recentInterval = 5.minutes.timeInterval
+        static let recentInterval = 10.minutes.timeInterval
     }
 
     private let processQueue = DispatchQueue(label: "BaseAnnouncementsStorage.processQueue")

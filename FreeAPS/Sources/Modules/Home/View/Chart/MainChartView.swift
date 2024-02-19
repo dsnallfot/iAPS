@@ -33,7 +33,7 @@ struct MainChartView: View {
         static let endID = "End"
         static let basalHeight: CGFloat = 65
         static let topYPadding: CGFloat = 10
-        static let bottomYPadding: CGFloat = 65
+        static let bottomYPadding: CGFloat = 50
         static let minAdditionalWidth: CGFloat = 100 // default 150
         static let maxGlucose = 324
         static let minGlucose = 36
@@ -51,6 +51,7 @@ struct MainChartView: View {
         static let owlOffset: CGFloat = 80
         static let carbsOffset: CGFloat = 55 // added to move carbs dots above glucose line
         static let bolusOffset: CGFloat = 15 // added to move bolus dots above glucose line
+        static let overrideOffset: CGFloat = 20 // added to offset the placement of overridesPath
     }
 
     private enum Command {
@@ -638,9 +639,11 @@ struct MainChartView: View {
             overridesPath
                 .scale(x: zoomScale, anchor: .zero)
                 .fill(Color.purple.opacity(colorScheme == .light ? 0.1 : 0.3))
+            // .offset(y: 20)
             overridesPath
                 .scale(x: zoomScale, anchor: .zero)
                 .stroke(Color.purple.opacity(0.7), lineWidth: 1)
+            // .offset(y: 20)
         }
         .onChange(of: glucose) { _ in
             calculateOverridesRects(fullSize: fullSize)
@@ -1040,7 +1043,7 @@ extension MainChartView {
                     x: x0,
                     y: y0 - 3,
                     width: x1 - x0,
-                    height: y1 - y0 + 5
+                    height: y1 - y0 + 6
                 )
             }
             if rects.count > 1 {
@@ -1152,7 +1155,7 @@ extension MainChartView {
                     x: xStart,
                     y: y - 3,
                     width: xEnd - xStart,
-                    height: 5
+                    height: 6
                 )
             }
             if let latestOverride = latest, latestOverride.enabled {
@@ -1168,7 +1171,7 @@ extension MainChartView {
                         x: x1,
                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
                         width: x2 - x1,
-                        height: 5
+                        height: 6
                     )
                     old.append(oneMore)
                 } else {
@@ -1179,7 +1182,7 @@ extension MainChartView {
                         x: x1,
                         y: glucoseToYCoordinate(Int(Double(truncating: latestOverride.target ?? 0)), fullSize: fullSize),
                         width: x2 - x1 + 6000, // additionalWidth(viewWidth: fullSize.width),
-                        height: 5
+                        height: 6
                     )
                     old.append(oneMore)
                 }
