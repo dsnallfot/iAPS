@@ -789,18 +789,25 @@ extension Home {
                          .font(.system(size: 12, weight: .bold)) */
                         Spacer()
                         if state.remoteMode {
-                            Button(action: {
-                                state.showModal(for: .cgm)
-                            }) {
-                                Text("REMOTELÄGE")
-                                    .font(.system(size: 10, weight: .semibold))
-                                    .frame(width: 90)
-                                    .foregroundColor(.white)
-                                    .padding(2)
-                                    .background(Color.insulin)
-                                    .cornerRadius(8)
+                            ZStack {
+                                Button(action: {
+                                    state.showModal(for: .cgm)
+                                }) {
+                                    Text("REMOTELÄGE")
+                                        .font(.system(size: 10, weight: .semibold))
+                                        .frame(width: 90)
+                                        .foregroundColor(.white)
+                                        .padding(2)
+                                        .background(Color.insulin)
+                                        .cornerRadius(8)
+                                }
+                                .padding(.top, -1.5)
+
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.secondary, lineWidth: 1)
+                                    .frame(width: 94, height: 16) // Adjust size as needed
+                                    .padding(.top, -1.5)
                             }
-                            .padding(.top, -1.5)
                             Spacer()
                         }
                         /* HStack {
