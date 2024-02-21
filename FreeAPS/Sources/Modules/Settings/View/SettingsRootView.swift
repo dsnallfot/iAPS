@@ -33,7 +33,7 @@ extension Settings {
                 } header: { Text("Devices") }
 
                 Section {
-                    Text("Nightscout").navigationLink(to: .nighscoutConfig, from: self)
+                    Text("Nightscout och web").navigationLink(to: .nighscoutConfig, from: self)
                     if HKHealthStore.isHealthDataAvailable() {
                         Text("Apple Health").navigationLink(to: .healthkit, from: self)
                     }

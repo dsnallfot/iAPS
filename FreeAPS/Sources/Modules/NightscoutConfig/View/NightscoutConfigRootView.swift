@@ -73,7 +73,7 @@ extension NightscoutConfig {
                         Toggle("Ladda även upp glukosvärden", isOn: $state.uploadGlucose)
                     }
                 } header: {
-                    Text("Tillåt uppladdning")
+                    Text("Tillåt uppladdning till Nightscout")
                 }
 
                 Section {
@@ -120,13 +120,13 @@ extension NightscoutConfig {
                         )
                     }
 
-                Section {
-                    Toggle("Use local glucose server", isOn: $state.useLocalSource)
-                    HStack {
-                        Text("Port")
-                        DecimalTextField("", value: $state.localPort, formatter: portFormater)
-                    }
-                } header: { Text("Local glucose source") }
+                /* Section {
+                     Toggle("Use local glucose server", isOn: $state.useLocalSource)
+                     HStack {
+                         Text("Port")
+                         DecimalTextField("", value: $state.localPort, formatter: portFormater)
+                     }
+                 } header: { Text("Local glucose source") } */
                 Section {
                     Button("Backfill glucose") { state.backfillGlucose() }
                         .disabled(state.url.isEmpty || state.connecting || state.backfilling)
@@ -137,7 +137,7 @@ extension NightscoutConfig {
                 } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Nightscout")
+            .navigationTitle("Nightscout och web")
             .navigationBarTitleDisplayMode(.automatic)
             .alert(isPresented: $isImportAlertPresented) {
                 importAlert!
