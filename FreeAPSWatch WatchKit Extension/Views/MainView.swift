@@ -396,7 +396,7 @@ import SwiftUI
                         .environmentObject(state)
                 } label: {
                     VStack {
-                        Image("target", bundle: nil)
+                        Image(systemName: "target")
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 35, height: 35)
@@ -415,26 +415,28 @@ import SwiftUI
                 } label: {
                     VStack {
                         if let until = state.overrides.compactMap(\.until).first, until > Date.now {
-                            Image(systemName: "person.fill")
+                            Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 35, height: 35)
                                 .foregroundColor(.purple.opacity(0.7))
 
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
-                                Text("> 48h")
+                                Text("∞")
                                     .scaledToFill()
-                                    .font(.system(size: 7))
+                                    .font(.system(size: 12))
+                                    .offset(y: -3)
+
                             } else {
                                 Text(until, style: .timer)
                                     .font(.system(size: 8))
                             }
                         } else {
-                            Image(systemName: "person")
+                            Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.purple)
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.7))
                         }
                     }
                 }

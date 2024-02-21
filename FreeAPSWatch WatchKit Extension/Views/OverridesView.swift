@@ -27,7 +27,7 @@ struct OverridesView: View {
                                 if let until = override.until, until > Date.now {
                                     Spacer()
                                     if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
-                                        Text("> 48h").foregroundStyle(.purple)
+                                        Text("∞").foregroundStyle(.purple)
                                     } else {
                                         Text(until, style: .timer).foregroundStyle(.purple)
                                     }
@@ -37,8 +37,6 @@ struct OverridesView: View {
                     }
                 }
             }
-
-
         }
         .navigationTitle("Overrides")
     }
