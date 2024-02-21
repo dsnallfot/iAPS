@@ -133,9 +133,16 @@ extension Settings {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 // .buttonStyle(.borderedProminent)
                             }
+                            HStack {
+                                Text("Delete All NS Overrides")
+                                Button("Delete") { state.deleteOverrides() }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.red)
+                            }
                             /* HStack {
-                                 Text("NS Test: Radera alla overrides")
-                                 Button("Delete") { state.deleteOverrides() }
+                                Text("NS Test: Radera alla overrides")
+                                Button("Delete") { state.deleteOverrides() }
                                      .frame(maxWidth: .infinity, alignment: .trailing)
                                      .buttonStyle(.borderedProminent)
                                      .tint(.red)

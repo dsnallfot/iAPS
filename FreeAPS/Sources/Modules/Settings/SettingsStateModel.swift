@@ -75,11 +75,11 @@ extension Settings {
             hideModal()
         }
 
-        /* func deleteOverrides() {
-             nightscoutManager.deleteAllNSoverrrides() // For testing
-         }
+        func deleteOverrides() {
+            nightscoutManager.deleteAllNSoverrrides() // For testing
+        }
 
-         func deleteOverride() {
+        /* func deleteOverride() {
              nightscoutManager.deleteOverride() // For testing
          } */
     }

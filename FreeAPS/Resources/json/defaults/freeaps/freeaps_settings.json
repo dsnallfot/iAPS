@@ -50,6 +50,8 @@
   "fattyMealTrigger": 0.5
   "sweetMeals": false,
   "sweetMealFactor": 2,
+  "useLiveActivity" : false,
+  "useTargetButton" : false,
   "advancedCalc": false,
   "disco": true,
   "simulatorMode": true,

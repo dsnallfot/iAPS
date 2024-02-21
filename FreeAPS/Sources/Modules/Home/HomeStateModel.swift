@@ -70,6 +70,7 @@ extension Home {
         @Published var simulatorMode: Bool = true
         @Published var insulinRecommended: Decimal = 0
         @Published var overrideHistory: [OverrideHistory] = []
+        @Published var overrides: [Override] = []
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -386,6 +387,13 @@ extension Home {
             }
         }
 
+        private func setupOverrides() {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.overrides = self.provider.overrides()
+            }
+        }
+
         private func setupAnnouncements() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -480,6 +488,11 @@ extension Home.StateModel:
     PumpReservoirObserver,
     PumpTimeZoneObserver
 {
+    /*
+     func overridesDidUpdate(_: [Override]) {
+         setupOverrides()
+     }*/
+
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
     }

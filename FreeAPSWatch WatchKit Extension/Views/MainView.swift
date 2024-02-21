@@ -11,6 +11,7 @@ import SwiftUI
 
     @State var isCarbsActive = false
     @State var isTargetsActive = false
+    @State var isOverrideActive = false
     @State var isBolusActive = false
     @State private var pulse = 0
     @State private var steps = 0
@@ -371,21 +372,70 @@ import SwiftUI
             }
             Spacer()
 
-            NavigationLink(isActive: $state.isTempTargetViewActive) {
-                TempTargetsView()
-                    .environmentObject(state)
-            } label: {
-                VStack {
-                    Image(systemName: "target")
-                        .renderingMode(.template)
-                        .resizable()
-                        .fontWeight(.light)
-                        .frame(width: 35, height: 35)
-                        .foregroundColor(.cyan)
-                    if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
-                        Text(until, style: .timer)
-                            .scaledToFill()
-                            .font(.system(size: 8))
+            /* NavigationLink(isActive: $state.isTempTargetViewActive) {
+             TempTargetsView()
+             .environmentObject(state)
+             } label: {
+             VStack {
+             Image(systemName: "target")
+             .renderingMode(.template)
+             .resizable()
+             .fontWeight(.light)
+             .frame(width: 35, height: 35)
+             .foregroundColor(.cyan)
+             if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+             Text(until, style: .timer)
+             .scaledToFill()
+             .font(.system(size: 8))
+             }
+             }
+             } */
+            if state.useTargetButton {
+                NavigationLink(isActive: $state.isTempTargetViewActive) {
+                    TempTargetsView()
+                        .environmentObject(state)
+                } label: {
+                    VStack {
+                        Image("target", bundle: nil)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .foregroundColor(.cyan)
+                        if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+                            Text(until, style: .timer)
+                                .scaledToFill()
+                                .font(.system(size: 8))
+                        }
+                    }
+                }
+            } else {
+                NavigationLink(isActive: $state.isOverridesViewActive) {
+                    OverridesView()
+                        .environmentObject(state)
+                } label: {
+                    VStack {
+                        if let until = state.overrides.compactMap(\.until).first, until > Date.now {
+                            Image(systemName: "person.fill")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.7))
+
+                            if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
+                                Text("> 48h")
+                                    .scaledToFill()
+                                    .font(.system(size: 7))
+                            } else {
+                                Text(until, style: .timer)
+                                    .font(.system(size: 8))
+                            }
+                        } else {
+                            Image(systemName: "person")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.purple)
+                        }
                     }
                 }
             }

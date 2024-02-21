@@ -8,7 +8,7 @@ struct TempTargetsView: View {
             WKInterfaceDevice.current().play(.click)
             state.enactTempTarget(id: "cancel")
         } label: {
-            Text("Avbryt tf målvärde")
+            Text("Avsluta tf mål")
         }.font(.headline.weight(.semibold))
             .padding(.bottom)
             .padding(.top)
