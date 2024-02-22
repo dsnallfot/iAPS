@@ -37,6 +37,7 @@ class WatchStateModel: NSObject, ObservableObject {
     @Published var isBolusViewActive = false
     @Published var displayOnWatch: AwConfig = .BGTarget
     @Published var displayFatAndProteinOnWatch = false
+    @Published var displaySensorDelayOnWatch = true
     @Published var useNewCalc = false
     @Published var eventualBG = ""
     @Published var useTargetButton = false
@@ -193,6 +194,7 @@ class WatchStateModel: NSObject, ObservableObject {
         eventualBG = state.eventualBG ?? ""
         displayOnWatch = state.displayOnWatch ?? .BGTarget
         displayFatAndProteinOnWatch = state.displayFatAndProteinOnWatch ?? false
+        displaySensorDelayOnWatch = state.displaySensorDelayOnWatch ?? false
         useTargetButton = state.useTargetButton ?? false
         useNewCalc = state.useNewCalc ?? false
         isf = state.isf

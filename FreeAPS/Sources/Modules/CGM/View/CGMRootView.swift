@@ -61,7 +61,7 @@ extension CGM {
                                 Text($0).tag($0)
                             }
                         }
-                        Toggle("Visa även 15m BS", isOn: $state.displayCalendarEmojis)
+                        Toggle("Visa ->15min BG (Sensorfördröjning)", isOn: $state.displayCalendarEmojis)
                         Toggle("Visa COB och IOB", isOn: $state.displayCalendarIOBandCOB)
                     } else if state.createCalendarEvents {
                         if #available(iOS 17.0, *) {

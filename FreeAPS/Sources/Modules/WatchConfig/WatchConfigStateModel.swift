@@ -31,6 +31,7 @@ extension WatchConfig {
         @Published var devices: [IQDevice] = []
         @Published var selectedAwConfig: AwConfig = .HR
         @Published var displayFatAndProteinOnWatch = false
+        @Published var displaySensorDelayOnWatch = true
         @Published var useTargetButton: Bool = false
 
         private(set) var preferences = Preferences()
@@ -39,6 +40,7 @@ extension WatchConfig {
             preferences = provider.preferences
 
             subscribeSetting(\.displayFatAndProteinOnWatch, on: $displayFatAndProteinOnWatch) { displayFatAndProteinOnWatch = $0 }
+            subscribeSetting(\.displaySensorDelayOnWatch, on: $displaySensorDelayOnWatch) { displaySensorDelayOnWatch = $0 }
             subscribeSetting(\.useTargetButton, on: $useTargetButton) { useTargetButton = $0 }
             subscribeSetting(\.displayOnWatch, on: $selectedAwConfig) { selectedAwConfig = $0 }
             didSet: { [weak self] value in

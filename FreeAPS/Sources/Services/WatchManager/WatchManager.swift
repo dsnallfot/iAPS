@@ -152,6 +152,7 @@ final class BaseWatchManager: NSObject, WatchManager, Injectable {
             self.state.bolusAfterCarbs = !self.settingsManager.settings.skipBolusScreenAfterCarbs
             self.state.displayOnWatch = self.settingsManager.settings.displayOnWatch
             self.state.displayFatAndProteinOnWatch = self.settingsManager.settings.displayFatAndProteinOnWatch
+            self.state.displaySensorDelayOnWatch = self.settingsManager.settings.displaySensorDelayOnWatch
             self.state.useTargetButton = self.settingsManager.settings.useTargetButton
 
             let eBG = self.evetualBGStraing()

@@ -31,13 +31,16 @@ struct CarbsView: View {
     var body: some View {
         VStack {
             // nutrient
-
-            carbs
             if state.displayFatAndProteinOnWatch {
+                carbs
                 Spacer()
                 fat
                 Spacer()
                 protein
+            } else {
+                Spacer()
+                carbs
+                    .padding(.bottom, 20)
             }
             buttonStack
         }
@@ -70,7 +73,7 @@ struct CarbsView: View {
             }
             Spacer()
             Text("Kh").font(selection == .carbs ? .title3 : .headline)
-            Spacer()
+            // Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
                 .font(selection == .carbs ? .title3 : .headline)
                 .focusable(selection == .carbs)
@@ -191,13 +194,6 @@ struct CarbsView: View {
 
     var buttonStack: some View {
         HStack(spacing: 25) {
-            /* To do: display the actual meal presets
-             Button {
-             displayPresets.toggle()
-             }
-             label: { Image(systemName: "menucard.fill") }
-             .buttonStyle(.borderless)
-             */
             Button {
                 WKInterfaceDevice.current().play(.click)
                 // Get amount from displayed string

@@ -118,33 +118,34 @@ import SwiftUI
                         .frame(width: 45, alignment: .leading)
                         .padding(.leading, 5)
                         Spacer()
-
-                        // Conditionally format the Image and Text
-                        HStack {
-                            if computedValue > 7.8 {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopYellow)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopYellow)
-                            } else if computedValue < 3.9 {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopRed)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopRed)
-                            } else {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopGreen)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopGreen)
+                        if state.displaySensorDelayOnWatch {
+                            // Conditionally format the Image and Text
+                            HStack {
+                                if computedValue > 7.8 {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopYellow)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopYellow)
+                                } else if computedValue < 3.9 {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopRed)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopRed)
+                                } else {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopGreen)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopGreen)
+                                }
                             }
+                            .frame(width: 60, alignment: .center)
                         }
-                        .frame(width: 60, alignment: .center)
                     } else {
                         HStack {
                             Text(state.delta)
@@ -282,6 +283,7 @@ import SwiftUI
                                 .resizable()
                                 .frame(width: 12, height: 12)
                                 .foregroundColor(.white)
+                                .offset(x: 3)
                             Text(override)
                                 .fontWeight(.regular)
                                 .font(.caption2)

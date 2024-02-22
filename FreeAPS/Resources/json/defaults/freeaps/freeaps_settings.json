@@ -43,6 +43,7 @@
   "rulerMarks" : false,
   "maxCarbs": 1000,
   "displayFatAndProteinOnWatch": false,
+  "displaysensorDelayOnWatch": true,
   "overrideFactor": 0.8,
   "useCalc": false,
   "fattyMeals": false,

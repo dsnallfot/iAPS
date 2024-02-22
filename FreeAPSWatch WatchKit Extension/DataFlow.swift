@@ -24,6 +24,7 @@ struct WatchState: Codable {
     var eventualBGRaw: String?
     var displayOnWatch: AwConfig?
     var displayFatAndProteinOnWatch: Bool?
+    var displaySensorDelayOnWatch: Bool?
     var useTargetButton: Bool?
     var useNewCalc: Bool?
     var isf: Decimal?

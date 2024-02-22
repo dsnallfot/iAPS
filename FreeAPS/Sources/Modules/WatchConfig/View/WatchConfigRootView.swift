@@ -20,7 +20,8 @@ extension WatchConfig {
                 }
 
                 Toggle("Visa protein och fett", isOn: $state.displayFatAndProteinOnWatch)
-                Toggle("Visa tillfälliga mål", isOn: $state.useTargetButton)
+                Toggle("Visa ->15min BG (Sensorfördröjning) ", isOn: $state.displaySensorDelayOnWatch)
+                Toggle("Visa tillfälliga mål istället för overrides", isOn: $state.useTargetButton)
 
                 Section(header: Text("Garmin Watch")) {
                     List {
