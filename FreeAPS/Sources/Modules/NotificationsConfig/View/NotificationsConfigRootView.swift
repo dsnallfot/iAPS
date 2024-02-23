@@ -53,7 +53,7 @@ extension NotificationsConfig {
                     Toggle("Show glucose on the app badge", isOn: $state.glucoseBadge)
                     Toggle("Always Notify Glucose", isOn: $state.glucoseNotificationsAlways)
                     Toggle("Also play alert sound", isOn: $state.useAlarmSound)
-                    Toggle("Also add source info", isOn: $state.addSourceInfoToGlucoseNotifications)
+                    // Toggle("Also add source info", isOn: $state.addSourceInfoToGlucoseNotifications)
 
                     HStack {
                         Text("Low")
@@ -70,33 +70,33 @@ extension NotificationsConfig {
                     }
                 }
 
-                Section(header: Text("Other")) {
-                    HStack {
-                        Text("Carbs Required Threshold")
-                        Spacer()
-                        DecimalTextField("0", value: $state.carbsRequiredThreshold, formatter: carbsFormatter)
-                        Text("g").foregroundColor(.secondary)
-                    }
-                }
-                if #available(iOS 16.2, *) {
-                    Section(
-                        header: Text("Liveaktivitet"),
-                        footer: Text(
-                            liveActivityFooterText()
-                        ),
-                        content: {
-                            if !systemLiveActivitySetting {
-                                Button("Open Settings App") {
-                                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                                }
-                            } else {
-                                Toggle("Visa liveaktivitet", isOn: $state.useLiveActivity) }
-                        }
-                    )
-                    .onReceive(resolver.resolve(LiveActivityBridge.self)!.$systemEnabled, perform: {
-                        self.systemLiveActivitySetting = $0
-                    })
-                }
+                /* Section(header: Text("Other")) {
+                     HStack {
+                         Text("Carbs Required Threshold")
+                         Spacer()
+                         DecimalTextField("0", value: $state.carbsRequiredThreshold, formatter: carbsFormatter)
+                         Text("g").foregroundColor(.secondary)
+                     }
+                 } */
+                /* if #available(iOS 16.2, *) {
+                     Section(
+                         header: Text("Liveaktivitet"),
+                         footer: Text(
+                             liveActivityFooterText()
+                         ),
+                         content: {
+                             if !systemLiveActivitySetting {
+                                 Button("Open Settings App") {
+                                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                                 }
+                             } else {
+                                 Toggle("Visa liveaktivitet", isOn: $state.useLiveActivity) }
+                         }
+                     )
+                     .onReceive(resolver.resolve(LiveActivityBridge.self)!.$systemEnabled, perform: {
+                         self.systemLiveActivitySetting = $0
+                     })
+                 } */
             }
             .onAppear(perform: configureView)
             .navigationBarTitle("Notifications")
