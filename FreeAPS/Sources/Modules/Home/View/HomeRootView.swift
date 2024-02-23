@@ -804,7 +804,7 @@ extension Home {
                                         .frame(width: 110)
                                         .foregroundColor(.white)
                                         .padding(2)
-                                        .background(Color.loopRed)
+                                        .background(Color.purple.opacity(0.7))
                                         .cornerRadius(8)
                                 }
                                 .padding(.top, -1.5)

@@ -42,7 +42,7 @@ extension Settings {
 
                 Section {
                     Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
-                    Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
+                    Text("Pump Basalinställningar").navigationLink(to: .basalProfileEditor, from: self)
                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
@@ -91,7 +91,7 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
                             Text("NS: Announcements")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
-                            Text("NS: Announcements - Utförda")
+                            Text("NS: Utförda Announcements")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
                         }
 
@@ -114,13 +114,15 @@ extension Settings {
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.pumpProfile), from: self)
                             Text("Statistics")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
-                            Text("TF mål: Lista Förval")
+                            Text("Tillfälliga mål: Favoriter")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
                             Text("Ändra inställningar (json)")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
                             HStack {
                                 Text("Profil & inställningar")
                                 Button(action: {
+                                    let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                                    impactHeavy.impactOccurred()
                                     state.uploadProfileAndSettings(true)
                                 }) {
                                     HStack {

@@ -72,7 +72,7 @@ extension BasalProfileEditor {
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Basal Profile")
+            .navigationTitle("Pump Basalinställningar")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(
                 trailing: EditButton()

@@ -3,15 +3,17 @@ import SwiftUI
 struct OverridesView: View {
     @EnvironmentObject var state: WatchStateModel
     var body: some View {
-        Button {
-            WKInterfaceDevice.current().play(.click)
-            state.enactOverride(id: "cancel")
-        } label: {
-            Text("Avsluta override")
-        }.font(.headline.weight(.semibold))
-            .padding(.bottom)
-            .padding(.top)
-            .tint(.loopRed)
+        if let until = state.overrides.compactMap(\.until).first, until > Date.now {
+            Button {
+                WKInterfaceDevice.current().play(.click)
+                state.enactOverride(id: "cancel")
+            } label: {
+                Text("Avsluta override")
+            }.font(.headline.weight(.semibold))
+                .padding(.bottom)
+                .padding(.top)
+                .tint(.loopRed)
+        }
         List {
             if state.overrides.isEmpty {
                 Text("Spara en override på din iPhone först").padding()
