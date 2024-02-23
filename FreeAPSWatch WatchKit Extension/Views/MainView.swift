@@ -11,6 +11,7 @@ import SwiftUI
 
     @State var isCarbsActive = false
     @State var isTargetsActive = false
+    @State var isOverrideActive = false
     @State var isBolusActive = false
     @State private var pulse = 0
     @State private var steps = 0
@@ -26,29 +27,29 @@ import SwiftUI
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if !completedLongPressOfBG {
-                if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
-                    HStack {
-                        Spacer()
-
-                        Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
-                        withAnimation {
-                            BlinkingView(count: 5, size: 3)
-                                .frame(width: 10, height: 10)
-                        }
-                        Spacer()
-                    }
-                    .offset(x: 0, y: 9)
-                }
-            }
-            VStack {
-                if !completedLongPressOfBG {
-                    header
+            // if !completedLongPressOfBG {
+            if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
+                HStack {
                     Spacer()
-                    buttons
-                } else {
-                    bigHeader
+
+                    Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
+                    withAnimation {
+                        BlinkingView(count: 5, size: 3)
+                            .frame(width: 10, height: 10)
+                    }
+                    Spacer()
                 }
+                .offset(x: 0, y: 9)
+            }
+            // }
+            VStack {
+                // if !completedLongPressOfBG {
+                header
+                Spacer()
+                buttons
+                /* } else {
+                     bigHeader
+                 } */
             }
 
             if state.isConfirmationViewActive {
@@ -117,33 +118,34 @@ import SwiftUI
                         .frame(width: 45, alignment: .leading)
                         .padding(.leading, 5)
                         Spacer()
-
-                        // Conditionally format the Image and Text
-                        HStack {
-                            if computedValue > 7.8 {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopYellow)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopYellow)
-                            } else if computedValue < 3.9 {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopRed)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopRed)
-                            } else {
-                                Image(systemName: "goforward.15")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.loopGreen)
-                                Text(formattedComputedValueWithComma)
-                                    .font(.caption)
-                                    .foregroundColor(.loopGreen)
+                        if state.displaySensorDelayOnWatch {
+                            // Conditionally format the Image and Text
+                            HStack {
+                                if computedValue > 7.8 {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopYellow)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopYellow)
+                                } else if computedValue < 3.9 {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopRed)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopRed)
+                                } else {
+                                    Image(systemName: "goforward.15")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.loopGreen)
+                                    Text(formattedComputedValueWithComma)
+                                        .font(.caption)
+                                        .foregroundColor(.loopGreen)
+                                }
                             }
+                            .frame(width: 60, alignment: .center)
                         }
-                        .frame(width: 60, alignment: .center)
                     } else {
                         HStack {
                             Text(state.delta)
@@ -281,6 +283,7 @@ import SwiftUI
                                 .resizable()
                                 .frame(width: 12, height: 12)
                                 .foregroundColor(.white)
+                                .offset(x: 3)
                             Text(override)
                                 .fontWeight(.regular)
                                 .font(.caption2)
@@ -300,24 +303,24 @@ import SwiftUI
         .gesture(longPresBGs)
     }
 
-    var bigHeader: some View {
-        VStack(alignment: .center) {
-            HStack {
-                Text(state.glucose).font(.system(size: 60, weight: .semibold))
-                Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
-                    .scaledToFill()
-                    .minimumScaleFactor(0.5)
-            }.padding(.bottom, 30)
+    /* var bigHeader: some View {
+         VStack(alignment: .center) {
+             HStack {
+                 Text(state.glucose).font(.system(size: 60, weight: .semibold))
+                 Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
+                     .scaledToFill()
+                     .minimumScaleFactor(0.5)
+             }.padding(.bottom, 30)
 
-            HStack {
-                Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
-            }
-        }
-        .gesture(longPresBGs)
-    }
+             HStack {
+                 Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
+             }
+         }
+         .gesture(longPresBGs)
+     } */
 
     var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 1)
+        LongPressGesture(minimumDuration: 2) // 1)
             .updating($isDetectingLongPress) { currentState, gestureState,
                 _ in
                 gestureState = currentState
@@ -371,21 +374,74 @@ import SwiftUI
             }
             Spacer()
 
-            NavigationLink(isActive: $state.isTempTargetViewActive) {
-                TempTargetsView()
-                    .environmentObject(state)
-            } label: {
-                VStack {
-                    Image(systemName: "target")
-                        .renderingMode(.template)
-                        .resizable()
-                        .fontWeight(.light)
-                        .frame(width: 35, height: 35)
-                        .foregroundColor(.cyan)
-                    if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
-                        Text(until, style: .timer)
-                            .scaledToFill()
-                            .font(.system(size: 8))
+            /* NavigationLink(isActive: $state.isTempTargetViewActive) {
+             TempTargetsView()
+             .environmentObject(state)
+             } label: {
+             VStack {
+             Image(systemName: "target")
+             .renderingMode(.template)
+             .resizable()
+             .fontWeight(.light)
+             .frame(width: 35, height: 35)
+             .foregroundColor(.cyan)
+             if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+             Text(until, style: .timer)
+             .scaledToFill()
+             .font(.system(size: 8))
+             }
+             }
+             } */
+            // if state.useTargetButton {
+            // use longpress to toggle between temptargets and override buttons instead of default and bigheader views
+            if completedLongPressOfBG {
+                NavigationLink(isActive: $state.isTempTargetViewActive) {
+                    TempTargetsView()
+                        .environmentObject(state)
+                } label: {
+                    VStack {
+                        Image(systemName: "target")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .foregroundColor(.cyan)
+                        if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+                            Text(until, style: .timer)
+                                .scaledToFill()
+                                .font(.system(size: 8))
+                        }
+                    }
+                }
+            } else {
+                NavigationLink(isActive: $state.isOverridesViewActive) {
+                    OverridesView()
+                        .environmentObject(state)
+                } label: {
+                    VStack {
+                        if let until = state.overrides.compactMap(\.until).first, until > Date.now {
+                            Image(systemName: "person.circle")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.7))
+
+                            if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
+                                Text("∞")
+                                    .scaledToFill()
+                                    .font(.system(size: 12))
+                                    .offset(y: -3)
+
+                            } else {
+                                Text(until, style: .timer)
+                                    .font(.system(size: 8))
+                            }
+                        } else {
+                            Image(systemName: "person.circle")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.7))
+                        }
                     }
                 }
             }

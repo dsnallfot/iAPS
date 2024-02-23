@@ -43,6 +43,7 @@
   "rulerMarks" : false,
   "maxCarbs": 1000,
   "displayFatAndProteinOnWatch": false,
+  "displaysensorDelayOnWatch": true,
   "overrideFactor": 0.8,
   "useCalc": false,
   "fattyMeals": false,
@@ -50,6 +51,8 @@
   "fattyMealTrigger": 0.5
   "sweetMeals": false,
   "sweetMealFactor": 2,
+  "useLiveActivity" : false,
+  "useTargetButton" : false,
   "advancedCalc": false,
   "disco": true,
   "simulatorMode": true,

@@ -44,6 +44,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var rulerMarks: Bool = false
     var maxCarbs: Decimal = 1000
     var displayFatAndProteinOnWatch: Bool = false
+    var displaySensorDelayOnWatch: Bool = true
     var onlyAutotuneBasals: Bool = false
     var overrideFactor: Decimal = 0.8
     var useCalc: Bool = false
@@ -56,6 +57,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var disco: Bool = true
     var simulatorMode: Bool = true
     var useLiveActivity: Bool = false
+    var useTargetButton: Bool = false
 }
 
 extension FreeAPSSettings: Decodable {
@@ -281,12 +283,20 @@ extension FreeAPSSettings: Decodable {
             settings.displayFatAndProteinOnWatch = displayFatAndProteinOnWatch
         }
 
+        if let displaySensorDelayOnWatch = try? container.decode(Bool.self, forKey: .displaySensorDelayOnWatch) {
+            settings.displaySensorDelayOnWatch = displaySensorDelayOnWatch
+        }
+
         if let onlyAutotuneBasals = try? container.decode(Bool.self, forKey: .onlyAutotuneBasals) {
             settings.onlyAutotuneBasals = onlyAutotuneBasals
         }
 
         if let useLiveActivity = try? container.decode(Bool.self, forKey: .useLiveActivity) {
             settings.useLiveActivity = useLiveActivity
+        }
+
+        if let useTargetButton = try? container.decode(Bool.self, forKey: .useTargetButton) {
+            settings.useTargetButton = useTargetButton
         }
 
         self = settings

@@ -43,7 +43,7 @@ extension OverrideProfilesConfig {
 
         func saveSettings() {
             // Is other override already active?
-            let last = CoreDataStorage().fetchLatestOverride().last
+            let last = OverrideStorage().fetchLatestOverride().last
 
             coredataContext.perform { [self] in
                 let saveOverride = Override(context: self.coredataContext)
@@ -101,11 +101,6 @@ extension OverrideProfilesConfig {
 
                 try? self.coredataContext.save()
             }
-            DispatchQueue.main.async {
-                self.broadcaster.notify(OverrideObserver.self, on: .main) {
-                    $0.overrideHistoryDidUpdate(OverrideStorage().fetchOverrideHistory(interval: DateFilter().today))
-                }
-            }
         }
 
         func savePreset() {
@@ -155,7 +150,7 @@ extension OverrideProfilesConfig {
             guard id_ != "" else { return }
 
             // Is other already active?
-            let last = CoreDataStorage().fetchLatestOverride().last
+            let last = OverrideStorage().fetchLatestOverride().last
 
             coredataContext.performAndWait {
                 var profileArray = [OverridePresets]()
@@ -288,25 +283,22 @@ extension OverrideProfilesConfig {
             smbMinutes = defaultSmbMinutes
             uamMinutes = defaultUamMinutes
 
-            /* let storage = OverrideStorage()
-             let duration_ = storage.cancelProfile()
-
-             let last_ = storage.fetchLatestOverride().last
-             let name = storage.isPresetName()
-             if let last = last_, let duration = duration_ {
-                 ns.editOverride(name ?? "", duration, last.date ?? Date.now)
-             } */
-
             let storage = OverrideStorage()
-            // let duration = storage.cancelProfile()
+            let duration_ = storage.cancelProfile()
+            let last_ = storage.fetchLatestOverride().last
+            let name = storage.isPresetName()
+            if let last = last_, let duration = duration_ {
+                ns.editOverride(name ?? "", duration, last.date ?? Date.now)
 
-            if let activeOveride = storage.fetchLatestOverride().first {
-                let presetName = storage.isPresetName()
-                let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+                /* let storage = OverrideStorage()
+                 // let duration = storage.cancelProfile()
 
-                if let duration = storage.cancelProfile() {
-                    ns.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
-                }
+                 if let activeOveride = storage.fetchLatestOverride().first {
+                     let presetName = storage.isPresetName()
+                     let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+
+                     if let duration = storage.cancelProfile() {
+                         ns.editOverride(nsString!, duration, activeOveride.date ?? Date.now) */
             }
         }
     }

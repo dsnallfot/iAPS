@@ -19,7 +19,7 @@ struct BolusView: View {
 
     var body: some View {
         GeometryReader { _ in
-            VStack(spacing: 16) {
+            VStack { // }(spacing: 16) {
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -28,7 +28,6 @@ struct BolusView: View {
                     } label: { Image(systemName: "minus").scaleEffect(1.25) }
                         .buttonStyle(.borderless).padding(.leading, 13)
                         .tint(.blue)
-                        .padding(.bottom, 20)
 
                     Spacer()
                     Text(numberFormatter.string(from: (steps * Double(state.bolusIncrement ?? 0.1)) as NSNumber)! + " E")
@@ -43,7 +42,6 @@ struct BolusView: View {
                             isContinuous: false,
                             isHapticFeedbackEnabled: true
                         )
-                        .padding(.bottom, 20)
 
                     Spacer()
                     Button {
@@ -53,8 +51,8 @@ struct BolusView: View {
                     } label: { Image(systemName: "plus").scaleEffect(1.35) }
                         .buttonStyle(.borderless).padding(.trailing, 18)
                         .tint(.blue)
-                        .padding(.bottom, 20)
                 }
+                .padding(.bottom, 37.5)
 
                 HStack {
                     Button {

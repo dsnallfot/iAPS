@@ -61,10 +61,33 @@ extension NightscoutConfig {
                 }
 
                 Section {
-                    Button("Connect") { state.connect() }
+                    Button("Anslut till Nightscout") { state.connect() }
                         .disabled(state.url.isEmpty || state.connecting)
-                    Button("Delete") { state.delete() }.foregroundColor(.red).disabled(state.connecting)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowBackground(
+                            AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
+                        )
+                        .tint(.white)
+                        .fontWeight(.semibold)
                 }
+                /* Section {
+                     Button("Radera URL och Secret") { state.delete() }
+                         .frame(maxWidth: .infinity, alignment: .center)
+                         // .foregroundColor(.loopRed)
+                         .disabled(state.connecting)
+                         .listRowBackground(Color(.red)).tint(.white)
+                         .fontWeight(.semibold)
+                 }*/
 
                 Section {
                     Toggle("Ladda upp behandlingar", isOn: $state.isUploadEnabled)
@@ -73,11 +96,15 @@ extension NightscoutConfig {
                         Toggle("Ladda även upp glukosvärden", isOn: $state.uploadGlucose)
                     }
                 } header: {
-                    Text("Tillåt uppladdning")
+                    Text("Tillåt uppladdning till Nightscout")
                 }
 
                 Section {
-                    Button("Import settings from Nightscout") {
+                    Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
+                } header: { Text("Tillåt fjärrstyrning av iAPS") }
+
+                Section {
+                    Button(action: {
                         importAlert = Alert(
                             title: Text("Import settings?"),
                             message: Text(
@@ -98,8 +125,26 @@ extension NightscoutConfig {
                             secondaryButton: .cancel()
                         )
                         isImportAlertPresented.toggle()
-                    }.disabled(state.url.isEmpty || state.connecting)
-
+                    }) {
+                        Text("Import settings from Nightscout")
+                            .fontWeight(.semibold)
+                    }
+                    .disabled(state.url.isEmpty || state.connecting)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(
+                        AnyView(LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                            ]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ))
+                    )
+                    .tint(.white)
                 } header: { Text("Import from Nightscout") }
 
                     .alert(isPresented: $importedHasRun) {
@@ -120,24 +165,36 @@ extension NightscoutConfig {
                         )
                     }
 
-                Section {
-                    Toggle("Use local glucose server", isOn: $state.useLocalSource)
-                    HStack {
-                        Text("Port")
-                        DecimalTextField("", value: $state.localPort, formatter: portFormater)
-                    }
-                } header: { Text("Local glucose source") }
+                /* Section {
+                     Toggle("Use local glucose server", isOn: $state.useLocalSource)
+                     HStack {
+                         Text("Port")
+                         DecimalTextField("", value: $state.localPort, formatter: portFormater)
+                     }
+                 } header: { Text("Local glucose source") } */
                 Section {
                     Button("Backfill glucose") { state.backfillGlucose() }
                         .disabled(state.url.isEmpty || state.connecting || state.backfilling)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .fontWeight(.semibold)
+                        .listRowBackground(
+                            AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
+                        )
+                        .tint(.white)
                 }
-
-                Section {
-                    Toggle("Aktivera fjärrstyrning", isOn: $state.allowAnnouncements)
-                } header: { Text("Tillåt fjärrstyrning av iAPS") }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Nightscout")
+            .navigationTitle("Nightscout och web")
             .navigationBarTitleDisplayMode(.automatic)
             .alert(isPresented: $isImportAlertPresented) {
                 importAlert!

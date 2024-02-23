@@ -43,16 +43,36 @@ extension BasalProfileEditor {
                         if state.syncInProgress {
                             ProgressView().padding(.trailing, 10)
                         }
-                        Button { state.save() }
+                        Button {
+                            let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                            impactHeavy.impactOccurred()
+                            state.save() }
                         label: {
                             Text(state.syncInProgress ? "Saving..." : "Save on Pump")
+                                .fontWeight(.semibold)
+                                .font(.title3)
                         }
                         .disabled(state.syncInProgress || state.items.isEmpty)
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(
+                        AnyView(LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                            ]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ))
+                    )
+                    .tint(.white)
                 }
             }
             .onAppear(perform: configureView)
-            .navigationTitle("Basal Profile")
+            .navigationTitle("Pump Basalinställningar")
             .navigationBarTitleDisplayMode(.automatic)
             .navigationBarItems(
                 trailing: EditButton()

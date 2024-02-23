@@ -68,7 +68,7 @@ extension NightscoutConfig {
                 url = String(fixedURL)
             }
             guard let url = URL(string: url) else {
-                message = "Invalid URL"
+                message = "Felaktig URL"
                 return
             }
             connecting = true
@@ -79,11 +79,11 @@ extension NightscoutConfig {
                     switch completion {
                     case .finished: break
                     case let .failure(error):
-                        self.message = "Error: \(error.localizedDescription)"
+                        self.message = "Fel: \(error.localizedDescription)"
                     }
                     self.connecting = false
                 } receiveValue: {
-                    self.message = "Connected!"
+                    self.message = "Ansluten!"
                     self.keychain.setValue(self.url, forKey: Config.urlKey)
                     self.keychain.setValue(self.secret, forKey: Config.secretKey)
                     self.keychain.setValue(self.carbsUrl, forKey: Config.carbsUrlKey)
@@ -103,7 +103,7 @@ extension NightscoutConfig {
 
         func importSettings() {
             guard let nightscout = nightscoutAPI else {
-                saveError("Can't access nightscoutAPI")
+                saveError("Kan inte nå nightscoutAPI")
                 return
             }
             let group = DispatchGroup()

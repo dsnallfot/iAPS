@@ -283,7 +283,7 @@ extension OverrideProfilesConfig {
             }
             .onAppear(perform: configureView)
             .onAppear { state.savedSettings() }
-            .navigationBarTitle("Override")
+            .navigationBarTitle("Overrides")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
         }

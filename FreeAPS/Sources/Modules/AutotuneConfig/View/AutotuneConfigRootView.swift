@@ -43,7 +43,10 @@ extension AutotuneConfig {
                         Spacer()
                         Text(dateFormatter.string(from: state.publishedDate))
                     }
-                    Button { state.run() }
+                    Button {
+                        let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                        impactHeavy.impactOccurred()
+                        state.run() }
                     label: { Text("Run now") }
                 }
 
@@ -92,15 +95,35 @@ extension AutotuneConfig {
 
                     Section {
                         Button { state.delete() }
-                        label: { Text("Delete autotune data") }
-                            .foregroundColor(.red)
+                        label: { Text("Delete autotune data")
+                            .fontWeight(.semibold)
+                            .tint(.white) }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .listRowBackground(Color(.loopRed))
                     }
 
                     Section {
                         Button {
                             replaceAlert = true
                         }
-                        label: { Text("Save as your Normal Basal Rates") }
+                        label: { Text("Save as your Normal Basal Rates")
+                            .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowBackground(
+                            AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
+                        )
+                        .tint(.white)
                     } header: {
                         Text("Save on Pump")
                     }
@@ -109,12 +132,16 @@ extension AutotuneConfig {
             .onAppear(perform: configureView)
             .navigationTitle("Autotune")
             .navigationBarTitleDisplayMode(.automatic)
-            .alert(Text("Are you sure?"), isPresented: $replaceAlert) {
-                Button("Yes", action: {
-                    state.replace()
+            .alert(
+                Text("Detta kommer att skriva över dina nuvarande basalinställningar \n\nÄr du säker på att du vill fortsätta?"),
+                isPresented: $replaceAlert
+            ) {
+                Button("Cancel", action: {
                     replaceAlert.toggle()
                 })
-                Button("No", action: { replaceAlert.toggle() })
+                Button("Spara", action: {
+                    state.replace()
+                    replaceAlert.toggle() })
             }
         }
     }

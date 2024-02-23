@@ -70,6 +70,7 @@ extension Home {
         @Published var simulatorMode: Bool = true
         @Published var insulinRecommended: Decimal = 0
         @Published var overrideHistory: [OverrideHistory] = []
+        @Published var overrides: [Override] = []
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -124,7 +125,6 @@ extension Home {
             broadcaster.register(EnactedSuggestionObserver.self, observer: self)
             broadcaster.register(PumpBatteryObserver.self, observer: self)
             broadcaster.register(PumpReservoirObserver.self, observer: self)
-            broadcaster.register(OverrideObserver.self, observer: self)
 
             animatedBackground = settingsManager.settings.animatedBackground
 
@@ -230,7 +230,6 @@ extension Home {
 
         func cancelProfile() {
             let storage = OverrideStorage()
-            // let duration = storage.cancelProfile()
 
             if let activeOveride = storage.fetchLatestOverride().first {
                 let presetName = storage.isPresetName()
@@ -388,6 +387,13 @@ extension Home {
             }
         }
 
+        private func setupOverrides() {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.overrides = self.provider.overrides()
+            }
+        }
+
         private func setupAnnouncements() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -480,9 +486,13 @@ extension Home.StateModel:
     EnactedSuggestionObserver,
     PumpBatteryObserver,
     PumpReservoirObserver,
-    PumpTimeZoneObserver,
-    OverrideObserver
+    PumpTimeZoneObserver
 {
+    /*
+     func overridesDidUpdate(_: [Override]) {
+         setupOverrides()
+     }*/
+
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
     }
@@ -491,10 +501,6 @@ extension Home.StateModel:
         self.suggestion = suggestion
         carbsRequired = suggestion.carbsReq
         setStatusTitle()
-        setupOverrideHistory()
-    }
-
-    func overrideHistoryDidUpdate(_: [OverrideHistory]) {
         setupOverrideHistory()
     }
 
