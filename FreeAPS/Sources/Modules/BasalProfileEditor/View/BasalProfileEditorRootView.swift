@@ -43,7 +43,10 @@ extension BasalProfileEditor {
                         if state.syncInProgress {
                             ProgressView().padding(.trailing, 10)
                         }
-                        Button { state.save() }
+                        Button {
+                            let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                            impactHeavy.impactOccurred()
+                            state.save() }
                         label: {
                             Text(state.syncInProgress ? "Saving..." : "Save on Pump")
                         }

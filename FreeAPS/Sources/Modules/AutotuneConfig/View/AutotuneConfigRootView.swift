@@ -43,7 +43,10 @@ extension AutotuneConfig {
                         Spacer()
                         Text(dateFormatter.string(from: state.publishedDate))
                     }
-                    Button { state.run() }
+                    Button {
+                        let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
+                        impactHeavy.impactOccurred()
+                        state.run() }
                     label: { Text("Run now") }
                 }
 

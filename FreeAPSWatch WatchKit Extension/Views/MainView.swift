@@ -27,29 +27,29 @@ import SwiftUI
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if !completedLongPressOfBG {
-                if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
-                    HStack {
-                        Spacer()
-
-                        Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
-                        withAnimation {
-                            BlinkingView(count: 5, size: 3)
-                                .frame(width: 10, height: 10)
-                        }
-                        Spacer()
-                    }
-                    .offset(x: 0, y: 9)
-                }
-            }
-            VStack {
-                if !completedLongPressOfBG {
-                    header
+            // if !completedLongPressOfBG {
+            if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
+                HStack {
                     Spacer()
-                    buttons
-                } else {
-                    bigHeader
+
+                    Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
+                    withAnimation {
+                        BlinkingView(count: 5, size: 3)
+                            .frame(width: 10, height: 10)
+                    }
+                    Spacer()
                 }
+                .offset(x: 0, y: 9)
+            }
+            // }
+            VStack {
+                // if !completedLongPressOfBG {
+                header
+                Spacer()
+                buttons
+                /* } else {
+                     bigHeader
+                 } */
             }
 
             if state.isConfirmationViewActive {
@@ -303,24 +303,24 @@ import SwiftUI
         .gesture(longPresBGs)
     }
 
-    var bigHeader: some View {
-        VStack(alignment: .center) {
-            HStack {
-                Text(state.glucose).font(.system(size: 60, weight: .semibold))
-                Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
-                    .scaledToFill()
-                    .minimumScaleFactor(0.5)
-            }.padding(.bottom, 30)
+    /* var bigHeader: some View {
+         VStack(alignment: .center) {
+             HStack {
+                 Text(state.glucose).font(.system(size: 60, weight: .semibold))
+                 Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
+                     .scaledToFill()
+                     .minimumScaleFactor(0.5)
+             }.padding(.bottom, 30)
 
-            HStack {
-                Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
-            }
-        }
-        .gesture(longPresBGs)
-    }
+             HStack {
+                 Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
+             }
+         }
+         .gesture(longPresBGs)
+     } */
 
     var longPress: some Gesture {
-        LongPressGesture(minimumDuration: 1)
+        LongPressGesture(minimumDuration: 2) // 1)
             .updating($isDetectingLongPress) { currentState, gestureState,
                 _ in
                 gestureState = currentState
@@ -392,7 +392,9 @@ import SwiftUI
              }
              }
              } */
-            if state.useTargetButton {
+            // if state.useTargetButton {
+            // use longpress to toggle between temptargets and override buttons instead of default and bigheader views
+            if completedLongPressOfBG {
                 NavigationLink(isActive: $state.isTempTargetViewActive) {
                     TempTargetsView()
                         .environmentObject(state)
