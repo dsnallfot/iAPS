@@ -38,6 +38,7 @@ struct TempTargetsView: View {
                 }
             }
         }
+        .padding(.top, 10)
         .navigationTitle("Temp Targets")
     }
 }

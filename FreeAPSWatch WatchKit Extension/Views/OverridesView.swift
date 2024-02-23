@@ -41,6 +41,7 @@ struct OverridesView: View {
                 }
             }
         }
+        .padding(.top, 10)
         .navigationTitle("Overrides")
     }
 }
