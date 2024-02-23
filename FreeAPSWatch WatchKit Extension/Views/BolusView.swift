@@ -64,7 +64,7 @@ struct BolusView: View {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopRed)
-                            .frame(width: 24, height: 24)
+                            .frame(width: 35, height: 35)
                     }
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -75,7 +75,7 @@ struct BolusView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopGreen)
-                            .frame(width: 24, height: 24)
+                            .frame(width: 35, height: 35)
                     }
                     .disabled(steps <= 0)
                 }

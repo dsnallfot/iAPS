@@ -118,7 +118,7 @@ struct CarbsView: View {
             }
             Spacer()
             Text("🍗").font(selection == .protein ? .title3 : .headline)
-            Spacer()
+            // Spacer()
             Text(numberFormatter.string(from: proteinAmount as NSNumber)! + " g")
                 .font(selection == .protein ? .title3 : .headline)
                 .foregroundStyle(.brown)
@@ -161,7 +161,7 @@ struct CarbsView: View {
             }
             Spacer()
             Text("🧀").font(selection == .fat ? .title3 : .headline)
-            Spacer()
+            // Spacer()
             Text(numberFormatter.string(from: fatAmount as NSNumber)! + " g")
                 .font(selection == .fat ? .title3 : .headline)
                 .foregroundColor(.brown)
