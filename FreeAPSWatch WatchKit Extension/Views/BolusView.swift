@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BolusView: View {
+@available(watchOSApplicationExtension 9.0, *) struct BolusView: View {
     @EnvironmentObject var state: WatchStateModel
 
     @State var steps = 0.0
@@ -25,7 +25,7 @@ struct BolusView: View {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps - 1
                         steps = max(newValue, 0)
-                    } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                    } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                         .buttonStyle(.borderless).padding(.leading, 13)
                         .tint(.blue)
 
@@ -48,7 +48,7 @@ struct BolusView: View {
                         WKInterfaceDevice.current().play(.click)
                         let newValue = steps + 1
                         steps = min(newValue, Double((state.maxBolus ?? 5) / (state.bolusIncrement ?? 0.1)))
-                    } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                         .buttonStyle(.borderless).padding(.trailing, 18)
                         .tint(.blue)
                 }
@@ -64,7 +64,7 @@ struct BolusView: View {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopRed)
-                            .frame(width: 35, height: 35)
+                            .frame(width: 30, height: 30)
                     }
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -75,7 +75,7 @@ struct BolusView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .foregroundColor(.loopGreen)
-                            .frame(width: 35, height: 35)
+                            .frame(width: 30, height: 30)
                     }
                     .disabled(steps <= 0)
                 }
@@ -94,7 +94,7 @@ struct BolusView: View {
     }
 }
 
-struct BolusView_Previews: PreviewProvider {
+@available(watchOSApplicationExtension 9.0, *) struct BolusView_Previews: PreviewProvider {
     static var previews: some View {
         let state = WatchStateModel()
         state.bolusRecommended = 10.3

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct CarbsView: View {
+@available(watchOSApplicationExtension 9.0, *) struct CarbsView: View {
     @EnvironmentObject var state: WatchStateModel
 
     // Selected nutrient
@@ -67,7 +67,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount - 5
                     carbAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .carbs ? .blue : .none)
             }
@@ -92,7 +92,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount + 5
                     carbAmount = min(newValue, Double(state.maxCarbs ?? 120))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .carbs ? .blue : .none)
             }
@@ -112,7 +112,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount - 5
                     proteinAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .protein ? .blue : .none)
             }
@@ -138,7 +138,8 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount + 5
                     proteinAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }.buttonStyle(.borderless).padding(.trailing, 18)
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }.buttonStyle(.borderless)
+                    .padding(.trailing, 18)
                     .tint(selection == .protein ? .blue : .none)
             }
         }
@@ -155,7 +156,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount - 5
                     fatAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .fat ? .blue : .none)
             }
@@ -181,7 +182,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount + 5
                     fatAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .fat ? .blue : .none)
             }
@@ -220,7 +221,7 @@ struct CarbsView: View {
     }
 }
 
-struct CarbsView_Previews: PreviewProvider {
+@available(watchOSApplicationExtension 9.0, *) struct CarbsView_Previews: PreviewProvider {
     static var previews: some View {
         let state = WatchStateModel()
         state.carbsRequired = 120
