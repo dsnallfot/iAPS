@@ -53,7 +53,6 @@ import SwiftUI
                         .buttonStyle(.borderless).padding(.trailing, 18)
                         .tint(.blue)
                 }
-                // .padding(.bottom, 20) // 37.5)
                 Spacer()
                 HStack {
                     Button {
@@ -81,7 +80,6 @@ import SwiftUI
                     .disabled(steps <= 0)
                 }
             }.frame(maxHeight: .infinity, alignment: .bottom)
-            // .padding(.top)
         }
         .navigationTitle("Enact Bolus")
 

@@ -132,31 +132,6 @@ extension Home {
             return Decimal(roundedInsulinAsDouble)
         }
 
-        /* @ViewBuilder func header(_ geo: GeometryProxy) -> some View {
-         VStack(alignment: .center) {
-         ZStack {
-         glucoseView
-         .padding(.bottom, 35)
-         .padding(.top, 15)
-         }
-
-         HStack(alignment: .center) {
-         Spacer()
-         cobIobView
-
-         Spacer()
-
-         pumpView
-
-         Spacer()
-         }
-         }
-         .frame(maxWidth: .infinity)
-         .padding(.top, 10 + geo.safeAreaInsets.top)
-         .padding(.horizontal, 10)
-         .background(Color.clear)
-         }*/
-
         @ViewBuilder func header(_: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
@@ -1162,10 +1137,6 @@ extension Home {
                             Image(systemName: "chart.bar")
                                 .foregroundStyle(.secondary.opacity(1))
                                 .font(.system(size: 13))
-                                /* .shadow(
-                                 color: Color.primary.opacity(colorScheme == .dark ? 0.25 : 0.25),
-                                 radius: colorScheme == .dark ? 1 : 1
-                                 ) */
                                 .onTapGesture {
                                     state.showModal(for: .statistics)
                                 }

@@ -132,11 +132,6 @@ extension DataTable {
                     )
                 }
             }
-            /* .navigationBarItems(
-                 trailing: HStack {
-                     Button("Close", action: state.hideModal)
-                 }
-             ) */
             .sheet(isPresented: $showManualGlucose, onDismiss: { if isAmountUnconfirmed { state.manualGlucose = 0 } }) {
                 addManualGlucoseView
             }
@@ -323,13 +318,6 @@ extension DataTable {
             List {
                 if state.treatments.contains(where: { $0.date > Date() }) {
                     HStack {
-                        /* Button(action: { showNonPumpInsulin = true }, label: {
-                             Image(systemName: "plus")
-                             Text("Insulin")
-                                 .font(.subheadline)
-                         })
-                             .buttonStyle(.borderless) */
-
                         Button(action: { showFutureEntries.toggle() }, label: {
                             Text("")
                             Spacer()
@@ -355,16 +343,10 @@ extension DataTable {
                             item.date <= Date()
                         }) { item in
                             treatmentView(item)
-                            /* .listRowBackground(
-                                 item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
-                             ) */
                         }
                     } else {
                         ForEach(state.treatments) { item in
                             treatmentView(item)
-                            /* .listRowBackground(
-                                 item.date > Date() ? Color(.tertiarySystemFill) : Color(.tertiarySystemBackground)
-                             ) */
                         }
                     }
                 } else {
@@ -393,16 +375,6 @@ extension DataTable {
 
         private var glucoseList: some View {
             List {
-                /* HStack {
-                     Button(action: { showManualGlucose = true }, label: {
-                         Image(systemName: "plus")
-                         Text("Blodsocker")
-                             .font(.subheadline)
-                     })
-                         .buttonStyle(.borderless)
-                 }
-                 .listRowBackground(Color(.tertiarySystemFill))*/
-
                 if !state.glucose.isEmpty {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)

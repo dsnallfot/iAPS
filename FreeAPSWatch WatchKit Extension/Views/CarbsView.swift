@@ -41,7 +41,6 @@ import SwiftUI
             } else {
                 Spacer()
                 carbs
-                // .padding(.bottom, 20)
             }
             Spacer()
             buttonStack
@@ -76,7 +75,6 @@ import SwiftUI
             }
             Spacer()
             Text("Kh").font(selection == .carbs ? .title3 : .headline)
-            // Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
                 .font(selection == .carbs ? .title3 : .headline)
                 .focusable(selection == .carbs)
@@ -104,7 +102,6 @@ import SwiftUI
             select(entry: .carbs)
         }
         .background(selection == .carbs && state.displayFatAndProteinOnWatch ? colorOfselection : .black)
-        // .padding(.top)
     }
 
     var protein: some View {
@@ -196,7 +193,7 @@ import SwiftUI
     }
 
     var buttonStack: some View {
-        HStack { // }(spacing: 25) {
+        HStack {
             Button {
                 WKInterfaceDevice.current().play(.click)
                 // Get amount from displayed string
@@ -215,7 +212,6 @@ import SwiftUI
 
             .navigationTitle("Reg Måltid")
         }
-        // .padding(.top)
     }
 
     private func select(entry: Selection) {

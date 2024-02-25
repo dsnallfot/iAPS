@@ -301,27 +301,14 @@ extension Bolus {
                                         if fetch {
                                             mealParts
                                                 .padding(.bottom, 4)
-                                            /* if fetch {
-                                                 Divider()
-                                                     .frame(height: 1)
-                                                     .background(Color.secondary) // .padding(1)
-                                             } */
                                         }
 
                                         VStack {
                                             variableParts
                                                 .padding(.bottom, 4)
 
-                                            /* Divider()
-                                             .frame(height: 1)
-                                             .background(Color.secondary) // .padding(1) */
-
                                             guardRailParts
                                                 .padding(.bottom, 4)
-
-                                            /* Divider()
-                                             .frame(height: 1)
-                                             .background(Color.secondary) // .padding(1) */
                                         }
                                         VStack {
                                             if state.advancedCalc {
@@ -539,11 +526,6 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.loopRed) */
 
                             // Refactored to avoid force unwrapping
                             if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
@@ -587,12 +569,7 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: roundedOrefInsulinRec as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.orange) */
-
+                            
                             // Refactored to avoid force unwrapping
 
                             if let insulinString = formatter.string(from: roundedOrefInsulinRec as NSNumber) {
@@ -647,11 +624,6 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.orange) */
 
                             // Refactored to avoid force unwrapping
 
@@ -677,11 +649,6 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.cyan) */
 
                             // Refactored to avoid force unwrapping
 
@@ -707,11 +674,6 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.green) */
 
                             // Refactored to avoid force unwrapping
 
@@ -1048,9 +1010,6 @@ extension Bolus {
                 .foregroundColor(.primary).fontWeight(.semibold)
                 .padding(.top, 2)
                 .padding(.bottom, 4)
-
-                /* let carbs = meal.first?.carbs
-                 let formattedCarbs = Decimal(carbs!) */
 
                 // Refactored to avoid force unwrapping
 

@@ -369,21 +369,6 @@ extension AddCarbs {
                             .frame(height: 660)
                             Spacer()
                             VStack {
-                                /* Button {
-                                     UIApplication.shared.open(
-                                         URL(
-                                             string: "https://soknaringsinnehall.livsmedelsverket.se"
-                                         )!,
-                                         options: [:],
-                                         completionHandler: nil
-                                     )
-                                 }
-                                 label: {
-                                     Image(systemName: "safari")
-                                     Text("Sök i livsmedelsverkets databas") }
-                                     .offset(x: -4)
-
-                                     .padding(.vertical, 30) */
                                 Spacer()
                             }
                             .frame(height: 350)
@@ -425,8 +410,6 @@ extension AddCarbs {
                     )
                 }
             }
-            /* .onAppear {
-             } */
             .onDisappear {
                 state.updateCurrentDate() // Daniel: Added to update the date in the datepicker when leaving räkna KH web view
             }

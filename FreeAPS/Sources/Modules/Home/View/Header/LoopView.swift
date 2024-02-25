@@ -40,14 +40,7 @@ struct LoopView: View {
                 if isLooping {
                     ProgressView()
                 }
-                // }
-                /* if isLooping {
-                 Text("looping").font(.system(size: 10))
-                 .offset(x: 0, y: -2)
-                 } else if manualTempBasal {
-                 Text("Manual").font(.system(size: 10))
-                 .offset(x: 0, y: -2)
-                 }*/
+
                 else if actualSuggestion?.timestamp != nil {
                     Text(timeString).font(.system(size: 12).weight(.semibold))
                         .foregroundColor(.primary)
