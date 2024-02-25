@@ -32,6 +32,7 @@ import SwiftUI
         VStack {
             // nutrient
             if state.displayFatAndProteinOnWatch {
+                Spacer()
                 carbs
                 Spacer()
                 fat
@@ -40,10 +41,12 @@ import SwiftUI
             } else {
                 Spacer()
                 carbs
-                    .padding(.bottom, 20)
+                // .padding(.bottom, 20)
             }
+            Spacer()
             buttonStack
         }
+        .frame(maxHeight: .infinity, alignment: .bottom)
         .onAppear { carbAmount = 0 }
     }
 
@@ -101,8 +104,7 @@ import SwiftUI
             select(entry: .carbs)
         }
         .background(selection == .carbs && state.displayFatAndProteinOnWatch ? colorOfselection : .black)
-        .padding(.top)
-        .frame(maxHeight: .infinity, alignment: .bottom)
+        // .padding(.top)
     }
 
     var protein: some View {
@@ -126,7 +128,7 @@ import SwiftUI
                 .digitalCrownRotation(
                     $proteinAmount,
                     from: 0,
-                    through: Double(240),
+                    through: Double(state.maxCarbs ?? 120),
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -137,7 +139,7 @@ import SwiftUI
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount + 5
-                    proteinAmount = min(newValue, Double(240))
+                    proteinAmount = min(newValue, Double(state.maxCarbs ?? 120))
                 } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }.buttonStyle(.borderless)
                     .padding(.trailing, 18)
                     .tint(selection == .protein ? .blue : .none)
@@ -170,7 +172,7 @@ import SwiftUI
                 .digitalCrownRotation(
                     $fatAmount,
                     from: 0,
-                    through: Double(240),
+                    through: Double(state.maxCarbs ?? 120),
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -181,7 +183,7 @@ import SwiftUI
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount + 5
-                    fatAmount = min(newValue, Double(240))
+                    fatAmount = min(newValue, Double(state.maxCarbs ?? 120))
                 } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .fat ? .blue : .none)
@@ -194,7 +196,7 @@ import SwiftUI
     }
 
     var buttonStack: some View {
-        HStack(spacing: 25) {
+        HStack { // }(spacing: 25) {
             Button {
                 WKInterfaceDevice.current().play(.click)
                 // Get amount from displayed string
@@ -204,16 +206,16 @@ import SwiftUI
                     Int(proteinAmount.rounded())
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
-            label: { Text("Save") }
+            label: { Text("Save")
+                .frame(width: 100, height: 30)
+            }
+            .font(.title3.weight(.semibold))
+            .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
+            .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
 
-                .font(.title3.weight(.semibold))
-                .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
-                .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
-
-                .navigationTitle("Reg Måltid")
+            .navigationTitle("Reg Måltid")
         }
-        .frame(maxHeight: .infinity, alignment: .bottom)
-        .padding(.top)
+        // .padding(.top)
     }
 
     private func select(entry: Selection) {

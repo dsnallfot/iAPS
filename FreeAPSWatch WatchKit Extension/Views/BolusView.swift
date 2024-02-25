@@ -20,6 +20,7 @@ import SwiftUI
     var body: some View {
         GeometryReader { _ in
             VStack { // }(spacing: 16) {
+                Spacer()
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -52,8 +53,8 @@ import SwiftUI
                         .buttonStyle(.borderless).padding(.trailing, 18)
                         .tint(.blue)
                 }
-                .padding(.bottom, 37.5)
-
+                // .padding(.bottom, 20) // 37.5)
+                Spacer()
                 HStack {
                     Button {
                         WKInterfaceDevice.current().play(.click)
@@ -80,6 +81,7 @@ import SwiftUI
                     .disabled(steps <= 0)
                 }
             }.frame(maxHeight: .infinity, alignment: .bottom)
+            // .padding(.top)
         }
         .navigationTitle("Enact Bolus")
 
