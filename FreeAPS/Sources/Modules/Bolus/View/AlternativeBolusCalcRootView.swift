@@ -569,7 +569,7 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            
+
                             // Refactored to avoid force unwrapping
 
                             if let insulinString = formatter.string(from: roundedOrefInsulinRec as NSNumber) {

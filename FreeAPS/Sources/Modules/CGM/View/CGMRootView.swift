@@ -92,9 +92,11 @@ extension CGM {
             .navigationTitle("CGM")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $setupCGM) {
-                if let cgmFetchManager = state.cgmManager, cgmFetchManager.glucoseSource.cgmType == state.cgm {
+                if let cgmFetchManager = state.cgmManager, cgmFetchManager.glucoseSource.cgmType == state.cgm,
+                   let cgmManager = cgmFetchManager.glucoseSource.cgmManager
+                {
                     CGMSettingsView(
-                        cgmManager: cgmFetchManager.glucoseSource.cgmManager!,
+                        cgmManager: cgmManager,
                         bluetoothManager: state.provider.apsManager.bluetoothManager!,
                         unit: state.settingsManager.settings.units,
                         completionDelegate: state
