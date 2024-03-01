@@ -101,13 +101,6 @@ extension AddCarbs {
             selection = nil
         }
 
-        /* func removePresetFromNewMeal() {
-             let a = summation.firstIndex(where: { $0 == selection?.dish! })
-             if a != nil, summation[a ?? 0] != "" {
-                 summation.remove(at: a!)
-             }
-         } */
-
         // Refactored to avoid force unwrapping
         func removePresetFromNewMeal() {
             if let indexToRemove = summation.firstIndex(where: { $0 == selection?.dish! }),

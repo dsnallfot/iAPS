@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct CarbsView: View {
+@available(watchOSApplicationExtension 9.0, *) struct CarbsView: View {
     @EnvironmentObject var state: WatchStateModel
 
     // Selected nutrient
@@ -32,6 +32,7 @@ struct CarbsView: View {
         VStack {
             // nutrient
             if state.displayFatAndProteinOnWatch {
+                Spacer()
                 carbs
                 Spacer()
                 fat
@@ -40,10 +41,11 @@ struct CarbsView: View {
             } else {
                 Spacer()
                 carbs
-                    .padding(.bottom, 20)
             }
+            Spacer()
             buttonStack
         }
+        .frame(maxHeight: .infinity, alignment: .bottom)
         .onAppear { carbAmount = 0 }
     }
 
@@ -67,13 +69,12 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount - 5
                     carbAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .carbs ? .blue : .none)
             }
             Spacer()
             Text("Kh").font(selection == .carbs ? .title3 : .headline)
-            // Spacer()
             Text(numberFormatter.string(from: carbAmount as NSNumber)! + " g")
                 .font(selection == .carbs ? .title3 : .headline)
                 .focusable(selection == .carbs)
@@ -92,7 +93,7 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = carbAmount + 5
                     carbAmount = min(newValue, Double(state.maxCarbs ?? 120))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .carbs ? .blue : .none)
             }
@@ -101,8 +102,6 @@ struct CarbsView: View {
             select(entry: .carbs)
         }
         .background(selection == .carbs && state.displayFatAndProteinOnWatch ? colorOfselection : .black)
-        .padding(.top)
-        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 
     var protein: some View {
@@ -112,13 +111,13 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount - 5
                     proteinAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .protein ? .blue : .none)
             }
             Spacer()
             Text("🍗").font(selection == .protein ? .title3 : .headline)
-            Spacer()
+            // Spacer()
             Text(numberFormatter.string(from: proteinAmount as NSNumber)! + " g")
                 .font(selection == .protein ? .title3 : .headline)
                 .foregroundStyle(.brown)
@@ -126,7 +125,7 @@ struct CarbsView: View {
                 .digitalCrownRotation(
                     $proteinAmount,
                     from: 0,
-                    through: Double(240),
+                    through: Double(state.maxCarbs ?? 120),
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -137,8 +136,9 @@ struct CarbsView: View {
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = proteinAmount + 5
-                    proteinAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }.buttonStyle(.borderless).padding(.trailing, 18)
+                    proteinAmount = min(newValue, Double(state.maxCarbs ?? 120))
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }.buttonStyle(.borderless)
+                    .padding(.trailing, 18)
                     .tint(selection == .protein ? .blue : .none)
             }
         }
@@ -155,13 +155,13 @@ struct CarbsView: View {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount - 5
                     fatAmount = max(newValue, 0)
-                } label: { Image(systemName: "minus").scaleEffect(1.25) }
+                } label: { Image(systemName: "minus").scaleEffect(1.25).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.leading, 13)
                     .tint(selection == .fat ? .blue : .none)
             }
             Spacer()
             Text("🧀").font(selection == .fat ? .title3 : .headline)
-            Spacer()
+            // Spacer()
             Text(numberFormatter.string(from: fatAmount as NSNumber)! + " g")
                 .font(selection == .fat ? .title3 : .headline)
                 .foregroundColor(.brown)
@@ -169,7 +169,7 @@ struct CarbsView: View {
                 .digitalCrownRotation(
                     $fatAmount,
                     from: 0,
-                    through: Double(240),
+                    through: Double(state.maxCarbs ?? 120),
                     by: 1,
                     sensitivity: .medium,
                     isContinuous: false,
@@ -180,8 +180,8 @@ struct CarbsView: View {
                 Button {
                     WKInterfaceDevice.current().play(.click)
                     let newValue = fatAmount + 5
-                    fatAmount = min(newValue, Double(240))
-                } label: { Image(systemName: "plus").scaleEffect(1.35) }
+                    fatAmount = min(newValue, Double(state.maxCarbs ?? 120))
+                } label: { Image(systemName: "plus").scaleEffect(1.35).fontWeight(.bold) }
                     .buttonStyle(.borderless).padding(.trailing, 18)
                     .tint(selection == .fat ? .blue : .none)
             }
@@ -193,7 +193,7 @@ struct CarbsView: View {
     }
 
     var buttonStack: some View {
-        HStack(spacing: 25) {
+        HStack {
             Button {
                 WKInterfaceDevice.current().play(.click)
                 // Get amount from displayed string
@@ -203,16 +203,15 @@ struct CarbsView: View {
                     Int(proteinAmount.rounded())
                 state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
             }
-            label: { Text("Save") }
+            label: { Text("Save")
+                .frame(width: 100, height: 30)
+            }
+            .font(.title3.weight(.semibold))
+            .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
+            .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
 
-                .font(.title3.weight(.semibold))
-                .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
-                .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
-
-                .navigationTitle("Reg Måltid")
+            .navigationTitle("Reg Måltid")
         }
-        .frame(maxHeight: .infinity, alignment: .bottom)
-        .padding(.top)
     }
 
     private func select(entry: Selection) {
@@ -220,7 +219,7 @@ struct CarbsView: View {
     }
 }
 
-struct CarbsView_Previews: PreviewProvider {
+@available(watchOSApplicationExtension 9.0, *) struct CarbsView_Previews: PreviewProvider {
     static var previews: some View {
         let state = WatchStateModel()
         state.carbsRequired = 120
