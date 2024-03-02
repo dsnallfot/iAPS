@@ -228,15 +228,35 @@ extension Home {
             apsManager.cancelBolus()
         }
 
+        /* func cancelProfile() {
+         let storage = OverrideStorage()
+
+         if let activeOveride = storage.fetchLatestOverride().first {
+             let presetName = storage.isPresetName()
+             let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+
+             if let duration = storage.cancelProfile() {
+                 nightscoutManager.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+             }
+         }
+         setupOverrideHistory() */
         func cancelProfile() {
-            let storage = OverrideStorage()
-
-            if let activeOveride = storage.fetchLatestOverride().first {
-                let presetName = storage.isPresetName()
-                let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
-
-                if let duration = storage.cancelProfile() {
-                    nightscoutManager.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+            let os = OverrideStorage()
+            // Is there a saved Override?
+            if let activeOveride = os.fetchLatestOverride().first {
+                let presetName = os.isPresetName()
+                // Is the Override a Preset?
+                if let preset = presetName {
+                    if let duration = os.cancelProfile() {
+                        // Update in Nightscout
+                        nightscoutManager.editOverride(preset, duration, activeOveride.date ?? Date.now)
+                    }
+                } else {
+                    let nsString = activeOveride.percentage.formatted() != "100" ? activeOveride.percentage
+                        .formatted() + " %" : "Custom"
+                    if let duration = os.cancelProfile() {
+                        nightscoutManager.editOverride(nsString, duration, activeOveride.date ?? Date.now)
+                    }
                 }
             }
             setupOverrideHistory()
