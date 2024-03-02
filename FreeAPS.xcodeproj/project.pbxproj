@@ -25,6 +25,7 @@
 		1935364028496F7D001E0B16 /* Oref2_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1935363F28496F7D001E0B16 /* Oref2_variables.swift */; };
 		193F6CDD2A512C8F001240FD /* Loops.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193F6CDC2A512C8F001240FD /* Loops.swift */; };
 		194297512B815938006B8A0B /* OverridesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194297502B815938006B8A0B /* OverridesView.swift */; };
+		194C32772B93A9BF0016FB2A /* OverrideShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194C32762B93A9BF0016FB2A /* OverrideShortcuts.swift */; };
 		1956FB212AFF79E200C7B4FF /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956FB202AFF79E200C7B4FF /* CoreDataStorage.swift */; };
 		195D80B42AF6973A00D25097 /* DynamicRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D80B32AF6973A00D25097 /* DynamicRootView.swift */; };
 		195D80B72AF697B800D25097 /* DynamicDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D80B62AF697B800D25097 /* DynamicDataFlow.swift */; };
@@ -277,6 +278,7 @@
 		61962FCAF8A2D222553AC5A3 /* LibreConfigDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A5B83E7967C38F7CBD883C /* LibreConfigDataFlow.swift */; };
 		63E890B4D951EAA91C071D5C /* BasalProfileEditorStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFF91130F2FCCC7EBBA11AD /* BasalProfileEditorStateModel.swift */; };
 		642F76A05A4FF530463A9FD0 /* NightscoutConfigRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8782B44544F38F2B2D82C38E /* NightscoutConfigRootView.swift */; };
+		6566FD7C2B93C36A006B835D /* Configs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6566FD7B2B93C36A006B835D /* Configs.swift */; };
 		6632A0DC746872439A858B44 /* ISFEditorDataFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BDA519C9B890FD9A5DFCF3 /* ISFEditorDataFlow.swift */; };
 		69A31254F2451C20361D172F /* BolusStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223EC0494F55A91E3EA69EF4 /* BolusStateModel.swift */; };
 		69B9A368029F7EB39F525422 /* CREditorStateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AA5E04A2761F6EEA6568E1 /* CREditorStateModel.swift */; };
@@ -566,6 +568,7 @@
 		1935363F28496F7D001E0B16 /* Oref2_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Oref2_variables.swift; sourceTree = "<group>"; };
 		193F6CDC2A512C8F001240FD /* Loops.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loops.swift; sourceTree = "<group>"; };
 		194297502B815938006B8A0B /* OverridesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverridesView.swift; sourceTree = "<group>"; };
+		194C32762B93A9BF0016FB2A /* OverrideShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverrideShortcuts.swift; sourceTree = "<group>"; };
 		1956FB202AFF79E200C7B4FF /* CoreDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
 		195D80B32AF6973A00D25097 /* DynamicRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicRootView.swift; sourceTree = "<group>"; };
 		195D80B62AF697B800D25097 /* DynamicDataFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDataFlow.swift; sourceTree = "<group>"; };
@@ -839,6 +842,7 @@
 		60744C3E9BB3652895C908CC /* DataTableProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataTableProvider.swift; sourceTree = "<group>"; };
 		618E62C9757B2F95431B5DC0 /* AddCarbsProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddCarbsProvider.swift; sourceTree = "<group>"; };
 		64AA5E04A2761F6EEA6568E1 /* CREditorStateModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CREditorStateModel.swift; sourceTree = "<group>"; };
+		6566FD7B2B93C36A006B835D /* Configs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configs.swift; sourceTree = "<group>"; };
 		66A5B83E7967C38F7CBD883C /* LibreConfigDataFlow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LibreConfigDataFlow.swift; sourceTree = "<group>"; };
 		67F94DD2853CF42BA4E30616 /* BasalProfileEditorDataFlow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BasalProfileEditorDataFlow.swift; sourceTree = "<group>"; };
 		680C4420C9A345D46D90D06C /* ManualTempBasalProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ManualTempBasalProvider.swift; sourceTree = "<group>"; };
@@ -1132,6 +1136,14 @@
 				195D80B32AF6973A00D25097 /* DynamicRootView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		196579A52B924BD400642E8E /* Overrides */ = {
+			isa = PBXGroup;
+			children = (
+				194C32762B93A9BF0016FB2A /* OverrideShortcuts.swift */,
+			);
+			path = Overrides;
 			sourceTree = "<group>";
 		};
 		198377CF266BFEDE004DE65E /* Localizations */ = {
@@ -1722,6 +1734,7 @@
 				193F6CDC2A512C8F001240FD /* Loops.swift */,
 				CC6C406D2ACDD69E009B8058 /* RawFetchedProfile.swift */,
 				192424CA2B7A64E70063CBF0 /* NIghtscoutExercise.swift */,
+				6566FD7B2B93C36A006B835D /* Configs.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2237,9 +2250,10 @@
 		CE7CA3422A064973004BE681 /* Shortcuts */ = {
 			isa = PBXGroup;
 			children = (
-				CE1856F32ADC4835007E39C7 /* Carbs */,
 				CE7CA3432A064973004BE681 /* AppShortcuts.swift */,
 				CE7CA3442A064973004BE681 /* BaseIntentsRequest.swift */,
+				CE1856F32ADC4835007E39C7 /* Carbs */,
+				196579A52B924BD400642E8E /* Overrides */,
 				CE7CA3452A064973004BE681 /* TempPresets */,
 				CE7CA34B2A064973004BE681 /* State */,
 			);
@@ -2786,6 +2800,7 @@
 				3811DEB625C9D88300A708ED /* UnlockManager.swift in Sources */,
 				E00EEC0827368630002FF094 /* NetworkAssembly.swift in Sources */,
 				38A13D3225E28B4B00EAA382 /* PumpHistoryEvent.swift in Sources */,
+				6566FD7C2B93C36A006B835D /* Configs.swift in Sources */,
 				E00EEC0627368630002FF094 /* UIAssembly.swift in Sources */,
 				3811DE1825C9D40400A708ED /* Router.swift in Sources */,
 				CE7950262998056D00FA576E /* CGMSetupView.swift in Sources */,
@@ -2987,6 +3002,7 @@
 				F90692D3274B9A130037068D /* AppleHealthKitRootView.swift in Sources */,
 				3862CC1F273FDC9200BF832C /* CalibrationsChart.swift in Sources */,
 				19E1F7EC29D082FE005C8D20 /* IconConfigStateModel.swift in Sources */,
+				194C32772B93A9BF0016FB2A /* OverrideShortcuts.swift in Sources */,
 				711C0CB42CAABE788916BC9D /* ManualTempBasalDataFlow.swift in Sources */,
 				BF1667ADE69E4B5B111CECAE /* ManualTempBasalProvider.swift in Sources */,
 				F90692D6274B9A450037068D /* HealthKitStateModel.swift in Sources */,
