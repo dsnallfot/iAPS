@@ -94,6 +94,7 @@ final class OverrideStorage {
             save.isf = preset.isf
             save.isfAndCr = preset.isfAndCr
             save.percentage = preset.percentage
+            save.smbIsOff = preset.smbIsOff
             save.smbIsAlwaysOff = preset.smbIsAlwaysOff
             save.smbMinutes = preset.smbMinutes
             save.uamMinutes = preset.uamMinutes
@@ -172,6 +173,7 @@ final class OverrideStorage {
             save.isf = override.isf
             save.isfAndCr = override.isfAndCr
             save.percentage = override.percentage
+            save.smbIsOff = override.smbIsOff
             save.smbIsAlwaysOff = override.smbIsAlwaysOff
             save.smbMinutes = override.smbMinutes
             save.uamMinutes = override.uamMinutes
@@ -262,6 +264,7 @@ final class OverrideStorage {
                 save.isf = preset.isf
                 save.isfAndCr = preset.isfAndCr
                 save.percentage = preset.percentage
+                save.smbIsOff = preset.smbIsOff
                 save.smbIsAlwaysOff = preset.smbIsAlwaysOff
                 save.smbMinutes = preset.smbMinutes
                 save.uamMinutes = preset.uamMinutes
