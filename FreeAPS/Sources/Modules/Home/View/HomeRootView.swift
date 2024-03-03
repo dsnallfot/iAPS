@@ -285,7 +285,7 @@ extension Home {
             guard fetchedPercent.first?.enabled ?? false else {
                 return nil
             }
-            var percentString = "\((fetchedPercent.first?.percentage ?? 100).formatted(.number)) %"
+            var percentString = "\((fetchedPercent.first?.percentage ?? 100).formatted(.number))%"
             var target = (fetchedPercent.first?.target ?? 100) as Decimal
             let indefinite = (fetchedPercent.first?.indefinite ?? false)
             let unit = state.units.rawValue
@@ -294,7 +294,7 @@ extension Home {
             }
             var targetString = (fetchedTargetFormatter.string(from: target as NSNumber) ?? "") + " " + unit
             if tempTargetString != nil || target == 0 { targetString = "" }
-            percentString = percentString == "100 %" ? "" : percentString
+            // percentString = percentString == "100%" ? " " : percentString
 
             let duration = (fetchedPercent.first?.duration ?? 0) as Decimal
             let addedMinutes = Int(duration)

@@ -228,39 +228,42 @@ extension Home {
             apsManager.cancelBolus()
         }
 
-        /* func cancelProfile() {
-         let storage = OverrideStorage()
-
-         if let activeOverride = storage.fetchLatestOverride().first {
-             let presetName = storage.isPresetName()
-             let nsString = presetName != nil ? presetName : activeOverride.percentage.formatted()
-
-             if let duration = storage.cancelProfile() {
-                 nightscoutManager.editOverride(nsString!, duration, activeOverride.date ?? Date.now)
-             }
-         }
-         setupOverrideHistory() */
         func cancelProfile() {
-            let os = OverrideStorage()
-            // Is there a saved Override?
-            if let activeOverride = os.fetchLatestOverride().first {
-                let presetName = os.isPresetName()
-                // Is the Override a Preset?
-                if let preset = presetName {
-                    if let duration = os.cancelProfile() {
-                        // Update in Nightscout
-                        nightscoutManager.editOverride(preset, duration, activeOverride.date ?? Date.now)
-                    }
-                } else {
-                    let nsString = activeOverride.percentage.formatted() != "100" ? activeOverride.percentage
-                        .formatted() + " %" : "Custom"
-                    if let duration = os.cancelProfile() {
-                        nightscoutManager.editOverride(nsString, duration, activeOverride.date ?? Date.now)
-                    }
+            let storage = OverrideStorage()
+
+            if let activeOverride = storage.fetchLatestOverride().first {
+                let presetName = storage.isPresetName()
+                let nsString = presetName != nil ? presetName : activeOverride.percentage.formatted()
+
+                if let duration = storage.cancelProfile() {
+                    nightscoutManager.editOverride(nsString!, duration, activeOverride.date ?? Date.now)
                 }
             }
             setupOverrideHistory()
         }
+
+        // Revertat nedan tillfälligt, behöver undersöka varför presetnamn ibland ersätts med procent
+        /* func cancelProfile() {
+             let os = OverrideStorage()
+             // Is there a saved Override?
+             if let activeOverride = os.fetchLatestOverride().first {
+                 let presetName = os.isPresetName()
+                 // Is the Override a Preset?
+                 if let preset = presetName {
+                     if let duration = os.cancelProfile() {
+                         // Update in Nightscout
+                         nightscoutManager.editOverride(preset, duration, activeOverride.date ?? Date.now)
+                     }
+                 } else {
+                     let nsString = activeOverride.percentage.formatted() != "100" ? activeOverride.percentage
+                         .formatted() + " %" : "Custom"
+                     if let duration = os.cancelProfile() {
+                         nightscoutManager.editOverride(nsString, duration, activeOverride.date ?? Date.now)
+                     }
+                 }
+             }
+             setupOverrideHistory()
+         } */
 
         func cancelTempTargets() {
             storage.storeTempTargets([TempTarget.cancel(at: Date())])

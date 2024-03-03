@@ -169,7 +169,7 @@ enum OverrideIntentError: Error {
     func fetchIDs(_ id: [OverrideEntity.ID]) -> [OverrideEntity] {
         let presets = overrideStorage.fetchProfiles().filter { id.contains(UUID(uuidString: $0.id ?? "")!) }
             .map { preset -> OverrideEntity in
-                let percentage = preset.percentage != 100 ? preset.percentage.formatted() : ""
+                let percentage = preset.percentage != 100 ? preset.percentage.formatted() : "100"
                 let targetRaw = settingsManager.settings
                     .units == .mgdL ? Decimal(Double(preset.target ?? 0)) : Double(preset.target ?? 0)
                     .asMmolL
@@ -185,6 +185,32 @@ enum OverrideIntentError: Error {
             }
         return presets
     }
+
+    // refactored to avoid force unwrapping
+    /* func fetchIDs(_ id: [OverrideEntity.ID]) -> [OverrideEntity] {
+         let presets = overrideStorage.fetchProfiles().filter { profile in
+             if let idString = profile.id, let uuid = UUID(uuidString: idString) {
+                 return id.contains(uuid)
+             }
+             return false
+         }.map { preset -> OverrideEntity in
+             let percentage = preset.percentage != 100 ? preset.percentage.formatted() : "100"
+             let targetRaw = settingsManager.settings.units == .mgdL ?
+                 Decimal(Double(preset.target ?? 0)) : Double(preset.target ?? 0)
+                 .asMmolL
+             let target = (preset.target != 0 || preset.target != 6) ?
+                 (glucoseFormatter.string(from: targetRaw as NSNumber) ?? "") : ""
+             let string = !percentage.isEmpty ? percentage + ", " + target : target
+
+             if let idString = preset.id, let uuid = UUID(uuidString: idString) {
+                 return OverrideEntity(id: uuid, name: preset.name ?? "", description: string)
+             } else {
+                 // Handle invalid or missing UUID
+                 return OverrideEntity(id: UUID(), name: preset.name ?? "", description: string)
+             }
+         }
+         return presets
+     } */
 
     func enactOverride(_ preset: OverridePresets) throws -> Override {
         guard let override = overrideStorage.fetchProfile(preset.name ?? "") else {
