@@ -33,7 +33,7 @@ struct MainChartView: View {
         static let endID = "End"
         static let basalHeight: CGFloat = 65
         static let topYPadding: CGFloat = 10
-        static let bottomYPadding: CGFloat = 50
+        static let bottomYPadding: CGFloat = 55
         static let minAdditionalWidth: CGFloat = 100 // default 150
         static let maxGlucose = 324
         static let minGlucose = 36
