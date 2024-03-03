@@ -1,6 +1,6 @@
 import Foundation
 
-struct NigtscoutExercise: JSON, Hashable, Equatable {
+struct NightscoutExercise: JSON, Hashable, Equatable {
     var duration: Int?
     var eventType: EventType
     var createdAt: Date
@@ -10,8 +10,8 @@ struct NigtscoutExercise: JSON, Hashable, Equatable {
 
     static let local = "iAPS"
 
-    static let empty = NigtscoutExercise(from: "{}")!
-    static func == (lhs: NigtscoutExercise, rhs: NigtscoutExercise) -> Bool {
+    static let empty = NightscoutExercise(from: "{}")!
+    static func == (lhs: NightscoutExercise, rhs: NightscoutExercise) -> Bool {
         (lhs.createdAt) == rhs.createdAt
     }
 
@@ -20,7 +20,7 @@ struct NigtscoutExercise: JSON, Hashable, Equatable {
     }
 }
 
-extension NigtscoutExercise {
+extension NightscoutExercise {
     private enum CodingKeys: String, CodingKey {
         case duration
         case eventType

@@ -112,7 +112,7 @@ extension NightscoutAPI {
             ),
             URLQueryItem(
                 name: "find[enteredBy][$ne]",
-                value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
             )
         ]
         if let date = sinceDate {
@@ -254,7 +254,7 @@ extension NightscoutAPI {
             ),
             URLQueryItem(
                 name: "find[enteredBy][$ne]",
-                value: NigtscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
             ),
             URLQueryItem(name: "find[duration][$exists]", value: "true")
         ]
@@ -423,7 +423,7 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    func uploadTreatments(_ treatments: [NigtscoutTreatment]) -> AnyPublisher<Void, Swift.Error> {
+    func uploadTreatments(_ treatments: [NightscoutTreatment]) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
         components.scheme = url.scheme
         components.host = url.host
@@ -447,7 +447,7 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    func uploadEcercises(_ override: [NigtscoutExercise]) -> AnyPublisher<Void, Swift.Error> {
+    func uploadExercises(_ override: [NightscoutExercise]) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
         components.scheme = url.scheme
         components.host = url.host

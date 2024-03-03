@@ -12,7 +12,7 @@ protocol PumpHistoryStorage {
     func storeEvents(_ events: [PumpHistoryEvent])
     func storeJournalCarbs(_ carbs: Int)
     func recent() -> [PumpHistoryEvent]
-    func nightscoutTretmentsNotUploaded() -> [NigtscoutTreatment]
+    func nightscoutTretmentsNotUploaded() -> [NightscoutTreatment]
     func saveCancelTempEvents()
     func deleteInsulin(at date: Date)
 }
@@ -221,15 +221,15 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
         return event.type
     }
 
-    func nightscoutTretmentsNotUploaded() -> [NigtscoutTreatment] {
+    func nightscoutTretmentsNotUploaded() -> [NightscoutTreatment] {
         let events = recent()
         guard !events.isEmpty else { return [] }
 
-        let temps: [NigtscoutTreatment] = events.reduce([]) { result, event in
+        let temps: [NightscoutTreatment] = events.reduce([]) { result, event in
             var result = result
             switch event.type {
             case .tempBasal:
-                result.append(NigtscoutTreatment(
+                result.append(NightscoutTreatment(
                     duration: nil,
                     rawDuration: nil,
                     rawRate: event,
@@ -237,7 +237,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: event.rate,
                     eventType: .nsTempBasal,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: nil,
                     insulin: nil,
                     notes: nil,
@@ -258,11 +258,11 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
             return result
         }
 
-        let bolusesAndCarbs = events.compactMap { event -> NigtscoutTreatment? in
+        let bolusesAndCarbs = events.compactMap { event -> NightscoutTreatment? in
             switch event.type {
             case .bolus:
                 let eventType = determineBolusEventType(for: event)
-                return NigtscoutTreatment(
+                return NightscoutTreatment(
                     duration: event.duration,
                     rawDuration: nil,
                     rawRate: nil,
@@ -270,7 +270,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: nil,
                     eventType: eventType,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: event,
                     insulin: event.amount,
                     notes: nil,
@@ -281,7 +281,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     targetBottom: nil
                 )
             case .journalCarbs:
-                return NigtscoutTreatment(
+                return NightscoutTreatment(
                     duration: nil,
                     rawDuration: nil,
                     rawRate: nil,
@@ -289,7 +289,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: nil,
                     eventType: .nsCarbCorrection,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: nil,
                     insulin: nil,
                     notes: nil,
@@ -303,10 +303,10 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
             }
         }
 
-        let misc = events.compactMap { event -> NigtscoutTreatment? in
+        let misc = events.compactMap { event -> NightscoutTreatment? in
             switch event.type {
             case .prime:
-                return NigtscoutTreatment(
+                return NightscoutTreatment(
                     duration: event.duration,
                     rawDuration: nil,
                     rawRate: nil,
@@ -314,7 +314,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: nil,
                     eventType: .nsSiteChange,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: event,
                     insulin: nil,
                     notes: nil,
@@ -325,7 +325,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     targetBottom: nil
                 )
             case .rewind:
-                return NigtscoutTreatment(
+                return NightscoutTreatment(
                     duration: nil,
                     rawDuration: nil,
                     rawRate: nil,
@@ -333,7 +333,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: nil,
                     eventType: .nsInsulinChange,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: nil,
                     insulin: nil,
                     notes: nil,
@@ -344,7 +344,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     targetBottom: nil
                 )
             case .pumpAlarm:
-                return NigtscoutTreatment(
+                return NightscoutTreatment(
                     duration: 30, // minutes
                     rawDuration: nil,
                     rawRate: nil,
@@ -352,7 +352,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
                     rate: nil,
                     eventType: .nsAnnouncement,
                     createdAt: event.timestamp,
-                    enteredBy: NigtscoutTreatment.local,
+                    enteredBy: NightscoutTreatment.local,
                     bolus: nil,
                     insulin: nil,
                     notes: "Alarm \(String(describing: event.note)) \(event.type)",
@@ -366,7 +366,7 @@ final class BasePumpHistoryStorage: PumpHistoryStorage, Injectable {
             }
         }
 
-        let uploaded = storage.retrieve(OpenAPS.Nightscout.uploadedPumphistory, as: [NigtscoutTreatment].self) ?? []
+        let uploaded = storage.retrieve(OpenAPS.Nightscout.uploadedPumphistory, as: [NightscoutTreatment].self) ?? []
 
         let treatments = Array(Set([bolusesAndCarbs, temps, misc].flatMap { $0 }).subtracting(Set(uploaded)))
 

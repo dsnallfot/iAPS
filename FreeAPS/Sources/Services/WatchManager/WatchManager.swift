@@ -475,13 +475,13 @@ extension BaseWatchManager: WCSessionDelegate {
                 preset.date = Date.now
 
                 // Cancel eventual current active override first
-                if let activeOveride = storage.fetchLatestOverride().first, activeOveride.enabled {
+                if let activeOverride = storage.fetchLatestOverride().first, activeOverride.enabled {
                     let name = storage.isPresetName()
 
                     if let duration = storage.cancelProfile() {
                         let presetName = preset.name
-                        let nsString = name != nil ? name! : activeOveride.percentage.formatted()
-                        nightscout.editOverride(nsString, duration, activeOveride.date ?? Date())
+                        let nsString = name != nil ? name! : activeOverride.percentage.formatted()
+                        nightscout.editOverride(nsString, duration, activeOverride.date ?? Date())
                     }
                 }
                 // Activate the new override and uplad the new ovderride to NS. Some duplicate code now.
@@ -495,12 +495,12 @@ extension BaseWatchManager: WCSessionDelegate {
                 configureState()
                 return
             } else if overrideID == "cancel" {
-                if let activeOveride = storage.fetchLatestOverride().first, activeOveride.enabled {
+                if let activeOverride = storage.fetchLatestOverride().first, activeOverride.enabled {
                     let presetName = storage.isPresetName()
-                    let nsString = presetName != nil ? presetName : activeOveride.percentage.formatted()
+                    let nsString = presetName != nil ? presetName : activeOverride.percentage.formatted()
 
                     if let duration = storage.cancelProfile() {
-                        nightscout.editOverride(nsString!, duration, activeOveride.date ?? Date.now)
+                        nightscout.editOverride(nsString!, duration, activeOverride.date ?? Date.now)
                         replyHandler(["confirmation": true])
                         configureState()
                     }

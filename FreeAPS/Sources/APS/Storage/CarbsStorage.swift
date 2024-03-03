@@ -11,7 +11,7 @@ protocol CarbsStorage {
     func storeCarbs(_ carbs: [CarbsEntry])
     func syncDate() -> Date
     func recent() -> [CarbsEntry]
-    func nightscoutTretmentsNotUploaded() -> [NigtscoutTreatment]
+    func nightscoutTretmentsNotUploaded() -> [NightscoutTreatment]
     func deleteCarbs(at uniqueID: String, fpuID: String, complex: Bool)
 }
 
@@ -205,12 +205,12 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
         }
     }
 
-    func nightscoutTretmentsNotUploaded() -> [NigtscoutTreatment] {
-        let uploaded = storage.retrieve(OpenAPS.Nightscout.uploadedCarbs, as: [NigtscoutTreatment].self) ?? []
+    func nightscoutTretmentsNotUploaded() -> [NightscoutTreatment] {
+        let uploaded = storage.retrieve(OpenAPS.Nightscout.uploadedCarbs, as: [NightscoutTreatment].self) ?? []
 
         let eventsManual = recent().filter { $0.enteredBy == CarbsEntry.manual || $0.enteredBy == CarbsEntry.remote }
         let treatments = eventsManual.map {
-            NigtscoutTreatment(
+            NightscoutTreatment(
                 duration: nil,
                 rawDuration: nil,
                 rawRate: nil,

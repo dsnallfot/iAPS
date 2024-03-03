@@ -319,7 +319,7 @@ final class OverrideStorage {
                     log = save.number
                 }
             }
-            debug(.service, "CoreData. addToNotUploaded Overides incremented. Current amount: \(log)")
+            debug(.service, "CoreData. addToNotUploaded Overrides incremented. Current amount: \(log)")
         }
     }
 
