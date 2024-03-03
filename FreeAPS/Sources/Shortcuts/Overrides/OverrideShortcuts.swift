@@ -74,8 +74,8 @@ enum OverrideIntentError: Error {
             }
 
             let preset = try intentRequest.findPreset(displayName)
-            let finalOverrideApply = try intentRequest.enactOverride(preset)
-            let isDone = finalOverrideApply.isPreset
+            let finalOverrideApply = try intentRequest.enactPreset(preset)
+            let isDone = finalOverrideApply != nil ? finalOverrideApply?.isPreset ?? false : false
 
             let displayDetail: String = isDone ?
                 "Override \(displayName) är nu aktiverad" : "Aktivering av override misslyckades"
@@ -212,26 +212,30 @@ enum OverrideIntentError: Error {
          return presets
      } */
 
-    func enactOverride(_ preset: OverridePresets) throws -> Override {
-        guard let override = overrideStorage.fetchProfile(preset.name ?? "") else {
-            return Override()
+    /* func enactOverride(_ preset: OverridePresets) throws -> Override {
+     guard let override = overrideStorage.fetchProfile(preset.name ?? "") else {
+         return Override() */
+    func enactPreset(_ preset: OverridePresets) throws -> Override? {
+        guard let overridePreset = overrideStorage.fetchProfilePreset(preset.name ?? "") else {
+            return nil
         }
 
         let lastActiveOverride = overrideStorage.fetchLatestOverride().first
         let isActive = lastActiveOverride?.enabled ?? false
 
-        // Cancel eventual current active override first
+        // Cancel the eventual current active override first
         if isActive {
+            let presetName = overrideStorage.isPresetName()
             if let duration = overrideStorage.cancelProfile(), let last = lastActiveOverride {
-                let presetName = overrideStorage.isPresetName()
+                // let presetName = overrideStorage.isPresetName()
                 let nsString = presetName != nil ? presetName : last.percentage.formatted()
                 nightscoutManager.editOverride(nsString!, duration, last.date ?? Date())
             }
         }
-        overrideStorage.overrideFromPreset(preset)
+        overrideStorage.overrideFromPreset(overridePreset)
         let currentActiveOverride = overrideStorage.fetchLatestOverride().first
         nightscoutManager.uploadOverride(preset.name ?? "", Double(preset.duration ?? 0), currentActiveOverride?.date ?? Date.now)
-        return override
+        return currentActiveOverride
     }
 
     func cancelOverride() throws {
