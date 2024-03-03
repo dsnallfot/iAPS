@@ -1,6 +1,6 @@
 import Foundation
 
-struct NigtscoutTreatment: JSON, Hashable, Equatable {
+struct NightscoutTreatment: JSON, Hashable, Equatable {
     var duration: Int?
     var rawDuration: PumpHistoryEvent?
     var rawRate: PumpHistoryEvent?
@@ -27,9 +27,9 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
 
     static let local = "iAPS" // Change to "Caregiver" when/if implementing Caregiver remote controll sim version
 
-    static let empty = NigtscoutTreatment(from: "{}")!
+    static let empty = NightscoutTreatment(from: "{}")!
 
-    static func == (lhs: NigtscoutTreatment, rhs: NigtscoutTreatment) -> Bool {
+    static func == (lhs: NightscoutTreatment, rhs: NightscoutTreatment) -> Bool {
         (lhs.createdAt ?? Date()) == (rhs.createdAt ?? Date())
     }
 
@@ -38,7 +38,7 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     }
 }
 
-extension NigtscoutTreatment {
+extension NightscoutTreatment {
     private enum CodingKeys: String, CodingKey {
         case duration
         case rawDuration = "raw_duration"

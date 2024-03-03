@@ -6,8 +6,15 @@ import Foundation
         AppShortcut(
             intent: ApplyTempPresetIntent(),
             phrases: [
-                "Aktivera \(.applicationName) tillfälligt mål?",
+                "Aktivera \(.applicationName) tillfälligt mål",
                 "\(.applicationName) aktivera ett tillfälligt mål"
+            ]
+        )
+        AppShortcut(
+            intent: CancelTempPresetIntent(),
+            phrases: [
+                "Avbryt \(.applicationName) tillfälligt mål",
+                "Avbryter ett aktivt \(.applicationName) tillfälligt mål"
             ]
         )
         AppShortcut(
@@ -25,10 +32,17 @@ import Foundation
             ]
         )
         AppShortcut(
-            intent: AddCarbPresentIntent(),
+            intent: ApplyOverrideIntent(),
             phrases: [
-                "Add carbs in \(.applicationName)",
-                "\(.applicationName) allows to add carbs"
+                "Aktivera \(.applicationName) override",
+                "Aktivera en \(.applicationName) override"
+            ]
+        )
+        AppShortcut(
+            intent: CancelOverrideIntent(),
+            phrases: [
+                "Avbryt \(.applicationName) override",
+                "Avbryter en aktiv \(.applicationName) override"
             ]
         )
     }
