@@ -244,20 +244,20 @@ extension Home {
 
         // Revertat nedan tillfälligt, behöver undersöka varför presetnamn ibland ersätts med procent
         /* func cancelProfile() {
-             let os = OverrideStorage()
+             let storage = OverrideStorage()
              // Is there a saved Override?
-             if let activeOverride = os.fetchLatestOverride().first {
-                 let presetName = os.isPresetName()
+             if let activeOverride = storage.fetchLatestOverride().first {
+                 let presetName = storage.isPresetName()
                  // Is the Override a Preset?
                  if let preset = presetName {
-                     if let duration = os.cancelProfile() {
+                     if let duration = storage.cancelProfile() {
                          // Update in Nightscout
                          nightscoutManager.editOverride(preset, duration, activeOverride.date ?? Date.now)
                      }
                  } else {
                      let nsString = activeOverride.percentage.formatted() != "100" ? activeOverride.percentage
                          .formatted() + " %" : "Custom"
-                     if let duration = os.cancelProfile() {
+                     if let duration = storage.cancelProfile() {
                          nightscoutManager.editOverride(nsString, duration, activeOverride.date ?? Date.now)
                      }
                  }
