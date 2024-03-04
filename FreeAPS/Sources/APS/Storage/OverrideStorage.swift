@@ -66,7 +66,6 @@ final class OverrideStorage {
             let history = OverrideHistory(context: self.coredataContext)
             if let latest = scheduled {
                 history.duration = -1 * (latest.date ?? Date()).timeIntervalSinceNow.minutes
-                print("History duration: \(history.duration) min")
                 history.date = latest.date ?? Date()
                 history.target = Double(latest.target ?? 100)
                 duration = history.duration
@@ -94,8 +93,8 @@ final class OverrideStorage {
             save.isf = preset.isf
             save.isfAndCr = preset.isfAndCr
             save.percentage = preset.percentage
-            save.smbIsOff = preset.smbIsOff
             save.smbIsAlwaysOff = preset.smbIsAlwaysOff
+            save.smbIsOff = preset.smbIsOff
             save.smbMinutes = preset.smbMinutes
             save.uamMinutes = preset.uamMinutes
             save.target = preset.target
@@ -121,7 +120,7 @@ final class OverrideStorage {
         return preset
     }
 
-    func fetchProfiles() -> OverridePresets? {
+    func fetchProfile() -> OverridePresets? {
         var presetsArray = [OverridePresets]()
         coredataContext.performAndWait {
             let requestPresets = OverridePresets.fetchRequest() as NSFetchRequest<OverridePresets>
@@ -173,8 +172,8 @@ final class OverrideStorage {
             save.isf = override.isf
             save.isfAndCr = override.isfAndCr
             save.percentage = override.percentage
-            save.smbIsOff = override.smbIsOff
             save.smbIsAlwaysOff = override.smbIsAlwaysOff
+            save.smbIsOff = override.smbIsOff
             save.smbMinutes = override.smbMinutes
             save.uamMinutes = override.uamMinutes
             save.target = override.target
@@ -264,8 +263,8 @@ final class OverrideStorage {
                 save.isf = preset.isf
                 save.isfAndCr = preset.isfAndCr
                 save.percentage = preset.percentage
-                save.smbIsOff = preset.smbIsOff
                 save.smbIsAlwaysOff = preset.smbIsAlwaysOff
+                save.smbIsOff = preset.smbIsOff
                 save.smbMinutes = preset.smbMinutes
                 save.uamMinutes = preset.uamMinutes
                 if (preset.target ?? 0) as Decimal > 6 {
