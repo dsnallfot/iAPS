@@ -313,7 +313,7 @@ extension AddCarbs {
                 label: {
                     Image(systemName: "list.bullet.circle")
                         .scaleEffect(0.61)
-                        .font(Font.title.weight(.semibold))
+                        .font(Font.title.weight(.regular))
                         .offset(x: -11, y: 0)
                     Text("Räkna KH")
                         .offset(x: -22, y: 0)
@@ -394,6 +394,23 @@ extension AddCarbs {
                         },
                         trailing:
                         HStack {
+                            Button {
+                                UIApplication.shared.open(
+                                    URL(
+                                        string: "https://t.me/ChatCGM_bot"
+                                        // string: "telegram://ChatCGM_bot"
+                                    )!,
+                                    options: [:],
+                                    completionHandler: nil
+                                )
+                            }
+                            label: {
+                                /* Text("🤖")
+                                 .font(.title) */
+                                Image(
+                                    systemName: "ellipsis.message"
+                                )
+                            }
                             Button {
                                 UIApplication.shared.open(
                                     URL(

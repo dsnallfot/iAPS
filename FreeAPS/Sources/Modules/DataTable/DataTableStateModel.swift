@@ -48,7 +48,7 @@ extension DataTable {
             processQueue.async {
                 let units = self.settingsManager.settings.units
 
-                // var date = Date.now
+                var date = Date.now
 
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }

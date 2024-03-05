@@ -95,7 +95,7 @@ extension DataTable {
                             label: {
                                 Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
-                                    .font(Font.title.weight(.semibold))
+                                    .font(Font.title.weight(.regular))
                                     .offset(x: -11, y: 0)
                                 Text("Insulin")
                                     .offset(x: -22, y: 0)
@@ -115,7 +115,7 @@ extension DataTable {
                             label: {
                                 Image(systemName: "plus.circle")
                                     .scaleEffect(0.61)
-                                    .font(Font.title.weight(.semibold))
+                                    .font(Font.title.weight(.regular))
                                     .offset(x: -11, y: 0)
                                 Text("Glukos")
                                     .offset(x: -22, y: 0)
