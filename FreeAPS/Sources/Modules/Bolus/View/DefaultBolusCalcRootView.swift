@@ -162,7 +162,7 @@ extension Bolus {
                     } else {
                         Image(systemName: "plus")
                             .scaleEffect(0.61)
-                            .font(Font.title.weight(.semibold))
+                            .font(Font.title.weight(.regular))
                             .offset(x: -13, y: 0)
                     }
 

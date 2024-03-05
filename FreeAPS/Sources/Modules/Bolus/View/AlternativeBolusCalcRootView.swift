@@ -240,7 +240,7 @@ extension Bolus {
                     } else {
                         Image(systemName: "plus.circle")
                             .scaleEffect(0.61)
-                            .font(Font.title.weight(.semibold))
+                            .font(Font.title.weight(.regular))
                             .offset(x: -11, y: 0)
                     }
 
