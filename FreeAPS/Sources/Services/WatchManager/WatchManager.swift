@@ -345,17 +345,17 @@ extension BaseWatchManager: WCSessionDelegate {
             )
 
             if settingsManager.settings.skipBolusScreenAfterCarbs {
-                apsManager.determineBasalSync()
+                // apsManager.determineBasalSync()
                 replyHandler(["confirmation": true])
                 return
-            } else {
-                apsManager.determineBasal()
-                    .sink { _ in
-                        replyHandler(["confirmation": true])
-                    }
-                    .store(in: &lifetime)
-                return
-            }
+            } /* else {
+                 apsManager.determineBasal()
+                     .sink { _ in
+                         replyHandler(["confirmation": true])
+                     }
+                     .store(in: &lifetime)
+                 return
+             } */
         }
 
         if let tempTargetID = message["tempTarget"] as? String {

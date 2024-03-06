@@ -19,6 +19,8 @@ extension NightscoutConfig {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         @Published var url = ""
+        @Published var carbsUrl = ""
+        // @Published var enteringUser = ""
         @Published var secret = ""
         @Published var message = ""
         @Published var connecting = false
@@ -32,17 +34,19 @@ extension NightscoutConfig {
         @Published var dia: Decimal = 6
         @Published var maxBasal: Decimal = 2
         @Published var maxBolus: Decimal = 10
-        @Published var allowAnnouncements: Bool = false
+        // @Published var allowAnnouncements: Bool = false
 
         override func subscribe() {
             url = keychain.getValue(String.self, forKey: Config.urlKey) ?? ""
+            carbsUrl = keychain.getValue(String.self, forKey: Config.carbsUrlKey) ?? ""
+            // enteringUser = keychain.getValue(String.self, forKey: Config.userKey) ?? ""
             secret = keychain.getValue(String.self, forKey: Config.secretKey) ?? ""
             units = settingsManager.settings.units
             dia = settingsManager.pumpSettings.insulinActionCurve
             maxBasal = settingsManager.pumpSettings.maxBasal
             maxBolus = settingsManager.pumpSettings.maxBolus
 
-            subscribeSetting(\.allowAnnouncements, on: $allowAnnouncements) { allowAnnouncements = $0 }
+            // subscribeSetting(\.allowAnnouncements, on: $allowAnnouncements) { allowAnnouncements = $0 }
             subscribeSetting(\.isUploadEnabled, on: $isUploadEnabled) { isUploadEnabled = $0 }
             subscribeSetting(\.useLocalGlucoseSource, on: $useLocalSource) { useLocalSource = $0 }
             subscribeSetting(\.localGlucosePort, on: $localPort.map(Int.init)) { localPort = Decimal($0) }
@@ -84,6 +88,8 @@ extension NightscoutConfig {
                     self.message = "Connected!"
                     self.keychain.setValue(self.url, forKey: Config.urlKey)
                     self.keychain.setValue(self.secret, forKey: Config.secretKey)
+                    self.keychain.setValue(self.carbsUrl, forKey: Config.carbsUrlKey)
+                    // self.keychain.setValue(self.enteringUser, forKey: Config.userKey)
                 }
                 .store(in: &lifetime)
         }

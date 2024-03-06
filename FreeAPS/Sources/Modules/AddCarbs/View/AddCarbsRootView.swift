@@ -252,7 +252,15 @@ extension AddCarbs {
                                     .foregroundColor(.loopRed)
                             }
                             Text(
-                                (state.skipBolus && !override && !editMode) ? "Save" :
+                                (state.skipBolus && !override && !editMode) ? (
+                                    (
+                                        state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state
+                                            .protein <= state
+                                            .maxCarbs
+                                    ) ?
+                                        "Spara" :
+                                        "Inställd maxgräns: \(formattedMaxAmountCarbs)g"
+                                ) :
                                     (
                                         (
                                             state.carbs <= state.maxCarbs && state.fat <= state.maxCarbs && state
@@ -330,27 +338,27 @@ extension AddCarbs {
                         VStack {
                             HStack {
                                 Spacer()
-                                HStack {
-                                    Text("Insulinkvot")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: 4)
-                                    Text(state.carbRatio.formatted())
-                                        .fontWeight(.semibold)
-                                    Text("g/E")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: -6)
-                                        .padding(.trailing, 10)
-                                }
-                                HStack {
-                                    Text("Aktiva kolhydrater")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: 4)
-                                    Text(state.cob.formatted())
-                                        .fontWeight(.semibold)
-                                    Text("g")
-                                        .foregroundColor(.secondary)
-                                        .offset(x: -6)
-                                }
+                                /* HStack {
+                                     Text("Insulinkvot")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: 4)
+                                     Text(state.carbRatio.formatted())
+                                         .fontWeight(.semibold)
+                                     Text("g/E")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: -6)
+                                         .padding(.trailing, 10)
+                                 }
+                                 HStack {
+                                     Text("Aktiva kolhydrater")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: 4)
+                                     Text(state.cob.formatted())
+                                         .fontWeight(.semibold)
+                                     Text("g")
+                                         .foregroundColor(.secondary)
+                                         .offset(x: -6)
+                                 } */
                                 Spacer()
                             }
                             .padding(.horizontal, 10)
@@ -364,7 +372,7 @@ extension AddCarbs {
                         VStack {
                             // Use WebViewRepresentable to display the webpage
                             WebViewRepresentable(
-                                urlString: "https://1drv.ms/x/s!AsGmBMxmLyGyhPk1uu2dfrrBLSauGw"
+                                urlString: state.carbsUrl
                             )
                             .frame(height: 660)
                             Spacer()

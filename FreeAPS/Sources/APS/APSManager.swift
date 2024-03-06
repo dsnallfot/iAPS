@@ -31,7 +31,7 @@ protocol APSManager {
     func roundBolus(amount: Decimal) -> Decimal
     var lastError: CurrentValueSubject<Error?, Never> { get }
     func cancelBolus()
-    func enactAnnouncement(_ announcement: Announcement)
+    // func enactAnnouncement(_ announcement: Announcement)
 }
 
 enum APSError: LocalizedError {
@@ -68,7 +68,7 @@ final class BaseAPSManager: APSManager, Injectable {
     @Injected() private var glucoseStorage: GlucoseStorage!
     @Injected() private var tempTargetsStorage: TempTargetsStorage!
     @Injected() private var carbsStorage: CarbsStorage!
-    @Injected() private var announcementsStorage: AnnouncementsStorage!
+    // @Injected() private var announcementsStorage: AnnouncementsStorage!
     @Injected() private var deviceDataManager: DeviceDataManager!
     @Injected() private var nightscout: NightscoutManager!
     @Injected() private var settingsManager: SettingsManager!
@@ -237,7 +237,7 @@ final class BaseAPSManager: APSManager, Injectable {
 
                 // Open loop completed
                 guard self.settings.closedLoop else {
-                    self.nightscout.uploadStatus()
+                    // self.nightscout.uploadStatus()
                     return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }
 
@@ -525,104 +525,104 @@ final class BaseAPSManager: APSManager, Injectable {
         openAPS.autotune().eraseToAnyPublisher()
     }
 
-    func enactAnnouncement(_ announcement: Announcement) {
-        guard let action = announcement.action else {
-            warning(.apsManager, "Invalid Announcement action")
-            return
-        }
+    /* func enactAnnouncement(_ announcement: Announcement) {
+         guard let action = announcement.action else {
+             warning(.apsManager, "Invalid Announcement action")
+             return
+         }
 
-        guard let pump = pumpManager else {
-            warning(.apsManager, "Pump ej inställd")
-            return
-        }
+         guard let pump = pumpManager else {
+             warning(.apsManager, "Pump ej inställd")
+             return
+         }
 
-        debug(.apsManager, "Start enact announcement: \(action)")
+         debug(.apsManager, "Start enact announcement: \(action)")
 
-        switch action {
-        case let .bolus(amount):
-            if let error = verifyStatus() {
-                processError(error)
-                return
-            }
-            let roundedAmount = pump.roundToSupportedBolusVolume(units: Double(amount))
+         switch action {
+         case let .bolus(amount):
+             if let error = verifyStatus() {
+                 processError(error)
+                 return
+             }
+             let roundedAmount = pump.roundToSupportedBolusVolume(units: Double(amount))
 
-            pump.enactBolus(units: roundedAmount, activationType: .manualRecommendationAccepted) { error in
-                if let error = error {
-                    // warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
-                    switch error {
-                    case .uncertainDelivery:
-                        // Do not generate notification on uncertain delivery error
-                        break
-                    default:
-                        // Do not generate notifications for automatic boluses that fail.
-                        warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
-                    }
+             pump.enactBolus(units: roundedAmount, activationType: .manualRecommendationAccepted) { error in
+                 if let error = error {
+                     // warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
+                     switch error {
+                     case .uncertainDelivery:
+                         // Do not generate notification on uncertain delivery error
+                         break
+                     default:
+                         // Do not generate notifications for automatic boluses that fail.
+                         warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
+                     }
 
-                } else {
-                    debug(.apsManager, "Announcement Bolus succeeded")
-                    self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                    self.bolusProgress.send(0)
-                    self.bolusAmount.send(Decimal(roundedAmount))
-                }
-            }
-        case let .pump(pumpAction):
-            switch pumpAction {
-            case .suspend:
-                if let error = verifyStatus() {
-                    processError(error)
-                    return
-                }
-                pump.suspendDelivery { error in
-                    if let error = error {
-                        debug(.apsManager, "Pump not suspended by Announcement: \(error.localizedDescription)")
-                    } else {
-                        debug(.apsManager, "Pump suspended by Announcement")
-                        self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                        self.nightscout.uploadStatus()
-                    }
-                }
-            case .resume:
-                guard pump.status.pumpStatus.suspended else {
-                    return
-                }
-                pump.resumeDelivery { error in
-                    if let error = error {
-                        warning(.apsManager, "Pump not resumed by Announcement: \(error.localizedDescription)")
-                    } else {
-                        debug(.apsManager, "Pump resumed by Announcement")
-                        self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                        self.nightscout.uploadStatus()
-                    }
-                }
-            }
-        case let .looping(closedLoop):
-            settings.closedLoop = closedLoop
-            debug(.apsManager, "Closed loop \(closedLoop) by Announcement")
-            announcementsStorage.storeAnnouncements([announcement], enacted: true)
-        case let .tempbasal(rate, duration):
-            if let error = verifyStatus() {
-                processError(error)
-                return
-            }
-            // unable to do temp basal during manual temp basal 😁
-            if isManualTempBasal {
-                processError(APSError.manualBasalTemp(message: "Loop not possible during the manual basal temp"))
-                return
-            }
-            guard !settings.closedLoop else {
-                return
-            }
-            let roundedRate = pump.roundToSupportedBasalRate(unitsPerHour: Double(rate))
-            pump.enactTempBasal(unitsPerHour: roundedRate, for: TimeInterval(duration) * 60) { error in
-                if let error = error {
-                    warning(.apsManager, "Announcement TempBasal failed with error: \(error.localizedDescription)")
-                } else {
-                    debug(.apsManager, "Announcement TempBasal succeeded")
-                    self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                }
-            }
-        }
-    }
+                 } else {
+                     debug(.apsManager, "Announcement Bolus succeeded")
+                     self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
+                     self.bolusProgress.send(0)
+                     self.bolusAmount.send(Decimal(roundedAmount))
+                 }
+             }
+         case let .pump(pumpAction):
+             switch pumpAction {
+             case .suspend:
+                 if let error = verifyStatus() {
+                     processError(error)
+                     return
+                 }
+                 pump.suspendDelivery { error in
+                     if let error = error {
+                         debug(.apsManager, "Pump not suspended by Announcement: \(error.localizedDescription)")
+                     } else {
+                         debug(.apsManager, "Pump suspended by Announcement")
+                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
+                         // self.nightscout.uploadStatus()
+                     }
+                 }
+             case .resume:
+                 guard pump.status.pumpStatus.suspended else {
+                     return
+                 }
+                 pump.resumeDelivery { error in
+                     if let error = error {
+                         warning(.apsManager, "Pump not resumed by Announcement: \(error.localizedDescription)")
+                     } else {
+                         debug(.apsManager, "Pump resumed by Announcement")
+                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
+                         // self.nightscout.uploadStatus()
+                     }
+                 }
+             }
+         case let .looping(closedLoop):
+             settings.closedLoop = closedLoop
+             debug(.apsManager, "Closed loop \(closedLoop) by Announcement")
+             announcementsStorage.storeAnnouncements([announcement], enacted: true)
+         case let .tempbasal(rate, duration):
+             if let error = verifyStatus() {
+                 processError(error)
+                 return
+             }
+             // unable to do temp basal during manual temp basal 😁
+             if isManualTempBasal {
+                 processError(APSError.manualBasalTemp(message: "Loop not possible during the manual basal temp"))
+                 return
+             }
+             guard !settings.closedLoop else {
+                 return
+             }
+             let roundedRate = pump.roundToSupportedBasalRate(unitsPerHour: Double(rate))
+             pump.enactTempBasal(unitsPerHour: roundedRate, for: TimeInterval(duration) * 60) { error in
+                 if let error = error {
+                     warning(.apsManager, "Announcement TempBasal failed with error: \(error.localizedDescription)")
+                 } else {
+                     debug(.apsManager, "Announcement TempBasal succeeded")
+                     self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
+                 }
+             }
+         }
+     } */
 
     private func currentTemp(date: Date) -> TempBasal {
         let defaultTemp = { () -> TempBasal in
@@ -1200,7 +1200,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     )
                 )
                 storage.save(dailystat, as: file)
-                nightscout.uploadStatistics(dailystat: dailystat)
+                // nightscout.uploadStatistics(dailystat: dailystat)
 
                 let saveStatsCoreData = StatsData(context: self.coredataContext)
                 saveStatsCoreData.lastrun = Date()

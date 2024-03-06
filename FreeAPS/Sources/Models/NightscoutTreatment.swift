@@ -25,7 +25,8 @@ struct NigtscoutTreatment: JSON, Hashable, Equatable {
     var id: String?
     var fpuID: String?
 
-    static let local = "iAPS"
+    // static var local = NightscoutConfig.Config.userKey // Testar enhetlig userKey
+    static var local = FreeAPSSettings().caregiver
 
     static let empty = NigtscoutTreatment(from: "{}")!
 

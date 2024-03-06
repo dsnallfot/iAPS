@@ -11,53 +11,61 @@ extension Settings {
         var body: some View {
             Form {
                 Section {
-                    Toggle("Closed loop", isOn: $state.closedLoop)
+                    // Toggle("Closed loop", isOn: $state.closedLoop)
                 }
                 header: {
                     if let expirationDate = Bundle.main.profileExpiration {
                         Text(
                             "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
-                                "\nBuild Expires: " + expirationDate
+                                "\nBuild Expires: " + expirationDate + "\nAnvändare: " + FreeAPSSettings()
+                                .caregiver // Testar enhetlig userKey
                         ).textCase(nil)
                     } else {
                         Text(
-                            "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)"
+                            "iAPS v\(state.versionNumber) (\(state.buildNumber))\nBranch: \(state.branch) \(state.copyrightNotice)" +
+                                "\nAnvändare: " + FreeAPSSettings().caregiver
                         )
                     }
                 }
 
                 Section {
-                    Text("Pump").navigationLink(to: .pumpConfig, from: self)
+                    // Text("Pump").navigationLink(to: .pumpConfig, from: self)
                     Text("CGM").navigationLink(to: .cgm, from: self)
                     Text("Watch").navigationLink(to: .watch, from: self)
                 } header: { Text("Devices") }
 
                 Section {
                     Text("Nightscout").navigationLink(to: .nighscoutConfig, from: self)
-                    if HKHealthStore.isHealthDataAvailable() {
-                        Text("Apple Health").navigationLink(to: .healthkit, from: self)
-                    }
+                    /* if HKHealthStore.isHealthDataAvailable() {
+                         Text("Apple Health").navigationLink(to: .healthkit, from: self)
+                     } */
+                    /* HStack {
+                         Text("Användare:")
+                         Spacer()
+                         TextField("...", text: $state.caregiver)
+                             .multilineTextAlignment(.trailing) // Align text to the right
+                     }*/
                     Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
                 } header: { Text("Services") }
 
                 Section {
                     Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
-                    Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
-                    Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
-                    Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
-                    Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
+                    // Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
+                    // Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
+                    // Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
+                    // Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
                 } header: { Text("Konfigurera") }
 
-                Section {
-                    Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
-                    Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
-                } header: { Text("OpenAPS") }
+                /* Section {
+                     Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
+                     Text("Autotune").navigationLink(to: .autotuneConfig, from: self)
+                 } header: { Text("OpenAPS") } */
 
                 Section {
                     Text("App ikoner").navigationLink(to: .iconConfig, from: self)
                     Text("Anpassa utseende").navigationLink(to: .statisticsConfig, from: self)
-                    Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
-                    Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
+                    // Text("Boluskalkylator").navigationLink(to: .bolusCalculatorConfig, from: self)
+                    // Text("Dynamisk ISF").navigationLink(to: .dynamicISF, from: self)
                     Text("Fat And Protein Conversion").navigationLink(to: .fpuConfig, from: self)
                     // Toggle("Animated Background", isOn: $state.animatedBackground)
                 } header: { Text("Extra funktioner") }
@@ -66,71 +74,71 @@ extension Settings {
                     Toggle("Debug options", isOn: $state.debugOptions)
                     if state.debugOptions {
                         Group {
-                            Text("Preferences")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
-                            Text("Pump Settings")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
                             Text("Autosense")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.autosense), from: self)
-                            Text("Pump History")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.pumpHistory), from: self)
+                            Text("Autotune")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
                             Text("Basal profile")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.basalProfile), from: self)
-                            Text("Målområden")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
-                            Text("Temp targets")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.tempTargets), from: self)
-                            Text("Meal")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.meal), from: self)
+                            Text("Logg: Glukos")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.glucose), from: self)
+                            Text("Logg: Kalibreringar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.calibrations), from: self)
+                            Text("Logg: Kolhydrater")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.carbHistory), from: self)
                         }
 
+                        Group {
+                            Text("Logg: Måltid")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.meal), from: self)
+                            Text("Logg: Pumphistorik")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.pumpHistory), from: self)
+                            Text("Logg: Tillfälliga målvärden")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.tempTargets), from: self)
+                            Text("Målinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.bgTargets), from: self)
+                            /* Text("NS: Announcements")
+                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
+                             Text("NS: Announcements - Utförda")
+                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self) */
+                        }
+
+                        Group {
+                            Text("Oref: Inställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.preferences), from: self)
+                            Text("Oref: Middleware")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Middleware.determineBasal), from: self)
+                            Text("Oref: Utfört")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Enact.enacted), from: self)
+                            Text("Profilinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.profile), from: self)
+                            Text("Pumpinställningar")
+                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.settings), from: self)
+                        }
                         Group {
                             Text("Pump profile")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Settings.pumpProfile), from: self)
-                            Text("Profile")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.profile), from: self)
-                            Text("Carbs")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.carbHistory), from: self)
-                            Text("Enacted")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Enact.enacted), from: self)
-                            Text("Announcements")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcements), from: self)
-                            Text("Genomförda meddelanden")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.announcementsEnacted), from: self)
-                            Text("Autotune")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Settings.autotune), from: self)
-                            Text("Glucose")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Monitor.glucose), from: self)
-                        }
-
-                        Group {
-                            Text("TF målvärden, förinställda")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
-                            Text("Calibrations")
-                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.calibrations), from: self)
-                            Text("Middleware")
-                                .navigationLink(to: .configEditor(file: OpenAPS.Middleware.determineBasal), from: self)
                             Text("Statistics")
                                 .navigationLink(to: .configEditor(file: OpenAPS.Monitor.statistics), from: self)
+                            Text("TF mål: Lista Förval")
+                                .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.tempTargetsPresets), from: self)
                             Text("Ändra inställningar (json)")
                                 .navigationLink(to: .configEditor(file: OpenAPS.FreeAPS.settings), from: self)
-                        }
-                        Group {
-                            HStack {
-                                Text("Profil & inställningar")
-                                Button(action: {
-                                    state.uploadProfileAndSettings(true)
-                                }) {
-                                    HStack {
-                                        Image(systemName: "icloud.and.arrow.up")
-                                        Text("Nightscout ")
-                                    }
-                                }
-                                .buttonStyle(DiscoButtonStyle())
+                            /* HStack {
+                                 Text("Profil & inställningar")
+                                 Button(action: {
+                                     state.uploadProfileAndSettings(true)
+                                 }) {
+                                     HStack {
+                                         Image(systemName: "icloud.and.arrow.up")
+                                         Text("Nightscout ")
+                                     }
+                                 }
+                                 .buttonStyle(DiscoButtonStyle())
 
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                // .buttonStyle(.borderedProminent)
-                            }
+                                 .frame(maxWidth: .infinity, alignment: .trailing)
+                                 // .buttonStyle(.borderedProminent)
+                             } */
                         }
                     }
                 } header: { Text("Utvecklare") }
@@ -152,7 +160,7 @@ extension Settings {
             .navigationTitle("Settings")
             .navigationBarItems(trailing: Button("Close", action: state.hideSettingsModal))
             .navigationBarTitleDisplayMode(.inline)
-            .onDisappear(perform: { state.uploadProfileAndSettings(false) })
+            // .onDisappear(perform: { state.uploadProfileAndSettings(false) })
         }
     }
 }

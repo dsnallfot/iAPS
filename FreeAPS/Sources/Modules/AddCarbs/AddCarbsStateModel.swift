@@ -7,6 +7,7 @@ extension AddCarbs {
         @Injected() var carbsStorage: CarbsStorage!
         @Injected() var apsManager: APSManager!
         @Injected() var settings: SettingsManager!
+        @Injected() private var keychain: Keychain!
         @Published var carbs: Decimal = 0
         @Published var date = Date()
         @Published var protein: Decimal = 0
@@ -20,10 +21,11 @@ extension AddCarbs {
         @Published var note: String = ""
         @Published var id_: String = ""
         @Published var summary: String = ""
-        @Published var skipBolus: Bool = false
+        @Published var skipBolus: Bool = true
         @Published var isEnabled = false
         @Published var carbRatio: Decimal = 0
         @Published var cob: Decimal = 0
+        @Published var carbsUrl = ""
 
         let now = Date.now
 
@@ -31,6 +33,7 @@ extension AddCarbs {
 
         override func subscribe() {
             subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
+            carbsUrl = keychain.getValue(String.self, forKey: NightscoutConfig.Config.carbsUrlKey) ?? ""
 
             carbsRequired = provider.suggestion?.carbsReq
             carbRatio = provider.suggestion?.carbRatio ?? 0
@@ -76,13 +79,12 @@ extension AddCarbs {
             carbsStorage.storeCarbs(carbsToStore)
 
             if skipBolus, !continue_, !fetch {
-                apsManager.determineBasalSync()
+                // apsManager.determineBasalSync()
                 showModal(for: nil)
             } else if carbs > 0 {
                 saveToCoreData(carbsToStore)
                 showModal(for: .bolus(waitForSuggestion: true, fetch: true))
-                apsManager
-                    .determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview also when show bolusscreen after addcarbs are active
+                // apsManager.determineBasalSync() // Daniel: Added determinebasalsync to force update before entering bolusview also when show bolusscreen after addcarbs are active. reverted due to possible hang when exiting addcarbsview
             } else {
                 hideModal()
             }

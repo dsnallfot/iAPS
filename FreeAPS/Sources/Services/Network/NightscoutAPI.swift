@@ -16,8 +16,8 @@ class NightscoutAPI {
         static let treatmentsPath = "/api/v1/treatments.json"
         static let statusPath = "/api/v1/devicestatus.json"
         static let profilePath = "/api/v1/profile.json"
-        static let retryCount = 2
-        static let timeout: TimeInterval = 60
+        static let retryCount = 1 // 2
+        static let timeout: TimeInterval = 30
     }
 
     enum Error: LocalizedError {
@@ -37,7 +37,7 @@ extension NightscoutAPI {
     func checkConnection() -> AnyPublisher<Void, Swift.Error> {
         struct Check: Codable, Equatable {
             var eventType = "Note"
-            var enteredBy = "iAPS"
+            var enteredBy = FreeAPSSettings().caregiver
             var notes = "iAPS anslöts till Nightscout"
         }
         let check = Check()
@@ -284,40 +284,40 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    func fetchAnnouncement(sinceDate: Date? = nil) -> AnyPublisher<[Announcement], Swift.Error> {
-        var components = URLComponents()
-        components.scheme = url.scheme
-        components.host = url.host
-        components.port = url.port
-        components.path = Config.treatmentsPath
-        components.queryItems = [
-            URLQueryItem(name: "find[eventType]", value: "Announcement"),
-            URLQueryItem(
-                name: "find[enteredBy]",
-                value: Announcement.remote.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            )
-        ]
-        if let date = sinceDate {
-            let dateItem = URLQueryItem(
-                name: "find[created_at][$gte]",
-                value: Formatter.iso8601withFractionalSeconds.string(from: date)
-            )
-            components.queryItems?.append(dateItem)
-        }
+    /* func fetchAnnouncement(sinceDate: Date? = nil) -> AnyPublisher<[Announcement], Swift.Error> {
+         var components = URLComponents()
+         components.scheme = url.scheme
+         components.host = url.host
+         components.port = url.port
+         components.path = Config.treatmentsPath
+         components.queryItems = [
+             URLQueryItem(name: "find[eventType]", value: "Announcement"),
+             URLQueryItem(
+                 name: "find[enteredBy]",
+                 value: Announcement.remote.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+             )
+         ]
+         if let date = sinceDate {
+             let dateItem = URLQueryItem(
+                 name: "find[created_at][$gte]",
+                 value: Formatter.iso8601withFractionalSeconds.string(from: date)
+             )
+             components.queryItems?.append(dateItem)
+         }
 
-        var request = URLRequest(url: components.url!)
-        request.allowsConstrainedNetworkAccess = false
-        request.timeoutInterval = Config.timeout
+         var request = URLRequest(url: components.url!)
+         request.allowsConstrainedNetworkAccess = false
+         request.timeoutInterval = Config.timeout
 
-        if let secret = secret {
-            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
-        }
+         if let secret = secret {
+             request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
+         }
 
-        return service.run(request)
-            .retry(Config.retryCount)
-            .decode(type: [Announcement].self, decoder: JSONCoding.decoder)
-            .eraseToAnyPublisher()
-    }
+         return service.run(request)
+             .retry(Config.retryCount)
+             .decode(type: [Announcement].self, decoder: JSONCoding.decoder)
+             .eraseToAnyPublisher()
+     } */
 
     func uploadTreatments(_ treatments: [NigtscoutTreatment]) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()

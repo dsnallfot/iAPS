@@ -9,12 +9,14 @@ extension Home {
         @Injected() var broadcaster: Broadcaster!
         @Injected() var apsManager: APSManager!
         @Injected() var nightscoutManager: NightscoutManager!
+        @Injected() var storage: TempTargetsStorage!
         @Injected() var settings: SettingsManager!
+        @Injected() var unlockmanager: UnlockManager!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
         @Published var glucose: [BloodGlucose] = []
         @Published var isManual: [BloodGlucose] = []
-        @Published var announcement: [Announcement] = []
+        // @Published var announcement: [Announcement] = []
         @Published var suggestion: Suggestion?
         @Published var uploadStats = false
         @Published var enactedSuggestion: Suggestion?
@@ -65,6 +67,7 @@ extension Home {
         @Published var timeZone: TimeZone?
         @Published var hours: Int16 = 3
         @Published var disco: Bool = true
+        @Published var remoteMode: Bool = false
         @Published var insulinRecommended: Decimal = 0
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
@@ -80,7 +83,7 @@ extension Home {
             setupCarbs()
             setupBattery()
             setupReservoir()
-            setupAnnouncements()
+            // setupAnnouncements()
             setupCurrentPumpTimezone()
 
             suggestion = provider.suggestion
@@ -105,6 +108,7 @@ extension Home {
             thresholdLines = settingsManager.settings.rulerMarks
             timeZone = provider.timezone
             disco = settings.settings.disco
+            remoteMode = settings.settings.remoteMode
 
             broadcaster.register(GlucoseObserver.self, observer: self)
             broadcaster.register(SuggestionObserver.self, observer: self)
@@ -238,6 +242,31 @@ extension Home {
             }
         }
 
+        func cancelTempTargets() {
+            storage.storeTempTargets([TempTarget.cancel(at: Date())])
+            coredataContext.performAndWait {
+                let saveToCoreData = TempTargets(context: self.coredataContext)
+                saveToCoreData.active = false
+                saveToCoreData.date = Date()
+                try? self.coredataContext.save()
+
+                let setHBT = TempTargetsSlider(context: self.coredataContext)
+                setHBT.enabled = false
+                setHBT.date = Date()
+                try? self.coredataContext.save()
+            }
+        }
+
+        // Added to require passcode/faceID before entering settings
+        func secureShowSettings() {
+            unlockmanager.unlock()
+                .sink { _ in } receiveValue: { [weak self] _ in
+                    guard let self = self else { return }
+                    showModal(for: .settings)
+                }
+                .store(in: &lifetime)
+        }
+
         private func setupGlucose() {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -332,12 +361,12 @@ extension Home {
             }
         }
 
-        private func setupAnnouncements() {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.announcement = self.provider.announcement(self.filteredHours)
-            }
-        }
+        /* private func setupAnnouncements() {
+             DispatchQueue.main.async { [weak self] in
+                 guard let self = self else { return }
+                 self.announcement = self.provider.announcement(self.filteredHours)
+             }
+         } */
 
         private func setStatusTitle() {
             guard let suggestion = suggestion else {
@@ -447,6 +476,7 @@ extension Home.StateModel:
         lowGlucose = settingsManager.settings.low
         highGlucose = settingsManager.settings.high
         overrideUnit = settingsManager.settings.overrideHbA1cUnit
+        remoteMode = settingsManager.settings.remoteMode
 
         displayXgridLines = settingsManager.settings.xGridLines
         displayYgridLines = settingsManager.settings.yGridLines
@@ -459,7 +489,7 @@ extension Home.StateModel:
         setupBasals()
         setupBoluses()
         setupSuspensions()
-        setupAnnouncements()
+        // setupAnnouncements()
     }
 
     func pumpSettingsDidChange(_: PumpSettings) {

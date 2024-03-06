@@ -30,7 +30,7 @@ extension StatConfig {
                     Toggle("Display Chart X - Grid lines", isOn: $state.xGridLines)
                     Toggle("Display Chart Y - Grid lines", isOn: $state.yGridLines)
                     Toggle("Display Chart Threshold lines for Low and High", isOn: $state.rulerMarks)
-                    Toggle("Standing / Laying TIR Chart", isOn: $state.oneDimensionalGraph)
+                    // Toggle("Standing / Laying TIR Chart", isOn: $state.oneDimensionalGraph)
                 } header: { Text("Grafer hemvy") }
 
                 Section {
@@ -47,13 +47,13 @@ extension StatConfig {
                         DecimalTextField("0", value: $state.high, formatter: glucoseFormatter)
                         Text(state.units.rawValue).foregroundColor(.secondary)
                     }
-                    Toggle("Change HbA1c Unit", isOn: $state.overrideHbA1cUnit)
+                    // Toggle("Change HbA1c Unit", isOn: $state.overrideHbA1cUnit)
 
                 } header: { Text("Målintervall") }
 
-                Section {
-                    Toggle("Skip Bolus screen after carbs", isOn: $state.skipBolusScreenAfterCarbs)
-                } header: { Text("Vy för måltider") }
+                /* Section {
+                     Toggle("Skip Bolus screen after carbs", isOn: $state.skipBolusScreenAfterCarbs)
+                 } header: { Text("Vy för måltider") } */
 
                 Section {
                     Toggle("Använd färgglatt tema (kräver omstart)", isOn: $state.disco)

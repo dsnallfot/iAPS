@@ -9,7 +9,7 @@ extension StatConfig {
         @Published var yGridLines: Bool = false
         @Published var oneDimensionalGraph = false
         @Published var rulerMarks: Bool = false
-        @Published var skipBolusScreenAfterCarbs: Bool = false
+        @Published var skipBolusScreenAfterCarbs: Bool = true
         @Published var disco: Bool = true
         @Published var animatedBackground = false
 

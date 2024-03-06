@@ -36,11 +36,16 @@ extension DataTable {
             maxBolus = provider.pumpSettings().maxBolus
         }
 
+        private let processQueue =
+            DispatchQueue(label: "setupTreatments.processQueue") // Ensure that only one instance of this function can execute at a time
+
         private func setupTreatments() {
-            DispatchQueue.global().async {
+            // DispatchQueue.global().async {
+            // Ensure that only one instance of this function can execute at a time
+            processQueue.async {
                 let units = self.settingsManager.settings.units
 
-                var date = Date.now
+                // var date = Date.now
 
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }
@@ -157,14 +162,14 @@ extension DataTable {
             provider.deleteCarbs(treatment)
         }
 
-        func deleteInsulin(_ treatment: Treatment) {
-            unlockmanager.unlock()
-                .sink { _ in } receiveValue: { [weak self] _ in
-                    guard let self = self else { return }
-                    self.provider.deleteInsulin(treatment)
-                }
-                .store(in: &lifetime)
-        }
+        /* func deleteInsulin(_ treatment: Treatment) {
+             unlockmanager.unlock()
+                 .sink { _ in } receiveValue: { [weak self] _ in
+                     guard let self = self else { return }
+                     self.provider.deleteInsulin(treatment)
+                 }
+                 .store(in: &lifetime)
+         } */
 
         func deleteGlucose(_ glucose: Glucose) {
             let id = glucose.id

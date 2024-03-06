@@ -8,6 +8,7 @@ extension Settings {
 
         @Published var closedLoop = false
         @Published var debugOptions = false
+        // @Published var caregiver: String = "Caregiver"
         // @Published var animatedBackground = false
 
         private(set) var buildNumber = ""
@@ -18,6 +19,7 @@ extension Settings {
         override func subscribe() {
             subscribeSetting(\.debugOptions, on: $debugOptions) { debugOptions = $0 }
             subscribeSetting(\.closedLoop, on: $closedLoop) { closedLoop = $0 }
+            // subscribeSetting(\.caregiver, on: $caregiver) { caregiver = $0 }
 
             broadcaster.register(SettingsObserver.self, observer: self)
 
@@ -65,13 +67,13 @@ extension Settings {
             return items
         }
 
-        func uploadProfileAndSettings(_ force: Bool) {
-            NSLog("SettingsState Upload Profile and Settings")
-            nightscoutManager.uploadProfileAndSettings(force)
-        }
+        /* func uploadProfileAndSettings(_ force: Bool) {
+             NSLog("SettingsState Upload Profile and Settings")
+             nightscoutManager.uploadProfileAndSettings(force)
+         }*/
 
         func hideSettingsModal() {
-            nightscoutManager.uploadProfileAndSettings(false)
+            // nightscoutManager.uploadProfileAndSettings(false)
             hideModal()
         }
     }

@@ -36,12 +36,12 @@ extension DataTable {
             healthkitManager.deleteCarbs(syncID: treatement.id, fpuID: treatement.fpuID ?? treatement.id)
         }
 
-        func deleteInsulin(_ treatement: Treatment) {
-            nightscoutManager.deleteInsulin(at: treatement.date)
-            if let id = treatement.idPumpEvent {
-                healthkitManager.deleteInsulin(syncID: id)
-            }
-        }
+        /* func deleteInsulin(_ treatement: Treatment) {
+             nightscoutManager.deleteInsulin(at: treatement.date)
+             if let id = treatement.idPumpEvent {
+                 healthkitManager.deleteInsulin(syncID: id)
+             }
+         } */
 
         func glucose() -> [BloodGlucose] {
             glucoseStorage.recent().sorted { $0.date > $1.date }

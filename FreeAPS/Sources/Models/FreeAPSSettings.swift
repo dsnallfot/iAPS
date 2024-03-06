@@ -3,14 +3,14 @@ import Foundation
 struct FreeAPSSettings: JSON, Equatable {
     var units: GlucoseUnits = .mmolL
     var closedLoop: Bool = false
-    var allowAnnouncements: Bool = false
+    // var allowAnnouncements: Bool = false
     var useAutotune: Bool = false
     var isUploadEnabled: Bool = false
     var useLocalGlucoseSource: Bool = false
     var localGlucosePort: Int = 8080
     var debugOptions: Bool = false
     var insulinReqPercentage: Decimal = 70
-    var skipBolusScreenAfterCarbs: Bool = false
+    var skipBolusScreenAfterCarbs: Bool = true
     var displayHR: Bool = false
     var cgm: CGMType = .nightscout
     var uploadGlucose: Bool = true
@@ -42,7 +42,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var yGridLines: Bool = true
     var oneDimensionalGraph: Bool = false
     var rulerMarks: Bool = false
-    var maxCarbs: Decimal = 1000
+    var maxCarbs: Decimal = 30
     var displayFatAndProteinOnWatch: Bool = false
     var onlyAutotuneBasals: Bool = false
     var overrideFactor: Decimal = 0.8
@@ -55,6 +55,8 @@ struct FreeAPSSettings: JSON, Equatable {
     var advancedCalc: Bool = false
     var disco: Bool = true
     var useLiveActivity: Bool = false
+    var caregiver: String = "Pappa" // change string to show as enteredBy in all NS related
+    var remoteMode: Bool = true
 }
 
 extension FreeAPSSettings: Decodable {
@@ -71,9 +73,9 @@ extension FreeAPSSettings: Decodable {
             settings.closedLoop = closedLoop
         }
 
-        if let allowAnnouncements = try? container.decode(Bool.self, forKey: .allowAnnouncements) {
-            settings.allowAnnouncements = allowAnnouncements
-        }
+        /* if let allowAnnouncements = try? container.decode(Bool.self, forKey: .allowAnnouncements) {
+             settings.allowAnnouncements = allowAnnouncements
+         } */
 
         if let useAutotune = try? container.decode(Bool.self, forKey: .useAutotune) {
             settings.useAutotune = useAutotune
@@ -175,6 +177,10 @@ extension FreeAPSSettings: Decodable {
 
         if let disco = try? container.decode(Bool.self, forKey: .disco) {
             settings.disco = disco
+        }
+
+        if let remoteMode = try? container.decode(Bool.self, forKey: .remoteMode) {
+            settings.remoteMode = remoteMode
         }
 
         if let advancedCalc = try? container.decode(Bool.self, forKey: .advancedCalc) {
@@ -282,6 +288,10 @@ extension FreeAPSSettings: Decodable {
 
         if let useLiveActivity = try? container.decode(Bool.self, forKey: .useLiveActivity) {
             settings.useLiveActivity = useLiveActivity
+        }
+
+        if let caregiver = try? container.decode(String.self, forKey: .caregiver) {
+            settings.caregiver = caregiver
         }
 
         self = settings

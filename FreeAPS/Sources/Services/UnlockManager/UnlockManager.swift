@@ -23,7 +23,7 @@ final class BaseUnlockManager: UnlockManager {
                 }
             }
 
-            let reason = "För att gå vidare med önskad åtgärd"
+            let reason = " "
 
             if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
                 context.evaluatePolicy(

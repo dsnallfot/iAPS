@@ -9,7 +9,7 @@
   "localGlucosePort" : 8080,
   "debugOptions" : false,
   "insulinReqPercentage" : 70,
-  "skipBolusScreenAfterCarbs" : false,
+  "skipBolusScreenAfterCarbs" : true,
   "displayHR" : false,
   "cgm" : "nightscout",
   "uploadGlucose" : true,
@@ -41,7 +41,7 @@
   "yGridLines" : true,
   "oneDimensionalGraph" : false,
   "rulerMarks" : false,
-  "maxCarbs": 1000,
+  "maxCarbs": 30,
   "displayFatAndProteinOnWatch": false,
   "overrideFactor": 0.8,
   "useCalc": false,
@@ -52,5 +52,7 @@
   "sweetMealFactor": 2,
   "advancedCalc": false,
   "disco": true,
+  "caregiver" : "Caregiver",
+  "remoteMode": true,
 
 }

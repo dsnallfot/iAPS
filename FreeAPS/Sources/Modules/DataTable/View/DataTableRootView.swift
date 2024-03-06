@@ -79,8 +79,8 @@ extension DataTable {
             }
             .onAppear(perform: configureView)
             .onDisappear {
-                state.apsManager
-                    .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
+                // state.apsManager
+                // .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
             }
 
             .navigationTitle("History")
@@ -90,17 +90,23 @@ extension DataTable {
                     switch state.mode {
                     case .treatments:
                         Button(
-                            action: { showNonPumpInsulin = true
-                                state.nonPumpInsulinDate = Date() },
+                            action: {},
                             label: {
-                                Image(systemName: "plus.circle")
-                                    .scaleEffect(0.61)
-                                    .font(Font.title.weight(.semibold))
-                                    .offset(x: -11, y: 0)
-                                Text("Insulin")
-                                    .offset(x: -22, y: 0)
+                                Text("")
                             }
                         )
+                    /* Button(
+                         action: { showNonPumpInsulin = true
+                             state.nonPumpInsulinDate = Date() },
+                         label: {
+                             Image(systemName: "plus.circle")
+                                 .scaleEffect(0.61)
+                                 .font(Font.title.weight(.semibold))
+                                 .offset(x: -11, y: 0)
+                             Text("Insulin")
+                                 .offset(x: -22, y: 0)
+                         }
+                     ) */
                     case .basals:
                         Button(
                             action: {},
@@ -369,7 +375,7 @@ extension DataTable {
                     }
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
@@ -377,19 +383,20 @@ extension DataTable {
 
         private var basalsList: some View {
             List {
-                if !state.basals.isEmpty {
-                    ForEach(state.basals) { item in
-                        basalView(item)
-                    }
-                    // .listRowBackground(Color(.tertiarySystemBackground))
+                /* if !state.basals.isEmpty {
+                     ForEach(state.basals) { item in
+                         basalView(item)
+                     }
+                     // .listRowBackground(Color(.tertiarySystemBackground))
 
-                } else {
-                    HStack {
-                        Text("Ingen data.")
-                    }
+                 } else { */
+                HStack {
+                    Text("Ingen data")
                 }
             }
         }
+
+        // }
 
         private var glucoseList: some View {
             List {
@@ -410,7 +417,7 @@ extension DataTable {
                     // .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
-                        Text("Ingen data.")
+                        Text("Ingen data")
                     }
                 }
             }
@@ -485,9 +492,9 @@ extension DataTable {
 
                     if treatmentToDelete.type == .carbs || treatmentToDelete.type == .fpus {
                         state.deleteCarbs(treatmentToDelete)
-                    } else {
-                        state.deleteInsulin(treatmentToDelete)
-                    }
+                    } /* else {
+                         state.deleteInsulin(treatmentToDelete)
+                     } */
                 }
             } message: {
                 Text("\n" + alertMessage)

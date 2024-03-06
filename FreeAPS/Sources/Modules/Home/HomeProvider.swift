@@ -9,7 +9,7 @@ extension Home {
         @Injected() var pumpHistoryStorage: PumpHistoryStorage!
         @Injected() var tempTargetsStorage: TempTargetsStorage!
         @Injected() var carbsStorage: CarbsStorage!
-        @Injected() var announcementStorage: AnnouncementsStorage!
+        // @Injected() var announcementStorage: AnnouncementsStorage!
 
         var timezone: TimeZone? {
             apsManager.pumpManager?.status.timeZone
@@ -66,11 +66,11 @@ extension Home {
             }
         }
 
-        func announcement(_ hours: Int) -> [Announcement] {
-            announcementStorage.validate().filter {
-                $0.createdAt.addingTimeInterval(hours.hours.timeInterval) > Date()
-            }
-        }
+        /* func announcement(_ hours: Int) -> [Announcement] {
+             announcementStorage.validate().filter {
+                 $0.createdAt.addingTimeInterval(hours.hours.timeInterval) > Date()
+             }
+         } */
 
         func pumpSettings() -> PumpSettings {
             storage.retrieve(OpenAPS.Settings.settings, as: PumpSettings.self)
