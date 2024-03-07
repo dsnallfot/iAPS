@@ -27,21 +27,6 @@ import SwiftUI
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // if !completedLongPressOfBG {
-            if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
-                HStack {
-                    Spacer()
-
-                    Text("Updating...").font(.system(size: 9)).foregroundColor(.secondary)
-                    withAnimation {
-                        BlinkingView(count: 5, size: 3)
-                            .frame(width: 10, height: 10)
-                    }
-                    Spacer()
-                }
-                .offset(x: 0, y: 9)
-            }
-            // }
             VStack {
                 // if !completedLongPressOfBG {
                 header
@@ -79,17 +64,25 @@ import SwiftUI
             HStack(alignment: .top) {
                 HStack {
                     Text(state.glucose)
-                        .font(.system(size: 45, weight: .semibold))
+                        .font(.system(size: 42, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
                     Spacer()
                     Text(state.trend)
-                        .font(.system(size: 35, weight: .semibold))
+                        .font(.system(size: 32, weight: .semibold))
                         .scaledToFill()
                         .minimumScaleFactor(0.3)
                         .offset(x: -8, y: 0)
                     Spacer()
-                    Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(5)
+                    ZStack {
+                        Circle().stroke(color, lineWidth: 4).frame(width: 32, height: 32).padding(5)
+                        if state.timerDate.timeIntervalSince(state.lastUpdate) > 10 {
+                            withAnimation {
+                                BlinkingView(count: 7, size: 4)
+                                    .frame(width: 18, height: 18)
+                            }
+                        }
+                    }
                 }
             }
             VStack {
@@ -303,22 +296,6 @@ import SwiftUI
         .gesture(longPresBGs)
     }
 
-    /* var bigHeader: some View {
-         VStack(alignment: .center) {
-             HStack {
-                 Text(state.glucose).font(.system(size: 60, weight: .semibold))
-                 Text(state.trend != "→" ? state.trend : "").font(.system(size: 60, weight: .semibold))
-                     .scaledToFill()
-                     .minimumScaleFactor(0.5)
-             }.padding(.bottom, 30)
-
-             HStack {
-                 Circle().stroke(color, lineWidth: 5).frame(width: 35, height: 35).padding(10)
-             }
-         }
-         .gesture(longPresBGs)
-     } */
-
     var longPress: some Gesture {
         LongPressGesture(minimumDuration: 2) // 1)
             .updating($isDetectingLongPress) { currentState, gestureState,
@@ -355,7 +332,7 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 35, height: 35)
+                    .frame(width: 33, height: 33)
                     .foregroundColor(.loopYellow)
             }
 
@@ -369,46 +346,28 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 35, height: 35)
+                    .frame(width: 33, height: 33)
                     .foregroundColor(.insulin)
             }
             Spacer()
 
-            /* NavigationLink(isActive: $state.isTempTargetViewActive) {
-             TempTargetsView()
-             .environmentObject(state)
-             } label: {
-             VStack {
-             Image(systemName: "target")
-             .renderingMode(.template)
-             .resizable()
-             .fontWeight(.light)
-             .frame(width: 35, height: 35)
-             .foregroundColor(.cyan)
-             if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
-             Text(until, style: .timer)
-             .scaledToFill()
-             .font(.system(size: 8))
-             }
-             }
-             } */
-            // if state.useTargetButton {
             // use longpress to toggle between temptargets and override buttons instead of default and bigheader views
             if completedLongPressOfBG {
                 NavigationLink(isActive: $state.isTempTargetViewActive) {
                     TempTargetsView()
                         .environmentObject(state)
                 } label: {
-                    VStack {
+                    ZStack {
                         Image(systemName: "target")
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: 35, height: 35)
+                            .frame(width: 33, height: 33)
                             .foregroundColor(.cyan)
                         if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
                             Text(until, style: .timer)
                                 .scaledToFill()
                                 .font(.system(size: 8))
+                                .offset(y: 30)
                         }
                     }
                 }
@@ -417,29 +376,30 @@ import SwiftUI
                     OverridesView()
                         .environmentObject(state)
                 } label: {
-                    VStack {
+                    ZStack {
                         if let until = state.overrides.compactMap(\.until).first, until > Date.now {
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 35, height: 35)
+                                .frame(width: 30, height: 30)
                                 .foregroundColor(.purple.opacity(0.7))
 
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
                                 Text("∞")
                                     .scaledToFill()
-                                    .font(.system(size: 12))
-                                    .offset(y: -3)
+                                    .font(.system(size: 16))
+                                    .offset(y: 30)
 
                             } else {
                                 Text(until, style: .timer)
                                     .font(.system(size: 8))
+                                    .offset(y: 30)
                             }
                         } else {
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 35, height: 35)
+                                .frame(width: 33, height: 33)
                                 .foregroundColor(.purple.opacity(0.7))
                         }
                     }
