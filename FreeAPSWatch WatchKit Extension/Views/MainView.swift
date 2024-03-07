@@ -358,16 +358,22 @@ import SwiftUI
                         .environmentObject(state)
                 } label: {
                     ZStack {
-                        Image(systemName: "target")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 33, height: 33)
-                            .foregroundColor(.cyan)
                         if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+                            Image(systemName: "target")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(.cyan.opacity(0.3))
                             Text(until, style: .timer)
                                 .scaledToFill()
-                                .font(.system(size: 8))
-                                .offset(y: 30)
+                                .font(.system(size: 11).weight(.bold))
+                                .foregroundColor(.cyan.opacity(1))
+                        } else {
+                            Image(systemName: "target")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(.cyan)
                         }
                     }
                 }
@@ -381,19 +387,20 @@ import SwiftUI
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(.purple.opacity(0.7))
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(.purple.opacity(0.25))
 
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
                                 Text("∞")
                                     .scaledToFill()
-                                    .font(.system(size: 16))
-                                    .offset(y: 30)
+                                    .font(.system(size: 25))
+                                    .foregroundColor(.purple.opacity(1))
+                                    .offset(y: -2)
 
                             } else {
                                 Text(until, style: .timer)
-                                    .font(.system(size: 8))
-                                    .offset(y: 30)
+                                    .font(.system(size: 11).weight(.bold))
+                                    .foregroundColor(.purple.opacity(1))
                             }
                         } else {
                             Image(systemName: "person.circle")
