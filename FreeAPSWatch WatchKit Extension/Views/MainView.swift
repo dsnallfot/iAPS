@@ -391,15 +391,13 @@ import SwiftUI
                                 .foregroundColor(.purple.opacity(0.25))
 
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
-                                Text("∞")
-                                    .scaledToFill()
-                                    .font(.system(size: 25))
+                                Image(systemName: "infinity")
+                                    .frame(width: 24, height: 12)
                                     .foregroundColor(.purple.opacity(1))
-                                    .offset(y: -2)
 
                             } else {
                                 Text(until, style: .timer)
-                                    .font(.system(size: 11).weight(.bold))
+                                    .font(.system(size: 10).weight(.bold))
                                     .foregroundColor(.purple.opacity(1))
                             }
                         } else {
