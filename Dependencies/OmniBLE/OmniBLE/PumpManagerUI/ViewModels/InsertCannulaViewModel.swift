@@ -12,12 +12,17 @@ import LoopKitUI
 public protocol CannulaInserter {
     func insertCannula(completion: @escaping (Result<TimeInterval,OmniBLEPumpManagerError>) -> ())
     func checkCannulaInsertionFinished(completion: @escaping (OmniBLEPumpManagerError?) -> Void)
+    var cannulaInsertionSuccessfullyStarted: Bool { get }
 }
 
-extension OmniBLEPumpManager: CannulaInserter { }
+extension OmniBLEPumpManager: CannulaInserter {
+    public var cannulaInsertionSuccessfullyStarted: Bool {
+        return state.podState?.setupProgress.cannulaInsertionSuccessfullyStarted == true
+    }
+}
 
 class InsertCannulaViewModel: ObservableObject, Identifiable {
-
+    
     enum InsertCannulaViewModelState {
         case ready
         case startingInsertion
@@ -28,9 +33,9 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         
         var actionButtonAccessibilityLabel: String {
             switch self {
-            case .ready, .startingInsertion:
+            case .ready:
                 return LocalizedString("Slide Button to insert Cannula", comment: "Insert cannula slider button accessibility label while ready to pair")
-            case .inserting:
+            case .inserting, .startingInsertion:
                 return LocalizedString("Inserting. Please wait.", comment: "Insert cannula action button accessibility label while pairing")
             case .checkingInsertion:
                 return LocalizedString("Checking Insertion", comment: "Insert cannula action button accessibility label checking insertion")
@@ -40,7 +45,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
                 return LocalizedString("Cannula inserted successfully. Continue.", comment: "Insert cannula action button accessibility label when cannula insertion succeeded")
             }
         }
-
+        
         var instructionsDisabled: Bool {
             switch self {
             case .ready, .error:
@@ -122,9 +127,9 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         }
         return nil
     }
-
+    
     @Published var state: InsertCannulaViewModelState = .ready
-
+    
     public var stateNeedsDeliberateUserAcceptance : Bool {
         switch state {
         case .ready:
@@ -140,24 +145,20 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     
     var cannulaInserter: CannulaInserter
     
+    var autoRetryAttempted: Bool
+    
     init(cannulaInserter: CannulaInserter) {
         self.cannulaInserter = cannulaInserter
+        self.autoRetryAttempted = false
+        
+        // If resuming, don't wait for the button action
+        if cannulaInserter.cannulaInsertionSuccessfullyStarted {
+            insertCannula()
+        }
     }
     
-//    private func handleEvent(_ event: ActivationStep2Event) {
-//        switch event {
-//        case .insertingCannula:
-//            let finishTime = TimeInterval(Pod.estimatedCannulaInsertionDuration)
-//            state = .inserting(finishTime: CACurrentMediaTime() + finishTime)
-//        case .step2Completed:
-//            state = .finished
-//        default:
-//            break
-//        }
-//    }
-    
     private func checkCannulaInsertionFinished() {
-        state = .startingInsertion
+        state = .checkingInsertion
         cannulaInserter.checkCannulaInsertionFinished() { (error) in
             DispatchQueue.main.async {
                 if let error = error {
@@ -186,17 +187,21 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
                         self.state = .finished
                     }
                 case .failure(let error):
-                    self.state = .error(error)
+                    if self.autoRetryAttempted {
+                        self.autoRetryAttempted = false // allow for an auto retry on the next user attempt
+                        self.state = .error(error)
+                    } else {
+                        self.autoRetryAttempted = true
+                        let autoRetryPauseTime = TimeInterval(seconds: 3)
+                        print("### insertCannula encountered error \(error.localizedDescription), retrying after \(autoRetryPauseTime) seconds")
+                        DispatchQueue.global(qos: .utility).async {
+                            Thread.sleep(forTimeInterval: autoRetryPauseTime)
+                            
+                            self.insertCannula()
+                        }
+                    }
                 }
             }
-
-            
-//            switch status {
-//            case .error(let error):
-//                self.state = .error(error)
-//            case .event(let event):
-//                self.handleEvent(event)
-//            }
         }
     }
     
@@ -221,23 +226,23 @@ public extension OmniBLEPumpManagerError {
     var recoverable: Bool {
         //TODO
         return true
-//        switch self {
-//        case .podIsInAlarm:
-//            return false
-//        case .activationError(let activationErrorCode):
-//            switch activationErrorCode {
-//            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-//                return false
-//            default:
-//                return true
-//            }
-//        case .internalError(.incompatibleProductId):
-//            return false
-//        case .systemError:
-//            return false
-//        default:
-//            return true
-//        }
+        //        switch self {
+        //        case .podIsInAlarm:
+        //            return false
+        //        case .activationError(let activationErrorCode):
+        //            switch activationErrorCode {
+        //            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+        //                return false
+        //            default:
+        //                return true
+        //            }
+        //        case .internalError(.incompatibleProductId):
+        //            return false
+        //        case .systemError:
+        //            return false
+        //        default:
+        //            return true
+        //        }
     }
 }
 
