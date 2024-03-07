@@ -42,7 +42,7 @@ extension Settings {
 
                 Section {
                     Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
-                    Text("Pump Basalinställningar").navigationLink(to: .basalProfileEditor, from: self)
+                    Text("Basalinställningar").navigationLink(to: .basalProfileEditor, from: self)
                     Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
                     Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
                     Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)

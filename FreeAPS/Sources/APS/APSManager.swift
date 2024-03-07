@@ -45,17 +45,17 @@ enum APSError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .pumpError(error):
-            return "Pump fel: \(error.localizedDescription)"
+            return "Pumpfel: \(error.localizedDescription)"
         case let .invalidPumpState(message):
-            return "Fel: Ogiltig pumpstatus: \(message)"
+            return "Pumpstatus: \(message)"
         case let .glucoseError(message):
-            return "Fel: Ogiltigt glukosvärde: \(message)"
+            return "Glukosstatus: \(message)"
         case let .apsError(message):
             return "APS fel: \(message)"
         case let .deviceSyncError(message):
             return "Synk fel: \(message)"
         case let .manualBasalTemp(message):
-            return "Manuell basal temp : \(message)"
+            return "Manuell temp basal: \(message)"
         }
     }
 }
@@ -191,7 +191,7 @@ final class BaseAPSManager: APSManager, Injectable {
         }
 
         guard !isLooping.value else {
-            warning(.apsManager, "Loop redan pågående. Ignorerar rekommendation.")
+            warning(.apsManager, "Loop pågår. Ignorerar rekommendation.")
             return
         }
 
@@ -296,21 +296,21 @@ final class BaseAPSManager: APSManager, Injectable {
 
     private func verifyStatus() -> Error? {
         guard let pump = pumpManager else {
-            return APSError.invalidPumpState(message: "Pump ej inställd")
+            return APSError.invalidPumpState(message: "Pump ej inställd!")
         }
         let status = pump.status.pumpStatus
 
         guard !status.bolusing else {
-            return APSError.invalidPumpState(message: "Pump ger bolus")
+            return APSError.invalidPumpState(message: "Bolus pågår! Vänta tills den är slutförd eller avbryt bolus")
         }
 
         guard !status.suspended else {
-            return APSError.invalidPumpState(message: "Pump avstängd")
+            return APSError.invalidPumpState(message: "Pump avstängd!")
         }
 
         let reservoir = storage.retrieve(OpenAPS.Monitor.reservoir, as: Decimal.self) ?? 100
         guard reservoir >= 0 else {
-            return APSError.invalidPumpState(message: "Reservoar är tom")
+            return APSError.invalidPumpState(message: "Reservoar är tom!")
         }
 
         return nil
@@ -332,22 +332,22 @@ final class BaseAPSManager: APSManager, Injectable {
         debug(.apsManager, "Starta determine basal")
         guard let glucose = storage.retrieve(OpenAPS.Monitor.glucose, as: [BloodGlucose].self), glucose.isNotEmpty else {
             debug(.apsManager, "Ej tillräcklig glukosdata")
-            processError(APSError.glucoseError(message: "Ej tillräcklig glukosdata"))
+            processError(APSError.glucoseError(message: "Ej tillräcklig glukosdata!"))
             return Just(false).eraseToAnyPublisher()
         }
 
         let lastGlucoseDate = glucoseStorage.lastGlucoseDate()
         guard lastGlucoseDate >= Date().addingTimeInterval(-12.minutes.timeInterval) else {
             debug(.apsManager, "Glukosdata är inaktuell")
-            processError(APSError.glucoseError(message: "Glukosdata är inaktuell"))
+            processError(APSError.glucoseError(message: "Glukosdata är inaktuell!"))
             return Just(false).eraseToAnyPublisher()
         }
 
         // Only let glucose be flat when 400 mg/dl
         if (glucoseStorage.recent().last?.glucose ?? 100) != 400 {
             guard glucoseStorage.isGlucoseNotFlat() else {
-                debug(.apsManager, "Glukosdata är för flat")
-                processError(APSError.glucoseError(message: "Glukosdata är för flat"))
+                debug(.apsManager, "Flera identiska glukosvärden i rad")
+                processError(APSError.glucoseError(message: "Flera identiska glukosvärden i rad. Kontrollera CGM!"))
                 return Just(false).eraseToAnyPublisher()
             }
         }
@@ -461,7 +461,7 @@ final class BaseAPSManager: APSManager, Injectable {
         debug(.apsManager, "Avbryt bolus")
         pump.cancelBolus().sink { completion in
             if case let .failure(error) = completion {
-                debug(.apsManager, "Avbruten bolus misslyckades med felorsak: \(error.localizedDescription)")
+                debug(.apsManager, "Kunde ej avbryta bolus, felorsak: \(error.localizedDescription)")
                 self.processError(APSError.pumpError(error))
             } else {
                 debug(.apsManager, "Bolus avbruten")
@@ -484,7 +484,7 @@ final class BaseAPSManager: APSManager, Injectable {
 
         // unable to do temp basal during manual temp basal 😁
         if isManualTempBasal {
-            processError(APSError.manualBasalTemp(message: "Loop not possible during the manual basal temp"))
+            processError(APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
             return
         }
 
@@ -527,7 +527,7 @@ final class BaseAPSManager: APSManager, Injectable {
 
     func enactAnnouncement(_ announcement: Announcement) {
         guard let action = announcement.action else {
-            warning(.apsManager, "Invalid Announcement action")
+            warning(.apsManager, "Ogiltig Announcement action")
             return
         }
 
@@ -536,7 +536,7 @@ final class BaseAPSManager: APSManager, Injectable {
             return
         }
 
-        debug(.apsManager, "Start enact announcement: \(action)")
+        debug(.apsManager, "Utför announcement: \(action)")
 
         switch action {
         case let .bolus(amount):
@@ -554,11 +554,11 @@ final class BaseAPSManager: APSManager, Injectable {
                         break
                     default:
                         // Do not generate notifications for automatic boluses that fail.
-                        warning(.apsManager, "Announcement Bolus failed with error: \(error.localizedDescription)")
+                        warning(.apsManager, "Announcement bolus misslyckades med felorsak: \(error.localizedDescription)")
                     }
 
                 } else {
-                    debug(.apsManager, "Announcement Bolus succeeded")
+                    debug(.apsManager, "Announcement bolus lyckades")
                     self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
                     self.bolusProgress.send(0)
                     self.bolusAmount.send(Decimal(roundedAmount))
@@ -573,9 +573,9 @@ final class BaseAPSManager: APSManager, Injectable {
                 }
                 pump.suspendDelivery { error in
                     if let error = error {
-                        debug(.apsManager, "Pump not suspended by Announcement: \(error.localizedDescription)")
+                        debug(.apsManager, "Pump pausades inte genom announcement: \(error.localizedDescription)")
                     } else {
-                        debug(.apsManager, "Pump suspended by Announcement")
+                        debug(.apsManager, "Pump pausades genom Announcement")
                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
                         self.nightscout.uploadStatus()
                     }
@@ -586,9 +586,9 @@ final class BaseAPSManager: APSManager, Injectable {
                 }
                 pump.resumeDelivery { error in
                     if let error = error {
-                        warning(.apsManager, "Pump not resumed by Announcement: \(error.localizedDescription)")
+                        warning(.apsManager, "Pump återupptogs inte genom Announcement: \(error.localizedDescription)")
                     } else {
-                        debug(.apsManager, "Pump resumed by Announcement")
+                        debug(.apsManager, "Pump återupptogs genom Announcement")
                         self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
                         self.nightscout.uploadStatus()
                     }
@@ -605,7 +605,7 @@ final class BaseAPSManager: APSManager, Injectable {
             }
             // unable to do temp basal during manual temp basal 😁
             if isManualTempBasal {
-                processError(APSError.manualBasalTemp(message: "Loop not possible during the manual basal temp"))
+                processError(APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
                 return
             }
             guard !settings.closedLoop else {
@@ -614,9 +614,9 @@ final class BaseAPSManager: APSManager, Injectable {
             let roundedRate = pump.roundToSupportedBasalRate(unitsPerHour: Double(rate))
             pump.enactTempBasal(unitsPerHour: roundedRate, for: TimeInterval(duration) * 60) { error in
                 if let error = error {
-                    warning(.apsManager, "Announcement TempBasal failed with error: \(error.localizedDescription)")
+                    warning(.apsManager, "Announcement temp basal misslyckades med felorsak: \(error.localizedDescription)")
                 } else {
-                    debug(.apsManager, "Announcement TempBasal succeeded")
+                    debug(.apsManager, "Announcement temp basal lyckades")
                     self.announcementsStorage.storeAnnouncements([announcement], enacted: true)
                 }
             }
@@ -644,7 +644,7 @@ final class BaseAPSManager: APSManager, Injectable {
             announcementsStorage.storeAnnouncements([announcement], enacted: true)
             debug(
                 .apsManager,
-                "Remote Meal by Announcement succeeded. Carbs: \(carbs), fat: \(fat), protein: \(protein)."
+                "Måltid genom Announcement lyckades. Kolhydrater: \(carbs), fett: \(fat), protein: \(protein)."
             )
         case let .override(name):
             guard !name.isEmpty else { return }
@@ -662,7 +662,7 @@ final class BaseAPSManager: APSManager, Injectable {
                         nightscout.editOverride(nsString!, duration, activeOverride.date ?? Date.now)
                     }
                     announcementsStorage.storeAnnouncements([announcement], enacted: true)
-                    debug(.apsManager, "Override Canceled by Announcement succeeded.")
+                    debug(.apsManager, "Override avbröts genom Announcement.")
                 }
                 return
             }
@@ -682,7 +682,7 @@ final class BaseAPSManager: APSManager, Injectable {
             let currentActiveOverride = storage.fetchLatestOverride().first
             nightscout.uploadOverride(name, Double(preset.preset?.duration ?? 0), currentActiveOverride?.date ?? Date.now)
             announcementsStorage.storeAnnouncements([announcement], enacted: true)
-            debug(.apsManager, "Remote Override by Announcement succeeded.")
+            debug(.apsManager, "Override startades genom Announcement.")
         }
     }
 
@@ -724,7 +724,7 @@ final class BaseAPSManager: APSManager, Injectable {
 
         // unable to do temp basal during manual temp basal 😁
         if isManualTempBasal {
-            return Fail(error: APSError.manualBasalTemp(message: "Loop not possible during the manual basal temp"))
+            return Fail(error: APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
                 .eraseToAnyPublisher()
         }
 
@@ -735,7 +735,7 @@ final class BaseAPSManager: APSManager, Injectable {
 
             guard let rate = suggested.rate, let duration = suggested.duration else {
                 // It is OK, no temp required
-                debug(.apsManager, "Ingen temp krävs")
+                debug(.apsManager, "Ingen temp basal krävs")
                 return Just(()).setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
