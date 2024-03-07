@@ -37,6 +37,8 @@ struct BolusConfirmationView: View {
                             .offset(y: (geo.size.height - elementSize) * progress / 100)
 
                     }.frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 5)
+                        .padding(.bottom, 5)
                     if isCrownLeftOriented {
                         Spacer().frame(width: elementSize / 2)
                     } else {
@@ -45,6 +47,7 @@ struct BolusConfirmationView: View {
                             .frame(width: elementSize / 2, height: elementSize / 2)
                             .foregroundColor(.primary)
                             .transition(.opacity)
+                            .padding(.top, 15)
                     }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -56,6 +59,7 @@ struct BolusConfirmationView: View {
                         .frame(width: elementSize / 2, height: elementSize / 2)
                         .foregroundColor(.primary)
                         .transition(.opacity)
+                        .padding(.top, 15)
                 }
                 Button {
                     WKInterfaceDevice.current().play(.click)
@@ -64,8 +68,11 @@ struct BolusConfirmationView: View {
                 }
                 label: {
                     Text("Cancel")
+                        .frame(width: 100, height: 30)
                 }
                 .font(.title3.weight(.semibold))
+
+                .tint(.loopRed)
                 if isCrownLeftOriented {
                     Spacer().frame(width: elementSize / 2)
                 }

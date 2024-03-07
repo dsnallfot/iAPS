@@ -72,10 +72,17 @@ import SwiftUI
                         enactBolus()
                     }
                     label: {
-                        Image(systemName: "checkmark.circle.fill")
-                            .resizable()
-                            .foregroundColor(.loopGreen)
-                            .frame(width: 30, height: 30)
+                        if steps <= 0 {
+                            Image(systemName: "checkmark.circle.fill")
+                                .resizable()
+                                .foregroundColor(.darkGray)
+                                .frame(width: 30, height: 30)
+                        } else {
+                            Image(systemName: "checkmark.circle.fill")
+                                .resizable()
+                                .foregroundColor(.loopGreen)
+                                .frame(width: 30, height: 30)
+                        }
                     }
                     .disabled(steps <= 0)
                 }
