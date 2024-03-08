@@ -123,7 +123,7 @@ struct InsertCannulaView: View {
 }
 
 class MockCannulaInserter: CannulaInserter {
-    public func insertCannula(completion: @escaping (Result<TimeInterval,OmniBLEPumpManagerError>) -> Void) {
+    func insertCannula(completion: @escaping (Result<TimeInterval,OmniBLEPumpManagerError>) -> Void) {
         let mockDelay = TimeInterval(seconds: 3)
         let result :Result<TimeInterval, OmniBLEPumpManagerError> = .success(mockDelay)
         completion(result)
@@ -132,6 +132,8 @@ class MockCannulaInserter: CannulaInserter {
     func checkCannulaInsertionFinished(completion: @escaping (OmniBLEPumpManagerError?) -> Void) {
         completion(nil)
     }
+    
+    var cannulaInsertionSuccessfullyStarted: Bool = false
 }
 
 struct InsertCannulaView_Previews: PreviewProvider {

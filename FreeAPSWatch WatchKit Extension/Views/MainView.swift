@@ -6,42 +6,38 @@ import SwiftUI
     private enum Config {
         static let lag: TimeInterval = 30
     }
-
+    
     @EnvironmentObject var state: WatchStateModel
-
+    
     @State var isCarbsActive = false
     @State var isTargetsActive = false
     @State var isOverrideActive = false
     @State var isBolusActive = false
     @State private var pulse = 0
     @State private var steps = 0
-
+    
     @GestureState var isDetectingLongPress = false
     @State var completedLongPress = false
-
+    
     @State var completedLongPressOfBG = false
     @GestureState var isDetectingLongPressOfBG = false
-
+    
     private var healthStore = HKHealthStore()
     let heartRateQuantity = HKUnit(from: "count/min")
-
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
             VStack {
-                // if !completedLongPressOfBG {
                 header
                 Spacer()
                 buttons
-                /* } else {
-                     bigHeader
-                 } */
             }
-
+            
             if state.isConfirmationViewActive {
                 ConfirmationView(success: $state.confirmationSuccess)
                     .background(Rectangle().fill(.black))
             }
-
+            
             if state.isConfirmationBolusViewActive {
                 BolusConfirmationView()
                     .environmentObject(state)
@@ -58,7 +54,7 @@ import SwiftUI
             state.requestState()
         }
     }
-
+    
     var header: some View {
         VStack {
             HStack(alignment: .top) {
@@ -91,17 +87,17 @@ import SwiftUI
                         .replacingOccurrences(of: ",", with: ".")
                         .replacingOccurrences(of: "+", with: "")
                         .replacingOccurrences(of: "−", with: "-")
-
+                    
                     let cleanedGlucose = state.glucose
                         .replacingOccurrences(of: ",", with: ".")
-
+                    
                     if let glucoseValue = Double(cleanedGlucose),
                        let deltaValue = Double(cleanedDelta)
                     {
                         let computedValue = glucoseValue + deltaValue * 2.5
                         let formattedComputedValue = String(format: "%.1f", computedValue)
                         let formattedComputedValueWithComma = formattedComputedValue.replacingOccurrences(of: ".", with: ",")
-
+                        
                         HStack {
                             Text(state.delta)
                                 .font(.caption2)
@@ -148,7 +144,7 @@ import SwiftUI
                         }
                         .frame(width: 60, alignment: .leading)
                     }
-
+                    
                     Spacer()
                     HStack {
                         if state.lastLoopDate != nil {
@@ -165,7 +161,7 @@ import SwiftUI
                     }
                     .frame(width: 50, alignment: .trailing)
                 }
-
+                
                 Spacer()
                 HStack(alignment: .firstTextBaseline) {
                     HStack {
@@ -181,7 +177,7 @@ import SwiftUI
                     }
                     .frame(width: 45, alignment: .leading)
                     .padding(.leading, 5)
-
+                    
                     Spacer()
                     HStack {
                         Text(iobFormatter.string(from: (state.iob ?? 0) as NSNumber)!)
@@ -189,14 +185,14 @@ import SwiftUI
                             .scaledToFill()
                             .foregroundColor(Color.white)
                             .minimumScaleFactor(0.5)
-
+                        
                         Text("U").foregroundColor(.insulin)
                             .font(.caption2)
                             .scaledToFill()
                             .minimumScaleFactor(0.5)
                     }
                     .frame(width: 60, alignment: .center)
-
+                    
                     switch state.displayOnWatch {
                     case .HR:
                         Spacer()
@@ -212,7 +208,7 @@ import SwiftUI
                                 }
                                 .scaleEffect(isDetectingLongPress ? 3 : 1)
                                 .gesture(longPress)
-
+                                
                             } else {
                                 HStack {
                                     Text("❤️" + "\(pulse)")
@@ -291,11 +287,11 @@ import SwiftUI
                     .onAppear(perform: start)
             }
         }
-        .padding()
-        // .scaleEffect(isDetectingLongPressOfBG ? 3 : 1)
+        
+        .padding(.bottom, 5)
         .gesture(longPresBGs)
     }
-
+    
     var longPress: some Gesture {
         LongPressGesture(minimumDuration: 2) // 1)
             .updating($isDetectingLongPress) { currentState, gestureState,
@@ -308,7 +304,7 @@ import SwiftUI
                 } else { completedLongPress = true }
             }
     }
-
+    
     var longPresBGs: some Gesture {
         LongPressGesture(minimumDuration: 1)
             .updating($isDetectingLongPressOfBG) { currentState, gestureState,
@@ -321,7 +317,7 @@ import SwiftUI
                 } else { completedLongPressOfBG = true }
             }
     }
-
+    
     var buttons: some View {
         HStack(alignment: .center) {
             NavigationLink(isActive: $state.isCarbsViewActive) {
@@ -332,12 +328,12 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 33, height: 33)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(.loopYellow)
             }
-
+            
             Spacer()
-
+            
             NavigationLink(isActive: $state.isBolusViewActive) {
                 BolusView()
                     .environmentObject(state)
@@ -346,11 +342,11 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 33, height: 33)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(.insulin)
             }
             Spacer()
-
+            
             // use longpress to toggle between temptargets and override buttons instead of default and bigheader views
             if completedLongPressOfBG {
                 NavigationLink(isActive: $state.isTempTargetViewActive) {
@@ -362,17 +358,17 @@ import SwiftUI
                             Image(systemName: "target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.cyan.opacity(0.3))
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.cyan.opacity(0.4))
                             Text(until, style: .timer)
                                 .scaledToFill()
                                 .font(.system(size: 11).weight(.bold))
-                                .foregroundColor(.cyan.opacity(1))
+                                .foregroundColor(.white.opacity(1))
                         } else {
                             Image(systemName: "target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
+                                .frame(width: 35, height: 35)
                                 .foregroundColor(.cyan)
                         }
                     }
@@ -383,44 +379,55 @@ import SwiftUI
                         .environmentObject(state)
                 } label: {
                     ZStack {
+                        let override: String = state.override != nil ? state.override! : "-"
                         if let until = state.overrides.compactMap(\.until).first, until > Date.now {
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.purple.opacity(0.25))
-
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.4))
+                            
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
-                                Text("∞")
-                                    .scaledToFill()
-                                    .font(.system(size: 25))
-                                    .foregroundColor(.purple.opacity(1))
-                                    .offset(y: -2)
-
+                                VStack {
+                                    Text(override)
+                                        .font(.system(size: 11).weight(.bold))
+                                        .foregroundColor(.white.opacity(1))
+                                        .padding(.bottom, 2)
+                                    Image(systemName: "infinity")
+                                        .frame(width: 16, height: 8)
+                                        .foregroundColor(.white.opacity(0.8))
+                                }
+                                
                             } else {
-                                Text(until, style: .timer)
-                                    .font(.system(size: 11).weight(.bold))
-                                    .foregroundColor(.purple.opacity(1))
+                                VStack {
+                                    Text(override)
+                                        .font(.system(size: 11).weight(.bold))
+                                        .foregroundColor(.white.opacity(1))
+                                        .padding(.bottom, 2)
+                                    Text(until, style: .timer)
+                                        .font(.system(size: 8).weight(.bold))
+                                        .foregroundColor(.white.opacity(1))
+                                }
                             }
                         } else {
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.purple.opacity(0.7))
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.8))
                         }
                     }
                 }
             }
         }
     }
-
+    
     func start() {
         autorizeHealthKit()
         startHeartRateQuery(quantityTypeIdentifier: .heartRate)
         startStepsQuery(quantityTypeIdentifier: .stepCount)
     }
-
+    
     func autorizeHealthKit() {
         let healthKitTypes: Set = [
             HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)!,
@@ -428,7 +435,7 @@ import SwiftUI
         ]
         healthStore.requestAuthorization(toShare: healthKitTypes, read: healthKitTypes) { _, _ in }
     }
-
+    
     private func startStepsQuery(quantityTypeIdentifier _: HKQuantityTypeIdentifier) {
         let type = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let now = Date()
@@ -442,7 +449,7 @@ import SwiftUI
             anchorDate: startOfDay,
             intervalComponents: interval
         )
-
+        
         query.initialResultsHandler = { _, result, _ in
             var resultCount = 0.0
             guard let result = result else {
@@ -450,7 +457,7 @@ import SwiftUI
                 return
             }
             result.enumerateStatistics(from: startOfDay, to: now) { statistics, _ in
-
+                
                 if let sum = statistics.sumQuantity() {
                     // Get steps (they are of double type)
                     resultCount = sum.doubleValue(for: HKUnit.count())
@@ -459,10 +466,10 @@ import SwiftUI
                 self.steps = Int(resultCount)
             }
         }
-
+        
         query.statisticsUpdateHandler = {
             _, statistics, _, _ in
-
+            
             // If new statistics are available
             if let sum = statistics?.sumQuantity() {
                 let resultCount = sum.doubleValue(for: HKUnit.count())
@@ -472,7 +479,7 @@ import SwiftUI
         }
         healthStore.execute(query)
     }
-
+    
     private func startHeartRateQuery(quantityTypeIdentifier: HKQuantityTypeIdentifier) {
         let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
         let updateHandler: (HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void = {
@@ -492,7 +499,7 @@ import SwiftUI
         query.updateHandler = updateHandler
         healthStore.execute(query)
     }
-
+    
     private func process(_ samples: [HKQuantitySample], type: HKQuantityTypeIdentifier) {
         var lastHeartRate = 0.0
         for sample in samples {
@@ -502,14 +509,14 @@ import SwiftUI
             pulse = Int(lastHeartRate)
         }
     }
-
+    
     private var iobFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 2
         formatter.numberStyle = .decimal
         return formatter
     }
-
+    
     private var timeString: String {
         let minAgo = Int((Date().timeIntervalSince(state.lastLoopDate ?? .distantPast) - Config.lag) / 60) + 1
         if minAgo > 1440 {
@@ -517,13 +524,13 @@ import SwiftUI
         }
         return "\(minAgo) " + NSLocalizedString("min", comment: "Minutes ago since last loop")
     }
-
+    
     private var color: Color {
         guard let lastLoopDate = state.lastLoopDate else {
             return .loopGray
         }
         let delta = Date().timeIntervalSince(lastLoopDate) - Config.lag
-
+        
         if delta <= 5.minutes.timeInterval {
             return .loopGreen
         } else if delta <= 10.minutes.timeInterval {
@@ -537,7 +544,7 @@ import SwiftUI
 @available(watchOSApplicationExtension 9.0, *) struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let state = WatchStateModel()
-
+        
         state.glucose = "15,8"
         state.delta = "+888"
         state.iob = 100.38
@@ -545,8 +552,8 @@ import SwiftUI
         state.lastLoopDate = Date().addingTimeInterval(-200)
         state
             .tempTargets =
-            [TempTargetWatchPreset(name: "Test", id: "test", description: "", until: Date().addingTimeInterval(3600 * 3))]
-
+        [TempTargetWatchPreset(name: "Test", id: "test", description: "", until: Date().addingTimeInterval(3600 * 3))]
+        
         return Group {
             MainView()
             MainView().previewDevice("Apple Watch Series 5 - 40mm")

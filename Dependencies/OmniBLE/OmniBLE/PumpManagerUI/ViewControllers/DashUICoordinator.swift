@@ -19,7 +19,7 @@ enum DashUIScreen {
     case expirationReminderSetup
     case lowReservoirReminderSetup
     case insulinTypeSelection
-    case pairPod
+    case pairAndPrime
     case insertCannula
     case confirmAttachment
     case checkInsertedCannula
@@ -38,8 +38,8 @@ enum DashUIScreen {
         case .lowReservoirReminderSetup:
             return .insulinTypeSelection
         case .insulinTypeSelection:
-            return .pairPod
-        case .pairPod:
+            return .pairAndPrime
+        case .pairAndPrime:
             return .confirmAttachment
         case .confirmAttachment:
             return .insertCannula
@@ -54,7 +54,7 @@ enum DashUIScreen {
         case .uncertaintyRecovered:
             return nil
         case .deactivate:
-            return .pairPod
+            return .pairAndPrime
         case .settings:
             return nil
         }
@@ -171,7 +171,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             }
             let view = OmniBLESettingsView(viewModel: viewModel, supportedInsulinTypes: allowedInsulinTypes)
             return hostingController(rootView: view)
-        case .pairPod:
+        case .pairAndPrime:
             pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didCreatePumpManager: pumpManager)
 
             let viewModel = PairPodViewModel(podPairer: pumpManager)
@@ -185,8 +185,8 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             viewModel.didRequestDeactivation = { [weak self] in
                 self?.navigateTo(.deactivate)
             }
-            
-            let view = hostingController(rootView: PairPodView(viewModel: viewModel).onAppear(perform: {UIApplication.shared.isIdleTimerDisabled = true}), onDisappear: {UIApplication.shared.isIdleTimerDisabled = false})
+
+            let view = hostingController(rootView: PairPodView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Pair Pod", comment: "Title for pod pairing screen")
             view.navigationItem.backButtonDisplayMode = .generic
             return view
@@ -198,9 +198,9 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 },
                 didRequestDeactivation: { [weak self] in
                     self?.navigateTo(.deactivate)
-                }).onAppear(perform: {UIApplication.shared.isIdleTimerDisabled = true})
+                })
             
-            let vc = hostingController(rootView: view, onDisappear: {UIApplication.shared.isIdleTimerDisabled = false})
+            let vc = hostingController(rootView: view)
             vc.navigationItem.title = LocalizedString("Attach Pod", comment: "Title for Attach Pod screen")
             vc.navigationItem.hidesBackButton = true
             return vc
@@ -215,7 +215,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 self?.navigateTo(.deactivate)
             }
 
-            let view = hostingController(rootView: InsertCannulaView(viewModel: viewModel).onAppear(perform: {UIApplication.shared.isIdleTimerDisabled = true}), onDisappear: {UIApplication.shared.isIdleTimerDisabled = false})
+            let view = hostingController(rootView: InsertCannulaView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Insert Cannula", comment: "Title for insert cannula screen")
             view.navigationItem.hidesBackButton = true
             return view
@@ -227,9 +227,8 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 wasInsertedProperly: { [weak self] in
                     self?.stepFinished()
                 }
-            ).onAppear(perform: {UIApplication.shared.isIdleTimerDisabled = true})
-            
-            let hostedView = hostingController(rootView: view, onDisappear: {UIApplication.shared.isIdleTimerDisabled = false})
+            )
+            let hostedView = hostingController(rootView: view)
             hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
             hostedView.navigationItem.hidesBackButton = true
             return hostedView
@@ -302,8 +301,8 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         }
     }
     
-    private func hostingController<Content: View>(rootView: Content, onDisappear: @escaping () -> Void = {}) -> DismissibleHostingController {
-        return DismissibleHostingController(rootView: rootView, onDisappear: onDisappear, colorPalette: colorPalette)
+    private func hostingController<Content: View>(rootView: Content) -> DismissibleHostingController {
+        return DismissibleHostingController(rootView: rootView, colorPalette: colorPalette)
     }
     
     private func stepFinished() {
@@ -351,13 +350,13 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             if pumpManager.podAttachmentConfirmed {
                 return .insertCannula
             } else {
-                return .confirmAttachment
+                return .pairAndPrime // need to finish the priming
             }
         } else if !pumpManager.isOnboarded {
             if !pumpManager.initialConfigurationCompleted {
                 return .firstRunScreen
             }
-            return .pairPod
+            return .pairAndPrime // pair and prime a new pod
         } else {
             return .settings
         }
