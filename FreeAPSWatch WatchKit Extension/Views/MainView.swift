@@ -288,8 +288,7 @@ import SwiftUI
             }
         }
 
-        // .padding()
-        // .scaleEffect(isDetectingLongPressOfBG ? 3 : 1)
+        .padding(.bottom, 5)
         .gesture(longPresBGs)
     }
 
@@ -408,8 +407,6 @@ import SwiftUI
                 }
             }
         }
-        .padding(.horizontal, -5)
-        .padding(.bottom, -12)
     }
 
     func start() {
