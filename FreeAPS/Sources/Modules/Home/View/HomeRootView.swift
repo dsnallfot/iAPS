@@ -293,8 +293,8 @@ extension Home {
                 target = target.asMmolL
             }
             var targetString = (fetchedTargetFormatter.string(from: target as NSNumber) ?? "") + " " + unit
-            if tempTargetString != nil || target == 0 { targetString = "" }
-            // percentString = percentString == "100%" ? " " : percentString
+            if tempTargetString != nil || target < 1 { targetString = "" }
+            percentString = percentString == "100%" ? "" : percentString
 
             let duration = (fetchedPercent.first?.duration ?? 0) as Decimal
             let addedMinutes = Int(duration)
