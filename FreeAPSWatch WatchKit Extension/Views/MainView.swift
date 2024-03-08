@@ -28,13 +28,9 @@ import SwiftUI
     var body: some View {
         ZStack(alignment: .topLeading) {
             VStack {
-                // if !completedLongPressOfBG {
                 header
                 Spacer()
                 buttons
-                /* } else {
-                     bigHeader
-                 } */
             }
 
             if state.isConfirmationViewActive {
@@ -291,7 +287,8 @@ import SwiftUI
                     .onAppear(perform: start)
             }
         }
-        .padding()
+
+        // .padding()
         // .scaleEffect(isDetectingLongPressOfBG ? 3 : 1)
         .gesture(longPresBGs)
     }
@@ -332,7 +329,7 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 33, height: 33)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(.loopYellow)
             }
 
@@ -346,7 +343,7 @@ import SwiftUI
                     .renderingMode(.template)
                     .resizable()
                     .fontWeight(.light)
-                    .frame(width: 33, height: 33)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(.insulin)
             }
             Spacer()
@@ -362,17 +359,17 @@ import SwiftUI
                             Image(systemName: "target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.cyan.opacity(0.3))
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.cyan.opacity(0.4))
                             Text(until, style: .timer)
                                 .scaledToFill()
                                 .font(.system(size: 11).weight(.bold))
-                                .foregroundColor(.cyan.opacity(1))
+                                .foregroundColor(.white.opacity(1))
                         } else {
                             Image(systemName: "target")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
+                                .frame(width: 35, height: 35)
                                 .foregroundColor(.cyan)
                         }
                     }
@@ -387,30 +384,32 @@ import SwiftUI
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.purple.opacity(0.25))
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.4))
 
                             if until > Date.now.addingTimeInterval(48.hours.timeInterval) {
                                 Image(systemName: "infinity")
                                     .frame(width: 24, height: 12)
-                                    .foregroundColor(.purple.opacity(1))
+                                    .foregroundColor(.white.opacity(1))
 
                             } else {
                                 Text(until, style: .timer)
                                     .font(.system(size: 10).weight(.bold))
-                                    .foregroundColor(.purple.opacity(1))
+                                    .foregroundColor(.white.opacity(1))
                             }
                         } else {
                             Image(systemName: "person.circle")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 33, height: 33)
-                                .foregroundColor(.purple.opacity(0.7))
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.purple.opacity(0.8))
                         }
                     }
                 }
             }
         }
+        .padding(.horizontal, -5)
+        .padding(.bottom, -12)
     }
 
     func start() {

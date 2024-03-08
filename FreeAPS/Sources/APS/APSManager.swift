@@ -301,7 +301,7 @@ final class BaseAPSManager: APSManager, Injectable {
         let status = pump.status.pumpStatus
 
         guard !status.bolusing else {
-            return APSError.invalidPumpState(message: "Bolus pågår! Vänta tills den är slutförd eller avbryt bolus")
+            return APSError.invalidPumpState(message: "Bolus pågår. \nVänta tills den är slutförd innan du försöker igen")
         }
 
         guard !status.suspended else {
