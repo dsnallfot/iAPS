@@ -83,25 +83,30 @@ extension Home {
         @ViewBuilder func header(_: GeometryProxy) -> some View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
-                    Text("iAPS Caregiver")
-                        .foregroundColor(Color.white)
-                        .font(.system(size: 16, weight: .bold))
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, 50)
-            .padding(.bottom, 10)
-            .background(
-                AnyShapeStyle(
-                    LinearGradient(colors: [
+                    let gradient = LinearGradient(gradient: Gradient(colors: [
                         Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
                         Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
                         Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
                         Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
                         Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                    ], startPoint: .leading, endPoint: .trailing)
-                )
-            )
+                    ]), startPoint: .leading, endPoint: .trailing)
+
+                    Text("iAPS Caregiver")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .overlay(
+                            gradient
+                                .mask(
+                                    Text("iAPS Caregiver")
+                                        .font(.system(size: 20, weight: .bold))
+                                        .foregroundColor(.white)
+                                )
+                        )
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 50)
+            .padding(.bottom, 10)
         }
 
         @ViewBuilder private func webNightscout(_: GeometryProxy) -> some View {
