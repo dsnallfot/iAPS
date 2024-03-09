@@ -19,14 +19,14 @@ import Foundation
             [CarbsEntry(
                 id: UUID().uuidString,
                 createdAt: dateAdded,
-                actualDate: nil,
-                // testar nil ist för dateAdded för att se om det löser intermittent problem med uopladdning till nightscout
+                actualDate: dateAdded,
                 carbs: carbs,
                 fat: Decimal(quantityFat),
                 protein: Decimal(quantityProtein),
                 note: note,
                 enteredBy: CarbsEntry.manual,
-                isFPU: false, fpuID: UUID().uuidString
+                isFPU: (quantityFat > 0 || quantityProtein > 0) ? true : false,
+                fpuID: (quantityFat > 0 || quantityProtein > 0) ? UUID().uuidString : nil
             )]
         )
         var resultDisplay: String
