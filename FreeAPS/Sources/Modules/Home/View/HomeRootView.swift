@@ -113,7 +113,7 @@ extension Home {
             VStack {
                 // Use WebViewRepresentable to display the webpage
                 WebViewRepresentable(
-                    urlString: "https://ivarsnightscout.herokuapp.com"
+                    urlString: "https://ivarsnightscout.herokuapp.com" // state.url // dont get this to work in home view
                 )
                 .frame(maxHeight: .infinity, alignment: .top)
             }

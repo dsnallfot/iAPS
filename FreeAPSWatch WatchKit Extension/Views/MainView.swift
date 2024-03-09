@@ -382,17 +382,23 @@ import SwiftUI
                 TempTargetsView()
                     .environmentObject(state)
             } label: {
-                VStack {
-                    Image(systemName: "target")
-                        .renderingMode(.template)
-                        .resizable()
-                        .fontWeight(.light)
-                        .frame(width: 35, height: 35)
-                        .foregroundColor(.cyan)
+                ZStack {
                     if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+                        Image(systemName: "target")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .foregroundColor(.cyan.opacity(0.4))
                         Text(until, style: .timer)
                             .scaledToFill()
-                            .font(.system(size: 8))
+                            .font(.system(size: 11).weight(.bold))
+                            .foregroundColor(.white.opacity(1))
+                    } else {
+                        Image(systemName: "target")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .foregroundColor(.cyan)
                     }
                 }
             }
