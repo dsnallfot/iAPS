@@ -30,7 +30,7 @@ extension Settings {
 
                 Section {
                     // Text("Pump").navigationLink(to: .pumpConfig, from: self)
-                    Text("CGM").navigationLink(to: .cgm, from: self)
+                    // Text("CGM").navigationLink(to: .cgm, from: self)
                     Text("Watch").navigationLink(to: .watch, from: self)
                 } header: { Text("Devices") }
 
@@ -45,16 +45,16 @@ extension Settings {
                          TextField("...", text: $state.caregiver)
                              .multilineTextAlignment(.trailing) // Align text to the right
                      }*/
-                    Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
+                    // Text("Notifications").navigationLink(to: .notificationsConfig, from: self)
                 } header: { Text("Services") }
 
                 Section {
-                    Text("Pumpinställningar").navigationLink(to: .pumpSettingsEditor, from: self)
+                    Text("Gränsvärden").navigationLink(to: .pumpSettingsEditor, from: self)
                     // Text("Basal Profile").navigationLink(to: .basalProfileEditor, from: self)
                     // Text("Insulin Sensitivities").navigationLink(to: .isfEditor, from: self)
                     // Text("Carb Ratios").navigationLink(to: .crEditor, from: self)
                     // Text("Target Glucose").navigationLink(to: .targetsEditor, from: self)
-                } header: { Text("Konfigurera") }
+                } header: { Text("Säkerhet") }
 
                 /* Section {
                      Text("OpenAPS").navigationLink(to: .preferencesEditor, from: self)
