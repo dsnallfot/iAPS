@@ -22,6 +22,7 @@ import Swinject
         description: "Mängd kolhydrater i g",
         controlStyle: .field,
         inclusiveRange: (lowerBound: 0, upperBound: 30),
+        // Satt till samma värde som maxcarbs just nu. SKa bygga om detta till en variabel senare
         requestValueDialog: IntentDialog("Vilken mängd kolhydrater i gram vill du lägga till?")
     ) var carbQuantity: Double?
 
@@ -29,14 +30,14 @@ import Swinject
         title: "Mängd fett",
         description: "Mängd fett i g",
         default: 0.0,
-        inclusiveRange: (0, 30)
+        inclusiveRange: (0, 30) // Satt till samma värde som maxcarbs just nu. SKa bygga om detta till en variabel senare
     ) var fatQuantity: Double
 
     @Parameter(
         title: "Mängd protein",
         description: "Mängd protein i g",
         default: 0.0,
-        inclusiveRange: (0, 30)
+        inclusiveRange: (0, 30) // Satt till samma värde som maxcarbs just nu. SKa bygga om detta till en variabel senare
     ) var proteinQuantity: Double
 
     @Parameter(

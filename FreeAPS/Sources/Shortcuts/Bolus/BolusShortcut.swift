@@ -11,6 +11,7 @@ import Intents
         description: "Bolusmängd i E",
         controlStyle: .field,
         inclusiveRange: (lowerBound: 0.05, upperBound: 1.5),
+        // Satt till samma värde som maxbolus just nu. SKa bygga om detta till en variabel senare
         requestValueDialog: IntentDialog("Vad är bolusmängden i insulinenheter?")
     ) var bolusQuantity: Double?
 
