@@ -91,13 +91,13 @@ extension Home {
                         Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
                     ]), startPoint: .leading, endPoint: .trailing)
 
-                    Text("iAPS Caregiver")
+                    Text("iAPS Caregiver Remote")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
                         .overlay(
                             gradient
                                 .mask(
-                                    Text("iAPS Caregiver")
+                                    Text("iAPS Caregiver Remote")
                                         .font(.system(size: 20, weight: .bold))
                                         .foregroundColor(.white)
                                 )
@@ -106,7 +106,7 @@ extension Home {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 50)
-            .padding(.bottom, 10)
+            .padding(.bottom, 14)
         }
 
         @ViewBuilder private func webNightscout(_: GeometryProxy) -> some View {
