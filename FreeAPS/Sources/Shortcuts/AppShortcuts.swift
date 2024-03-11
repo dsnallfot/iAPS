@@ -45,5 +45,12 @@ import Foundation
                 "Avbryter en aktiv \(.applicationName) override"
             ]
         )
+        AppShortcut(
+            intent: BolusIntent(),
+            phrases: [
+                "\(.applicationName) bolus",
+                "\(.applicationName) försöker ge en bolus"
+            ]
+        )
     }
 }
