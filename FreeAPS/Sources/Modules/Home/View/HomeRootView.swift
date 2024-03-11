@@ -185,7 +185,7 @@ extension Home {
                             .onLongPressGesture {
                                 UIApplication.shared.open(
                                     URL(
-                                        string: "shortcuts://run-shortcut?name=Remote%20Måltid" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Måltid ist för x-callback
+                                        string: "shortcuts://run-shortcut?name=Remote%20Kolhydrater" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Måltid ist för x-callback
                                         /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Måltid&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                                     )!,
                                     options: [:],
