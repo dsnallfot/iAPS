@@ -116,60 +116,58 @@ extension Home {
 
         @ViewBuilder private func webNightscout(_: GeometryProxy) -> some View {
             ZStack {
-                VStack {
+                HStack(alignment: .center) {
+                    Spacer()
                     HStack(alignment: .center) {
-                        Spacer()
-                        HStack(alignment: .center) {
-                            Button {
-                                UIApplication.shared.open(
-                                    URL(
-                                        string: "shortcuts://run-shortcut?name=Remote%20Dextro"
-                                    )!,
-                                    options: [:],
-                                    completionHandler: nil
-                                )
-                            }
-                            label: {
-                                Image(systemName: "pills.fill")
-                                    .renderingMode(.template)
-                                    .frame(width: 12, height: 12)
-                                    .font(.system(size: 12, weight: .regular))
-                                    .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
-                            }
-                            .buttonStyle(.plain)
-                            .frame(width: 25, height: 25)
-
-                            .background(Color(red: 0.20, green: 0.20, blue: 0.20))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        Button {
+                            UIApplication.shared.open(
+                                URL(
+                                    string: "shortcuts://run-shortcut?name=Remote%20Dextro"
+                                )!,
+                                options: [:],
+                                completionHandler: nil
+                            )
                         }
-                        .padding(.top, 7)
-
-                        HStack(alignment: .center) {
-                            Button {
-                                UIApplication.shared.open(
-                                    URL(
-                                        string: "shortcuts://run-shortcut?name=Hälsologgning"
-                                    )!,
-                                    options: [:],
-                                    completionHandler: nil
-                                )
-                            }
-                            label: {
-                                Image(systemName: "calendar.badge.plus")
-                                    .renderingMode(.template)
-                                    .frame(width: 12, height: 12)
-                                    .font(.system(size: 12, weight: .regular))
-                                    .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
-                            }
-                            .buttonStyle(.plain)
-                            .frame(width: 25, height: 25)
-
-                            .background(Color(red: 0.20, green: 0.20, blue: 0.20))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        label: {
+                            Image(systemName: "pills.fill")
+                                .renderingMode(.template)
+                                .frame(width: 25, height: 25)
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
                         }
-                        .padding(.top, 7)
-                        .padding(.trailing, 104)
+                        .buttonStyle(.plain)
+                        .frame(width: 25, height: 25)
+
+                        .background(Color(red: 0.20, green: 0.20, blue: 0.20))
+                        // .clipShape(RoundedRectangle(cornerRadius: 5))
                     }
+                    .padding(.top, 7)
+
+                    HStack(alignment: .center) {
+                        Button {
+                            UIApplication.shared.open(
+                                URL(
+                                    string: "shortcuts://run-shortcut?name=Hälsologgning"
+                                )!,
+                                options: [:],
+                                completionHandler: nil
+                            )
+                        }
+                        label: {
+                            Image(systemName: "calendar.badge.plus")
+                                .renderingMode(.template)
+                                .frame(width: 25, height: 25)
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 25, height: 25)
+
+                        .background(Color(red: 0.20, green: 0.20, blue: 0.20))
+                        // .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
+                    .padding(.top, 7)
+                    .padding(.trailing, 104)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
                 .zIndex(1)
