@@ -142,7 +142,7 @@ extension Home {
                             .background(Color(red: 0.20, green: 0.20, blue: 0.20))
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                         }
-                        .padding(.top, 8)
+                        .padding(.top, 7)
 
                         HStack(alignment: .center) {
                             Button {
@@ -167,7 +167,7 @@ extension Home {
                             .background(Color(red: 0.20, green: 0.20, blue: 0.20))
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                         }
-                        .padding(.top, 8)
+                        .padding(.top, 7)
                         .padding(.trailing, 104)
                     }
                 }
