@@ -203,7 +203,6 @@ extension Home {
                                 UIApplication.shared.open(
                                     URL(
                                         string: "shortcuts://run-shortcut?name=Remote%20Kolhydrater" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Måltid ist för x-callback
-                                        /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Måltid&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                                     )!,
                                     options: [:],
                                     completionHandler: nil
@@ -211,31 +210,11 @@ extension Home {
                             }
                     }.buttonStyle(.plain)
 
-                    /* Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
-                     label: {
-                     ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                     Image(systemName: "fork.knife")
-                     .renderingMode(.template)
-                     .frame(width: 27, height: 27)
-                     .font(.system(size: 24, weight: .regular))
-                     .foregroundColor(state.disco ? .loopYellow : .gray)
-                     .padding(.top, 14)
-                     .padding(.bottom, 9)
-                     .padding(.leading, 7)
-                     .padding(.trailing, 7)
-                     if state.carbsRequired != nil {
-                     Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
-                     .offset(x: 1, y: 2.5)
-                     }
-                     }
-                     }.buttonStyle(.plain) */
-
                     Spacer()
                     Button {
                         UIApplication.shared.open(
                             URL(
                                 string: "shortcuts://run-shortcut?name=Remote%20Bolus" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Bolus ist för x-callback
-                                /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Bolus&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                             )!,
                             options: [:],
                             completionHandler: nil
@@ -272,7 +251,17 @@ extension Home {
                                 }
                             }
                             .onLongPressGesture {
-                                state.showModal(for: .addTempTarget)
+                                if isTarget {
+                                    state.showModal(for: .addTempTarget)
+                                } else {
+                                    UIApplication.shared.open(
+                                        URL(
+                                            string: "shortcuts://run-shortcut?name=Remote%20Temp%20Targets" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Temp Targets ist för x-callback
+                                        )!,
+                                        options: [:],
+                                        completionHandler: nil
+                                    )
+                                }
                             }
                         if state.tempTarget != nil {
                             Circle().fill(state.disco ? Color.cyan : Color.gray).frame(width: 6, height: 6)
@@ -286,16 +275,12 @@ extension Home {
                         UIApplication.shared.open(
                             URL(
                                 string: "shortcuts://run-shortcut?name=Remote%20Override" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Override ist för x-callback
-                                /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Override&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
                             )!,
                             options: [:],
                             completionHandler: nil
                         )
-
-                        // state.showModal(for: .overrideProfilesConfig)
                     }
                     label: {
-                        // ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                         Image(systemName: "person")
                             .renderingMode(.template)
                             .frame(width: 27, height: 27)
@@ -305,11 +290,6 @@ extension Home {
                             .padding(.bottom, 7)
                             .padding(.leading, 7)
                             .padding(.trailing, 7)
-                        /* if selectedProfile().isOn {
-                         Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
-                         .offset(x: 0, y: 4)
-                         } */
-                        // }
                     }.buttonStyle(.plain)
                     Spacer()
                     Button { state.secureShowSettings() }
@@ -336,12 +316,6 @@ extension Home {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 30)
             }
-            /* .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
-             Button("Avbryt override", role: .destructive) {
-             state.cancelProfile()
-             triggerUpdate.toggle()
-             }
-             } */
             .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
                 Button("Avbryt tillfälligt mål", role: .destructive) {
                     state.cancelTempTargets()
