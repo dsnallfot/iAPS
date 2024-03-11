@@ -10,8 +10,7 @@ import Intents
         title: "Mängd",
         description: "Bolusmängd i E",
         controlStyle: .field,
-        inclusiveRange: (lowerBound: 0.05, upperBound: 1.5),
-        // Satt till samma värde som maxbolus just nu. SKa bygga om detta till en variabel senare
+        inclusiveRange: (lowerBound: 0.05, upperBound: 3),
         requestValueDialog: IntentDialog("Vad är bolusmängden i insulinenheter?")
     ) var bolusQuantity: Double?
 
@@ -60,9 +59,17 @@ import Intents
 
 @available(iOS 16.0,*) final class BolusIntentRequest: BaseIntentsRequest {
     func bolus(_ bolusAmount: Double) throws -> String {
-        guard bolusAmount >= Double(settingsManager.preferences.bolusIncrement) else {
-            return "för låg bolusmängd"
+        guard settingsManager.settings.allowBolusShortcut else {
+            return NSLocalizedString("Bolus Shortcuts are disabled in iAPS settings", comment: "")
         }
+        guard bolusAmount >= Double(settingsManager.preferences.bolusIncrement) else {
+            return NSLocalizedString("too small bolus amount", comment: "")
+        }
+
+        guard bolusAmount <= Double(settingsManager.pumpSettings.maxBolus) else {
+            return NSLocalizedString("Max Bolus exceeded", comment: "")
+        }
+
         let bolus = min(
             max(Decimal(bolusAmount), settingsManager.preferences.bolusIncrement),
             settingsManager.pumpSettings.maxBolus

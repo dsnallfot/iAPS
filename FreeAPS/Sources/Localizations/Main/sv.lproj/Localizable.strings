@@ -1094,6 +1094,21 @@ Enact a temp Basal or a temp target */
 /* */
 "Bolus failed or inaccurate. Check pump history before repeating." = "Kontrollera pumpens historik innan du försöker igen.";
 
+/* Bolus shortcut. Error */
+"too small bolus amount" = "för liten bolusmängdt";
+
+/* Bolus shortcut. Error */
+"Bolus Shortcuts are disabled in iAPS settings" = "Bolusgenvägen är inaktiverad i iAPS inställningar";
+
+/* Bolus shortcut */
+"Bolus Amount in U" = "Bolusmängd i E";
+
+/* Bolus shortcut. Setting */
+"Allow iOS Bolus Shortcuts" = "Tillåt iOS bolusgenväg";
+
+/* Bolus shortcut. Pop-up */
+"If you enable this setting you will be able to use iOS shortcuts and its automations to trigger a bolus in iAPS.\n\nObserve that the iOS shortuts also works with Siri!\n\nIf you need to use Bolus Shorcuts, please make sure to turn off the listen for 'Hey Siri' setting in iPhone Siri settings, to avoid any inadvertant activaton of a bolus with Siri.\nIf you don't disable 'Hey Siri' the iAPS bolus shortcut can be triggered with the utterance 'Hey Siri, iAPS Bolus'.\n\nWhen triggered with Siri you will be asked for an amount and a confirmation before the bolus command can be sent to iAPS." = "Om du aktiverar denna inställning kommer du att kunna använda iOS genvägar och automatiseringar för att trigga en bolus i iAPS.\n\nObservera att iOS genvägar även fungerar med Siri!\n\nOm du önskar använda bolusgenvägen är det rekommenderat att inaktivera 'Lyssna efter Hej Siri' i din telefons inställningar av säkerhetsskäl, för att undvika oönskad aktivering av bolusgenvägarna.\nOm du väljer att inte inaktivera 'Hej Siri' kommer iAPS bolusgenväg triggas av frasen 'Hej Siri, iAPS Bolus'.\n\nEfter att ha triggats av Siri blir du därefter ombedd att ange en bolusmängd, samt att bekräfta mängden innan boluskommandot sickas till iAPS.";
+
 /* */
 "Carbs" = "Kolhydrater";
 
