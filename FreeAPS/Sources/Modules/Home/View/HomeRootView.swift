@@ -133,24 +133,49 @@ extension Home {
                 let isTarget = (state.tempTarget != nil)
 
                 HStack {
-                    Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
-                    label: {
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                            Image(systemName: "fork.knife")
-                                .renderingMode(.template)
-                                .frame(width: 27, height: 27)
-                                .font(.system(size: 24, weight: .regular))
-                                .foregroundColor(state.disco ? .loopYellow : .gray)
-                                .padding(.top, 14)
-                                .padding(.bottom, 9)
-                                .padding(.leading, 7)
-                                .padding(.trailing, 7)
-                            if state.carbsRequired != nil {
-                                Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
-                                    .offset(x: 1, y: 2.5)
+                    ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                        Image(systemName: "fork.knife")
+                            .renderingMode(.template)
+                            .frame(width: 27, height: 27)
+                            .font(.system(size: 24, weight: .regular))
+                            .foregroundColor(state.disco ? .loopYellow : .gray)
+                            .padding(.top, 14)
+                            .padding(.bottom, 9)
+                            .padding(.leading, 7)
+                            .padding(.trailing, 7)
+                            .onTapGesture {
+                                state.showModal(for: .addCarbs(editMode: false, override: false))
                             }
-                        }
+                            .onLongPressGesture {
+                                UIApplication.shared.open(
+                                    URL(
+                                        string: "shortcuts://run-shortcut?name=Remote%20Måltid" // Använd med "Öppna app iAPS Caregiver" som första åtgärd i shortcut Remote Måltid ist för x-callback
+                                        /* string: "shortcuts://x-callback-url/run-shortcut?name=Remote%20Måltid&x-success=ivaraps://&x-cancel=ivaraps://&x-error=ivaraps://" */
+                                    )!,
+                                    options: [:],
+                                    completionHandler: nil
+                                )
+                            }
                     }.buttonStyle(.plain)
+
+                    /* Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
+                     label: {
+                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                             Image(systemName: "fork.knife")
+                                 .renderingMode(.template)
+                                 .frame(width: 27, height: 27)
+                                 .font(.system(size: 24, weight: .regular))
+                                 .foregroundColor(state.disco ? .loopYellow : .gray)
+                                 .padding(.top, 14)
+                                 .padding(.bottom, 9)
+                                 .padding(.leading, 7)
+                                 .padding(.trailing, 7)
+                             if state.carbsRequired != nil {
+                                 Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
+                                     .offset(x: 1, y: 2.5)
+                             }
+                         }
+                     }.buttonStyle(.plain) */
 
                     Spacer()
                     Button {
