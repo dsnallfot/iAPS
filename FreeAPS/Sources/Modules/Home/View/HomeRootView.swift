@@ -21,6 +21,9 @@ extension Home {
                 webView.load(request)
             }
 
+            // Disable scrolling
+            webView.scrollView.isScrollEnabled = false
+
             return viewController
         }
 
@@ -116,31 +119,57 @@ extension Home {
                 VStack {
                     HStack(alignment: .center) {
                         Spacer()
-                        Button {
-                            UIApplication.shared.open(
-                                URL(
-                                    string: "shortcuts://run-shortcut?name=Hälsologgning"
-                                )!,
-                                options: [:],
-                                completionHandler: nil
-                            )
-                        }
-                        label: {
-                            Image(systemName: "calendar.badge.plus")
-                                .renderingMode(.template)
-                                .frame(width: 13, height: 13)
-                                .font(.system(size: 13, weight: .regular))
-                                .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 40, height: 30)
+                        HStack(alignment: .center) {
+                            Button {
+                                UIApplication.shared.open(
+                                    URL(
+                                        string: "shortcuts://run-shortcut?name=Remote%20Dextro"
+                                    )!,
+                                    options: [:],
+                                    completionHandler: nil
+                                )
+                            }
+                            label: {
+                                Image(systemName: "pills.fill")
+                                    .renderingMode(.template)
+                                    .frame(width: 12, height: 12)
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 25, height: 25)
 
-                        .background(Color(red: 0.20, green: 0.20, blue: 0.20))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .background(Color(red: 0.20, green: 0.20, blue: 0.20))
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        }
+                        .padding(.top, 8)
+
+                        HStack(alignment: .center) {
+                            Button {
+                                UIApplication.shared.open(
+                                    URL(
+                                        string: "shortcuts://run-shortcut?name=Hälsologgning"
+                                    )!,
+                                    options: [:],
+                                    completionHandler: nil
+                                )
+                            }
+                            label: {
+                                Image(systemName: "calendar.badge.plus")
+                                    .renderingMode(.template)
+                                    .frame(width: 12, height: 12)
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 25, height: 25)
+
+                            .background(Color(red: 0.20, green: 0.20, blue: 0.20))
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        }
+                        .padding(.top, 8)
+                        .padding(.trailing, 104)
                     }
-                    // .offset(x: 70, y: 5.5)
-                    .padding(.top, 5.5)
-                    .padding(.trailing, 98)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
                 .zIndex(1)
@@ -196,21 +225,21 @@ extension Home {
 
                     /* Button { state.showModal(for: .addCarbs(editMode: false, override: false)) }
                      label: {
-                         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                             Image(systemName: "fork.knife")
-                                 .renderingMode(.template)
-                                 .frame(width: 27, height: 27)
-                                 .font(.system(size: 24, weight: .regular))
-                                 .foregroundColor(state.disco ? .loopYellow : .gray)
-                                 .padding(.top, 14)
-                                 .padding(.bottom, 9)
-                                 .padding(.leading, 7)
-                                 .padding(.trailing, 7)
-                             if state.carbsRequired != nil {
-                                 Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
-                                     .offset(x: 1, y: 2.5)
-                             }
-                         }
+                     ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                     Image(systemName: "fork.knife")
+                     .renderingMode(.template)
+                     .frame(width: 27, height: 27)
+                     .font(.system(size: 24, weight: .regular))
+                     .foregroundColor(state.disco ? .loopYellow : .gray)
+                     .padding(.top, 14)
+                     .padding(.bottom, 9)
+                     .padding(.leading, 7)
+                     .padding(.trailing, 7)
+                     if state.carbsRequired != nil {
+                     Circle().fill(state.disco ? Color.loopYellow : Color.gray).frame(width: 6, height: 6)
+                     .offset(x: 1, y: 2.5)
+                     }
+                     }
                      }.buttonStyle(.plain) */
 
                     Spacer()
@@ -289,8 +318,8 @@ extension Home {
                             .padding(.leading, 7)
                             .padding(.trailing, 7)
                         /* if selectedProfile().isOn {
-                            Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
-                                 .offset(x: 0, y: 4)
+                         Circle().fill(state.disco ? Color.purple.opacity(0.7) : Color.gray).frame(width: 6, height: 6)
+                         .offset(x: 0, y: 4)
                          } */
                         // }
                     }.buttonStyle(.plain)
@@ -320,10 +349,10 @@ extension Home {
                 .padding(.bottom, 30)
             }
             /* .confirmationDialog("Avbryt override", isPresented: $showCancelAlert) {
-                 Button("Avbryt override", role: .destructive) {
-                     state.cancelProfile()
-                     triggerUpdate.toggle()
-                 }
+             Button("Avbryt override", role: .destructive) {
+             state.cancelProfile()
+             triggerUpdate.toggle()
+             }
              } */
             .confirmationDialog("Avbryt tillfälligt mål", isPresented: $showCancelTTAlert) {
                 Button("Avbryt tillfälligt mål", role: .destructive) {
