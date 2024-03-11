@@ -81,27 +81,29 @@ extension Home {
         ) var enactedSliderTT: FetchedResults<TempTargetsSlider>
 
         @ViewBuilder func header(_: GeometryProxy) -> some View {
-            VStack(alignment: .center) {
-                HStack(alignment: .center) {
-                    let gradient = LinearGradient(gradient: Gradient(colors: [
-                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
-                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
-                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
-                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
-                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                    ]), startPoint: .leading, endPoint: .trailing)
+            ZStack {
+                VStack(alignment: .center) {
+                    HStack(alignment: .center) {
+                        let gradient = LinearGradient(gradient: Gradient(colors: [
+                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                        ]), startPoint: .leading, endPoint: .trailing)
 
-                    Text("iAPS Caregiver Remote")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .overlay(
-                            gradient
-                                .mask(
-                                    Text("iAPS Caregiver Remote")
-                                        .font(.system(size: 20, weight: .bold))
-                                        .foregroundColor(.white)
-                                )
-                        )
+                        Text("iAPS Caregiver Remote")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                            .overlay(
+                                gradient
+                                    .mask(
+                                        Text("iAPS Caregiver Remote")
+                                            .font(.system(size: 20, weight: .bold))
+                                            .foregroundColor(.white)
+                                    )
+                            )
+                    }
                 }
             }
             .frame(maxWidth: .infinity)
@@ -110,12 +112,46 @@ extension Home {
         }
 
         @ViewBuilder private func webNightscout(_: GeometryProxy) -> some View {
-            VStack {
-                // Use WebViewRepresentable to display the webpage
-                WebViewRepresentable(
-                    urlString: "https://ivarsnightscout.herokuapp.com" // state.url // dont get this to work in home view
-                )
+            ZStack {
+                VStack {
+                    HStack(alignment: .center) {
+                        Spacer()
+                        Button {
+                            UIApplication.shared.open(
+                                URL(
+                                    string: "shortcuts://run-shortcut?name=Hälsologgning"
+                                )!,
+                                options: [:],
+                                completionHandler: nil
+                            )
+                        }
+                        label: {
+                            Image(systemName: "calendar.badge.plus")
+                                .renderingMode(.template)
+                                .frame(width: 13, height: 13)
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundColor(Color(red: 0.65, green: 0.65, blue: 0.65))
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 40, height: 30)
+
+                        .background(Color(red: 0.20, green: 0.20, blue: 0.20))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
+                    // .offset(x: 70, y: 5.5)
+                    .padding(.top, 5.5)
+                    .padding(.trailing, 98)
+                }
                 .frame(maxHeight: .infinity, alignment: .top)
+                .zIndex(1)
+                VStack {
+                    // Use WebViewRepresentable to display the webpage
+                    WebViewRepresentable(
+                        urlString: "https://ivarsnightscout.herokuapp.com" // state.url // dont get this to work in home view
+                    )
+                    .frame(maxHeight: .infinity, alignment: .top)
+                }
+                .zIndex(0)
             }
         }
 
