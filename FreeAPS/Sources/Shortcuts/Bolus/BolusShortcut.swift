@@ -42,8 +42,11 @@ import Intents
             }
             let bolusAmountString = amount.formatted()
             if confirmBeforeApplying {
+                let glucoseString = BolusIntentRequest().currentGlucose() // Fetch current glucose
                 try await requestConfirmation(
-                    result: .result(dialog: "Är du säker på att du vill ge en bolus på \(bolusAmountString) E insulin?")
+                    result: .result(
+                        dialog: "Your current glucose is \(glucoseString != nil ? glucoseString! : "not available"). Are you sure you want to bolus \(bolusAmountString) U of insulin?"
+                    )
                 )
             }
             let finalQuantityBolusDisplay = try BolusIntentRequest().bolus(amount)
@@ -66,18 +69,37 @@ import Intents
             return NSLocalizedString("too small bolus amount", comment: "")
         }
 
-        guard bolusAmount <= Double(settingsManager.pumpSettings.maxBolus) else {
-            return NSLocalizedString("Max Bolus exceeded", comment: "")
+        let maxBolus = Double(settingsManager.pumpSettings.maxBolus)
+
+        guard bolusAmount <= Double(settingsManager.pumpSettings.maxBolus),
+              settingsManager.settings.allowedRemoteBolusAmount >= Decimal(bolusAmount)
+        else {
+            return NSLocalizedString(
+                "Angiven bolus \(bolusAmount) E är större än din inställda maxbolus \(maxBolus) E. Åtgärden avbröts! Vänligen försök igen med en mindre bolusmängd",
+                comment: ""
+            )
         }
 
         let bolus = min(
             max(Decimal(bolusAmount), settingsManager.preferences.bolusIncrement),
-            settingsManager.pumpSettings.maxBolus
+            settingsManager.pumpSettings.maxBolus, settingsManager.settings.allowedRemoteBolusAmount
         )
         let resultDisplay: String =
-            "En bolus på \(bolus) E insulin skickades i iAPS. Bekräfta i iAPS app eller Nightscout om bolusen levererades som förväntat."
+            "En bolus på \(bolus) E insulin skickades i iAPS. Bekräfta i iAPS app eller Nightscout att bolusen levererades som förväntat."
 
         apsManager.enactBolus(amount: Double(bolus), isSMB: false)
         return resultDisplay
+    }
+
+    func currentGlucose() -> String? {
+        if let fetchedReading = coreDataStorage.fetchGlucose(interval: DateFilter().today).first {
+            let fetchedGlucose = Decimal(fetchedReading.glucose)
+            let convertedString = settingsManager.settings.units == .mmolL ? fetchedGlucose.asMmolL
+                .formatted(.number.grouping(.never).rounded().precision(.fractionLength(1))) : fetchedGlucose
+                .formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))
+
+            return convertedString + " " + NSLocalizedString(settingsManager.settings.units.rawValue, comment: "Glucose Unit")
+        }
+        return nil
     }
 }

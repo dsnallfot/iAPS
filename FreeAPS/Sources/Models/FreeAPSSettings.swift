@@ -59,6 +59,7 @@ struct FreeAPSSettings: JSON, Equatable {
     var useLiveActivity: Bool = false
     var useTargetButton: Bool = false
     var allowBolusShortcut: Bool = false
+    var allowedRemoteBolusAmount: Decimal = 0.0
 }
 
 extension FreeAPSSettings: Decodable {
@@ -302,6 +303,10 @@ extension FreeAPSSettings: Decodable {
 
         if let allowBolusShortcut = try? container.decode(Bool.self, forKey: .allowBolusShortcut) {
             settings.allowBolusShortcut = allowBolusShortcut
+        }
+
+        if let allowedRemoteBolusAmount = try? container.decode(Decimal.self, forKey: .allowedRemoteBolusAmount) {
+            settings.allowedRemoteBolusAmount = allowedRemoteBolusAmount
         }
 
         self = settings

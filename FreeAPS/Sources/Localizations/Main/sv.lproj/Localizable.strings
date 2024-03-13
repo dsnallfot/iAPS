@@ -1094,8 +1094,26 @@ Enact a temp Basal or a temp target */
 /* */
 "Bolus failed or inaccurate. Check pump history before repeating." = "Kontrollera pumpens historik innan du försöker igen.";
 
+/* Bolus shortcut. Setting */
+"Max allowed bolus amount using shortcuts " = "Max tillåten bolusmängd när genväg används";
+
+/* Bolus shortcut */
+"Enter a Bolus Amount" = "Ange mängd insulin";
+
+/* Bolus shortcut */
+"Your current glucose is %@. Are you sure you want to bolus %@ U of insulin?" = "Ditt blodsocker är %@. Är du säker på att du vill ge %@ E insulin?";
+
+/* Bolus shortcut */
+"A bolus command of " = "Ett kommando med ";
+
+/* Bolus shortcut */
+" U of insulin was sent to iAPS. Verify in iAPS app or in Nightscout if the bolus was delivered." = " E insulin skickades till iAPS. Verifiera i iAPS eller Nightscout att din bolus har givits.";
+
 /* Bolus shortcut. Error */
 "too small bolus amount" = "för liten bolusmängdt";
+
+/* Bolus shortcut. Error */
+"Bolus Shortcuts are disabled in iAPS settings" = "Genvägar för bolus är inaktiverade i dina iAPS-inställningar";
 
 /* Bolus shortcut. Error */
 "Bolus Shortcuts are disabled in iAPS settings" = "Bolusgenvägen är inaktiverad i iAPS inställningar";
