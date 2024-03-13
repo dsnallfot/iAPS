@@ -62,17 +62,22 @@ import Intents
 
 @available(iOS 16.0,*) final class BolusIntentRequest: BaseIntentsRequest {
     func bolus(_ bolusAmount: Double) throws -> String {
-        guard settingsManager.settings.allowBolusShortcut,
-              settingsManager.settings.allowedRemoteBolusAmount >= Decimal(bolusAmount)
-        else {
+        guard settingsManager.settings.allowBolusShortcut else {
             return NSLocalizedString("Bolus Shortcuts are disabled in iAPS settings", comment: "")
         }
         guard bolusAmount >= Double(settingsManager.preferences.bolusIncrement) else {
             return NSLocalizedString("too small bolus amount", comment: "")
         }
 
-        guard bolusAmount <= Double(settingsManager.pumpSettings.maxBolus) else {
-            return NSLocalizedString("Max Bolus exceeded", comment: "")
+        let maxBolus = Double(settingsManager.pumpSettings.maxBolus)
+
+        guard bolusAmount <= Double(settingsManager.pumpSettings.maxBolus),
+              settingsManager.settings.allowedRemoteBolusAmount >= Decimal(bolusAmount)
+        else {
+            return NSLocalizedString(
+                "Angiven bolus \(bolusAmount) E är större än din inställda maxbolus \(maxBolus) E. Åtgärden avbröts! Vänligen försök igen med en mindre bolusmängd",
+                comment: ""
+            )
         }
 
         let bolus = min(
@@ -80,7 +85,7 @@ import Intents
             settingsManager.pumpSettings.maxBolus, settingsManager.settings.allowedRemoteBolusAmount
         )
         let resultDisplay: String =
-            "En bolus på \(bolus) E insulin skickades i iAPS. Bekräfta i iAPS app eller Nightscout om bolusen levererades som förväntat."
+            "En bolus på \(bolus) E insulin skickades i iAPS. Bekräfta i iAPS app eller Nightscout att bolusen levererades som förväntat."
 
         apsManager.enactBolus(amount: Double(bolus), isSMB: false)
         return resultDisplay
