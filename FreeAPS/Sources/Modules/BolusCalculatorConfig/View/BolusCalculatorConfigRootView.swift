@@ -79,12 +79,12 @@ extension BolusCalculatorConfig {
                             DecimalTextField("2", value: $state.sweetMealFactor, formatter: conversionFormatter)
                         }
                     } header: { Text("Superbolus") }
-                }
 
-                Section {}
-                footer: { Text(
-                    "Här kan du välja att använda den nya boluskalkylatorn istället för iAPS ordinarie bolusberäkningar. \n\nDen manuella bolusfaktorn (default 0.8) används för att begränsa hur stor andel av kalkylatorns totalt framräknade insulinbehov som ska rekommenderas  som bolus.\n\nFaktorn för fettrika måltider (default 0.7) lägger till ytterligare en begränsning till bolusrekommendationen för att ta hänsyn till en längre absorbtionstid.\n\n Därefter kan en faktor för vilken andel fett+protein i en registrerad måltid som ska trigga att faktorn för fettrika måltider aktiveras (default 0.5).\n\nAvslutningsvis kan möjligheten att ge superbolus aktiveras. Superbolusen ökar bolusberäkningen med schemalagd basal motsvarande det antal timmar som anges i inställningen för detta (default 2)"
-                )
+                    Section {}
+                    footer: { Text(
+                        "Här kan du välja att använda den nya boluskalkylatorn istället för iAPS ordinarie bolusberäkningar. \n\nDen manuella bolusfaktorn (default 0.8) används för att begränsa hur stor andel av kalkylatorns totalt framräknade insulinbehov som ska rekommenderas  som bolus.\n\nFaktorn för fettrika måltider (default 0.7) lägger till ytterligare en begränsning till bolusrekommendationen för att ta hänsyn till en längre absorbtionstid.\n\n Därefter kan en faktor för vilken andel fett+protein i en registrerad måltid som ska trigga att faktorn för fettrika måltider aktiveras (default 0.5).\n\nAvslutningsvis kan möjligheten att ge superbolus aktiveras. Superbolusen ökar bolusberäkningen med schemalagd basal motsvarande det antal timmar som anges i inställningen för detta (default 2)"
+                    )
+                    }
                 }
                 Section {
                     HStack {
@@ -103,7 +103,22 @@ extension BolusCalculatorConfig {
                                 }
                             })
                     }
-                }
+                    if state.allowBolusShortcut {
+                        HStack {
+                            Text(
+                                state.allowedRemoteBolusAmount > state.settingsManager.pumpSettings
+                                    .maxBolus ? "Max Bolus exceeded!" :
+                                    "Max allowed bolus amount using shortcuts "
+                            )
+                            .foregroundStyle(
+                                state.allowedRemoteBolusAmount > state.settingsManager.pumpSettings
+                                    .maxBolus ? .red : .primary
+                            )
+                            Spacer()
+                            DecimalTextField("0", value: $state.allowedRemoteBolusAmount, formatter: conversionFormatter)
+                        }
+                    }
+                } header: { Text("Allow iOS Bolus Shortcuts") }
             }
             .onAppear(perform: configureView)
             .navigationBarTitle("Boluskalkylator")

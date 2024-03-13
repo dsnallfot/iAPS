@@ -12,6 +12,7 @@ extension BolusCalculatorConfig {
         @Published var insulinReqPercentage: Decimal = 70
         @Published var advancedCalc: Bool = false
         @Published var allowBolusShortcut: Bool = false
+        @Published var allowedRemoteBolusAmount: Decimal = 0
 
         override func subscribe() {
             subscribeSetting(\.overrideFactor, on: $overrideFactor, initial: {
@@ -43,6 +44,12 @@ extension BolusCalculatorConfig {
                 $0
             })
             subscribeSetting(\.insulinReqPercentage, on: $insulinReqPercentage) { insulinReqPercentage = $0 }
+            subscribeSetting(\.allowedRemoteBolusAmount, on: $allowedRemoteBolusAmount, initial: {
+                let value = max(min($0, allowBolusShortcut ? settingsManager.pumpSettings.maxBolus : 0), 0)
+                allowedRemoteBolusAmount = value
+            }, map: {
+                $0
+            })
             subscribeSetting(\.advancedCalc, on: $advancedCalc) { advancedCalc = $0 }
         }
     }
