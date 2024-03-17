@@ -32,7 +32,7 @@ extension AddCarbs {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         override func subscribe() {
-            subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
+            // subscribeSetting(\.useFPUconversion, on: $useFPUconversion) { useFPUconversion = $0 }
             carbsUrl = keychain.getValue(String.self, forKey: NightscoutConfig.Config.carbsUrlKey) ?? ""
 
             carbsRequired = provider.suggestion?.carbsReq
@@ -40,6 +40,7 @@ extension AddCarbs {
             cob = provider.suggestion?.cob ?? 0
             maxCarbs = settings.settings.maxCarbs
             skipBolus = settingsManager.settings.skipBolusScreenAfterCarbs
+            useFPUconversion = settingsManager.settings.useFPUconversion
         }
 
         func updateCurrentDate() {
