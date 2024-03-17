@@ -60,25 +60,12 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
                 var equivalent: Decimal = carbEquivalents / Decimal(computedDuration)
                 // Adjust for interval setting other than 60 minutes
                 equivalent /= Decimal(60 / interval)
-
-                
                 // Round to 1 fraction digit
-                // equivalent = Decimal(round(Double(equivalent * 10) / 10))
-                let roundedEquivalent: Double = round(Double(equivalent * 10)) / 10
-                equivalent = Decimal(roundedEquivalent)
-                
-                /*
-                 equivalent = Decimal(round(Double(equivalent * 10)) / 10)
-                 // Round up to 1 or done to 0 as oref0 only accepts carbs >= 1
-                 equivalent = equivalent > IAPSconfig.minimumCarbEquivalent ? max(equivalent, 1) : 0
-                */
-                
-                
+                equivalent = Decimal(round(Double(equivalent * 10)) / 10)
+                // Round up to 1 or done to 0 as oref0 only accepts carbs >= 1
+                equivalent = equivalent > IAPSconfig.minimumCarbEquivalent ? max(equivalent, 1) : 0
                 // Number of equivalents
-                /*var numberOfEquivalents = equivalent > 0 ? carbEquivalents / equivalent : 0*/
-                
                 var numberOfEquivalents = equivalent > 0 ? carbEquivalents / equivalent : 0
-                
                 // Only use delay in first loop
                 var firstIndex = true
                 // New date for each carb equivalent
