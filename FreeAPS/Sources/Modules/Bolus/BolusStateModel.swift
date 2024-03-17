@@ -316,8 +316,18 @@ extension Bolus {
             if deleteTwice {
                 nsManager.deleteNormalCarbs(mealArray)
                 nsManager.deleteFPUs(mealArray)
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             } else {
                 nsManager.deleteNormalCarbs(mealArray)
+                hkManager
+                    .deleteCarbs(
+                        syncID: meals.id ?? "",
+                        fpuID: (meals.fpuID ?? meals.id) ?? ""
+                    ) // Daniel added to enable deletion of fpus in apple health
             }
         }
 
