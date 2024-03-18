@@ -313,13 +313,7 @@ extension Bolus {
                 fpuID: deleteTwice ? (meals.fpuID ?? "") : ""
             )
 
-            print(
-                "meals 2: ID: " + mealArray.id.description + " FPU ID: " + (mealArray.fpuID ?? "")
-                    .description
-            )
-
             if deleteTwice {
-                // nsManager.deleteCarbs(mealArray, complexMeal: true)
                 nsManager.deleteNormalCarbs(mealArray)
                 nsManager.deleteFPUs(mealArray)
                 hkManager
@@ -328,7 +322,6 @@ extension Bolus {
                         fpuID: (meals.fpuID ?? meals.id) ?? ""
                     ) // Daniel added to enable deletion of fpus in apple health
             } else {
-                // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
                 nsManager.deleteNormalCarbs(mealArray)
                 hkManager
                     .deleteCarbs(
@@ -337,6 +330,45 @@ extension Bolus {
                     ) // Daniel added to enable deletion of fpus in apple health
             }
         }
+
+        /* func delete(deleteTwice: Bool, meal: FetchedResults<Meals>) {
+             guard let meals = meal.first else {
+                 return
+             }
+
+             let mealArray = DataTable.Treatment(
+                 units: units,
+                 type: .carbs,
+                 date: (deleteTwice ? (meals.createdAt ?? Date()) : meals.actualDate) ?? Date(),
+                 id: meals.id ?? "",
+                 isFPU: deleteTwice ? true : false,
+                 fpuID: deleteTwice ? (meals.fpuID ?? "") : ""
+             )
+
+             print(
+                 "meals 2: ID: " + mealArray.id.description + " FPU ID: " + (mealArray.fpuID ?? "")
+                     .description
+             )
+
+             if deleteTwice {
+                 // nsManager.deleteCarbs(mealArray, complexMeal: true)
+                 nsManager.deleteNormalCarbs(mealArray)
+                 nsManager.deleteFPUs(mealArray)
+                 hkManager
+                     .deleteCarbs(
+                         syncID: meals.id ?? "",
+                         fpuID: (meals.fpuID ?? meals.id) ?? ""
+                     ) // Daniel added to enable deletion of fpus in apple health
+             } else {
+                 // Jon deleted this "else" to prevent accidental deletion of previous carbs, this line is however needed to delete carbs when cancelling from bolus view
+                 nsManager.deleteNormalCarbs(mealArray)
+                 hkManager
+                     .deleteCarbs(
+                         syncID: meals.id ?? "",
+                         fpuID: (meals.fpuID ?? meals.id) ?? ""
+                     ) // Daniel added to enable deletion of fpus in apple health
+             }
+         } */
     }
 }
 
