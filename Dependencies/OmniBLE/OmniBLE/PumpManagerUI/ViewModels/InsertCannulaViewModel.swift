@@ -22,7 +22,7 @@ extension OmniBLEPumpManager: CannulaInserter {
 }
 
 class InsertCannulaViewModel: ObservableObject, Identifiable {
-    
+
     enum InsertCannulaViewModelState {
         case ready
         case startingInsertion
@@ -45,7 +45,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
                 return LocalizedString("Cannula inserted successfully. Continue.", comment: "Insert cannula action button accessibility label when cannula insertion succeeded")
             }
         }
-        
+
         var instructionsDisabled: Bool {
             switch self {
             case .ready, .error:
@@ -64,7 +64,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             case .inserting, .startingInsertion:
                 return LocalizedString("För in kanyl...", comment: "Cannula insertion button text while inserting")
             case .checkingInsertion:
-                return LocalizedString("Kontrollerar...", comment: "Cannula insertion button text while checking insertion")
+                return LocalizedString("Kontrollera...", comment: "Cannula insertion button text while checking insertion")
             case .finished:
                 return LocalizedString("Fortsätt", comment: "Cannula insertion button text when inserted")
             }
@@ -127,9 +127,9 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         }
         return nil
     }
-    
+
     @Published var state: InsertCannulaViewModelState = .ready
-    
+
     public var stateNeedsDeliberateUserAcceptance : Bool {
         switch state {
         case .ready:
@@ -144,19 +144,19 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     var didRequestDeactivation: (() -> Void)?
     
     var cannulaInserter: CannulaInserter
-    
+
     var autoRetryAttempted: Bool
-    
+
     init(cannulaInserter: CannulaInserter) {
         self.cannulaInserter = cannulaInserter
         self.autoRetryAttempted = false
-        
+
         // If resuming, don't wait for the button action
         if cannulaInserter.cannulaInsertionSuccessfullyStarted {
             insertCannula()
         }
     }
-    
+
     private func checkCannulaInsertionFinished() {
         state = .checkingInsertion
         cannulaInserter.checkCannulaInsertionFinished() { (error) in
@@ -172,7 +172,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     
     private func insertCannula() {
         state = .startingInsertion
-        
+
         cannulaInserter.insertCannula { (result) in
             DispatchQueue.main.async {
                 switch(result) {
@@ -196,7 +196,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
                         print("### insertCannula encountered error \(error.localizedDescription), retrying after \(autoRetryPauseTime) seconds")
                         DispatchQueue.global(qos: .utility).async {
                             Thread.sleep(forTimeInterval: autoRetryPauseTime)
-                            
+
                             self.insertCannula()
                         }
                     }
@@ -219,30 +219,29 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             insertCannula()
         }
     }
-    
 }
 
 public extension OmniBLEPumpManagerError {
     var recoverable: Bool {
         //TODO
         return true
-        //        switch self {
-        //        case .podIsInAlarm:
-        //            return false
-        //        case .activationError(let activationErrorCode):
-        //            switch activationErrorCode {
-        //            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-        //                return false
-        //            default:
-        //                return true
-        //            }
-        //        case .internalError(.incompatibleProductId):
-        //            return false
-        //        case .systemError:
-        //            return false
-        //        default:
-        //            return true
-        //        }
+//        switch self {
+//        case .podIsInAlarm:
+//            return false
+//        case .activationError(let activationErrorCode):
+//            switch activationErrorCode {
+//            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+//                return false
+//            default:
+//                return true
+//            }
+//        case .internalError(.incompatibleProductId):
+//            return false
+//        case .systemError:
+//            return false
+//        default:
+//            return true
+//        }
     }
 }
 

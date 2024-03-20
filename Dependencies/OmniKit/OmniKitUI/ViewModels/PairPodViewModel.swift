@@ -280,3 +280,4 @@ extension OmnipodPumpManager: PodPairer {
         pairAndPrime(completion: completion)
     }
 }
+

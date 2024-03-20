@@ -515,10 +515,10 @@ struct OmnipodSettingsView: View  {
 
             Section() {
                 NavigationLink(destination: PodDiagnosticsView(
-                    title: LocalizedString("Poddiagnostik", comment: "Title for the pod diagnostic view"),
+                    title: LocalizedString("Pod Diagnostics", comment: "Title for the pod diagnostic view"),
                     viewModel: viewModel))
                 {
-                    FrameworkLocalText("Poddiagnostik", comment: "Text for pod diagnostics row")
+                    FrameworkLocalText("Pod Diagnostics", comment: "Text for pod diagnostics row")
                         .foregroundColor(Color.primary)
                 }
             }

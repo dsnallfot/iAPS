@@ -41,7 +41,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
         var actionButtonDescription: String {
             switch self {
             case .active:
-                return LocalizedString("Svep för att avaktivera pod", comment: "Action button description for deactivate while pod still active")
+                return LocalizedString("Svep för att avaktivera podd", comment: "Action button description for deactivate while pod still active")
             case .resultError:
                 return LocalizedString("Försök igen", comment: "Action button description for deactivate after failed attempt")
             case .deactivating:

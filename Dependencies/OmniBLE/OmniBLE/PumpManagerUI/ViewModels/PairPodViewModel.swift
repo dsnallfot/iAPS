@@ -111,10 +111,10 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 return .indeterminantProgress
             case .priming(let finishTime):
                 if let finishTime {
-                                    return .timedProgress(finishTime: finishTime)
-                                } else {
-                                    return .indeterminantProgress
-                                }
+                    return .timedProgress(finishTime: finishTime)
+                } else {
+                    return .indeterminantProgress
+                }
             case .finished:
                 return .completed
             }
@@ -149,7 +149,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
     var podIsActivated: Bool {
         return podPairer.podCommState != .noPod
     }
-    
+
     var backButtonHidden: Bool {
         if case .pairing = state {
             return true
@@ -167,18 +167,19 @@ class PairPodViewModel: ObservableObject, Identifiable {
     var didCancelSetup: (() -> Void)?
 
     var podPairer: PodPairer
-    
+
     var autoRetryAttempted: Bool
 
     init(podPairer: PodPairer) {
         self.podPairer = podPairer
         self.autoRetryAttempted = false
 
-                // If resuming, don't wait for the button action
-                if podPairer.podCommState == .activating {
-                    pairAndPrime()
-                }
+        // If resuming, don't wait for the button action
+        if podPairer.podCommState == .activating {
+            pairAndPrime()
+        }
     }
+
     private func pairAndPrime() {
         if podPairer.podCommState == .noPod {
             state = .pairing
@@ -192,19 +193,19 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 switch status {
                 case .failure(let error):
                     if self.autoRetryAttempted {
-                                            self.autoRetryAttempted = false // allow for an auto retry on the next user attempt
-                                            let pairAndPrimeError = DashPairingError.pumpManagerError(error)
-                                            self.state = .error(pairAndPrimeError)
-                                        } else {
-                                            self.autoRetryAttempted = true
-                                            let autoRetryPauseTime = TimeInterval(seconds: 3)
-                                            print("### pairAndPrimePod encountered error \(error.localizedDescription), retrying after \(autoRetryPauseTime) seconds")
-                                            DispatchQueue.global(qos: .utility).async {
-                                                Thread.sleep(forTimeInterval: autoRetryPauseTime)
+                        self.autoRetryAttempted = false // allow for an auto retry on the next user attempt
+                        let pairAndPrimeError = DashPairingError.pumpManagerError(error)
+                        self.state = .error(pairAndPrimeError)
+                    } else {
+                        self.autoRetryAttempted = true
+                        let autoRetryPauseTime = TimeInterval(seconds: 3)
+                        print("### pairAndPrimePod encountered error \(error.localizedDescription), retrying after \(autoRetryPauseTime) seconds")
+                        DispatchQueue.global(qos: .utility).async {
+                            Thread.sleep(forTimeInterval: autoRetryPauseTime)
 
-                                                self.pairAndPrime() // handles both pairing or priming failures
-                                            }
-                                        }
+                            self.pairAndPrime() // handles both pairing or priming failures
+                        }
+                    }
                 case .success(let duration):
                     
                     if duration > 0 {
@@ -234,7 +235,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
         default:
             pairAndPrime()
         }
-    }    
+    }
 }
 
 // Pairing recovery suggestions

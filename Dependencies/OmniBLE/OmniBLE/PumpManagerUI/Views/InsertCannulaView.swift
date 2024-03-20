@@ -25,8 +25,8 @@ struct InsertCannulaView: View {
 
                 HStack {
                     InstructionList(instructions: [
-                        LocalizedString("Svep nedan för att påbörja införande av kanyl.", comment: "Label text for step one of insert cannula instructions"),
-                        LocalizedString("Vänta tills införandet är färdigt.", comment: "Label text for step two of insert cannula instructions"),
+                        LocalizedString("Slide the switch below to start cannula insertion.", comment: "Label text for step one of insert cannula instructions"),
+                        LocalizedString("Wait until insertion is completed.", comment: "Label text for step two of insert cannula instructions"),
                     ])
                     .disabled(viewModel.state.instructionsDisabled)
 
@@ -120,6 +120,7 @@ struct InsertCannulaView: View {
             secondaryButton: .default(FrameworkLocalText("No, Continue With Pod", comment: "Continue pairing button title of in pairing cancel modal"))
         )
     }
+
 }
 
 class MockCannulaInserter: CannulaInserter {
@@ -132,7 +133,7 @@ class MockCannulaInserter: CannulaInserter {
     func checkCannulaInsertionFinished(completion: @escaping (OmniBLEPumpManagerError?) -> Void) {
         completion(nil)
     }
-    
+
     var cannulaInsertionSuccessfullyStarted: Bool = false
 }
 
