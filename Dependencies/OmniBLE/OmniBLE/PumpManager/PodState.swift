@@ -42,7 +42,7 @@ public enum SetupProgress: Int {
     public var needsCannulaInsertion: Bool {
         return self.rawValue < SetupProgress.completed.rawValue
     }
-        
+
     public var cannulaInsertionSuccessfullyStarted: Bool {
         return self.rawValue > SetupProgress.startingInsertCannula.rawValue
     }

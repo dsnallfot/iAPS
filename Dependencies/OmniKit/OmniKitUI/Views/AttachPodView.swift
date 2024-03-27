@@ -33,7 +33,7 @@ struct AttachPodView: View {
                 HStack {
                     InstructionList(instructions: [
                         LocalizedString("Prepare site.", comment: "Label text for step one of attach pod instructions"),
-                        LocalizedString("Ta bort det blå kanylskyddet och kontrollera att kanylen inte redan sticker ut. Ta sedan bort skyddspappret.", comment: "Label text for step two of attach pod instructions"),
+                        LocalizedString("Remove the Pod's clear needle cap and check cannula. Then remove paper backing.", comment: "Label text for step two of attach pod instructions"),
                         LocalizedString("Check Pod, apply to site, then confirm pod attachment.", comment: "Label text for step three of attach pod instructions")
                     ])
                 }

@@ -16,17 +16,17 @@ public struct PodInfoTriggeredAlerts: PodInfo {
     // CMD 1  2  3 4  5 6  7 8  910 1112 1314 1516 1718 1920
     // DATA   0  1 2  3 4  5 6  7 8  910 1112 1314 1516 1718
     // 02 13 01 XXXX VVVV VVVV VVVV VVVV VVVV VVVV VVVV VVVV
-    
+
     public let podInfoType: PodInfoResponseSubType = .triggeredAlerts
     public let unknown_word: UInt16
     public var alertActivations: [TimeInterval] = Array(repeating: 0, count: 8)
     public let data: Data
-    
+
     public init(encodedData: Data) throws {
         guard encodedData.count >= 11 else {
             throw MessageBlockError.notEnoughData
         }
-        
+
         // initialize the eight VVVV triggered alert values starting at offset 3
         for i in 0..<8 {
             let j = 3 + (2 * i)
@@ -39,14 +39,14 @@ public struct PodInfoTriggeredAlerts: PodInfo {
 
 private func triggeredAlerts(podInfoTriggeredAlerts: PodInfoTriggeredAlerts, startOffset: Int, sepString: String, printAll: Bool) -> String {
     var result: [String] = []
-    
+
     for index in podInfoTriggeredAlerts.alertActivations.indices {
         // extract the alert slot debug description for a more helpful display
         let description = AlertSlot(rawValue: UInt8(index)).debugDescription
         let start = description.index(description.startIndex, offsetBy: startOffset)
         let end = description.index(description.endIndex, offsetBy: -1)
         let range = start..<end
-        
+
         let triggeredTimeStr: String
         if printAll || podInfoTriggeredAlerts.alertActivations[index] != 0 {
             triggeredTimeStr = podInfoTriggeredAlerts.alertActivations[index].timeIntervalStr
@@ -55,7 +55,7 @@ private func triggeredAlerts(podInfoTriggeredAlerts: PodInfoTriggeredAlerts, sta
         }
         result.append(String(format: "%@: %@", String(description[range]), triggeredTimeStr))
     }
-    
+
     return result.joined(separator: sepString)
 }
 

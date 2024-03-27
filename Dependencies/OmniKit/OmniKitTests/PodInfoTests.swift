@@ -391,7 +391,7 @@ class PodInfoTests: XCTestCase {
         // 02 11 // 05 PP QQQQ 00000000 00000000 MMDDYYHHMM
         // 02 11 // 05 92 0001 00000000 00000000 091912170e
         // 09-25-18 23:14 int values for datetime
-        do {
+        do {                                            
             // Decode
             let decoded = try PodInfoActivationTime(encodedData: Data(hexadecimalString: "059200010000000000000000091912170e")!)
             XCTAssertEqual(.activationTime, decoded.podInfoType)
