@@ -33,8 +33,8 @@ struct AttachPodView: View {
                 HStack {
                     InstructionList(instructions: [
                         LocalizedString("Prepare site.", comment: "Label text for step one of attach pod instructions"),
-                        LocalizedString("Ta bort poddens blå kanylskydd och kontrollera kanylen. Ta sedan bort skyddspappret.", comment: "Label text for step 1 of pair pod instructions "),
-                        LocalizedString("Kontrollera podd, fäst på huden, och bekräfta.", comment: "Label text for step three of attach pod instructions")
+                        LocalizedString("Remove the Pod's blue needle cap and check cannula. Then remove paper backing.", comment: "Label text for step 1 of pair pod instructions "),
+                        LocalizedString("Check Pod, apply to site, then confirm pod attachment.", comment: "Label text for step three of attach pod instructions")
                     ])
                 }
                 .padding(.bottom, 8)
@@ -44,7 +44,7 @@ struct AttachPodView: View {
             Button(action: {
                 activeModal = .attachConfirmationModal
             }) {
-                FrameworkLocalText("Fotsätt", comment: "Action button title for attach pod view")
+                FrameworkLocalText("Continue", comment: "Action button title for attach pod view")
                     .accessibility(identifier: "button_next_action")
                     .actionButtonStyle(.primary)
             }
@@ -55,7 +55,7 @@ struct AttachPodView: View {
         }
         .animation(.default)
         .alert(item: $activeModal, content: self.alert(for:))
-        .navigationBarTitle(LocalizedString("Fäst podd", comment: "navigation bar title attach pod"), displayMode: .automatic)
+        .navigationBarTitle(LocalizedString("Attach Pod", comment: "navigation bar title attach pod"), displayMode: .automatic)
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)
     }

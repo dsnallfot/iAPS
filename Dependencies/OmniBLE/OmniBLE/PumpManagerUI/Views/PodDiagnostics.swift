@@ -66,9 +66,9 @@ struct PodDiagnosticsView: View  {
             .disabled(self.viewModel.noPod)
 
             NavigationLink(destination: ReadPodInfoView(
-                title: LocalizedString("Läs in triggade larm", comment: "Text for read triggered alerts title"),
-                actionString: LocalizedString("Läser in triggade larm...", comment: "Text for read triggered alerts action"),
-                failedString: LocalizedString("Misslyckades med att läsa in triggade larm.", comment: "Alert title for error when reading triggered alerts"),
+                title: LocalizedString("Read Triggered Alerts", comment: "Text for read triggered alerts title"),
+                actionString: LocalizedString("Reading Triggered Alerts...", comment: "Text for read triggered alerts action"),
+                failedString: LocalizedString("Failed to read triggered alerts.", comment: "Alert title for error when reading triggered alerts"),
                 toRun: self.viewModel.readTriggeredAlerts))
             {
                 FrameworkLocalText("Read Triggered Alerts", comment: "Text for read triggered alerts navigation link")
