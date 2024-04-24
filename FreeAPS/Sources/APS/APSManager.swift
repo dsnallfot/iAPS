@@ -182,87 +182,90 @@ final class BaseAPSManager: APSManager, Injectable {
 
     // Loop entry point
     private func loop() {
-        // check the last start of looping is more the loopInterval but the previous loop was completed
-        if lastLoopDate > lastStartLoopDate {
-            guard lastStartLoopDate.addingTimeInterval(Config.loopInterval) < Date() else {
-                debug(.apsManager, "för nära inpå senaste loop : \(lastStartLoopDate)")
-                return
-            }
-        }
-
-        guard !isLooping.value else {
-            warning(.apsManager, "Loop redan pågående. Ignorerar rekommendation.")
-            return
-        }
-
-        // start background time extension
-        backGroundTaskID = UIApplication.shared.beginBackgroundTask(withName: "Loop startar") {
-            guard let backgroundTask = self.backGroundTaskID else { return }
-            UIApplication.shared.endBackgroundTask(backgroundTask)
-            self.backGroundTaskID = .invalid
-        }
-
-        debug(.apsManager, "Startar loop med en fördröjning på \(UIApplication.shared.backgroundTimeRemaining.rounded())")
-
-        lastStartLoopDate = Date()
-
-        var previousLoop = [LoopStatRecord]()
-        var interval: Double?
-
-        coredataContext.performAndWait {
-            let requestStats = LoopStatRecord.fetchRequest() as NSFetchRequest<LoopStatRecord>
-            let sortStats = NSSortDescriptor(key: "end", ascending: false)
-            requestStats.sortDescriptors = [sortStats]
-            requestStats.fetchLimit = 1
-            try? previousLoop = coredataContext.fetch(requestStats)
-
-            if (previousLoop.first?.end ?? .distantFuture) < lastStartLoopDate {
-                interval = roundDouble((lastStartLoopDate - (previousLoop.first?.end ?? Date())).timeInterval / 60, 1)
-            }
-        }
-
-        var loopStatRecord = LoopStats(
-            start: lastStartLoopDate,
-            loopStatus: "Startar",
-            interval: interval
-        )
-
-        isLooping.send(true)
-        determineBasal()
-            .replaceEmpty(with: false)
-            .flatMap { [weak self] success -> AnyPublisher<Void, Error> in
-                guard let self = self, success else {
-                    return Fail(error: APSError.apsError(message: "Determine basal misslyckades")).eraseToAnyPublisher()
-                }
-
-                // Open loop completed
-                guard self.settings.closedLoop else {
-                    // self.nightscout.uploadStatus()
-                    return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
-                }
-
-                // self.nightscout.uploadStatus()
-
-                // Closed loop - enact suggested
-                return self.enactSuggested()
-            }
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                loopStatRecord.end = Date()
-                loopStatRecord.duration = self.roundDouble(
-                    (loopStatRecord.end! - loopStatRecord.start).timeInterval / 60,
-                    2
-                )
-                if case let .failure(error) = completion {
-                    loopStatRecord.loopStatus = error.localizedDescription
-                    self.loopCompleted(error: error, loopStatRecord: loopStatRecord)
-                } else {
-                    loopStatRecord.loopStatus = "Success"
-                    self.loopCompleted(loopStatRecord: loopStatRecord)
-                }
-            } receiveValue: {}
-            .store(in: &lifetime)
+        print("Loop triggered, no action taken in caregiver app")
     }
+
+    /* // check the last start of looping is more the loopInterval but the previous loop was completed
+         if lastLoopDate > lastStartLoopDate {
+             guard lastStartLoopDate.addingTimeInterval(Config.loopInterval) < Date() else {
+                 debug(.apsManager, "för nära inpå senaste loop : \(lastStartLoopDate)")
+                 return
+             }
+         }
+
+         guard !isLooping.value else {
+             warning(.apsManager, "Loop redan pågående. Ignorerar rekommendation.")
+             return
+         }
+
+         // start background time extension
+         backGroundTaskID = UIApplication.shared.beginBackgroundTask(withName: "Loop startar") {
+             guard let backgroundTask = self.backGroundTaskID else { return }
+             UIApplication.shared.endBackgroundTask(backgroundTask)
+             self.backGroundTaskID = .invalid
+         }
+
+         debug(.apsManager, "Startar loop med en fördröjning på \(UIApplication.shared.backgroundTimeRemaining.rounded())")
+
+         lastStartLoopDate = Date()
+
+         var previousLoop = [LoopStatRecord]()
+         var interval: Double?
+
+         coredataContext.performAndWait {
+             let requestStats = LoopStatRecord.fetchRequest() as NSFetchRequest<LoopStatRecord>
+             let sortStats = NSSortDescriptor(key: "end", ascending: false)
+             requestStats.sortDescriptors = [sortStats]
+             requestStats.fetchLimit = 1
+             try? previousLoop = coredataContext.fetch(requestStats)
+
+             if (previousLoop.first?.end ?? .distantFuture) < lastStartLoopDate {
+                 interval = roundDouble((lastStartLoopDate - (previousLoop.first?.end ?? Date())).timeInterval / 60, 1)
+             }
+         }
+
+         var loopStatRecord = LoopStats(
+             start: lastStartLoopDate,
+             loopStatus: "Startar",
+             interval: interval
+         )
+
+         isLooping.send(true)
+         determineBasal()
+             .replaceEmpty(with: false)
+             .flatMap { [weak self] success -> AnyPublisher<Void, Error> in
+                 guard let self = self, success else {
+                     return Fail(error: APSError.apsError(message: "Determine basal misslyckades")).eraseToAnyPublisher()
+                 }
+
+                 // Open loop completed
+                 guard self.settings.closedLoop else {
+                     // self.nightscout.uploadStatus()
+                     return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+                 }
+
+                 // self.nightscout.uploadStatus()
+
+                 // Closed loop - enact suggested
+                 return self.enactSuggested()
+             }
+             .sink { [weak self] completion in
+                 guard let self = self else { return }
+                 loopStatRecord.end = Date()
+                 loopStatRecord.duration = self.roundDouble(
+                     (loopStatRecord.end! - loopStatRecord.start).timeInterval / 60,
+                     2
+                 )
+                 if case let .failure(error) = completion {
+                     loopStatRecord.loopStatus = error.localizedDescription
+                     self.loopCompleted(error: error, loopStatRecord: loopStatRecord)
+                 } else {
+                     loopStatRecord.loopStatus = "Success"
+                     self.loopCompleted(loopStatRecord: loopStatRecord)
+                 }
+             } receiveValue: {}
+             .store(in: &lifetime)
+     } */
 
     // Loop exit point
     private func loopCompleted(error: Error? = nil, loopStatRecord: LoopStats) {

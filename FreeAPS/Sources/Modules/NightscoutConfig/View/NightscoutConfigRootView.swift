@@ -1,6 +1,7 @@
 import CoreData
 import SwiftUI
 import Swinject
+import WebKit
 
 extension NightscoutConfig {
     struct RootView: BaseView {
@@ -21,6 +22,15 @@ extension NightscoutConfig {
             let formatter = NumberFormatter()
             formatter.allowsFloats = false
             return formatter
+        }
+
+        // New code to clear web cache
+        func clearWebCache() {
+            let dataStore = WKWebsiteDataStore.default()
+            let date = Date(timeIntervalSince1970: 0)
+            dataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), modifiedSince: date) {
+                print("Web cache cleared.")
+            }
         }
 
         var body: some View {
@@ -80,14 +90,14 @@ extension NightscoutConfig {
                         .tint(.white)
                         .fontWeight(.semibold)
                 }
-                /* Section {
-                     Button("Radera URL och Secret") { state.delete() }
-                         .frame(maxWidth: .infinity, alignment: .center)
-                         // .foregroundColor(.loopRed)
-                         .disabled(state.connecting)
-                         .listRowBackground(Color(.red)).tint(.white)
-                         .fontWeight(.semibold)
-                 }*/
+                Section {
+                    Button("Radera Webcache") { clearWebCache() }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        // .foregroundColor(.loopRed)
+                        .disabled(state.connecting)
+                        .listRowBackground(Color(.loopRed)).tint(.white)
+                        .fontWeight(.semibold)
+                }
 
                 Section {
                     Toggle("Ladda upp behandlingar", isOn: $state.isUploadEnabled)

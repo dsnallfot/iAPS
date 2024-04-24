@@ -12,6 +12,7 @@ extension Home {
         @Injected() var storage: TempTargetsStorage!
         @Injected() var settings: SettingsManager!
         @Injected() var unlockmanager: UnlockManager!
+        @Injected() private var keychain: Keychain!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
         @Published var glucose: [BloodGlucose] = []
@@ -69,6 +70,7 @@ extension Home {
         @Published var disco: Bool = true
         @Published var remoteMode: Bool = false
         @Published var insulinRecommended: Decimal = 0
+        @Published var url = "" // dont get this to work in home view
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -109,6 +111,8 @@ extension Home {
             timeZone = provider.timezone
             disco = settings.settings.disco
             remoteMode = settings.settings.remoteMode
+            url = keychain
+                .getValue(String.self, forKey: NightscoutConfig.Config.urlKey) ?? "" // dont get this to work in home view
 
             broadcaster.register(GlucoseObserver.self, observer: self)
             broadcaster.register(SuggestionObserver.self, observer: self)

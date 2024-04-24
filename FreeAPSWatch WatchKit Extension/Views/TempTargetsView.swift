@@ -4,15 +4,17 @@ struct TempTargetsView: View {
     @EnvironmentObject var state: WatchStateModel
 
     var body: some View {
-        Button {
-            WKInterfaceDevice.current().play(.click)
-            state.enactTempTarget(id: "cancel")
-        } label: {
-            Text("Avbryt tf målvärde")
-        }.font(.headline.weight(.semibold))
-            .padding(.bottom)
-            .padding(.top)
-            .tint(.loopRed)
+        if let until = state.tempTargets.compactMap(\.until).first, until > Date() {
+            Button {
+                WKInterfaceDevice.current().play(.click)
+                state.enactTempTarget(id: "cancel")
+            } label: {
+                Text("Avsluta tf mål")
+            }.font(.headline.weight(.semibold))
+                .padding(.bottom)
+                .padding(.top)
+                .tint(.loopRed)
+        }
         List {
             if state.tempTargets.isEmpty {
                 Text("Set temp targets presets on iPhone first").padding()
@@ -36,6 +38,7 @@ struct TempTargetsView: View {
                 }
             }
         }
+        .padding(.top, 10)
         .navigationTitle("Temp Targets")
     }
 }
