@@ -644,21 +644,32 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         var suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
         var enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
 
-        var useEnacted = true
         if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
             enacted?.predictions = nil
         } else {
             suggested?.predictions = nil
-            useEnacted = false
         }
 
-        // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
-        let openapsStatus = OpenAPSStatus(
-            iob: iob?.first,
-            suggested: useEnacted ? nil : suggested,
-            enacted: useEnacted ? enacted : nil,
-            version: "0.7.1"
-        )
+        let loopIsClosed = settingsManager.settings.closedLoop
+
+        var openapsStatus: OpenAPSStatus
+
+        // Only upload suggested in Open Loop Mode. Upload suggested and enacted in Closed Loop Mode.
+        if loopIsClosed {
+            openapsStatus = OpenAPSStatus(
+                iob: iob?.first,
+                suggested: suggested,
+                enacted: enacted,
+                version: "0.7.1"
+            )
+        } else {
+            openapsStatus = OpenAPSStatus(
+                iob: iob?.first,
+                suggested: suggested,
+                enacted: nil,
+                version: "0.7.1"
+            )
+        }
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
