@@ -98,48 +98,48 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    /* func fetchCarbs(sinceDate: Date? = nil) -> AnyPublisher<[CarbsEntry], Swift.Error> {
-         var components = URLComponents()
-         components.scheme = url.scheme
-         components.host = url.host
-         components.port = url.port
-         components.path = Config.treatmentsPath
-         components.queryItems = [
-             URLQueryItem(name: "find[carbs][$exists]", value: "true"),
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: CarbsEntry.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             ),
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             )
-         ]
-         if let date = sinceDate {
-             let dateItem = URLQueryItem(
-                 name: "find[created_at][$gt]",
-                 value: Formatter.iso8601withFractionalSeconds.string(from: date)
-             )
-             components.queryItems?.append(dateItem)
-         }
+    func fetchCarbs(sinceDate: Date? = nil) -> AnyPublisher<[CarbsEntry], Swift.Error> {
+        var components = URLComponents()
+        components.scheme = url.scheme
+        components.host = url.host
+        components.port = url.port
+        components.path = Config.treatmentsPath
+        components.queryItems = [
+            URLQueryItem(name: "find[carbs][$exists]", value: "true"),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: CarbsEntry.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            ),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            )
+        ]
+        if let date = sinceDate {
+            let dateItem = URLQueryItem(
+                name: "find[created_at][$gt]",
+                value: Formatter.iso8601withFractionalSeconds.string(from: date)
+            )
+            components.queryItems?.append(dateItem)
+        }
 
-         var request = URLRequest(url: components.url!)
-         request.allowsConstrainedNetworkAccess = false
-         request.timeoutInterval = Config.timeout
+        var request = URLRequest(url: components.url!)
+        request.allowsConstrainedNetworkAccess = false
+        request.timeoutInterval = Config.timeout
 
-         if let secret = secret {
-             request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
-         }
+        if let secret = secret {
+            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
+        }
 
-         return service.run(request)
-             .retry(Config.retryCount)
-             .decode(type: [CarbsEntry].self, decoder: JSONCoding.decoder)
-             .catch { error -> AnyPublisher<[CarbsEntry], Swift.Error> in
-                 warning(.nightscout, "Carbs fetching error: \(error.localizedDescription)")
-                 return Just([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
-             }
-             .eraseToAnyPublisher()
-     } */
+        return service.run(request)
+            .retry(Config.retryCount)
+            .decode(type: [CarbsEntry].self, decoder: JSONCoding.decoder)
+            .catch { error -> AnyPublisher<[CarbsEntry], Swift.Error> in
+                warning(.nightscout, "Carbs fetching error: \(error.localizedDescription)")
+                return Just([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
 
     func deleteCarbs(_ treatement: DataTable.Treatment, _isFPU: Bool) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
@@ -275,84 +275,84 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    /* func fetchTempTargets(sinceDate: Date? = nil) -> AnyPublisher<[TempTarget], Swift.Error> {
-         var components = URLComponents()
-         components.scheme = url.scheme
-         components.host = url.host
-         components.port = url.port
-         components.path = Config.treatmentsPath
-         components.queryItems = [
-             URLQueryItem(name: "find[eventType]", value: "Temporary+Target"),
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: TempTarget.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             ),
-             URLQueryItem(
-                 name: "find[enteredBy][$ne]",
-                 value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             ),
-             URLQueryItem(name: "find[duration][$exists]", value: "true")
-         ]
-         if let date = sinceDate {
-             let dateItem = URLQueryItem(
-                 name: "find[created_at][$gt]",
-                 value: Formatter.iso8601withFractionalSeconds.string(from: date)
-             )
-             components.queryItems?.append(dateItem)
-         }
+    func fetchTempTargets(sinceDate: Date? = nil) -> AnyPublisher<[TempTarget], Swift.Error> {
+        var components = URLComponents()
+        components.scheme = url.scheme
+        components.host = url.host
+        components.port = url.port
+        components.path = Config.treatmentsPath
+        components.queryItems = [
+            URLQueryItem(name: "find[eventType]", value: "Temporary+Target"),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: TempTarget.manual.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            ),
+            URLQueryItem(
+                name: "find[enteredBy][$ne]",
+                value: NightscoutTreatment.local.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            ),
+            URLQueryItem(name: "find[duration][$exists]", value: "true")
+        ]
+        if let date = sinceDate {
+            let dateItem = URLQueryItem(
+                name: "find[created_at][$gt]",
+                value: Formatter.iso8601withFractionalSeconds.string(from: date)
+            )
+            components.queryItems?.append(dateItem)
+        }
 
-         var request = URLRequest(url: components.url!)
-         request.allowsConstrainedNetworkAccess = false
-         request.timeoutInterval = Config.timeout
+        var request = URLRequest(url: components.url!)
+        request.allowsConstrainedNetworkAccess = false
+        request.timeoutInterval = Config.timeout
 
-         if let secret = secret {
-             request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
-         }
+        if let secret = secret {
+            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
+        }
 
-         return service.run(request)
-             .retry(Config.retryCount)
-             .decode(type: [TempTarget].self, decoder: JSONCoding.decoder)
-             .catch { error -> AnyPublisher<[TempTarget], Swift.Error> in
-                 warning(.nightscout, "TempTarget fetching error: \(error.localizedDescription)")
-                 return Just([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
-             }
-             .eraseToAnyPublisher()
-     } */
+        return service.run(request)
+            .retry(Config.retryCount)
+            .decode(type: [TempTarget].self, decoder: JSONCoding.decoder)
+            .catch { error -> AnyPublisher<[TempTarget], Swift.Error> in
+                warning(.nightscout, "TempTarget fetching error: \(error.localizedDescription)")
+                return Just([]).setFailureType(to: Swift.Error.self).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
 
-    /* func fetchAnnouncement(sinceDate: Date? = nil) -> AnyPublisher<[Announcement], Swift.Error> {
-         var components = URLComponents()
-         components.scheme = url.scheme
-         components.host = url.host
-         components.port = url.port
-         components.path = Config.treatmentsPath
-         components.queryItems = [
-             URLQueryItem(name: "find[eventType]", value: "Announcement"),
-             URLQueryItem(
-                 name: "find[enteredBy]",
-                 value: Announcement.remote.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-             )
-         ]
-         if let date = sinceDate {
-             let dateItem = URLQueryItem(
-                 name: "find[created_at][$gte]",
-                 value: Formatter.iso8601withFractionalSeconds.string(from: date)
-             )
-             components.queryItems?.append(dateItem)
-         }
+    func fetchAnnouncement(sinceDate: Date? = nil) -> AnyPublisher<[Announcement], Swift.Error> {
+        var components = URLComponents()
+        components.scheme = url.scheme
+        components.host = url.host
+        components.port = url.port
+        components.path = Config.treatmentsPath
+        components.queryItems = [
+            URLQueryItem(name: "find[eventType]", value: "Announcement"),
+            URLQueryItem(
+                name: "find[enteredBy]",
+                value: Announcement.remote.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            )
+        ]
+        if let date = sinceDate {
+            let dateItem = URLQueryItem(
+                name: "find[created_at][$gte]",
+                value: Formatter.iso8601withFractionalSeconds.string(from: date)
+            )
+            components.queryItems?.append(dateItem)
+        }
 
-         var request = URLRequest(url: components.url!)
-         request.allowsConstrainedNetworkAccess = false
-         request.timeoutInterval = Config.timeout
+        var request = URLRequest(url: components.url!)
+        request.allowsConstrainedNetworkAccess = false
+        request.timeoutInterval = Config.timeout
 
-         if let secret = secret {
-             request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
-         }
+        if let secret = secret {
+            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
+        }
 
-         return service.run(request)
-             .retry(Config.retryCount)
-             .decode(type: [Announcement].self, decoder: JSONCoding.decoder)
-             .eraseToAnyPublisher()
-     } */
+        return service.run(request)
+            .retry(Config.retryCount)
+            .decode(type: [Announcement].self, decoder: JSONCoding.decoder)
+            .eraseToAnyPublisher()
+    }
 
     func deleteAnnouncements() -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()

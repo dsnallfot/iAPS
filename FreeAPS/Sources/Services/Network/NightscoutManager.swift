@@ -6,9 +6,9 @@ import UIKit
 
 protocol NightscoutManager: GlucoseSource {
     func fetchGlucose(since date: Date) -> AnyPublisher<[BloodGlucose], Never>
-    // func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never>
-    // func fetchTempTargets() -> AnyPublisher<[TempTarget], Never>
-    // func fetchAnnouncements() -> AnyPublisher<[Announcement], Never>
+    func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never>
+    func fetchTempTargets() -> AnyPublisher<[TempTarget], Never>
+    func fetchAnnouncements() -> AnyPublisher<[Announcement], Never>
     func deleteCarbs(_ treatement: DataTable.Treatment, complexMeal: Bool)
     func deleteNormalCarbs(_ treatement: DataTable.Treatment)
     func deleteFPUs(_ treatement: DataTable.Treatment)
@@ -54,6 +54,10 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
     private var isUploadEnabled: Bool {
         settingsManager.settings.isUploadEnabled
+    }
+
+    private var isDownloadEnabled: Bool {
+        settingsManager.settings.isDownloadEnabled
     }
 
     private var isUploadGlucoseEnabled: Bool {
@@ -154,38 +158,38 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         fetch(nil)
     }
 
-    /* func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never> {
-         guard let nightscout = nightscoutAPI, isNetworkReachable else {
-             return Just([]).eraseToAnyPublisher()
-         }
+    func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never> {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
+            return Just([]).eraseToAnyPublisher()
+        }
 
-         let since = carbsStorage.syncDate()
-         return nightscout.fetchCarbs(sinceDate: since)
-             .replaceError(with: [])
-             .eraseToAnyPublisher()
-     }
+        let since = carbsStorage.syncDate()
+        return nightscout.fetchCarbs(sinceDate: since)
+            .replaceError(with: [])
+            .eraseToAnyPublisher()
+    }
 
-     func fetchTempTargets() -> AnyPublisher<[TempTarget], Never> {
-         guard let nightscout = nightscoutAPI, isNetworkReachable else {
-             return Just([]).eraseToAnyPublisher()
-         }
+    func fetchTempTargets() -> AnyPublisher<[TempTarget], Never> {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
+            return Just([]).eraseToAnyPublisher()
+        }
 
-         let since = tempTargetsStorage.syncDate()
-         return nightscout.fetchTempTargets(sinceDate: since)
-             .replaceError(with: [])
-             .eraseToAnyPublisher()
-     }
+        let since = tempTargetsStorage.syncDate()
+        return nightscout.fetchTempTargets(sinceDate: since)
+            .replaceError(with: [])
+            .eraseToAnyPublisher()
+    }
 
-     func fetchAnnouncements() -> AnyPublisher<[Announcement], Never> {
-         guard let nightscout = nightscoutAPI, isNetworkReachable else {
-             return Just([]).eraseToAnyPublisher()
-         }
+    func fetchAnnouncements() -> AnyPublisher<[Announcement], Never> {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
+            return Just([]).eraseToAnyPublisher()
+        }
 
-         let since = announcementsStorage.syncDate()
-         return nightscout.fetchAnnouncement(sinceDate: since)
-             .replaceError(with: [])
-             .eraseToAnyPublisher()
-     } */
+        let since = announcementsStorage.syncDate()
+        return nightscout.fetchAnnouncement(sinceDate: since)
+            .replaceError(with: [])
+            .eraseToAnyPublisher()
+    }
 
     func deleteCarbs(_ treatement: DataTable.Treatment, complexMeal: Bool) {
         guard let nightscout = nightscoutAPI, isUploadEnabled else {
