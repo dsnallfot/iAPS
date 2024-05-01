@@ -654,7 +654,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
         var openapsStatus: OpenAPSStatus
 
-        // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
+        // Only upload suggested in Open Loop Mode. Upload both enacted and suggested in Closed Loop Mode.
         if loopIsClosed {
             openapsStatus = OpenAPSStatus(
                 iob: iob?.first,
