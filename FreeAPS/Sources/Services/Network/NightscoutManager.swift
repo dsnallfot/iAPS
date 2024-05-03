@@ -645,14 +645,14 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
     func uploadStatus() {
         let iob = storage.retrieve(OpenAPS.Monitor.iob, as: [IOBEntry].self)
-        var suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
-        var enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
+        let suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
+        let enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
 
-        if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
-            enacted?.predictions = nil
-        } else {
-            suggested?.predictions = nil
-        }
+        /* if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
+             enacted?.predictions = nil
+         } else {
+             suggested?.predictions = nil
+         } */ // Commented out to upload predictions for both suggested and enacted
 
         let loopIsClosed = settingsManager.settings.closedLoop
 
