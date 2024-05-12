@@ -241,7 +241,7 @@ final class BaseAPSManager: APSManager, Injectable {
                     return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }
 
-                self.nightscout.uploadStatus()
+                // self.nightscout.uploadStatus() // Avoid double uploading devicestatus -> status is already uploaded in self.enactSuggested() with closed loop, and above if open loop
 
                 // Closed loop - enact suggested
                 return self.enactSuggested()

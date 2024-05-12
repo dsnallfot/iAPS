@@ -48,6 +48,7 @@ extension AddCarbs {
         @State private var showInfo = false
         @State var saved = false
         @State var pushed = false
+        @State var button = false
         @State private var showAlert = false
         @State private var isTapped: Bool = false
         @FocusState private var isFocused: Bool
@@ -243,7 +244,8 @@ extension AddCarbs {
                     Button {
                         if state.carbs <= state.maxCarbs {
                             // Only allow button click if carbs are below maxCarbs
-                            state.add(override, fetch: editMode)
+                            button.toggle()
+                            if button { state.add(override, fetch: editMode) }
                         }
                     } label: {
                         HStack {

@@ -15,6 +15,7 @@ extension Bolus {
         @State private var carbsWarning = false
         @State private var displayError = false
         @State private var presentInfo = false
+        @State var button = false
         @Environment(\.colorScheme) var colorScheme
 
         var roundedOrefInsulinRec: Decimal {
@@ -134,7 +135,10 @@ extension Bolus {
                         let formattedMaxAmountBolus = String(maxamountbolus)
                         Button {
                             keepForNextWiew = true
-                            state.add()
+                            button.toggle()
+                            if button {
+                                state.add()
+                            }
                         }
                         label: {
                             HStack {

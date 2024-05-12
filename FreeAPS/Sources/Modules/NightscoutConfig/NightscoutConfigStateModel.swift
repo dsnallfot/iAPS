@@ -25,6 +25,7 @@ extension NightscoutConfig {
         @Published var connecting = false
         @Published var backfilling = false
         @Published var isUploadEnabled = false // Allow uploads
+        @Published var isDownloadEnabled = false // Allow doenloads
         @Published var uploadStats = false // Upload Statistics
         @Published var uploadGlucose = true // Upload Glucose
         @Published var useLocalSource = false
@@ -46,6 +47,7 @@ extension NightscoutConfig {
 
             subscribeSetting(\.allowAnnouncements, on: $allowAnnouncements) { allowAnnouncements = $0 }
             subscribeSetting(\.isUploadEnabled, on: $isUploadEnabled) { isUploadEnabled = $0 }
+            subscribeSetting(\.isDownloadEnabled, on: $isDownloadEnabled) { isDownloadEnabled = $0 }
             subscribeSetting(\.useLocalGlucoseSource, on: $useLocalSource) { useLocalSource = $0 }
             subscribeSetting(\.localGlucosePort, on: $localPort.map(Int.init)) { localPort = Decimal($0) }
             subscribeSetting(\.uploadStats, on: $uploadStats) { uploadStats = $0 }

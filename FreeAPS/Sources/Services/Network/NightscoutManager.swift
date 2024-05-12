@@ -56,6 +56,10 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         settingsManager.settings.isUploadEnabled
     }
 
+    private var isDownloadEnabled: Bool {
+        settingsManager.settings.isDownloadEnabled
+    }
+
     private var isUploadGlucoseEnabled: Bool {
         settingsManager.settings.uploadGlucose
     }
@@ -155,7 +159,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     }
 
     func fetchCarbs() -> AnyPublisher<[CarbsEntry], Never> {
-        guard let nightscout = nightscoutAPI, isNetworkReachable else {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
             return Just([]).eraseToAnyPublisher()
         }
 
@@ -166,7 +170,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     }
 
     func fetchTempTargets() -> AnyPublisher<[TempTarget], Never> {
-        guard let nightscout = nightscoutAPI, isNetworkReachable else {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
             return Just([]).eraseToAnyPublisher()
         }
 
@@ -177,7 +181,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     }
 
     func fetchAnnouncements() -> AnyPublisher<[Announcement], Never> {
-        guard let nightscout = nightscoutAPI, isNetworkReachable else {
+        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
             return Just([]).eraseToAnyPublisher()
         }
 
@@ -641,31 +645,44 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
     func uploadStatus() {
         let iob = storage.retrieve(OpenAPS.Monitor.iob, as: [IOBEntry].self)
-        var suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
-        var enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
+        let suggested = storage.retrieve(OpenAPS.Enact.suggested, as: Suggestion.self)
+        let enacted = storage.retrieve(OpenAPS.Enact.enacted, as: Suggestion.self)
 
-        var useEnacted = true
-        if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
-            enacted?.predictions = nil
-            useEnacted = false
+        /* if (suggested?.timestamp ?? .distantPast) > (enacted?.timestamp ?? .distantPast) {
+             enacted?.predictions = nil
+         } else {
+             suggested?.predictions = nil
+         } */ // Commented out to upload predictions for both suggested and enacted
+
+        let loopIsClosed = settingsManager.settings.closedLoop
+
+        var openapsStatus: OpenAPSStatus
+
+        // Only upload suggested in Open Loop Mode. Upload both enacted and suggested in Closed Loop Mode.
+        if loopIsClosed {
+            openapsStatus = OpenAPSStatus(
+                iob: iob?.first,
+                suggested: suggested,
+                enacted: enacted,
+                version: "0.7.1"
+            )
         } else {
-            suggested?.predictions = nil
+            openapsStatus = OpenAPSStatus(
+                iob: iob?.first,
+                suggested: suggested,
+                enacted: nil,
+                version: "0.7.1"
+            )
         }
-
-        // Only upload suggested in Open Loop Mode. Only upload enacted in Closed Loop Mode.
-        let openapsStatus = OpenAPSStatus(
-            iob: iob?.first,
-            suggested: useEnacted ? nil : suggested,
-            enacted: useEnacted ? enacted : nil,
-            version: "0.7.1"
-        )
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
+        //var reservoir = storage.retrieve(OpenAPS.Monitor.reservoir, as: Decimal.self) ?? 0
         var reservoir = Decimal(from: storage.retrieveRaw(OpenAPS.Monitor.reservoir) ?? "0")
         if reservoir == 0xDEAD_BEEF {
             reservoir = nil
         }
+        
         let pumpStatus = storage.retrieve(OpenAPS.Monitor.status, as: PumpStatus.self)
 
         let pump = NSPumpStatus(clock: Date(), battery: battery, reservoir: reservoir, status: pumpStatus)

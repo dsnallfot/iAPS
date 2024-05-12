@@ -95,8 +95,9 @@ extension NightscoutConfig {
                         Toggle("Ladda även upp statistik", isOn: $state.uploadStats)
                         Toggle("Ladda även upp glukosvärden", isOn: $state.uploadGlucose)
                     }
+                    Toggle("Ladda ner behandlingar", isOn: $state.isDownloadEnabled)
                 } header: {
-                    Text("Tillåt uppladdning till Nightscout")
+                    Text("Tillåt upp-/nedladdning Nightscout")
                 }
 
                 Section {
