@@ -187,7 +187,7 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
         DispatchQueue.main.async {
             if let url =
                 URL(
-                    string: "shortcuts://run-shortcut?name=Bolusfailure&input=text&text=Bolus misslyckades.\nKontrollera pumpens historik innan du försöker igen"
+                    string: "shortcuts://run-shortcut?name=Bolusfailure&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
                 )
             {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
