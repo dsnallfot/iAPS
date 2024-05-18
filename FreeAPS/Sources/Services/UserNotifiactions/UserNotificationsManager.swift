@@ -174,11 +174,24 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
             content.sound = .default
 
             self.addRequest(
-                identifier: .noLoopFirstNotification,
+                identifier: .bolusFailedNotification,
                 content: content,
                 deleteOld: true,
                 trigger: nil
             )
+        }
+        triggerShortcut()
+    }
+
+    private func triggerShortcut() {
+        DispatchQueue.main.async {
+            if let url =
+                URL(
+                    string: "shortcuts://run-shortcut?name=Bolusfailure&input=text&text=Bolus misslyckades.\nKontrollera pumpens historik innan du försöker igen"
+                )
+            {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         }
     }
 
