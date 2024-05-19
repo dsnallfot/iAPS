@@ -158,6 +158,19 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 trigger: secondTrigger
             )
         }
+        triggerNotLoopingShortcut()
+    }
+
+    private func triggerNotLoopingShortcut() {
+        DispatchQueue.main.async {
+            if let url =
+                URL(
+                    string: "shortcuts://run-shortcut?name=LoopStatus&input=text&text=iAPS ej aktiv.\nMer än 20 minuter sedan senaste loop"
+                )
+            {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
     }
 
     private func notifyBolusFailure() {
@@ -180,14 +193,14 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 trigger: nil
             )
         }
-        triggerShortcut()
+        triggerBolusfailureShortcut()
     }
 
-    private func triggerShortcut() {
+    private func triggerBolusfailureShortcut() {
         DispatchQueue.main.async {
             if let url =
                 URL(
-                    string: "shortcuts://run-shortcut?name=Bolusfailure&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
+                    string: "shortcuts://run-shortcut?name=LoopStatus&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
                 )
             {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
