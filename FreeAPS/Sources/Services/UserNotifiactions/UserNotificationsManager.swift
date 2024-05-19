@@ -52,9 +52,6 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
     private let center = UNUserNotificationCenter.current()
     private var lifetime = Lifetime()
 
-    // Variable to track the first notification delivery status
-    private var isFirstNotificationDelivered = false
-
     init(resolver: Resolver) {
         super.init()
         center.delegate = self
@@ -148,9 +145,6 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
             let firstTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * TimeInterval(firstInterval), repeats: false)
             let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * TimeInterval(secondInterval), repeats: false)
 
-            // Reset the flag each time notifications are scheduled
-            self.isFirstNotificationDelivered = false
-
             self.addRequest(
                 identifier: .noLoopFirstNotification,
                 content: firstContent,
@@ -163,40 +157,6 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 deleteOld: true,
                 trigger: secondTrigger
             )
-        }
-    }
-
-    private func notificationCenter(
-        _: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse,
-        withCompletionHandler completionHandler: @escaping () -> Void
-    ) {
-        let identifier = response.notification.request.identifier
-
-        if identifier == Identifier.noLoopFirstNotification.rawValue {
-            // Set the flag when the first notification is delivered
-            isFirstNotificationDelivered = true
-        }
-
-        completionHandler()
-    }
-
-    // Function to trigger the shortcut if the first notification has been delivered
-    private func checkAndTriggerShortcut() {
-        if isFirstNotificationDelivered {
-            triggerNotLoopingShortcut()
-        }
-    }
-
-    private func triggerNotLoopingShortcut() {
-        DispatchQueue.main.async {
-            if let url =
-                URL(
-                    string: "shortcuts://run-shortcut?name=LoopStatus&input=text&text=iAPS ej aktiv.\nMer än 20 minuter sedan senaste loop"
-                )
-            {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
         }
     }
 
@@ -220,14 +180,14 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 trigger: nil
             )
         }
-        triggerBolusfailureShortcut()
+        triggerBolusFailedShortcut()
     }
 
-    private func triggerBolusfailureShortcut() {
+    private func triggerBolusFailedShortcut() {
         DispatchQueue.main.async {
             if let url =
                 URL(
-                    string: "shortcuts://run-shortcut?name=LoopStatus&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
+                    string: "shortcuts://run-shortcut?name=LoopSTatus&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
                 )
             {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
