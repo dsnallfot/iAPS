@@ -269,14 +269,12 @@ final class BaseAPSManager: APSManager, Injectable {
         isLooping.send(false)
 
         if let error = error {
-            let errorMessage = "Loop misslyckades med felorsak: \(error.localizedDescription)"
-            warning(.apsManager, errorMessage)
+            warning(.apsManager, "Loop misslyckades med felorsak: \(error.localizedDescription)")
             if let backgroundTask = backGroundTaskID {
                 UIApplication.shared.endBackgroundTask(backgroundTask)
                 backGroundTaskID = .invalid
             }
             processError(error)
-            triggerLoopFailedShortcut(with: errorMessage) // Daniel: Added to receive error message on mom/dads phone over sms/imessage shortcut
         } else {
             debug(.apsManager, "Loop lyckades")
             lastLoopDate = Date()
@@ -293,18 +291,6 @@ final class BaseAPSManager: APSManager, Injectable {
         if let backgroundTask = backGroundTaskID {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backGroundTaskID = .invalid
-        }
-    }
-
-    private func triggerLoopFailedShortcut(with errorMessage: String) {
-        DispatchQueue.main.async {
-            if let url =
-                URL(
-                    string: "shortcuts://run-shortcut?name=LoopSTatus&input=text&text=\(errorMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-                )
-            {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
         }
     }
 
