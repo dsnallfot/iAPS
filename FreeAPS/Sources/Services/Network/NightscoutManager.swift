@@ -684,6 +684,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             reservoir = nil
         }
 
+      
         let pumpStatus = storage.retrieve(OpenAPS.Monitor.status, as: PumpStatus.self)
 
         let pump = NSPumpStatus(clock: Date(), battery: battery, reservoir: reservoir, status: pumpStatus)
