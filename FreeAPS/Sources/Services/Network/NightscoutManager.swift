@@ -677,12 +677,13 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
 
         let battery = storage.retrieve(OpenAPS.Monitor.battery, as: Battery.self)
 
-        //var reservoir = storage.retrieve(OpenAPS.Monitor.reservoir, as: Decimal.self) ?? 0
+        // var reservoir = storage.retrieve(OpenAPS.Monitor.reservoir, as: Decimal.self) ?? 0
+
         var reservoir = Decimal(from: storage.retrieveRaw(OpenAPS.Monitor.reservoir) ?? "0")
         if reservoir == 0xDEAD_BEEF {
             reservoir = nil
         }
-        
+      
         let pumpStatus = storage.retrieve(OpenAPS.Monitor.status, as: PumpStatus.self)
 
         let pump = NSPumpStatus(clock: Date(), battery: battery, reservoir: reservoir, status: pumpStatus)
