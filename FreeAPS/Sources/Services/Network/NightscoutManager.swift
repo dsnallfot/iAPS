@@ -683,6 +683,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         if reservoir == 0xDEAD_BEEF {
             reservoir = nil
         }
+
       
         let pumpStatus = storage.retrieve(OpenAPS.Monitor.status, as: PumpStatus.self)
 

@@ -180,21 +180,22 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 trigger: nil
             )
         }
-        triggerShortcut()
+        // triggerBolusFailedShortcut()
     }
 
-    private func triggerShortcut() {
-        DispatchQueue.main.async {
-            if let url =
-                URL(
-                    string: "shortcuts://run-shortcut?name=Bolusfailure&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
-                )
-            {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        }
-    }
-
+    /* Commented out. Do not work when app is in background mode
+     private func triggerBolusFailedShortcut() {
+         DispatchQueue.main.async {
+             if let url =
+                 URL(
+                     string: "shortcuts://run-shortcut?name=LoopSTatus&input=text&text=Bolus misslyckades.\nKontrollera pumpens anslutning och historik innan du försöker igen"
+                 )
+             {
+                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
+             }
+         }
+     }
+     */
     private func sendGlucoseNotification() {
         addAppBadge(glucose: nil)
 
