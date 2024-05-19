@@ -52,6 +52,9 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
     private let center = UNUserNotificationCenter.current()
     private var lifetime = Lifetime()
 
+    // Variable to track the first notification delivery status
+    private var isFirstNotificationDelivered = false
+
     init(resolver: Resolver) {
         super.init()
         center.delegate = self
@@ -145,6 +148,9 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
             let firstTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * TimeInterval(firstInterval), repeats: false)
             let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * TimeInterval(secondInterval), repeats: false)
 
+            // Reset the flag each time notifications are scheduled
+            self.isFirstNotificationDelivered = false
+
             self.addRequest(
                 identifier: .noLoopFirstNotification,
                 content: firstContent,
@@ -158,7 +164,28 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
                 trigger: secondTrigger
             )
         }
-        triggerNotLoopingShortcut()
+    }
+
+    private func notificationCenter(
+        _: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let identifier = response.notification.request.identifier
+
+        if identifier == Identifier.noLoopFirstNotification.rawValue {
+            // Set the flag when the first notification is delivered
+            isFirstNotificationDelivered = true
+        }
+
+        completionHandler()
+    }
+
+    // Function to trigger the shortcut if the first notification has been delivered
+    private func checkAndTriggerShortcut() {
+        if isFirstNotificationDelivered {
+            triggerNotLoopingShortcut()
+        }
     }
 
     private func triggerNotLoopingShortcut() {
