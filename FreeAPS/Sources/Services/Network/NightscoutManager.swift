@@ -15,6 +15,7 @@ protocol NightscoutManager: GlucoseSource {
     func deleteInsulin(at date: Date)
     func deleteManualGlucose(at: Date)
     func uploadStatus()
+    func uploadBolusErrors(withNotes notes: String)
     func uploadGlucose()
     func uploadManualGlucose()
     func uploadStatistics(dailystat: Statistics)
@@ -47,6 +48,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
     private var ping: TimeInterval?
 
     private var lifetime = Lifetime()
+
+    private var cancellables = Set<AnyCancellable>()
 
     private var isNetworkReachable: Bool {
         reachabilityManager.isReachable
@@ -684,7 +687,6 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             reservoir = nil
         }
 
-      
         let pumpStatus = storage.retrieve(OpenAPS.Monitor.status, as: PumpStatus.self)
 
         let pump = NSPumpStatus(clock: Date(), battery: battery, reservoir: reservoir, status: pumpStatus)
@@ -722,6 +724,44 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         }
 
         uploadPodAge()
+    }
+
+    //Daniel: Added to upload bolus failure reasons as a note to Nightscout
+    internal func uploadBolusErrors(withNotes notes: String) {
+        let bolusError = NightscoutTreatment(
+            duration: nil,
+            rawDuration: nil,
+            rawRate: nil,
+            absolute: nil,
+            rate: nil,
+            eventType: .nsNote,
+            createdAt: Date(),
+            enteredBy: NightscoutTreatment.local,
+            bolus: nil,
+            insulin: nil,
+            notes: notes,
+            carbs: nil,
+            fat: nil,
+            protein: nil,
+            targetTop: nil,
+            targetBottom: nil
+        )
+
+        guard let nightscout = nightscoutAPI else {
+            print("NightscoutAPI instance is not available.")
+            return
+        }
+
+        nightscout.uploadBolusErrors(bolusError)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Bolus error note uploaded successfully.")
+                case let .failure(error):
+                    print("Failed to upload bolus error note: \(error.localizedDescription)")
+                }
+            }, receiveValue: {})
+            .store(in: &cancellables)
     }
 
     private func uploadPodAge() {

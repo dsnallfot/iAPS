@@ -63,6 +63,7 @@ enum EventType: String, JSON {
 
     case nsTempBasal = "Temp Basal"
     case nsCarbCorrection = "Carb Correction"
+    case nsNote = "Note"
     case nsTempTarget = "Temporary Target"
     case nsInsulinChange = "Insulin Change"
     case nsSiteChange = "Site Change"

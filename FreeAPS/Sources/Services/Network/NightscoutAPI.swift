@@ -578,6 +578,39 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
+    //Daniel: Added to upload bolus failure reasons as a note to Nightscout
+    func uploadBolusErrors(_ bolusError: NightscoutTreatment) -> AnyPublisher<Void, Swift.Error> {
+        var components = URLComponents()
+        components.scheme = url.scheme
+        components.host = url.host
+        components.port = url.port
+        components.path = Config.treatmentsPath
+
+        var request = URLRequest(url: components.url!)
+        request.allowsConstrainedNetworkAccess = false
+        request.timeoutInterval = Config.timeout
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let secret = secret {
+            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
+        }
+        request.httpBody = try! JSONCoding.encoder.encode(bolusError)
+        request.httpMethod = "POST"
+
+        /* do {
+             request.httpBody = try JSONEncoder().encode([bolusError])
+         } catch {
+             return Fail(error: error).eraseToAnyPublisher()
+         }
+
+         request.httpMethod = "POST" */
+
+        return service.run(request)
+            .retry(Config.retryCount)
+            .map { _ in () }
+            .eraseToAnyPublisher()
+    }
+
     func uploadPrefs(_ prefs: NightscoutPreferences) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
         components.scheme = url.scheme

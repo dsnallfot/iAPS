@@ -418,7 +418,12 @@ final class BaseAPSManager: APSManager, Injectable {
 
     func enactBolus(amount: Double, isSMB: Bool) {
         if let error = verifyStatus() {
+            let errorDescription = error.localizedDescription
             processError(error)
+            
+            //Daniel: Added to upload bolus failure reasons as a note to Nightscout
+            nightscout.uploadBolusErrors(withNotes: errorDescription)
+            
             processQueue.async {
                 self.broadcaster.notify(BolusFailureObserver.self, on: self.processQueue) {
                     $0.bolusDidFail()
@@ -435,8 +440,13 @@ final class BaseAPSManager: APSManager, Injectable {
 
         pump.enactBolus(units: roundedAmount, automatic: isSMB).sink { completion in
             if case let .failure(error) = completion {
-                warning(.apsManager, "Bolus misslyckades med felorsak: \(error.localizedDescription)")
+                let errorDescription = "Bolus misslyckades med felorsak: \(error.localizedDescription)"
+                warning(.apsManager, errorDescription)
                 self.processError(APSError.pumpError(error))
+                
+                //Daniel: Added to upload bolus failure reasons as a note to Nightscout
+                self.nightscout.uploadBolusErrors(withNotes: errorDescription)
+                
                 if !isSMB {
                     self.processQueue.async {
                         self.broadcaster.notify(BolusFailureObserver.self, on: self.processQueue) {
@@ -444,6 +454,7 @@ final class BaseAPSManager: APSManager, Injectable {
                         }
                     }
                 }
+
             } else {
                 debug(.apsManager, "Bolus lyckades")
                 if !isSMB {
