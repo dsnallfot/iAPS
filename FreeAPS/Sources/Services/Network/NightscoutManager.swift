@@ -15,7 +15,7 @@ protocol NightscoutManager: GlucoseSource {
     func deleteInsulin(at date: Date)
     func deleteManualGlucose(at: Date)
     func uploadStatus()
-    func uploadBolusErrors(withNotes notes: String)
+    func uploadErrors(withNotes notes: String)
     func uploadGlucose()
     func uploadManualGlucose()
     func uploadStatistics(dailystat: Statistics)
@@ -726,9 +726,9 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         uploadPodAge()
     }
 
-    //Daniel: Added to upload bolus failure reasons as a note to Nightscout
-    internal func uploadBolusErrors(withNotes notes: String) {
-        let bolusError = NightscoutTreatment(
+    // Daniel: Added to upload bolus failure reasons as a note to Nightscout
+    internal func uploadErrors(withNotes notes: String) {
+        let errorNote = NightscoutTreatment(
             duration: nil,
             rawDuration: nil,
             rawRate: nil,
@@ -752,13 +752,13 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             return
         }
 
-        nightscout.uploadBolusErrors(bolusError)
+        nightscout.uploadErrors(errorNote)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    print("Bolus error note uploaded successfully.")
+                    print("Error note uploaded successfully.")
                 case let .failure(error):
-                    print("Failed to upload bolus error note: \(error.localizedDescription)")
+                    print("Failed to upload error note: \(error.localizedDescription)")
                 }
             }, receiveValue: {})
             .store(in: &cancellables)

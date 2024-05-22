@@ -269,7 +269,12 @@ final class BaseAPSManager: APSManager, Injectable {
         isLooping.send(false)
 
         if let error = error {
-            warning(.apsManager, "Loop misslyckades med felorsak: \(error.localizedDescription)")
+            let errorDescription = "Loop misslyckades med felorsak: \(error.localizedDescription)"
+            warning(.apsManager, errorDescription)
+
+            // Daniel: Added to upload loop failure reasons as a note to Nightscout
+            nightscout.uploadErrors(withNotes: errorDescription)
+
             if let backgroundTask = backGroundTaskID {
                 UIApplication.shared.endBackgroundTask(backgroundTask)
                 backGroundTaskID = .invalid
@@ -301,7 +306,7 @@ final class BaseAPSManager: APSManager, Injectable {
         let status = pump.status.pumpStatus
 
         guard !status.bolusing else {
-            return APSError.invalidPumpState(message: "Bolus pågår. \nVänta tills den är slutförd innan du försöker igen")
+            return APSError.invalidPumpState(message: "Bolus pågår! \nVänta tills den är slutförd innan du försöker igen")
         }
 
         guard !status.suspended else {
@@ -420,10 +425,10 @@ final class BaseAPSManager: APSManager, Injectable {
         if let error = verifyStatus() {
             let errorDescription = error.localizedDescription
             processError(error)
-            
-            //Daniel: Added to upload bolus failure reasons as a note to Nightscout
-            nightscout.uploadBolusErrors(withNotes: errorDescription)
-            
+
+            // Daniel: Added to upload bolus failure reasons as a note to Nightscout
+            nightscout.uploadErrors(withNotes: errorDescription)
+
             processQueue.async {
                 self.broadcaster.notify(BolusFailureObserver.self, on: self.processQueue) {
                     $0.bolusDidFail()
@@ -440,13 +445,13 @@ final class BaseAPSManager: APSManager, Injectable {
 
         pump.enactBolus(units: roundedAmount, automatic: isSMB).sink { completion in
             if case let .failure(error) = completion {
-                let errorDescription = "Bolus misslyckades med felorsak: \(error.localizedDescription)"
+                let errorDescription = error.localizedDescription
                 warning(.apsManager, errorDescription)
                 self.processError(APSError.pumpError(error))
-                
-                //Daniel: Added to upload bolus failure reasons as a note to Nightscout
-                self.nightscout.uploadBolusErrors(withNotes: errorDescription)
-                
+
+                // Daniel: Added to upload bolus failure reasons as a note to Nightscout
+                self.nightscout.uploadErrors(withNotes: errorDescription)
+
                 if !isSMB {
                     self.processQueue.async {
                         self.broadcaster.notify(BolusFailureObserver.self, on: self.processQueue) {

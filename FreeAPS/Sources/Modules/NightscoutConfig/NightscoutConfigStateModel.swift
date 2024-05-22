@@ -25,7 +25,7 @@ extension NightscoutConfig {
         @Published var connecting = false
         @Published var backfilling = false
         @Published var isUploadEnabled = false // Allow uploads
-        @Published var isDownloadEnabled = false // Allow doenloads
+        @Published var isDownloadEnabled = false // Allow downloads
         @Published var uploadStats = false // Upload Statistics
         @Published var uploadGlucose = true // Upload Glucose
         @Published var useLocalSource = false

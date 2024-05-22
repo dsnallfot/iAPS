@@ -578,8 +578,8 @@ extension NightscoutAPI {
             .eraseToAnyPublisher()
     }
 
-    //Daniel: Added to upload bolus failure reasons as a note to Nightscout
-    func uploadBolusErrors(_ bolusError: NightscoutTreatment) -> AnyPublisher<Void, Swift.Error> {
+    // Daniel: Added to upload errors and reasons as a note to Nightscout (Bolus errors)
+    func uploadErrors(_ errorNote: NightscoutTreatment) -> AnyPublisher<Void, Swift.Error> {
         var components = URLComponents()
         components.scheme = url.scheme
         components.host = url.host
@@ -594,16 +594,8 @@ extension NightscoutAPI {
         if let secret = secret {
             request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
         }
-        request.httpBody = try! JSONCoding.encoder.encode(bolusError)
+        request.httpBody = try! JSONCoding.encoder.encode(errorNote)
         request.httpMethod = "POST"
-
-        /* do {
-             request.httpBody = try JSONEncoder().encode([bolusError])
-         } catch {
-             return Fail(error: error).eraseToAnyPublisher()
-         }
-
-         request.httpMethod = "POST" */
 
         return service.run(request)
             .retry(Config.retryCount)
