@@ -169,6 +169,12 @@ extension Bolus {
                                 ))
                         )
                         .tint(.white)
+                    } footer: {
+                        HStack {
+                            Text("\nⓘ  ")
+                            Text("\nAll automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv")
+                        }
+                        .font(.footnote)
                     }
                 }
                 if state.amount <= 0 {
@@ -178,6 +184,12 @@ extension Bolus {
                             state.showModal(for: nil)
                         }
                         label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center).font(.title3)
+                    } footer: {
+                        HStack {
+                            Text("\nⓘ  ")
+                            Text("\nAll automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv")
+                        }
+                        .font(.footnote)
                     }
                 }
             }
