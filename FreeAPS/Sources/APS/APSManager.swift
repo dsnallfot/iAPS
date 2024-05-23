@@ -58,7 +58,7 @@ enum APSError: LocalizedError {
         case let .manualBasalTemp(message):
             return "Manuell temp basal: \(message)"
         case .activeBolusView:
-            return "Utförande pausat. Pågående manuell bolusregistrering"
+            return "Loop pausad. Manuell bolusregistrering pågår"
         }
     }
 }
@@ -502,7 +502,7 @@ final class BaseAPSManager: APSManager, Injectable {
         guard let pump = pumpManager else { return }
 
         guard !activeCarbsView(), rate == 0 else {
-            debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+            debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
             processError(APSError.activeBolusView)
             return
         }
@@ -571,7 +571,7 @@ final class BaseAPSManager: APSManager, Injectable {
             }
 
             guard !activeCarbsView() else {
-                debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+                debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
                 processError(APSError.activeBolusView)
                 return
             }
@@ -637,7 +637,7 @@ final class BaseAPSManager: APSManager, Injectable {
             }
 
             guard !activeCarbsView() || rate == 0 else {
-                debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+                debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
                 processError(APSError.activeBolusView)
                 return
             }

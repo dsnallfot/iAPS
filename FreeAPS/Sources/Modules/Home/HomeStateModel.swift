@@ -220,6 +220,12 @@ extension Home {
             showModal(for: .addCarbs(editMode: false, override: false))
         }
 
+        func notActive() {
+            let defaults = UserDefaults.standard
+            defaults.set(false, forKey: IAPSconfig.inBolusView)
+            print("Active: NO") // For testing
+        }
+
         func runLoop() {
             provider.heartbeatNow()
         }

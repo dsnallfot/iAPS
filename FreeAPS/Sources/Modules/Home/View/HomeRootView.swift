@@ -1174,6 +1174,7 @@ extension Home {
             }
             .onAppear {
                 configureView {}
+                state.notActive()
             }
             .overlay {
                 if let progress = state.bolusProgress, let amount = state.bolusAmount {
