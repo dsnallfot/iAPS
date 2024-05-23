@@ -41,6 +41,7 @@ enum APSError: LocalizedError {
     case apsError(message: String)
     case deviceSyncError(message: String)
     case manualBasalTemp(message: String)
+    case activeBolusView
 
     var errorDescription: String? {
         switch self {
@@ -56,6 +57,8 @@ enum APSError: LocalizedError {
             return "Synk fel: \(message)"
         case let .manualBasalTemp(message):
             return "Manuell temp basal: \(message)"
+        case .activeBolusView:
+            return "Utförande pausat. Pågående manuell bolusregistrering"
         }
     }
 }
@@ -498,6 +501,12 @@ final class BaseAPSManager: APSManager, Injectable {
 
         guard let pump = pumpManager else { return }
 
+        guard !activeCarbsView(), rate == 0 else {
+            debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+            processError(APSError.activeBolusView)
+            return
+        }
+
         // unable to do temp basal during manual temp basal 😁
         if isManualTempBasal {
             processError(APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
@@ -560,6 +569,13 @@ final class BaseAPSManager: APSManager, Injectable {
                 processError(error)
                 return
             }
+
+            guard !activeCarbsView() else {
+                debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+                processError(APSError.activeBolusView)
+                return
+            }
+
             let roundedAmount = pump.roundToSupportedBolusVolume(units: Double(amount))
             pump.enactBolus(units: roundedAmount, activationType: .manualRecommendationAccepted) { error in
                 if let error = error {
@@ -619,6 +635,13 @@ final class BaseAPSManager: APSManager, Injectable {
                 processError(error)
                 return
             }
+
+            guard !activeCarbsView() || rate == 0 else {
+                debug(.apsManager, "Utförande pausat. Pågående manuell bolusregistrering")
+                processError(APSError.activeBolusView)
+                return
+            }
+
             // unable to do temp basal during manual temp basal 😁
             if isManualTempBasal {
                 processError(APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
@@ -755,6 +778,10 @@ final class BaseAPSManager: APSManager, Injectable {
                 return Just(()).setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
+
+            guard !self.activeCarbsView() || rate == 0 else {
+                return Fail(error: APSError.activeBolusView).eraseToAnyPublisher()
+            }
             return pump.enactTempBasal(unitsPerHour: Double(rate), for: TimeInterval(duration * 60)).map { _ in
                 let temp = TempBasal(duration: duration, rate: rate, temp: .absolute, timestamp: Date())
                 self.storage.save(temp, as: OpenAPS.Monitor.tempBasal)
@@ -767,6 +794,11 @@ final class BaseAPSManager: APSManager, Injectable {
             if let error = self.verifyStatus() {
                 return Fail(error: error).eraseToAnyPublisher()
             }
+
+            guard !self.activeCarbsView() else {
+                return Fail(error: APSError.activeBolusView).eraseToAnyPublisher()
+            }
+
             guard let units = suggested.units else {
                 // It is OK, no bolus required
                 debug(.apsManager, "Ingen bolus krävs")
@@ -1242,6 +1274,11 @@ final class BaseAPSManager: APSManager, Injectable {
                 try? self.coredataContext.save()
             }
         }
+    }
+
+    private func activeCarbsView() -> Bool {
+        let defaults = UserDefaults.standard
+        return defaults.bool(forKey: IAPSconfig.inBolusView)
     }
 
     private func loopStats(loopStatRecord: LoopStats) {

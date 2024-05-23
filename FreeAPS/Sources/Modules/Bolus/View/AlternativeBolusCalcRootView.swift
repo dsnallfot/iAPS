@@ -252,11 +252,14 @@ extension Bolus {
                         .offset(x: -22, y: 0)
 
                 },
-                trailing: Button { state.hideModal() }
+                trailing: Button {
+                    state.hideModal()
+                }
                 label: { Text("Cancel") }
             )
             .onAppear {
                 configureView {
+                    state.viewActive()
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
                     state.insulinCalculated = state.calculateInsulin()
@@ -282,8 +285,11 @@ extension Bolus {
             }
             .onDisappear {
                 state.useFattyMealCorrectionFactor = false
+                if state.useCalc {
+                    state.notActive() }
                 if fetch, hasFatOrProtein, !keepForNextWiew, state.useCalc {
                     state.delete(deleteTwice: true, meal: meal)
+
                 } else if fetch, !keepForNextWiew, state.useCalc {
                     state.delete(deleteTwice: false, meal: meal)
                 }

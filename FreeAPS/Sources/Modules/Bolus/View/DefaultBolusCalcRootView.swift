@@ -127,12 +127,15 @@ extension Bolus {
                 )
             }.onAppear {
                 configureView {
+                    state.viewActive()
                     state.waitForSuggestionInitial = waitForSuggestion
                     state.waitForSuggestion = waitForSuggestion
                 }
             }
 
             .onDisappear {
+                if !state.useCalc {
+                    state.notActive() }
                 if fetch, hasFatOrProtein, !keepForNextWiew, !state.useCalc {
                     state.delete(deleteTwice: true, meal: meal)
                 } else if fetch, !keepForNextWiew, !state.useCalc {
@@ -170,7 +173,9 @@ extension Bolus {
                         .offset(x: -22, y: 0)
 
                 },
-                trailing: Button { state.hideModal() }
+                trailing: Button {
+                    state.hideModal()
+                }
                 label: { Text("Cancel") }
             )
             .popup(isPresented: presentInfo, alignment: .center, direction: .bottom) {

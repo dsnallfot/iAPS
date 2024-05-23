@@ -747,8 +747,7 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
             targetBottom: nil
         )
 
-        guard let nightscout = nightscoutAPI else {
-            print("NightscoutAPI instance is not available.")
+        guard let nightscout = nightscoutAPI, isUploadEnabled else {
             return
         }
 

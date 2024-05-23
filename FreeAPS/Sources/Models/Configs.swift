@@ -21,6 +21,7 @@ public enum IAPSconfig {
     static let glassShadowOpacity: CGFloat = 0.6
     static let shadowFraction: CGFloat = 2
     static let minimumCarbEquivalent: Decimal = 0.6
+    static let inBolusView = "iAPS.inBolusView"
 }
 
 extension Font {
