@@ -51,24 +51,26 @@ extension OverrideProfilesConfig {
                 } header: { Text("Enter a name") }
 
                 Section(header: Text("Settings to save")) {
-                    let percentString = Text("\(Int(state.percentage))%")
+                    let percentString = Text("Override: \(Int(state.percentage))%")
                     let targetString = state
                         .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
                     let durationString = state
                         ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
-                    let isfAndCRString = state.isfAndCr ? Text("ISF/CR Changes") : Text("")
-                    let smbString = state.smbIsOff ? Text("SMB Disabled") : Text("")
+                    let isfString = state.isf ? Text("Change ISF") : Text("")
+                    let crString = state.cr ? Text("Change CR") : Text("")
+                    let smbString = state.smbIsOff ? Text("Disable SMB") : Text("")
                     let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
                     let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB minutes") : Text("")
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basal minutes") : Text("")
                     let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM minutes") : Text("")
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basal minutes") : Text("")
 
                     VStack(alignment: .leading, spacing: 2) {
                         percentString
                         if targetString != Text("") { targetString }
                         if durationString != Text("") { durationString }
-                        if isfAndCRString != Text("") { isfAndCRString }
+                        if isfString != Text("") { isfString }
+                        if crString != Text("") { crString }
                         if smbString != Text("") { smbString }
                         if scheduledSMBString != Text("") { scheduledSMBString }
                         if maxMinutesSMBString != Text("") { maxMinutesSMBString }
@@ -99,24 +101,26 @@ extension OverrideProfilesConfig {
                 } header: { Text("Keep or change name?") }
 
                 Section(header: Text("New settings to save")) {
-                    let percentString = Text("\(Int(state.percentage))%")
+                    let percentString = Text("Override: \(Int(state.percentage))%")
                     let targetString = state
                         .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
                     let durationString = state
                         ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
-                    let isfAndCRString = state.isfAndCr ? Text("ISF/CR Changes") : Text("")
-                    let smbString = state.smbIsOff ? Text("SMB Disabled") : Text("")
+                    let isfString = state.isf ? Text("Change ISF") : Text("")
+                    let crString = state.cr ? Text("Change CR") : Text("")
+                    let smbString = state.smbIsOff ? Text("Disable SMB") : Text("")
                     let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
                     let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB minutes") : Text("")
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basal minutes") : Text("")
                     let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM minutes") : Text("")
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basal minutes") : Text("")
 
                     VStack(alignment: .leading, spacing: 2) {
                         percentString
                         if targetString != Text("") { targetString }
                         if durationString != Text("") { durationString }
-                        if isfAndCRString != Text("") { isfAndCRString }
+                        if isfString != Text("") { isfString }
+                        if crString != Text("") { crString }
                         if smbString != Text("") { smbString }
                         if scheduledSMBString != Text("") { scheduledSMBString }
                         if maxMinutesSMBString != Text("") { maxMinutesSMBString }
@@ -190,15 +194,15 @@ extension OverrideProfilesConfig {
                         Text("When you want to edit a preset:")
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("First use the override configurator below for all settings you want to include")
+                            Text("First use the override configurator below and select the settings you want to include.")
                         }
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("Then swipe left on the preset you want to change and click the edit symbol")
+                            Text("Then swipe left on the preset you want to change and click the edit symbol.")
                         }
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("Use the existing preset name or enter a new name and click save")
+                            Text("In the pop-up: Use the existing preset name or enter a new name and click save - Done!")
                         }
                     }
                     }
@@ -420,7 +424,7 @@ extension OverrideProfilesConfig {
             let maxMinutesUAM = (preset.uamMinutes as Decimal?) != nil ? (preset.uamMinutes ?? 0) as Decimal : 0
 
             let isfString = preset.isf ? "ISF" : ""
-            let crString = preset.cr ? "CR •" : ""
+            let crString = preset.cr ? "CR" : ""
             let dash = crString != "" ? "/" : "•"
             let isfAndCRstring = isfString + dash + crString
             if name != "" {
