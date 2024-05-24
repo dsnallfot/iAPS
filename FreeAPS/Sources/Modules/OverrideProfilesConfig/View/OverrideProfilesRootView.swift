@@ -48,47 +48,14 @@ extension OverrideProfilesConfig {
 
         var presetPopover: some View {
             Form {
-                Section {
-                    TextField("Ange ett namn", text: $state.profileName)
-                } header: { Text("Namn på override") }
-
-                Section(header: Text("Inställningar som sparas")) {
-                    let percentString = Text("Override: \(Int(state.percentage))%")
-                    let targetString = state
-                        .target != 0 ? Text("Målvärde: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
-                    let durationString = state
-                        ._indefinite ? Text("Varaktighet: Tillsvidare") :
-                        Text("Varaktighet: \(state.duration.formatted()) minuter")
-                    let isfString = state.isf ? Text("Ändra ISF") : Text("")
-                    let crString = state.cr ? Text("Ändra CR") : Text("")
-                    let smbString = state.smbIsOff ? Text("Inaktivera SMB") : Text("")
-                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("Schemalagda SMB") : Text("")
-                    let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basalminuter") : Text("")
-                    let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basalminuter") : Text("")
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        percentString
-                        if targetString != Text("") { targetString }
-                        if durationString != Text("") { durationString }
-                        if isfString != Text("") { isfString }
-                        if crString != Text("") { crString }
-                        if smbString != Text("") { smbString }
-                        if scheduledSMBString != Text("") { scheduledSMBString }
-                        if maxMinutesSMBString != Text("") { maxMinutesSMBString }
-                        if maxMinutesUAMString != Text("") { maxMinutesUAMString }
-                    }
-                    .foregroundColor(.secondary)
-                    .font(.caption)
-                }
-
+                nameSection(header: "Ange ett namn")
+                settingsSection(header: "Inställningar som sparas")
                 Section {
                     Button("Save") {
                         state.savePreset()
                         isSheetPresented = false
                     }
-                    .disabled(state.profileName.isEmpty || fetchedProfiles.filter({ $0.name == state.profileName }).isNotEmpty)
+                    .disabled(state.profileName.isEmpty || fetchedProfiles.contains(where: { $0.name == state.profileName }))
 
                     Button("Cancel") {
                         isSheetPresented = false
@@ -99,41 +66,8 @@ extension OverrideProfilesConfig {
 
         var editPresetPopover: some View {
             Form {
-                Section {
-                    TextField("Ange ett namn", text: $state.profileName)
-                } header: { Text("Behåll eller ändra namn?") }
-
-                Section(header: Text("Nya inställningar att spara")) {
-                    let percentString = Text("Override: \(Int(state.percentage))%")
-                    let targetString = state
-                        .target != 0 ? Text("Målvärde: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
-                    let durationString = state
-                        ._indefinite ? Text("Varaktighet: Tillsvidare") :
-                        Text("Varaktighet: \(state.duration.formatted()) minuter")
-                    let isfString = state.isf ? Text("Ändra ISF") : Text("")
-                    let crString = state.cr ? Text("Ändra CR") : Text("")
-                    let smbString = state.smbIsOff ? Text("Inaktivera SMB") : Text("")
-                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("Schemalagda SMB") : Text("")
-                    let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basalminuter") : Text("")
-                    let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basalminuter") : Text("")
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        percentString
-                        if targetString != Text("") { targetString }
-                        if durationString != Text("") { durationString }
-                        if isfString != Text("") { isfString }
-                        if crString != Text("") { crString }
-                        if smbString != Text("") { smbString }
-                        if scheduledSMBString != Text("") { scheduledSMBString }
-                        if maxMinutesSMBString != Text("") { maxMinutesSMBString }
-                        if maxMinutesUAMString != Text("") { maxMinutesUAMString }
-                    }
-                    .foregroundColor(.secondary)
-                    .font(.caption)
-                }
-
+                nameSection(header: "Behåll eller ändra namn?")
+                settingsSection(header: "Nya inställningar att spara")
                 Section {
                     Button("Save") {
                         guard let selectedPreset = selectedPreset else { return }
@@ -146,6 +80,47 @@ extension OverrideProfilesConfig {
                         isEditSheetPresented = false
                     }
                 }
+            }
+        }
+
+        @ViewBuilder private func nameSection(header: String) -> some View {
+            Section {
+                TextField("Override preset name", text: $state.profileName)
+            } header: {
+                Text(header)
+            }
+        }
+
+        @ViewBuilder private func settingsSection(header: String) -> some View {
+            Section(header: Text(header)) {
+                let percentString = Text("Override: \(Int(state.percentage))%")
+                let targetString = state
+                    .target != 0 ? Text("Målvärde: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
+                let durationString = state
+                    ._indefinite ? Text("Varaktighet: Tillsvidare") :
+                    Text("Varaktighet: \(state.duration.formatted()) minuter")
+                let isfString = state.isf ? Text("Ändra ISF") : Text("")
+                let crString = state.cr ? Text("Ändra CR") : Text("")
+                let smbString = state.smbIsOff ? Text("Inaktivera SMB") : Text("")
+                let scheduledSMBString = state.smbIsAlwaysOff ? Text("Schemalagda SMB") : Text("")
+                let maxMinutesSMBString = state
+                    .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basalminuter") : Text("")
+                let maxMinutesUAMString = state
+                    .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basalminuter") : Text("")
+
+                VStack(alignment: .leading, spacing: 2) {
+                    percentString
+                    if targetString != Text("") { targetString }
+                    if durationString != Text("") { durationString }
+                    if isfString != Text("") { isfString }
+                    if crString != Text("") { crString }
+                    if smbString != Text("") { smbString }
+                    if scheduledSMBString != Text("") { scheduledSMBString }
+                    if maxMinutesSMBString != Text("") { maxMinutesSMBString }
+                    if maxMinutesUAMString != Text("") { maxMinutesUAMString }
+                }
+                .foregroundColor(.secondary)
+                .font(.caption)
             }
         }
 
@@ -397,7 +372,7 @@ extension OverrideProfilesConfig {
                 header: { Text("Ställ in Override") }
                 footer: {
                     Text(
-                        "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversely adjusted with the percentage."
+                        "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
                     )
                 }
             }
@@ -439,7 +414,6 @@ extension OverrideProfilesConfig {
             let targetString = target != 0 ? "\(glucoseFormatter.string(from: target as NSNumber)!)" : ""
             let maxMinutesSMB = (preset.smbMinutes as Decimal?) != nil ? (preset.smbMinutes ?? 0) as Decimal : 0
             let maxMinutesUAM = (preset.uamMinutes as Decimal?) != nil ? (preset.uamMinutes ?? 0) as Decimal : 0
-
             let isfString = preset.isf ? "ISF" : ""
             let crString = preset.cr ? "CR" : ""
             let dash = crString != "" ? "/" : "•"
