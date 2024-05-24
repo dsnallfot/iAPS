@@ -131,15 +131,16 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
-                    .listRowBackground(Color(.loopYellow).opacity(0.8))
+                    // .listRowBackground(Color(.loopYellow).opacity(0.8))
                     .overlay(
                         RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
-                            .stroke(lineWidth: 7)
+                            .stroke(lineWidth: 3)
                             .padding(.leading, -16)
                             .padding(.trailing, -16)
                             .padding(.top, -4)
                             .padding(.bottom, -4)
-                            .foregroundColor(colorScheme == .dark ? .primary : .white)
+                            // .foregroundColor(colorScheme == .dark ? .primary : .white)
+                            .foregroundColor(Color(.loopYellow).opacity(0.8))
                     )
 
                     if state.useFPUconversion {

@@ -71,7 +71,27 @@ extension Bolus {
                         mealEntries
                     } header: { Text("Aktuell måltid") }
                 }
+                /* Section {
+                     HStack {
+                         Image(systemName: "info.circle")
+                             .padding(.trailing, 8)
+                             .foregroundColor(.secondary)
+                         Text(
+                             "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
+                         )
+                         .font(.caption).foregroundColor(.secondary)
+                     }
+                 } */
                 Section {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .padding(.horizontal, 3)
+                            .font(.caption).foregroundColor(.secondary)
+                        Text(
+                            "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
+                        )
+                        .font(.caption).foregroundColor(.secondary)
+                    }
                     bolusSuggestion
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -116,17 +136,18 @@ extension Bolus {
                             exceededMaxBolus3 = false
                         }
                     }
-                    .listRowBackground(Color(.insulin).opacity(0.8))
+                    // .listRowBackground(Color(.insulin).opacity(0.8))
                     // }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
-                        .stroke(lineWidth: 7)
+                        .stroke(lineWidth: 3)
                         .padding(.leading, -16)
                         .padding(.trailing, -16)
                         .padding(.top, -4)
                         .padding(.bottom, -4)
-                        .foregroundColor(colorScheme == .dark ? .primary : .white)
+                        // .foregroundColor(colorScheme == .dark ? .primary : .white)
+                        .foregroundColor(Color(.insulin))
                 )
 
                 if state.amount > 0 {
@@ -169,12 +190,6 @@ extension Bolus {
                                 ))
                         )
                         .tint(.white)
-                    } footer: {
-                        HStack {
-                            Text("\nⓘ  ")
-                            Text("\nAll automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv")
-                        }
-                        .font(.footnote)
                     }
                 }
                 if state.amount <= 0 {
@@ -184,12 +199,6 @@ extension Bolus {
                             state.showModal(for: nil)
                         }
                         label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center).font(.title3)
-                    } footer: {
-                        HStack {
-                            Text("\nⓘ  ")
-                            Text("\nAll automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv")
-                        }
-                        .font(.footnote)
                     }
                 }
             }
@@ -461,7 +470,7 @@ extension Bolus {
                     }
                 }
             }
-            .listRowBackground(Color(.loopYellow).opacity(0.8))
+            // .listRowBackground(Color(.loopYellow).opacity(0.8))
             .onTapGesture {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)
@@ -537,7 +546,7 @@ extension Bolus {
                     {
                         HStack {
                             // Image(systemName: "x.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -561,7 +570,7 @@ extension Bolus {
                     } else if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 {
                         HStack {
                             // Image(systemName: "x.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -580,7 +589,7 @@ extension Bolus {
                     } else if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -605,7 +614,7 @@ extension Bolus {
                     } else if state.roundedWholeCalc > roundedOrefInsulinRec && state.useSuperBolus {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -635,7 +644,7 @@ extension Bolus {
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
                             // Image(systemName: "exclamationmark.triangle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -660,7 +669,7 @@ extension Bolus {
                     } else if state.useSuperBolus {
                         HStack {
                             // Image(systemName: "checkmark.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.cyan)
                                 .onTapGesture {
                                     showInfo.toggle()
@@ -685,7 +694,7 @@ extension Bolus {
                     } else {
                         HStack {
                             // Image(systemName: "checkmark.circle.fill")
-                            Image(systemName: "info.circle.fill")
+                            Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.green)
                                 .onTapGesture {
                                     showInfo.toggle()
