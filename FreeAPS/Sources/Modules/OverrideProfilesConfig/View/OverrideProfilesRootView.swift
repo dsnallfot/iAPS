@@ -10,7 +10,7 @@ extension OverrideProfilesConfig {
         @State private var isEditing = false
         @State private var showAlert = false
         @State private var showingDetail = false
-        @State private var alertSring = ""
+        @State private var alertString = ""
         @State private var selectedPreset: OverridePresets?
         @State private var isEditSheetPresented: Bool = false
         @State var isSheetPresented: Bool = false
@@ -48,9 +48,7 @@ extension OverrideProfilesConfig {
             Form {
                 Section {
                     TextField("Override name", text: $state.profileName)
-                    // TextField("Namn på override", text: $state.profileName)
                 } header: { Text("Enter a name for the override") }
-                // } header: { Text("Ange namn på override") }
 
                 Section {
                     Button("Save") {
@@ -70,7 +68,7 @@ extension OverrideProfilesConfig {
             Form {
                 Section {
                     TextField("Name", text: $state.profileName)
-                } header: { Text("Enter override name") }
+                } header: { Text("Change or keep name?") }
 
                 Section {
                     Button("Save") {
@@ -99,7 +97,6 @@ extension OverrideProfilesConfig {
                             HStack {
                                 Image(systemName: "x.circle")
                                 Text("Cancel override")
-                                    // Text("Avsluta override")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
@@ -123,6 +120,7 @@ extension OverrideProfilesConfig {
 
                                     Button {
                                         selectedPreset = preset
+                                        state.profileName = preset.name ?? ""
                                         isEditSheetPresented = true
                                     } label: {
                                         Label("Redigera", systemImage: "square.and.pencil")
@@ -130,8 +128,24 @@ extension OverrideProfilesConfig {
                                 }
                         }
                     }
-                    header: { Text("Activate saved override") }
-                    // header: { Text("Aktivera sparad override") }
+                    header: { Text("Activate preset override") }
+                    footer: { VStack(alignment: .leading) {
+                        Text("Swipe left on a preset to edit or delete it.")
+                        Text("\nWhen you want to edit a preset:")
+                        HStack(alignment: .top) {
+                            Text(" •")
+                            Text("First use the override configurator below for all settings you want to include")
+                        }
+                        HStack(alignment: .top) {
+                            Text(" •")
+                            Text("Then swipe left on the preset you want to change and click the edit symbol")
+                        }
+                        HStack(alignment: .top) {
+                            Text(" •")
+                            Text("Use the existing preset name or enter a new name and click save")
+                        }
+                    }
+                    }
                 }
                 Section {
                     VStack {
@@ -244,9 +258,8 @@ extension OverrideProfilesConfig {
 
                     HStack {
                         Button("Start new override") {
-                            // Button("Aktivera ny override") {
                             showAlert.toggle()
-                            alertSring = "\(state.percentage.formatted(.number)) %, " +
+                            alertString = "\(state.percentage.formatted(.number)) %, " +
                                 (
                                     state.duration > 0 || !state
                                         ._indefinite ?
@@ -285,12 +298,10 @@ extension OverrideProfilesConfig {
                         .font(.callout)
                         .controlSize(.mini)
                         .alert(
-                            // "Starta override",
                             "Start override",
                             isPresented: $showAlert,
                             actions: {
                                 Button("Cancel", role: .cancel) { state.isEnabled = false }
-                                // Button("Starta override", role: .destructive) {
                                 Button("Start override", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
@@ -299,14 +310,13 @@ extension OverrideProfilesConfig {
                                 }
                             },
                             message: {
-                                Text(alertSring)
+                                Text(alertString)
                             }
                         )
                         Button {
                             isSheetPresented = true
                         }
-                        // label: { Text("Spara ny override") }
-                        label: { Text("Save new override") }
+                        label: { Text("Save override") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -318,8 +328,7 @@ extension OverrideProfilesConfig {
                         presetPopover
                     }
                 }
-                // header: { Text("Ställ in ny eller editera sparad override") }
-                header: { Text("Configure a new or edit a saved override") }
+                header: { Text("Override configuration") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversely adjusted with the percentage."
@@ -365,9 +374,11 @@ extension OverrideProfilesConfig {
                             Spacer()
                             Button(action: {
                                 selectedPreset = preset
+                                state.profileName = preset.name ?? ""
                                 isEditSheetPresented = true
                             }) {
-                                // Image(systemName: "pencil")
+                                // Image(systemName: "chevron.left")
+                                // .foregroundColor(.secondary)
                             }
                         }
                         HStack(spacing: 2) {
@@ -388,7 +399,7 @@ extension OverrideProfilesConfig {
                             }
                             Spacer()
                         }
-                        .padding(.top, 2)
+                        .padding(.bottom, 2)
                         .foregroundColor(.secondary)
                         .font(.caption2)
                     }
