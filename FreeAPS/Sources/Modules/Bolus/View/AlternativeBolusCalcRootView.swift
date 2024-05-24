@@ -66,32 +66,34 @@ extension Bolus {
 
         var body: some View {
             Form {
+                let notetext =
+                    "All automatisk insulintillförsel genom SMB och temp basal är inaktiverad medan denna bolusvy är aktiv."
                 if fetch {
                     Section {
                         mealEntries
                     } header: { Text("Aktuell måltid") }
+                } else {
+                    Section {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                // .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(notetext)
+                                .padding(.leading, 8)
+                                .font(.caption2).foregroundColor(.secondary)
+                        }
+                    }
                 }
-                /* Section {
-                 HStack {
-                 Image(systemName: "info.circle")
-                 .padding(.trailing, 8)
-                 .foregroundColor(.secondary)
-                 Text(
-                 "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
-                 )
-                 .font(.caption).foregroundColor(.secondary)
-                 }
-                 } */
                 Section {
-                    HStack {
-                        Image(systemName: "info.circle")
-                            // .padding(.horizontal, 3)
-                            .font(.caption).foregroundColor(.secondary)
-                        Text(
-                            "All automatisk insulintillförsel genom SMB och temp basal är inaktiverad medan denna bolusvy är aktiv."
-                        )
-                        .padding(.leading, 4)
-                        .font(.caption2).foregroundColor(.secondary)
+                    if fetch {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                // .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(notetext)
+                                .padding(.leading, 8)
+                                .font(.caption2).foregroundColor(.secondary)
+                        }
                     }
                     if state.fattyMeals || state.sweetMeals {
                         checkboxParts
@@ -110,11 +112,6 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
-
-                    // } // header: { Text("Bolus") }
-
-                    // Section {
-                    // if !state.waitForSuggestion {
                     HStack {
                         Text("Ange bolusdos").fontWeight(.semibold)
                         Spacer()
@@ -138,17 +135,13 @@ extension Bolus {
                             exceededMaxBolus3 = false
                         }
                     }
-                    // .listRowBackground(Color(.insulin).opacity(0.8))
-                    // }
-                    // }
                     .overlay(
-                        RoundedRectangle(cornerRadius: 9) // Adjust the corner radius as needed
+                        RoundedRectangle(cornerRadius: 9)
                             .stroke(lineWidth: 2)
                             .padding(.leading, -15)
                             .padding(.trailing, -15)
                             .padding(.top, -3)
                             .padding(.bottom, -3)
-                            // .foregroundColor(colorScheme == .dark ? .primary : .white)
                             .foregroundColor(Color(.insulin))
                     )
                 }
@@ -350,7 +343,7 @@ extension Bolus {
 
                                                 Divider()
                                                     .frame(height: 1)
-                                                    .background(Color.secondary) // .padding(1)
+                                                    .background(Color.secondary)
                                             }
 
                                             calculationParts
@@ -372,7 +365,7 @@ extension Bolus {
                                         }
                                         Divider()
                                             .frame(height: 1)
-                                            .background(Color.secondary) // .padding(1)
+                                            .background(Color.secondary)
 
                                         VStack {
                                             resultsPart
@@ -473,7 +466,6 @@ extension Bolus {
                     }
                 }
             }
-            // .listRowBackground(Color(.loopYellow).opacity(0.8))
             .onTapGesture {
                 keepForNextWiew = true
                 state.backToCarbsView(complexEntry: true, meal, override: false)
@@ -548,7 +540,6 @@ extension Bolus {
                         .useSuperBolus
                     {
                         HStack {
-                            // Image(systemName: "x.circle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
@@ -572,7 +563,6 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 {
                         HStack {
-                            // Image(systemName: "x.circle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
@@ -591,7 +581,6 @@ extension Bolus {
                         }
                     } else if state.insulinCalculated > roundedOrefInsulinRec && !state.useSuperBolus {
                         HStack {
-                            // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
@@ -605,7 +594,6 @@ extension Bolus {
                             Spacer()
 
                             // Refactored to avoid force unwrapping
-
                             if let insulinString = formatter.string(from: roundedOrefInsulinRec as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.orange)
@@ -616,7 +604,6 @@ extension Bolus {
                         }
                     } else if state.roundedWholeCalc > roundedOrefInsulinRec && state.useSuperBolus {
                         HStack {
-                            // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
@@ -628,14 +615,8 @@ extension Bolus {
                                     showInfo.toggle()
                                 }
                             Spacer()
-                            /* Text(
-                                 formatter
-                                     .string(from: state.insulinCalculated as NSNumber)! +
-                                     NSLocalizedString(" U", comment: "Insulin unit")
-                             ).foregroundColor(.orange) */
 
                             // Refactored to avoid force unwrapping
-
                             if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.orange)
@@ -646,7 +627,6 @@ extension Bolus {
                         }
                     } else if state.error && state.insulinCalculated > 0 {
                         HStack {
-                            // Image(systemName: "exclamationmark.triangle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
@@ -660,7 +640,6 @@ extension Bolus {
                             Spacer()
 
                             // Refactored to avoid force unwrapping
-
                             if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.orange)
@@ -671,7 +650,6 @@ extension Bolus {
                         }
                     } else if state.useSuperBolus {
                         HStack {
-                            // Image(systemName: "checkmark.circle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.cyan)
                                 .onTapGesture {
@@ -685,7 +663,6 @@ extension Bolus {
                             Spacer()
 
                             // Refactored to avoid force unwrapping
-
                             if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.cyan)
@@ -696,7 +673,6 @@ extension Bolus {
                         }
                     } else {
                         HStack {
-                            // Image(systemName: "checkmark.circle.fill")
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.green)
                                 .onTapGesture {
@@ -710,7 +686,6 @@ extension Bolus {
                             Spacer()
 
                             // Refactored to avoid force unwrapping
-
                             if let insulinString = formatter.string(from: state.insulinCalculated as NSNumber) {
                                 Text(insulinString + NSLocalizedString(" U", comment: "Insulin unit"))
                                     .foregroundColor(.green)
@@ -1046,7 +1021,6 @@ extension Bolus {
                 .padding(.bottom, 4)
 
                 // Refactored to avoid force unwrapping
-
                 if let carbs = meal.first?.carbs {
                     let formattedCarbs = Decimal(carbs)
 
@@ -1126,9 +1100,6 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                         }
                     }
-                } else {
-                    // Handle the case where meal.first?.carbs is nil
-                    // You can provide a default value or handle it in a way that makes sense for your application.
                 }
                 HStack(alignment: .center, spacing: nil) {
                     Text("• IOB:")
@@ -1631,7 +1602,7 @@ extension Bolus {
                 }
                 Divider()
                     .frame(height: 1)
-                    .background(Color.secondary) // .padding(1)
+                    .background(Color.secondary)
                 VStack {
                     if state.error, state.insulinCalculated > 0 {
                         VStack {

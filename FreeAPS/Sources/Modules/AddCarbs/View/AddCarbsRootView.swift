@@ -74,8 +74,8 @@ extension AddCarbs {
                 if state.isEnabled {
                     Section {
                         HStack {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(.orange)
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(Color(.loopYellow))
                                 .padding(.trailing, 8)
                             Text(
                                 "En aktiv override modifierar just nu din inställda insulinkänslighet och/eller kolhydratskvot. \nOm du inte vill att detta ska påverka hur insulindosen beräknas för måltiden i nästa steg, bör du avsluta overriden innan du fortsätter."
@@ -131,16 +131,14 @@ extension AddCarbs {
                         )
                         Text("grams").fontWeight(.semibold)
                     }
-                    // .listRowBackground(Color(.loopYellow).opacity(0.8))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 9) // Adjust the corner radius as needed
+                        RoundedRectangle(cornerRadius: 9)
                             .stroke(lineWidth: 2)
                             .padding(.leading, -15)
                             .padding(.trailing, -15)
                             .padding(.top, -3)
                             .padding(.bottom, -3)
-                            // .foregroundColor(colorScheme == .dark ? .primary : .white)
-                            .foregroundColor(Color(.loopYellow).opacity(0.8))
+                            .foregroundColor(Color(.loopYellow))
                     )
 
                     if state.useFPUconversion {
@@ -156,7 +154,6 @@ extension AddCarbs {
 
                             label: {
                                 Image(systemName: "trash")
-                                // .offset(x: 5, y: 0)
                                 Text("Radera favorit")
                             }
                             .frame(alignment: .leading)
@@ -408,8 +405,6 @@ extension AddCarbs {
                                 )
                             }
                             label: {
-                                /* Text("🤖")
-                                 .font(.title) */
                                 Image(
                                     systemName: "ellipsis.message"
                                 )
@@ -491,7 +486,6 @@ extension AddCarbs {
                     }
                     .labelsHidden()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    // .pickerStyle(.automatic)
                     .foregroundColor(.primary)
                     .offset(x: -12, y: 0)
                     ._onBindingChange($state.selection) { _ in
@@ -575,7 +569,7 @@ extension AddCarbs {
 
         @ViewBuilder private func proteinAndFat() -> some View {
             HStack {
-                Text("Fat") // .fontWeight(.thin)
+                Text("Fat")
                 Spacer()
                 DecimalTextField(
                     "0",
@@ -587,7 +581,7 @@ extension AddCarbs {
                 Text("grams")
             }.foregroundColor(.brown)
             HStack {
-                Text("Protein") // .fontWeight(.thin)
+                Text("Protein")
                 Spacer()
                 DecimalTextField(
                     "0",
