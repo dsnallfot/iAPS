@@ -281,5 +281,25 @@ extension OverrideProfilesConfig {
                 ns.editOverride(name ?? "", duration, last.date ?? Date.now)
             }
         }
+
+        func updatePreset(_ preset: OverridePresets) {
+            let context = CoreDataStack.shared.persistentContainer.viewContext
+            context.performAndWait {
+                preset.name = profileName
+                preset.percentage = percentage
+                preset.duration = NSDecimalNumber(decimal: duration)
+                preset.target = override_target ? NSDecimalNumber(decimal: target) : nil
+                preset.indefinite = _indefinite
+                preset.advancedSettings = advancedSettings
+                preset.smbIsOff = smbIsOff
+                preset.smbIsAlwaysOff = smbIsAlwaysOff
+                preset.isf = isf
+                preset.cr = cr
+                preset.smbMinutes = NSDecimalNumber(decimal: smbMinutes)
+                preset.uamMinutes = NSDecimalNumber(decimal: uamMinutes)
+                preset.isfAndCr = isfAndCr
+                try? context.save()
+            }
+        }
     }
 }

@@ -11,6 +11,8 @@ extension OverrideProfilesConfig {
         @State private var showAlert = false
         @State private var showingDetail = false
         @State private var alertSring = ""
+        @State private var selectedPreset: OverridePresets?
+        @State private var isEditSheetPresented: Bool = false
         @State var isSheetPresented: Bool = false
         @State var index: Int = 1
 
@@ -45,8 +47,10 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Namn på override", text: $state.profileName)
-                } header: { Text("Ange namn på override") }
+                    TextField("Override name", text: $state.profileName)
+                    // TextField("Namn på override", text: $state.profileName)
+                } header: { Text("Enter a name for the override") }
+                // } header: { Text("Ange namn på override") }
 
                 Section {
                     Button("Save") {
@@ -57,6 +61,27 @@ extension OverrideProfilesConfig {
 
                     Button("Cancel") {
                         isSheetPresented = false
+                    }
+                }
+            }
+        }
+
+        var editPresetPopover: some View {
+            Form {
+                Section {
+                    TextField("Name", text: $state.profileName)
+                } header: { Text("Enter override name") }
+
+                Section {
+                    Button("Save") {
+                        guard let selectedPreset = selectedPreset else { return }
+                        state.updatePreset(selectedPreset)
+                        isEditSheetPresented = false
+                    }
+                    .disabled(state.profileName.isEmpty)
+
+                    Button("Cancel") {
+                        isEditSheetPresented = false
                     }
                 }
             }
@@ -73,7 +98,8 @@ extension OverrideProfilesConfig {
                         label: {
                             HStack {
                                 Image(systemName: "x.circle")
-                                Text("Avsluta override")
+                                Text("Cancel override")
+                                    // Text("Avsluta override")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
@@ -85,19 +111,34 @@ extension OverrideProfilesConfig {
                 }
                 if state.presets.isNotEmpty {
                     Section {
-                        ForEach(fetchedProfiles) { preset in
+                        ForEach(fetchedProfiles.indices, id: \.self) { index in
+                            let preset = fetchedProfiles[index]
                             profilesView(for: preset)
-                        }.onDelete(perform: removeProfile)
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        removeProfile(at: IndexSet(integer: index))
+                                    } label: {
+                                        Label("Ta bort", systemImage: "trash")
+                                    }
+
+                                    Button {
+                                        selectedPreset = preset
+                                        isEditSheetPresented = true
+                                    } label: {
+                                        Label("Redigera", systemImage: "square.and.pencil")
+                                    }.tint(.blue)
+                                }
+                        }
                     }
-                    header: { Text("Aktivera sparad override") }
+                    header: { Text("Activate saved override") }
+                    // header: { Text("Aktivera sparad override") }
                 }
                 Section {
                     VStack {
                         Spacer()
                         Text("\(state.percentage.formatted(.number)) %")
                             .foregroundColor(
-                                state
-                                    .percentage >= 130 ? .red :
+                                state.percentage >= 130 ? .red :
                                     (isEditing ? .orange : .blue)
                             )
                             .font(.largeTitle)
@@ -202,7 +243,8 @@ extension OverrideProfilesConfig {
                     }
 
                     HStack {
-                        Button("Aktivera ny override") {
+                        Button("Start new override") {
+                            // Button("Aktivera ny override") {
                             showAlert.toggle()
                             alertSring = "\(state.percentage.formatted(.number)) %, " +
                                 (
@@ -243,11 +285,13 @@ extension OverrideProfilesConfig {
                         .font(.callout)
                         .controlSize(.mini)
                         .alert(
-                            "Starta override",
+                            // "Starta override",
+                            "Start override",
                             isPresented: $showAlert,
                             actions: {
                                 Button("Cancel", role: .cancel) { state.isEnabled = false }
-                                Button("Starta override", role: .destructive) {
+                                // Button("Starta override", role: .destructive) {
+                                Button("Start override", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
                                     state.saveSettings()
@@ -261,7 +305,8 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Spara ny override") }
+                        // label: { Text("Spara ny override") }
+                        label: { Text("Save new override") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -273,11 +318,11 @@ extension OverrideProfilesConfig {
                         presetPopover
                     }
                 }
-
-                header: { Text("Ställ in ny override") }
+                // header: { Text("Ställ in ny eller editera sparad override") }
+                header: { Text("Configure a new or edit a saved override") }
                 footer: {
                     Text(
-                        "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
+                        "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversely adjusted with the percentage."
                     )
                 }
             }
@@ -286,6 +331,10 @@ extension OverrideProfilesConfig {
             .navigationBarTitle("Overrides")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
+            .sheet(isPresented: $isEditSheetPresented) {
+                editPresetPopover
+                    .padding()
+            }
         }
 
         @ViewBuilder private func profilesView(for preset: OverridePresets) -> some View {
@@ -293,9 +342,8 @@ extension OverrideProfilesConfig {
                 .asMmolL : (preset.target ?? 0) as Decimal
             let duration = (preset.duration ?? 0) as Decimal
             let name = ((preset.name ?? "") == "") || (preset.name?.isEmpty ?? true) ? "" : preset.name!
-            let identifier = ((preset.emoji ?? "") == "") || (preset.emoji?.isEmpty ?? true) ||
-                (preset.emoji ?? "") == "\u{0022}\u{0022}" ?
-                "" : preset.emoji!
+            let identifier = ((preset.emoji ?? "") == "") || (preset.emoji?.isEmpty ?? true) || (preset.emoji ?? "") ==
+                "\u{0022}\u{0022}" ? "" : preset.emoji!
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"
@@ -315,6 +363,12 @@ extension OverrideProfilesConfig {
                         HStack {
                             Text(name)
                             Spacer()
+                            Button(action: {
+                                selectedPreset = preset
+                                isEditSheetPresented = true
+                            }) {
+                                // Image(systemName: "pencil")
+                            }
                         }
                         HStack(spacing: 2) {
                             Text(percent.formatted(.percent.grouping(.never).rounded().precision(.fractionLength(0))))
