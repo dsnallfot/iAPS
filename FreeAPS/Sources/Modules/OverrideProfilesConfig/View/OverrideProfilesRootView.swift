@@ -15,6 +15,8 @@ extension OverrideProfilesConfig {
         @State private var isEditSheetPresented: Bool = false
         @State var isSheetPresented: Bool = false
         @State var index: Int = 1
+        @State private var showDeleteAlert = false
+        @State private var indexToDelete: Int?
 
         @Environment(\.dismiss) var dismiss
         @Environment(\.managedObjectContext) var moc
@@ -99,7 +101,7 @@ extension OverrideProfilesConfig {
             Form {
                 Section {
                     TextField("Ange ett namn", text: $state.profileName)
-                } header: { Text("Ändra eller behåll namn?") }
+                } header: { Text("Behåll eller ändra namn?") }
 
                 Section(header: Text("Nya inställningar att spara")) {
                     let percentString = Text("Override: \(Int(state.percentage))%")
@@ -175,7 +177,8 @@ extension OverrideProfilesConfig {
                             profilesView(for: preset)
                                 .swipeActions {
                                     Button(role: .destructive) {
-                                        removeProfile(at: IndexSet(integer: index))
+                                        indexToDelete = index
+                                        showDeleteAlert = true
                                     } label: {
                                         Label("Ta bort", systemImage: "trash")
                                     }
@@ -406,6 +409,18 @@ extension OverrideProfilesConfig {
             .sheet(isPresented: $isEditSheetPresented) {
                 editPresetPopover
                     .padding()
+            }
+            .alert(isPresented: $showDeleteAlert) {
+                Alert(
+                    title: Text("Radera sparad override"),
+                    message: Text("Är du säker på att du vill radera denna override?"),
+                    primaryButton: .destructive(Text("Radera")) {
+                        if let index = indexToDelete {
+                            removeProfile(at: IndexSet(integer: index))
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
             }
         }
 
