@@ -72,15 +72,15 @@ extension Bolus {
                     } header: { Text("Aktuell måltid") }
                 }
                 /* Section {
-                     HStack {
-                         Image(systemName: "info.circle")
-                             .padding(.trailing, 8)
-                             .foregroundColor(.secondary)
-                         Text(
-                             "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
-                         )
-                         .font(.caption).foregroundColor(.secondary)
-                     }
+                 HStack {
+                 Image(systemName: "info.circle")
+                 .padding(.trailing, 8)
+                 .foregroundColor(.secondary)
+                 Text(
+                 "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
+                 )
+                 .font(.caption).foregroundColor(.secondary)
+                 }
                  } */
                 Section {
                     HStack {
@@ -109,9 +109,9 @@ extension Bolus {
                     if state.fattyMeals || state.sweetMeals {
                         checkboxParts
                     }
-                } // header: { Text("Bolus") }
+                    // } // header: { Text("Bolus") }
 
-                Section {
+                    // Section {
                     // if !state.waitForSuggestion {
                     HStack {
                         Text("Ange bolusdos").fontWeight(.semibold)
@@ -138,17 +138,18 @@ extension Bolus {
                     }
                     // .listRowBackground(Color(.insulin).opacity(0.8))
                     // }
+                    // }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 9) // Adjust the corner radius as needed
+                            .stroke(lineWidth: 2)
+                            .padding(.leading, -15)
+                            .padding(.trailing, -15)
+                            .padding(.top, -3)
+                            .padding(.bottom, -3)
+                            // .foregroundColor(colorScheme == .dark ? .primary : .white)
+                            .foregroundColor(Color(.insulin))
+                    )
                 }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
-                        .stroke(lineWidth: 3)
-                        .padding(.leading, -16)
-                        .padding(.trailing, -16)
-                        .padding(.top, -4)
-                        .padding(.bottom, -4)
-                        // .foregroundColor(colorScheme == .dark ? .primary : .white)
-                        .foregroundColor(Color(.insulin))
-                )
 
                 if state.amount > 0 {
                     Section {

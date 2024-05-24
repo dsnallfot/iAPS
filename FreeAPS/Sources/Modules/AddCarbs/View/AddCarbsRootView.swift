@@ -133,12 +133,12 @@ extension AddCarbs {
                     }
                     // .listRowBackground(Color(.loopYellow).opacity(0.8))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 11) // Adjust the corner radius as needed
-                            .stroke(lineWidth: 3)
-                            .padding(.leading, -16)
-                            .padding(.trailing, -16)
-                            .padding(.top, -4)
-                            .padding(.bottom, -4)
+                        RoundedRectangle(cornerRadius: 9) // Adjust the corner radius as needed
+                            .stroke(lineWidth: 2)
+                            .padding(.leading, -15)
+                            .padding(.trailing, -15)
+                            .padding(.top, -3)
+                            .padding(.bottom, -3)
                             // .foregroundColor(colorScheme == .dark ? .primary : .white)
                             .foregroundColor(Color(.loopYellow).opacity(0.8))
                     )
