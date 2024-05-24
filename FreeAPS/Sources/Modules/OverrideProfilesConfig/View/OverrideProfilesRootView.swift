@@ -47,8 +47,36 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Override name", text: $state.profileName)
-                } header: { Text("Enter a name for the override") }
+                    TextField("Override preset name", text: $state.profileName)
+                } header: { Text("Enter a name") }
+
+                Section(header: Text("Settings to save")) {
+                    let percentString = Text("\(Int(state.percentage))%")
+                    let targetString = state
+                        .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
+                    let durationString = state
+                        ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
+                    let isfAndCRString = state.isfAndCr ? Text("ISF/CR Changes") : Text("")
+                    let smbString = state.smbIsOff ? Text("SMB Disabled") : Text("")
+                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
+                    let maxMinutesSMBString = state
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB minutes") : Text("")
+                    let maxMinutesUAMString = state
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM minutes") : Text("")
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        percentString
+                        if targetString != Text("") { targetString }
+                        if durationString != Text("") { durationString }
+                        if isfAndCRString != Text("") { isfAndCRString }
+                        if smbString != Text("") { smbString }
+                        if scheduledSMBString != Text("") { scheduledSMBString }
+                        if maxMinutesSMBString != Text("") { maxMinutesSMBString }
+                        if maxMinutesUAMString != Text("") { maxMinutesUAMString }
+                    }
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+                }
 
                 Section {
                     Button("Save") {
@@ -67,8 +95,36 @@ extension OverrideProfilesConfig {
         var editPresetPopover: some View {
             Form {
                 Section {
-                    TextField("Name", text: $state.profileName)
-                } header: { Text("Change or keep name?") }
+                    TextField("Override preset name", text: $state.profileName)
+                } header: { Text("Keep or change name?") }
+
+                Section(header: Text("New settings to save")) {
+                    let percentString = Text("\(Int(state.percentage))%")
+                    let targetString = state
+                        .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
+                    let durationString = state
+                        ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
+                    let isfAndCRString = state.isfAndCr ? Text("ISF/CR Changes") : Text("")
+                    let smbString = state.smbIsOff ? Text("SMB Disabled") : Text("")
+                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
+                    let maxMinutesSMBString = state
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB minutes") : Text("")
+                    let maxMinutesUAMString = state
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM minutes") : Text("")
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        percentString
+                        if targetString != Text("") { targetString }
+                        if durationString != Text("") { durationString }
+                        if isfAndCRString != Text("") { isfAndCRString }
+                        if smbString != Text("") { smbString }
+                        if scheduledSMBString != Text("") { scheduledSMBString }
+                        if maxMinutesSMBString != Text("") { maxMinutesSMBString }
+                        if maxMinutesUAMString != Text("") { maxMinutesUAMString }
+                    }
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+                }
 
                 Section {
                     Button("Save") {
@@ -131,7 +187,7 @@ extension OverrideProfilesConfig {
                     header: { Text("Activate preset override") }
                     footer: { VStack(alignment: .leading) {
                         Text("Swipe left on a preset to edit or delete it.")
-                        Text("\nWhen you want to edit a preset:")
+                        Text("When you want to edit a preset:")
                         HStack(alignment: .top) {
                             Text(" •")
                             Text("First use the override configurator below for all settings you want to include")
@@ -320,6 +376,7 @@ extension OverrideProfilesConfig {
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
+                            .font(.callout)
                             .controlSize(.mini)
                             .disabled(unChanged())
                     }
