@@ -47,23 +47,24 @@ extension OverrideProfilesConfig {
         var presetPopover: some View {
             Form {
                 Section {
-                    TextField("Override preset name", text: $state.profileName)
-                } header: { Text("Enter a name") }
+                    TextField("Ange ett namn", text: $state.profileName)
+                } header: { Text("Namn på override") }
 
-                Section(header: Text("Settings to save")) {
+                Section(header: Text("Inställningar som sparas")) {
                     let percentString = Text("Override: \(Int(state.percentage))%")
                     let targetString = state
-                        .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
+                        .target != 0 ? Text("Målvärde: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
                     let durationString = state
-                        ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
-                    let isfString = state.isf ? Text("Change ISF") : Text("")
-                    let crString = state.cr ? Text("Change CR") : Text("")
-                    let smbString = state.smbIsOff ? Text("Disable SMB") : Text("")
-                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
+                        ._indefinite ? Text("Varaktighet: Tillsvidare") :
+                        Text("Varaktighet: \(state.duration.formatted()) minuter")
+                    let isfString = state.isf ? Text("Ändra ISF") : Text("")
+                    let crString = state.cr ? Text("Ändra CR") : Text("")
+                    let smbString = state.smbIsOff ? Text("Inaktivera SMB") : Text("")
+                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("Schemalagda SMB") : Text("")
                     let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basal minutes") : Text("")
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basalminuter") : Text("")
                     let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basal minutes") : Text("")
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basalminuter") : Text("")
 
                     VStack(alignment: .leading, spacing: 2) {
                         percentString
@@ -97,23 +98,24 @@ extension OverrideProfilesConfig {
         var editPresetPopover: some View {
             Form {
                 Section {
-                    TextField("Override preset name", text: $state.profileName)
-                } header: { Text("Keep or change name?") }
+                    TextField("Ange ett namn", text: $state.profileName)
+                } header: { Text("Ändra eller behåll namn?") }
 
-                Section(header: Text("New settings to save")) {
+                Section(header: Text("Nya inställningar att spara")) {
                     let percentString = Text("Override: \(Int(state.percentage))%")
                     let targetString = state
-                        .target != 0 ? Text("Target: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
+                        .target != 0 ? Text("Målvärde: \(state.target.formatted()) \(state.units.rawValue)") : Text("")
                     let durationString = state
-                        ._indefinite ? Text("Duration: Indefinite") : Text("Duration: \(state.duration.formatted()) minutes")
-                    let isfString = state.isf ? Text("Change ISF") : Text("")
-                    let crString = state.cr ? Text("Change CR") : Text("")
-                    let smbString = state.smbIsOff ? Text("Disable SMB") : Text("")
-                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("SMB Schedule On") : Text("")
+                        ._indefinite ? Text("Varaktighet: Tillsvidare") :
+                        Text("Varaktighet: \(state.duration.formatted()) minuter")
+                    let isfString = state.isf ? Text("Ändra ISF") : Text("")
+                    let crString = state.cr ? Text("Ändra CR") : Text("")
+                    let smbString = state.smbIsOff ? Text("Inaktivera SMB") : Text("")
+                    let scheduledSMBString = state.smbIsAlwaysOff ? Text("Schemalagda SMB") : Text("")
                     let maxMinutesSMBString = state
-                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basal minutes") : Text("")
+                        .smbMinutes != 0 ? Text("\(state.smbMinutes.formatted()) SMB Basalminuter") : Text("")
                     let maxMinutesUAMString = state
-                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basal minutes") : Text("")
+                        .uamMinutes != 0 ? Text("\(state.uamMinutes.formatted()) UAM Basalminuter") : Text("")
 
                     VStack(alignment: .leading, spacing: 2) {
                         percentString
@@ -156,7 +158,7 @@ extension OverrideProfilesConfig {
                         label: {
                             HStack {
                                 Image(systemName: "x.circle")
-                                Text("Cancel override")
+                                Text("Avbryt override")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
@@ -188,21 +190,21 @@ extension OverrideProfilesConfig {
                                 }
                         }
                     }
-                    header: { Text("Activate preset override") }
+                    header: { Text("Aktivera sparad override") }
                     footer: { VStack(alignment: .leading) {
-                        Text("Swipe left on a preset to edit or delete it.")
-                        Text("When you want to edit a preset:")
+                        Text("Svep vänster för att redigera eller radera sparad override.")
+                        Text("När du vill redigera en sparad override:")
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("First use the override configurator below and select the settings you want to include.")
+                            Text("Använd 'Ställ in override' nedan och välj vilka inställningar du vill inkludera.")
                         }
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("Then swipe left on the preset you want to change and click the edit symbol.")
+                            Text("Svep sedan vänster på den sparade override du vill ändra, och klicka på  redigera-symbolen.")
                         }
                         HStack(alignment: .top) {
                             Text(" •")
-                            Text("In the pop-up: Use the existing preset name or enter a new name and click save - Done!")
+                            Text("I pop-up-rutan: Behåll eller ändra det befintliga override-namnet, Klicka på spara, Klart!")
                         }
                     }
                     }
@@ -226,98 +228,98 @@ extension OverrideProfilesConfig {
                         ).accentColor(state.percentage >= 130 ? .loopRed : .blue)
                         Spacer()
                         Toggle(isOn: $state._indefinite) {
-                            Text("Enable indefinitely")
+                            Text("Aktivera tillsvidare")
                         }
                     }
                     if !state._indefinite {
                         HStack {
-                            Text("Duration")
+                            Text("Varaktighet")
                             DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: false)
-                            Text("minutes")
+                            Text("minuter")
                         }
                     }
 
                     HStack {
                         Toggle(isOn: $state.override_target) {
-                            Text("Override Profile Target")
+                            Text("Ändra målvärde")
                         }
                     }
                     if state.override_target {
                         HStack {
-                            Text("Target Glucose")
+                            Text("Nytt målvärde")
                             DecimalTextField("0", value: $state.target, formatter: glucoseFormatter, cleanInput: false)
                             Text(state.units.rawValue)
                         }
                     }
                     HStack {
                         Toggle(isOn: $state.advancedSettings) {
-                            Text("More options")
+                            Text("Mer alternativ")
                         }
                     }
                     if state.advancedSettings {
                         HStack {
                             Toggle(isOn: $state.smbIsOff) {
-                                Text("Disable SMBs")
+                                Text("Inaktivera SMB")
                             }
                         }
                         HStack {
                             Toggle(isOn: $state.smbIsAlwaysOff) {
-                                Text("Schedule when SMBs are Off")
+                                Text("Schemalägg när SMB är av")
                             }.disabled(!state.smbIsOff)
                         }
                         if state.smbIsAlwaysOff {
                             HStack {
-                                Text("First Hour SMBs are Off (24 hours)")
+                                Text("Första timmen SMB av (24h)")
                                 DecimalTextField("0", value: $state.start, formatter: formatter, cleanInput: false)
-                                Text("hour")
+                                Text("h")
                             }
                             HStack {
-                                Text("Last Hour SMBs are Off (24 hours)")
+                                Text("Sista timmen SMB av (24h)")
                                 DecimalTextField("0", value: $state.end, formatter: formatter, cleanInput: false)
-                                Text("hour")
+                                Text("h")
                             }
                         }
                         HStack {
                             Toggle(isOn: $state.isfAndCr) {
-                                Text("Change ISF and CR")
+                                Text("Ändra ISF och CR")
                             }
                         }
                         if !state.isfAndCr {
                             HStack {
                                 Toggle(isOn: $state.isf) {
-                                    Text("Change ISF")
+                                    Text("Ändra ISF")
                                 }
                             }
                             HStack {
                                 Toggle(isOn: $state.cr) {
-                                    Text("Change CR")
+                                    Text("Ändra CR")
                                 }
                             }
                         }
                         HStack {
-                            Text("SMB Minutes")
+                            Text("SMB-minuter")
                             DecimalTextField(
                                 "0",
                                 value: $state.smbMinutes,
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes")
+                            Text("minuter")
                         }
                         HStack {
-                            Text("UAM SMB Minutes")
+                            Text("UAM-minuter")
                             DecimalTextField(
                                 "0",
                                 value: $state.uamMinutes,
                                 formatter: formatter,
                                 cleanInput: false
                             )
-                            Text("minutes")
+                            Text("minuter")
                         }
                     }
 
                     HStack {
-                        Button("Start new override") {
+                        Button("Starta ny override") {
                             showAlert.toggle()
                             alertString = "\(state.percentage.formatted(.number)) %, " +
                                 (
@@ -358,11 +360,11 @@ extension OverrideProfilesConfig {
                         .font(.callout)
                         .controlSize(.mini)
                         .alert(
-                            "Start override",
+                            "Starta ny override",
                             isPresented: $showAlert,
                             actions: {
                                 Button("Cancel", role: .cancel) { state.isEnabled = false }
-                                Button("Start override", role: .destructive) {
+                                Button("Starta override", role: .destructive) {
                                     if state._indefinite { state.duration = 0 }
                                     state.isEnabled.toggle()
                                     state.saveSettings()
@@ -376,7 +378,7 @@ extension OverrideProfilesConfig {
                         Button {
                             isSheetPresented = true
                         }
-                        label: { Text("Save override") }
+                        label: { Text("Spara override") }
                             .tint(.blue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .buttonStyle(BorderlessButtonStyle())
@@ -389,7 +391,7 @@ extension OverrideProfilesConfig {
                         presetPopover
                     }
                 }
-                header: { Text("Override configuration") }
+                header: { Text("Ställ in Override") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversely adjusted with the percentage."
