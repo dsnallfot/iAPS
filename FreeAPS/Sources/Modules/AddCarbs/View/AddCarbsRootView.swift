@@ -78,9 +78,9 @@ extension AddCarbs {
                                 .foregroundColor(.orange)
                                 .padding(.trailing, 8)
                             Text(
-                                "En aktiv override modifierar just nu din insulinkänslighet och/eller kolhydratskvot. \nOm du inte vill att detta ska påverka hur insulindosen beräknas för måltiden bör du stänga av overriden innan du fortsätter."
+                                "En aktiv override modifierar just nu din inställda insulinkänslighet och/eller kolhydratskvot. \nOm du inte vill att detta ska påverka hur insulindosen beräknas för måltiden i nästa steg, bör du avsluta overriden innan du fortsätter."
                             )
-                            .font(.caption).foregroundColor(.secondary)
+                            .font(.caption2).foregroundColor(.secondary)
                         }
                         .onTapGesture(perform: { state.showModal(for: .overrideProfilesConfig)
                         })

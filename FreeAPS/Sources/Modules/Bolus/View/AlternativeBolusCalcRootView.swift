@@ -85,12 +85,16 @@ extension Bolus {
                 Section {
                     HStack {
                         Image(systemName: "info.circle")
-                            .padding(.horizontal, 3)
+                            // .padding(.horizontal, 3)
                             .font(.caption).foregroundColor(.secondary)
                         Text(
-                            "All automatisk insulintillförsel (SMB & Temp basal) är pausad medan bolusvyn är aktiv"
+                            "All automatisk insulintillförsel genom SMB och temp basal är inaktiverad medan denna bolusvy är aktiv."
                         )
-                        .font(.caption).foregroundColor(.secondary)
+                        .padding(.leading, 4)
+                        .font(.caption2).foregroundColor(.secondary)
+                    }
+                    if state.fattyMeals || state.sweetMeals {
+                        checkboxParts
                     }
                     bolusSuggestion
                         .contentShape(Rectangle())
@@ -106,9 +110,7 @@ extension Bolus {
                                 state.amount = state.insulinCalculated
                             }
                         }
-                    if state.fattyMeals || state.sweetMeals {
-                        checkboxParts
-                    }
+
                     // } // header: { Text("Bolus") }
 
                     // Section {
