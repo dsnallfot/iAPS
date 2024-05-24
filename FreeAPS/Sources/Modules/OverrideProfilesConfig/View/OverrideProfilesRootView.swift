@@ -309,7 +309,6 @@ extension OverrideProfilesConfig {
             let crString = preset.cr ? "CR •" : ""
             let dash = crString != "" ? "/" : "•"
             let isfAndCRstring = isfString + dash + crString
-
             if name != "" {
                 HStack {
                     VStack {
@@ -317,7 +316,7 @@ extension OverrideProfilesConfig {
                             Text(name)
                             Spacer()
                         }
-                        HStack(spacing: 3) {
+                        HStack(spacing: 2) {
                             Text(percent.formatted(.percent.grouping(.never).rounded().precision(.fractionLength(0))))
                             if targetString != "" {
                                 Text(targetString)
