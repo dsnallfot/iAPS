@@ -67,7 +67,8 @@ extension OverrideProfilesConfig {
         var editPresetPopover: some View {
             Form {
                 nameSection(header: "Behåll eller ändra namn?")
-                settingsSection(header: "Nya inställningar att spara")
+                // settingsSection(header: "Nya inställningar att spara")
+                settingsConfig(header: "Ändra inställningar")
                 Section {
                     Button("Save") {
                         guard let selectedPreset = selectedPreset else { return }
@@ -86,6 +87,120 @@ extension OverrideProfilesConfig {
         @ViewBuilder private func nameSection(header: String) -> some View {
             Section {
                 TextField("Override preset name", text: $state.profileName)
+            } header: {
+                Text(header)
+            }
+        }
+
+        @ViewBuilder private func settingsConfig(header: String) -> some View {
+            Section {
+                VStack {
+                    Spacer()
+                    Text("\(state.percentage.formatted(.number)) %")
+                        .foregroundColor(
+                            state.percentage >= 130 ? .red :
+                                (isEditing ? .orange : .blue)
+                        )
+                        .font(.largeTitle)
+                    Slider(
+                        value: $state.percentage,
+                        in: 10 ... 200,
+                        step: 1,
+                        onEditingChanged: { editing in
+                            isEditing = editing
+                        }
+                    ).accentColor(state.percentage >= 130 ? .loopRed : .blue)
+                    Spacer()
+                    Toggle(isOn: $state._indefinite) {
+                        Text("Aktivera tillsvidare")
+                    }
+                }
+                if !state._indefinite {
+                    HStack {
+                        Text("Varaktighet")
+                        DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: false)
+                        Text("minuter")
+                    }
+                }
+
+                HStack {
+                    Toggle(isOn: $state.override_target) {
+                        Text("Ändra målvärde")
+                    }
+                }
+                if state.override_target {
+                    HStack {
+                        Text("Nytt målvärde")
+                        DecimalTextField("0", value: $state.target, formatter: glucoseFormatter, cleanInput: false)
+                        Text(state.units.rawValue)
+                    }
+                }
+                HStack {
+                    Toggle(isOn: $state.advancedSettings) {
+                        Text("Mer alternativ")
+                    }
+                }
+                if state.advancedSettings {
+                    HStack {
+                        Toggle(isOn: $state.smbIsOff) {
+                            Text("Inaktivera SMB")
+                        }
+                    }
+                    HStack {
+                        Toggle(isOn: $state.smbIsAlwaysOff) {
+                            Text("Schemalägg när SMB är av")
+                        }.disabled(!state.smbIsOff)
+                    }
+                    if state.smbIsAlwaysOff {
+                        HStack {
+                            Text("Första timmen SMB av (24h)")
+                            DecimalTextField("0", value: $state.start, formatter: formatter, cleanInput: false)
+                            Text("h")
+                        }
+                        HStack {
+                            Text("Sista timmen SMB av (24h)")
+                            DecimalTextField("0", value: $state.end, formatter: formatter, cleanInput: false)
+                            Text("h")
+                        }
+                    }
+                    HStack {
+                        Toggle(isOn: $state.isfAndCr) {
+                            Text("Ändra ISF och CR")
+                        }
+                    }
+                    if !state.isfAndCr {
+                        HStack {
+                            Toggle(isOn: $state.isf) {
+                                Text("Ändra ISF")
+                            }
+                        }
+                        HStack {
+                            Toggle(isOn: $state.cr) {
+                                Text("Ändra CR")
+                            }
+                        }
+                    }
+                    HStack {
+                        Text("SMB-minuter")
+                        DecimalTextField(
+                            "0",
+                            value: $state.smbMinutes,
+                            formatter: formatter,
+                            cleanInput: false
+                        )
+                        Text("minuter")
+                    }
+                    HStack {
+                        Text("UAM-minuter")
+                        DecimalTextField(
+                            "0",
+                            value: $state.uamMinutes,
+                            formatter: formatter,
+                            cleanInput: false
+                        )
+                        Text("minuter")
+                    }
+                }
             } header: {
                 Text(header)
             }
@@ -171,131 +286,12 @@ extension OverrideProfilesConfig {
                     header: { Text("Aktivera sparad override") }
                     footer: { VStack(alignment: .leading) {
                         Text("Svep vänster för att redigera eller radera sparad override.")
-                        Text("När du vill redigera en sparad override:")
-                        HStack(alignment: .top) {
-                            Text(" •")
-                            Text("Använd 'Ställ in override' nedan och välj vilka inställningar du vill inkludera.")
                         }
-                        HStack(alignment: .top) {
-                            Text(" •")
-                            Text("Svep sedan vänster på den sparade override du vill ändra, och klicka på  redigera-symbolen.")
-                        }
-                        HStack(alignment: .top) {
-                            Text(" •")
-                            Text("I pop-up-rutan: Behåll eller ändra det befintliga override-namnet, Klicka på spara, Klart!")
-                        }
-                    }
                     }
                 }
+                settingsConfig(header: "Ställ in Override")
+ 
                 Section {
-                    VStack {
-                        Spacer()
-                        Text("\(state.percentage.formatted(.number)) %")
-                            .foregroundColor(
-                                state.percentage >= 130 ? .red :
-                                    (isEditing ? .orange : .blue)
-                            )
-                            .font(.largeTitle)
-                        Slider(
-                            value: $state.percentage,
-                            in: 10 ... 200,
-                            step: 1,
-                            onEditingChanged: { editing in
-                                isEditing = editing
-                            }
-                        ).accentColor(state.percentage >= 130 ? .loopRed : .blue)
-                        Spacer()
-                        Toggle(isOn: $state._indefinite) {
-                            Text("Aktivera tillsvidare")
-                        }
-                    }
-                    if !state._indefinite {
-                        HStack {
-                            Text("Varaktighet")
-                            DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: false)
-                            Text("minuter")
-                        }
-                    }
-
-                    HStack {
-                        Toggle(isOn: $state.override_target) {
-                            Text("Ändra målvärde")
-                        }
-                    }
-                    if state.override_target {
-                        HStack {
-                            Text("Nytt målvärde")
-                            DecimalTextField("0", value: $state.target, formatter: glucoseFormatter, cleanInput: false)
-                            Text(state.units.rawValue)
-                        }
-                    }
-                    HStack {
-                        Toggle(isOn: $state.advancedSettings) {
-                            Text("Mer alternativ")
-                        }
-                    }
-                    if state.advancedSettings {
-                        HStack {
-                            Toggle(isOn: $state.smbIsOff) {
-                                Text("Inaktivera SMB")
-                            }
-                        }
-                        HStack {
-                            Toggle(isOn: $state.smbIsAlwaysOff) {
-                                Text("Schemalägg när SMB är av")
-                            }.disabled(!state.smbIsOff)
-                        }
-                        if state.smbIsAlwaysOff {
-                            HStack {
-                                Text("Första timmen SMB av (24h)")
-                                DecimalTextField("0", value: $state.start, formatter: formatter, cleanInput: false)
-                                Text("h")
-                            }
-                            HStack {
-                                Text("Sista timmen SMB av (24h)")
-                                DecimalTextField("0", value: $state.end, formatter: formatter, cleanInput: false)
-                                Text("h")
-                            }
-                        }
-                        HStack {
-                            Toggle(isOn: $state.isfAndCr) {
-                                Text("Ändra ISF och CR")
-                            }
-                        }
-                        if !state.isfAndCr {
-                            HStack {
-                                Toggle(isOn: $state.isf) {
-                                    Text("Ändra ISF")
-                                }
-                            }
-                            HStack {
-                                Toggle(isOn: $state.cr) {
-                                    Text("Ändra CR")
-                                }
-                            }
-                        }
-                        HStack {
-                            Text("SMB-minuter")
-                            DecimalTextField(
-                                "0",
-                                value: $state.smbMinutes,
-                                formatter: formatter,
-                                cleanInput: false
-                            )
-                            Text("minuter")
-                        }
-                        HStack {
-                            Text("UAM-minuter")
-                            DecimalTextField(
-                                "0",
-                                value: $state.uamMinutes,
-                                formatter: formatter,
-                                cleanInput: false
-                            )
-                            Text("minuter")
-                        }
-                    }
-
                     HStack {
                         Button("Starta ny override") {
                             showAlert.toggle()
@@ -369,7 +365,7 @@ extension OverrideProfilesConfig {
                         presetPopover
                     }
                 }
-                header: { Text("Ställ in Override") }
+                // header: { Text("Ställ in Override") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."
