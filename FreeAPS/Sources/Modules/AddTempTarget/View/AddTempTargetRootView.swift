@@ -1,4 +1,5 @@
 import CoreData
+import SwiftDate
 import SwiftUI
 import Swinject
 
@@ -10,6 +11,8 @@ extension AddTempTarget {
         @State private var isRemoveAlertPresented = false
         @State private var removeAlert: Alert?
         @State private var isEditing = false
+        @State private var selectedPreset: TempTarget?
+        @State private var isEditSheetPresented = false
 
         @FetchRequest(
             entity: TempTargetsSlider.entity(),
@@ -21,6 +24,21 @@ extension AddTempTarget {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 1
             return formatter
+        }
+
+        private var displayString: String {
+            guard let preset = selectedPreset else { return "" }
+            var low = preset.targetBottom
+            var high = preset.targetBottom // change to only use targetBottom instead of targetTop
+            if state.units == .mmolL {
+                low = low?.asMmolL
+                high = high?.asMmolL
+            }
+
+            let formattedLow = low.flatMap { formatter.string(from: $0 as NSNumber) } ?? ""
+            let formattedDuration = formatter.string(from: preset.duration as NSNumber) ?? ""
+
+            return "\(formattedLow) \(state.units.rawValue) for \(formattedDuration) min"
         }
 
         var body: some View {
@@ -50,7 +68,7 @@ extension AddTempTarget {
                                     Button(role: .destructive, action: {
                                         removeAlert = Alert(
                                             title: Text("Are you sure?"),
-                                            message: Text("Delete preset \"\(preset.displayName)\""),
+                                            message: Text("Delete preset \"\(preset.displayName)\"?"),
                                             primaryButton: .destructive(Text("Delete"), action: {
                                                 state.removePreset(id: preset.id)
                                                 isRemoveAlertPresented = false // Dismiss the alert after deletion
@@ -59,14 +77,25 @@ extension AddTempTarget {
                                         )
                                         isRemoveAlertPresented = true
                                     }) {
-                                        Text("Delete")
+                                        Label("Ta bort", systemImage: "trash")
                                     }
+                                    Button {
+                                        selectedPreset = preset
+                                        state.newPresetName = preset.displayName
+                                        state.low = state.units == .mmolL ? preset.targetBottom?.asMmolL ?? 0 : preset
+                                            .targetBottom ?? 0
+                                        state.duration = preset.duration
+                                        state.date = preset.date as? Date ?? Date()
+                                        isEditSheetPresented = true
+                                    } label: {
+                                        Label("Redigera", systemImage: "square.and.pencil")
+                                    }
+                                    .tint(.blue)
                                 }
                                 .alert(isPresented: $isRemoveAlertPresented) {
                                     removeAlert!
                                 }
                         }
-                        .onDelete(perform: delete)
                     }
                 }
                 HStack {
@@ -84,8 +113,7 @@ extension AddTempTarget {
                             Spacer()
                             Slider(
                                 value: $state.percentage,
-                                in: 15 ...
-                                    min(Double(state.maxValue * 100), 200),
+                                in: 15 ... min(Double(state.maxValue * 100), 200),
                                 step: 1,
                                 onEditingChanged: { editing in
                                     isEditing = editing
@@ -97,8 +125,7 @@ extension AddTempTarget {
                                 Divider()
                                 Text(
                                     (
-                                        state
-                                            .units == .mmolL ?
+                                        state.units == .mmolL ?
                                             "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
                                             "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
                                     )
@@ -180,6 +207,13 @@ extension AddTempTarget {
                 Form {
                     Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
+                    }
+                    Section(header: Text("Inställningar som sparas")) {
+                        Text(displayString)
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                    Section {
                         Button {
                             state.save()
                             isPromptPresented = false
@@ -190,6 +224,10 @@ extension AddTempTarget {
                     }
                 }
             }
+            .sheet(isPresented: $isEditSheetPresented) {
+                editPresetPopover()
+                    .padding()
+            }
             .onAppear {
                 configureView()
                 state.hbt = isEnabledArray.first?.hbt ?? 160
@@ -197,6 +235,44 @@ extension AddTempTarget {
             .navigationTitle("Tillfälliga mål")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
+        }
+
+        @ViewBuilder private func editPresetPopover() -> some View {
+            Form {
+                Section(header: Text("Edit Preset")) {
+                    TextField("Name", text: $state.newPresetName)
+                    Text(displayString)
+                        .foregroundColor(.secondary)
+                        .font(.caption)
+                    HStack {
+                        Text("Target")
+                        Spacer()
+                        DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
+                        Text(state.units.rawValue)
+                    }
+                    HStack {
+                        Text("Duration")
+                        Spacer()
+                        DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
+                        Text("minutes")
+                    }
+                }
+                Section {
+                    Button("Save") {
+                        guard let selectedPreset = selectedPreset else { return }
+                        state.updatePreset(
+                            selectedPreset,
+                            low: state.units == .mmolL ? state.low.asMgdL : state.low
+                        )
+                        isEditSheetPresented = false
+                    }
+                    .disabled(state.newPresetName.isEmpty)
+
+                    Button("Cancel") {
+                        isEditSheetPresented = false
+                    }
+                }
+            }
         }
 
         private func presetView(for preset: TempTarget) -> some View {
@@ -213,6 +289,14 @@ extension AddTempTarget {
                     HStack {
                         Text(preset.displayName)
                         Spacer()
+                        Button {
+                            selectedPreset = preset
+                            state.newPresetName = preset.displayName
+                            state.low = state.units == .mmolL ? preset.targetBottom?.asMmolL ?? 0 : preset.targetBottom ?? 0
+                            state.duration = preset.duration
+                            state.date = preset.date as? Date ?? Date()
+                            isEditSheetPresented = true
+                        } label: {}
                     }
                     HStack(spacing: 2) {
                         if let lowValue = low,
@@ -227,7 +311,7 @@ extension AddTempTarget {
                             .foregroundColor(.secondary)
                             .font(.caption)
 
-                        Text("for")
+                        Text("i")
                             .foregroundColor(.secondary)
                             .font(.caption)
 
@@ -254,6 +338,24 @@ extension AddTempTarget {
 
         private func delete(at offsets: IndexSet) {
             state.presets.remove(atOffsets: offsets)
+        }
+    }
+}
+
+extension AddTempTarget.StateModel {
+    func updatePreset(_ preset: TempTarget, low: Decimal) {
+        if let index = presets.firstIndex(where: { $0.id == preset.id }) {
+            presets[index] = TempTarget(
+                id: preset.id,
+                name: newPresetName,
+                createdAt: preset.createdAt,
+                targetTop: low,
+                targetBottom: low,
+                duration: duration,
+                enteredBy: preset.enteredBy,
+                reason: newPresetName
+            )
+            storage.storePresets(presets)
         }
     }
 }

@@ -1,11 +1,13 @@
+import Combine
 import CoreData
+import LoopKitUI
 import SwiftDate
 import SwiftUI
 
 extension AddTempTarget {
     final class StateModel: BaseStateModel<Provider> {
         @Injected() var broadcaster: Broadcaster!
-        @Injected() private var storage: TempTargetsStorage!
+        @Injected() var storage: TempTargetsStorage!
         @Injected() var apsManager: APSManager!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
@@ -13,7 +15,6 @@ extension AddTempTarget {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         @Published var low: Decimal = 0
-        // @Published var target: Decimal = 0
         @Published var high: Decimal = 0
         @Published var duration: Decimal = 0
         @Published var date = Date()
@@ -219,12 +220,28 @@ extension AddTempTarget {
             }
             return Decimal(Double(target))
         }
+
+        func updatePreset(_ preset: TempTarget) {
+            let updatedPreset = TempTarget(
+                id: preset.id,
+                name: newPresetName.isEmpty ? preset.name : newPresetName,
+                createdAt: preset.createdAt,
+                targetTop: preset.targetTop,
+                targetBottom: low,
+                duration: duration,
+                enteredBy: preset.enteredBy,
+                reason: newPresetName.isEmpty ? preset.reason : newPresetName
+            )
+
+            if let index = presets.firstIndex(where: { $0.id == preset.id }) {
+                presets[index] = updatedPreset
+                storage.storePresets(presets)
+            }
+        }
     }
 }
 
-extension AddTempTarget.StateModel:
-    TempTargetsObserver
-{
+extension AddTempTarget.StateModel: TempTargetsObserver {
     func tempTargetsDidUpdate(_: [TempTarget]) {
         setupTempTargets()
     }
