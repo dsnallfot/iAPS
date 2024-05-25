@@ -14,6 +14,7 @@ extension OverrideProfilesConfig {
         @State private var selectedPreset: OverridePresets?
         @State private var isEditSheetPresented: Bool = false
         @State var isSheetPresented: Bool = false
+        @State private var originalPreset: OverridePresets?
         @State var index: Int = 1
         @State private var showDeleteAlert = false
         @State private var indexToDelete: Int?
@@ -60,13 +61,14 @@ extension OverrideProfilesConfig {
                     Button("Cancel") {
                         isSheetPresented = false
                     }
+                    .tint(.red)
                 }
             }
         }
 
         var editPresetPopover: some View {
             Form {
-                nameSection(header: "Behåll eller ändra namn?")
+                nameSection(header: "Ändra namn?")
                 // settingsSection(header: "Nya inställningar att spara")
                 settingsConfig(header: "Ändra inställningar")
                 Section {
@@ -75,11 +77,18 @@ extension OverrideProfilesConfig {
                         state.updatePreset(selectedPreset)
                         isEditSheetPresented = false
                     }
-                    .disabled(state.profileName.isEmpty)
+                    .disabled(!hasChanges())
 
                     Button("Cancel") {
                         isEditSheetPresented = false
                     }
+                    .tint(.red)
+                }
+            }
+            .onAppear {
+                if let preset = selectedPreset {
+                    originalPreset = preset
+                    state.populateSettings(from: preset)
                 }
             }
         }
@@ -471,6 +480,40 @@ extension OverrideProfilesConfig {
             return isChanged
         }
 
+        private func hasChanges() -> Bool {
+            guard let originalPreset = originalPreset else { return false }
+
+            let targetInStateUnits: Decimal
+            let targetInPresetUnits: Decimal
+
+            if state.units == .mmolL {
+                targetInStateUnits = state.target
+                targetInPresetUnits = Decimal(Double(truncating: originalPreset.target ?? 0) * 0.0555)
+            } else {
+                targetInStateUnits = state.target
+                targetInPresetUnits = (originalPreset.target ?? 0) as Decimal
+            }
+
+            let hasChanges = state.profileName != originalPreset.name ||
+                state.percentage != originalPreset.percentage ||
+                state.duration != (originalPreset.duration ?? 0) as Decimal ||
+                state._indefinite != originalPreset.indefinite ||
+                state.override_target != (originalPreset.target != nil) ||
+                (state.override_target && targetInStateUnits != targetInPresetUnits) ||
+                // state.advancedSettings != originalPreset.advancedSettings ||
+                state.smbIsOff != originalPreset.smbIsOff ||
+                state.smbIsAlwaysOff != originalPreset.smbIsAlwaysOff ||
+                state.isf != originalPreset.isf ||
+                state.cr != originalPreset.cr ||
+                state.smbMinutes != (originalPreset.smbMinutes ?? 0) as Decimal ||
+                state.uamMinutes != (originalPreset.uamMinutes ?? 0) as Decimal ||
+                state.isfAndCr != originalPreset.isfAndCr ||
+                state.start != (originalPreset.start ?? 0) as Decimal ||
+                state.end != (originalPreset.end ?? 0) as Decimal
+
+            return hasChanges
+        }
+
         private func removeProfile(at offsets: IndexSet) {
             for index in offsets {
                 let language = fetchedProfiles[index]
@@ -482,5 +525,30 @@ extension OverrideProfilesConfig {
                 // To do: add error
             }
         }
+    }
+}
+
+extension OverrideProfilesConfig.StateModel {
+    func populateSettings(from preset: OverridePresets) {
+        profileName = preset.name ?? ""
+        percentage = preset.percentage
+        duration = (preset.duration ?? 0) as Decimal
+        _indefinite = preset.indefinite
+        override_target = preset.target != nil
+        if let targetValue = preset.target as Decimal? {
+            target = units == .mmolL ? Decimal(Double(truncating: targetValue as NSNumber) * 0.0555) : targetValue
+        } else {
+            target = 0
+        }
+        advancedSettings = preset.advancedSettings
+        smbIsOff = preset.smbIsOff
+        smbIsAlwaysOff = preset.smbIsAlwaysOff
+        isf = preset.isf
+        cr = preset.cr
+        smbMinutes = (preset.smbMinutes ?? 0) as Decimal
+        uamMinutes = (preset.uamMinutes ?? 0) as Decimal
+        isfAndCr = preset.isfAndCr
+        start = (preset.start ?? 0) as Decimal
+        end = (preset.end ?? 0) as Decimal
     }
 }
