@@ -286,11 +286,11 @@ extension OverrideProfilesConfig {
                     header: { Text("Aktivera sparad override") }
                     footer: { VStack(alignment: .leading) {
                         Text("Svep vänster för att redigera eller radera sparad override.")
-                        }
+                    }
                     }
                 }
                 settingsConfig(header: "Ställ in Override")
- 
+
                 Section {
                     HStack {
                         Button("Starta ny override") {
