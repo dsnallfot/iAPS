@@ -124,6 +124,32 @@ extension AddTempTarget {
             }
         }
 
+        private func convertAndRound(_ value: Decimal) -> Decimal {
+            if units == .mmolL {
+                return Decimal(round(Double(value.asMgdL)))
+            } else {
+                return Decimal(round(Double(value)))
+            }
+        }
+
+        func updatePreset(_ preset: TempTarget, low: Decimal) {
+            let roundedLow = convertAndRound(low)
+
+            if let index = presets.firstIndex(where: { $0.id == preset.id }) {
+                presets[index] = TempTarget(
+                    id: preset.id,
+                    name: newPresetName.isEmpty ? preset.name : newPresetName,
+                    createdAt: preset.createdAt,
+                    targetTop: roundedLow,
+                    targetBottom: roundedLow,
+                    duration: duration,
+                    enteredBy: preset.enteredBy,
+                    reason: newPresetName.isEmpty ? preset.reason : newPresetName
+                )
+                storage.storePresets(presets)
+            }
+        }
+
         func save() {
             guard duration > 0 else {
                 return
@@ -134,18 +160,13 @@ extension AddTempTarget {
                 lowTarget = Decimal(round(Double(computeTarget())))
                 saveSettings = true
             }
-            var highTarget = low // lowTarget
-
-            if units == .mmolL, !viewPercantage {
-                lowTarget = Decimal(round(Double(lowTarget.asMgdL)))
-                highTarget = lowTarget
-            }
+            let roundedLow = convertAndRound(lowTarget)
 
             let entry = TempTarget(
                 name: newPresetName.isEmpty ? TempTarget.custom : newPresetName,
                 createdAt: Date(),
-                targetTop: highTarget,
-                targetBottom: lowTarget,
+                targetTop: roundedLow,
+                targetBottom: roundedLow,
                 duration: duration,
                 enteredBy: TempTarget.manual,
                 reason: newPresetName.isEmpty ? TempTarget.custom : newPresetName

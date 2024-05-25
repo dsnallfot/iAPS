@@ -208,11 +208,6 @@ extension AddTempTarget {
                     Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
                     }
-                    Section(header: Text("Inställningar som sparas")) {
-                        Text(displayString)
-                            .foregroundColor(.secondary)
-                            .font(.caption)
-                    }
                     Section {
                         Button {
                             state.save()
@@ -241,7 +236,7 @@ extension AddTempTarget {
             Form {
                 Section(header: Text("Ändra favorit")) {
                     TextField("Name", text: $state.newPresetName)
-                    Text(displayString)
+                    Text("Innan ändring: \(displayString)")
                         .foregroundColor(.secondary)
                         .font(.caption)
                     HStack {
@@ -262,7 +257,7 @@ extension AddTempTarget {
                         guard let selectedPreset = selectedPreset else { return }
                         state.updatePreset(
                             selectedPreset,
-                            low: state.units == .mmolL ? state.low.asMgdL : state.low
+                            low: state.low // Pass the low value to ensure correct conversion and rounding
                         )
                         isEditSheetPresented = false
                     }
@@ -338,24 +333,6 @@ extension AddTempTarget {
 
         private func delete(at offsets: IndexSet) {
             state.presets.remove(atOffsets: offsets)
-        }
-    }
-}
-
-extension AddTempTarget.StateModel {
-    func updatePreset(_ preset: TempTarget, low: Decimal) {
-        if let index = presets.firstIndex(where: { $0.id == preset.id }) {
-            presets[index] = TempTarget(
-                id: preset.id,
-                name: newPresetName,
-                createdAt: preset.createdAt,
-                targetTop: low,
-                targetBottom: low,
-                duration: duration,
-                enteredBy: preset.enteredBy,
-                reason: newPresetName
-            )
-            storage.storePresets(presets)
         }
     }
 }
