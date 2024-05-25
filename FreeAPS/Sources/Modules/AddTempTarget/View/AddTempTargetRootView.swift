@@ -38,7 +38,7 @@ extension AddTempTarget {
             let formattedLow = low.flatMap { formatter.string(from: $0 as NSNumber) } ?? ""
             let formattedDuration = formatter.string(from: preset.duration as NSNumber) ?? ""
 
-            return "\(formattedLow) \(state.units.rawValue) for \(formattedDuration) min"
+            return "\(formattedLow) \(state.units.rawValue) i \(formattedDuration) min"
         }
 
         var body: some View {
@@ -239,7 +239,7 @@ extension AddTempTarget {
 
         @ViewBuilder private func editPresetPopover() -> some View {
             Form {
-                Section(header: Text("Edit Preset")) {
+                Section(header: Text("Ändra favorit")) {
                     TextField("Name", text: $state.newPresetName)
                     Text(displayString)
                         .foregroundColor(.secondary)
