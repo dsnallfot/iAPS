@@ -18,6 +18,7 @@ extension OverrideProfilesConfig {
         @State var index: Int = 1
         @State private var showDeleteAlert = false
         @State private var indexToDelete: Int?
+        @State private var profileNameToDelete: String = ""
 
         @Environment(\.dismiss) var dismiss
         @Environment(\.managedObjectContext) var moc
@@ -275,12 +276,13 @@ extension OverrideProfilesConfig {
                             let preset = fetchedProfiles[index]
                             profilesView(for: preset)
                                 .swipeActions {
-                                    Button(role: .destructive) {
+                                    Button(role: .none) {
                                         indexToDelete = index
+                                        profileNameToDelete = preset.name ?? "this profile"
                                         showDeleteAlert = true
                                     } label: {
                                         Label("Ta bort", systemImage: "trash")
-                                    }
+                                    }.tint(.red)
 
                                     Button {
                                         selectedPreset = preset
@@ -393,7 +395,7 @@ extension OverrideProfilesConfig {
             .alert(isPresented: $showDeleteAlert) {
                 Alert(
                     title: Text("Radera sparad override"),
-                    message: Text("Är du säker på att du vill radera denna override?"),
+                    message: Text("Är du säker på att du vill radera\n\(profileNameToDelete)?"),
                     primaryButton: .destructive(Text("Radera")) {
                         if let index = indexToDelete {
                             removeProfile(at: IndexSet(integer: index))

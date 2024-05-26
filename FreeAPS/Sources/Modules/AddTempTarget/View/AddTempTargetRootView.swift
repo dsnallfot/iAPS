@@ -65,10 +65,10 @@ extension AddTempTarget {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
                                 .swipeActions {
-                                    Button(role: .destructive, action: {
+                                    Button(role: .none, action: {
                                         removeAlert = Alert(
                                             title: Text("Are you sure?"),
-                                            message: Text("Delete preset \"\(preset.displayName)\"?"),
+                                            message: Text("Radera tillfälligt mål \n\(preset.displayName)?"),
                                             primaryButton: .destructive(Text("Delete"), action: {
                                                 state.removePreset(id: preset.id)
                                                 isRemoveAlertPresented = false // Dismiss the alert after deletion
@@ -78,7 +78,7 @@ extension AddTempTarget {
                                         isRemoveAlertPresented = true
                                     }) {
                                         Label("Ta bort", systemImage: "trash")
-                                    }
+                                    }.tint(.red)
                                     Button {
                                         selectedPreset = preset
                                         state.newPresetName = preset.displayName
