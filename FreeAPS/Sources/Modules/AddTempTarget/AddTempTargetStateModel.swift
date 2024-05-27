@@ -1,11 +1,13 @@
+import Combine
 import CoreData
+import LoopKitUI
 import SwiftDate
 import SwiftUI
 
 extension AddTempTarget {
     final class StateModel: BaseStateModel<Provider> {
         @Injected() var broadcaster: Broadcaster!
-        @Injected() private var storage: TempTargetsStorage!
+        @Injected() var storage: TempTargetsStorage!
         @Injected() var apsManager: APSManager!
         private let timer = DispatchTimer(timeInterval: 5)
         private(set) var filteredHours = 24
@@ -13,7 +15,6 @@ extension AddTempTarget {
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
         @Published var low: Decimal = 0
-        // @Published var target: Decimal = 0
         @Published var high: Decimal = 0
         @Published var duration: Decimal = 0
         @Published var date = Date()
@@ -123,6 +124,14 @@ extension AddTempTarget {
             }
         }
 
+        private func convertAndRound(_ value: Decimal) -> Decimal {
+            if units == .mmolL {
+                return Decimal(round(Double(value.asMgdL)))
+            } else {
+                return Decimal(round(Double(value)))
+            }
+        }
+
         func save() {
             guard duration > 0 else {
                 return
@@ -133,18 +142,13 @@ extension AddTempTarget {
                 lowTarget = Decimal(round(Double(computeTarget())))
                 saveSettings = true
             }
-            var highTarget = low // lowTarget
-
-            if units == .mmolL, !viewPercantage {
-                lowTarget = Decimal(round(Double(lowTarget.asMgdL)))
-                highTarget = lowTarget
-            }
+            let roundedLow = convertAndRound(lowTarget)
 
             let entry = TempTarget(
                 name: newPresetName.isEmpty ? TempTarget.custom : newPresetName,
                 createdAt: Date(),
-                targetTop: highTarget,
-                targetBottom: lowTarget,
+                targetTop: roundedLow,
+                targetBottom: roundedLow,
                 duration: duration,
                 enteredBy: TempTarget.manual,
                 reason: newPresetName.isEmpty ? TempTarget.custom : newPresetName
@@ -219,12 +223,50 @@ extension AddTempTarget {
             }
             return Decimal(Double(target))
         }
+
+        func computePercentage(target: Decimal) -> Decimal {
+            let c = Decimal(hbt - 100)
+            var ratio = c / (c + target - 100)
+
+            if ratio > maxValue {
+                ratio = maxValue
+            }
+
+            let adjustedPercentage = ratio * 100
+            let roundedPercentage = (adjustedPercentage as NSDecimalNumber).rounding(accordingToBehavior: nil)
+            return roundedPercentage as Decimal
+        }
+
+        func updatePreset(_ preset: TempTarget) {
+            var lowTarget = low
+
+            if viewPercantage {
+                lowTarget = Decimal(round(Double(computeTarget())))
+            }
+
+            if units == .mmolL, !viewPercantage {
+                lowTarget = Decimal(round(Double(lowTarget.asMgdL)))
+            }
+            let updatedPreset = TempTarget(
+                id: preset.id,
+                name: newPresetName.isEmpty ? preset.name : newPresetName,
+                createdAt: preset.createdAt,
+                targetTop: lowTarget,
+                targetBottom: lowTarget,
+                duration: duration,
+                enteredBy: preset.enteredBy,
+                reason: newPresetName.isEmpty ? preset.reason : newPresetName
+            )
+
+            if let index = presets.firstIndex(where: { $0.id == preset.id }) {
+                presets[index] = updatedPreset
+                storage.storePresets(presets)
+            }
+        }
     }
 }
 
-extension AddTempTarget.StateModel:
-    TempTargetsObserver
-{
+extension AddTempTarget.StateModel: TempTargetsObserver {
     func tempTargetsDidUpdate(_: [TempTarget]) {
         setupTempTargets()
     }

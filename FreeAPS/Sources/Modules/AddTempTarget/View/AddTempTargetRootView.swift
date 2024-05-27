@@ -1,4 +1,5 @@
 import CoreData
+import SwiftDate
 import SwiftUI
 import Swinject
 
@@ -10,6 +11,8 @@ extension AddTempTarget {
         @State private var isRemoveAlertPresented = false
         @State private var removeAlert: Alert?
         @State private var isEditing = false
+        @State private var selectedPreset: TempTarget?
+        @State private var isEditSheetPresented = false
 
         @FetchRequest(
             entity: TempTargetsSlider.entity(),
@@ -21,6 +24,21 @@ extension AddTempTarget {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 1
             return formatter
+        }
+
+        private var displayString: String {
+            guard let preset = selectedPreset else { return "" }
+            var low = preset.targetBottom
+            var high = preset.targetBottom // change to only use targetBottom instead of targetTop
+            if state.units == .mmolL {
+                low = low?.asMmolL
+                high = high?.asMmolL
+            }
+
+            let formattedLow = low.flatMap { formatter.string(from: $0 as NSNumber) } ?? ""
+            let formattedDuration = formatter.string(from: preset.duration as NSNumber) ?? ""
+
+            return "\(formattedLow) \(state.units.rawValue) i \(formattedDuration) min"
         }
 
         var body: some View {
@@ -47,10 +65,10 @@ extension AddTempTarget {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
                                 .swipeActions {
-                                    Button(role: .destructive, action: {
+                                    Button(role: .none, action: {
                                         removeAlert = Alert(
                                             title: Text("Are you sure?"),
-                                            message: Text("Delete preset \"\(preset.displayName)\""),
+                                            message: Text("Radera tillfälligt mål \n\(preset.displayName)?"),
                                             primaryButton: .destructive(Text("Delete"), action: {
                                                 state.removePreset(id: preset.id)
                                                 isRemoveAlertPresented = false // Dismiss the alert after deletion
@@ -59,127 +77,51 @@ extension AddTempTarget {
                                         )
                                         isRemoveAlertPresented = true
                                     }) {
-                                        Text("Delete")
+                                        Label("Ta bort", systemImage: "trash")
+                                    }.tint(.red)
+                                    Button {
+                                        selectedPreset = preset
+                                        state.newPresetName = preset.displayName
+                                        state.low = state.units == .mmolL ? preset.targetBottom?.asMmolL ?? 0 : preset
+                                            .targetBottom ?? 0
+                                        state.duration = preset.duration
+                                        state.date = preset.date as? Date ?? Date()
+                                        isEditSheetPresented = true
+                                    } label: {
+                                        Label("Redigera", systemImage: "square.and.pencil")
                                     }
+                                    .tint(.blue)
                                 }
                                 .alert(isPresented: $isRemoveAlertPresented) {
                                     removeAlert!
                                 }
                         }
-                        .onDelete(perform: delete)
                     }
                 }
+                settingsSection(header: "Custom")
+
+                DatePicker("Date", selection: $state.date)
+
                 HStack {
-                    Text("Insulin %")
-                    Toggle(isOn: $state.viewPercantage) {}.controlSize(.mini)
-                }
-
-                if state.viewPercantage {
-                    Section {
-                        VStack {
-                            Text("\(state.percentage.formatted(.number)) % Insulin")
-                                .foregroundColor(isEditing ? .orange : .blue)
-                                .font(.largeTitle)
-                                .padding(.vertical)
-                            Spacer()
-                            Slider(
-                                value: $state.percentage,
-                                in: 15 ...
-                                    min(Double(state.maxValue * 100), 200),
-                                step: 1,
-                                onEditingChanged: { editing in
-                                    isEditing = editing
-                                }
-                            )
-
-                            // Only display target slider when not 100 %
-                            if state.percentage != 100 {
-                                Divider()
-                                Text(
-                                    (
-                                        state
-                                            .units == .mmolL ?
-                                            "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
-                                            "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
-                                    )
-                                        + NSLocalizedString("  Målvärde", comment: "")
-                                )
-                                .foregroundColor(.green)
-
-                                Slider(
-                                    value: $state.hbt,
-                                    in: 101 ... 295,
-                                    step: 1
-                                ).accentColor(.green)
-                            }
-                        }
-                    }
-                    header: { Text("Ställ in önskad insulinprocent") }
-                    footer: {
-                        Text(
-                            "Ditt målvärde justeras automatiskt ovan för att motsvara den procentuella ökning/minskning av insulintillförsel du anger. \nBeräkningen utgår från OpenAPS-formeln för 'Halvera basaldosen vid tillfälligt målvärde 160 mg/dl (8.9 mmol/L)'"
-                        )
-                    }
-
-                } else {
-                    Section(header: Text("Ställ in ett tillfälligt mål")) {
-                        HStack {
-                            Text("Target")
-                            Spacer()
-                            DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
-                            Text(state.units.rawValue)
-                        }
-                        HStack {
-                            Text("Duration")
-                            Spacer()
-                            DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes")
-                        }
-                        DatePicker("Date", selection: $state.date)
-                        HStack {
-                            Button { state.enact() }
-                            label: { Text("Aktivera tillfälligt mål") }
-                                .disabled(state.duration == 0)
-                                .controlSize(.mini)
-                                .buttonStyle(BorderlessButtonStyle())
-                            Spacer()
-                            Button { isPromptPresented = true }
-                            label: { Text("Spara ny favorit") }
-                                .disabled(state.duration == 0)
-                                .controlSize(.mini)
-                                .buttonStyle(BorderlessButtonStyle())
-                        }
-                    }
-                }
-                if state.viewPercantage {
-                    Section {
-                        HStack {
-                            Text("Duration")
-                            Spacer()
-                            DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                            Text("minutes")
-                        }
-                        DatePicker("Date", selection: $state.date)
-                        HStack {
-                            Button { state.enact() }
-                            label: { Text("Aktivera tillfälligt mål") }
-                                .disabled(state.duration == 0)
-                                .controlSize(.mini)
-                                .buttonStyle(BorderlessButtonStyle())
-                            Spacer()
-                            Button { isPromptPresented = true }
-                            label: { Text("Spara ny favorit") }
-                                .disabled(state.duration == 0)
-                                .controlSize(.mini)
-                                .buttonStyle(BorderlessButtonStyle())
-                        }
-                    }
+                    Button { state.enact() }
+                    label: { Text("Aktivera tillfälligt mål") }
+                        .disabled(state.duration == 0)
+                        .controlSize(.mini)
+                        .buttonStyle(BorderlessButtonStyle())
+                    Spacer()
+                    Button { isPromptPresented = true }
+                    label: { Text("Spara ny favorit") }
+                        .disabled(state.duration == 0)
+                        .controlSize(.mini)
+                        .buttonStyle(BorderlessButtonStyle())
                 }
             }
             .popover(isPresented: $isPromptPresented) {
                 Form {
                     Section(header: Text("Ange namn på favorit")) {
                         TextField("Name", text: $state.newPresetName)
+                    }
+                    Section {
                         Button {
                             state.save()
                             isPromptPresented = false
@@ -190,6 +132,10 @@ extension AddTempTarget {
                     }
                 }
             }
+            .sheet(isPresented: $isEditSheetPresented) {
+                editPresetPopover()
+                    .padding()
+            }
             .onAppear {
                 configureView()
                 state.hbt = isEnabledArray.first?.hbt ?? 160
@@ -197,6 +143,154 @@ extension AddTempTarget {
             .navigationTitle("Tillfälliga mål")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
+        }
+
+        @ViewBuilder func settingsSection(header: String) -> some View {
+            HStack {
+                Text("Använd HBT %")
+                Toggle(isOn: $state.viewPercantage) {}
+                    .controlSize(.mini)
+                    .onChange(of: state.viewPercantage) { newValue in
+                        if newValue {
+                            guard let selectedPreset = selectedPreset,
+                                  let targetBottom = selectedPreset.targetBottom else { return }
+                            let computedPercentage = state.computePercentage(target: targetBottom)
+                            state.percentage = Double(truncating: computedPercentage as NSNumber)
+                        }
+                    }
+            }
+            if state.viewPercantage {
+                Section {
+                    VStack {
+                        Text("\(state.percentage.formatted(.number)) % Insulin")
+                            .foregroundColor(isEditing ? .orange : .blue)
+                            .font(.largeTitle)
+                            .padding(.vertical)
+                        Spacer()
+                        Slider(
+                            value: $state.percentage,
+                            in: 15 ... min(Double(state.maxValue * 100), 200),
+                            step: 1,
+                            onEditingChanged: { editing in
+                                isEditing = editing
+                            }
+                        )
+
+                        // Only display target slider when not 100 %
+                        if state.percentage != 100 {
+                            Spacer()
+                            Divider()
+                            Text(
+                                (
+                                    state.units == .mmolL ?
+                                        "\(state.computeTarget().asMmolL.formatted(.number.grouping(.never).rounded().precision(.fractionLength(1)))) mmol/L" :
+                                        "\(state.computeTarget().formatted(.number.grouping(.never).rounded().precision(.fractionLength(0)))) mg/dl"
+                                )
+                                    + NSLocalizedString("  Målvärde", comment: "")
+                            )
+                            .foregroundColor(.green)
+                            .padding(.vertical)
+
+                            Slider(
+                                value: $state.hbt,
+                                in: 101 ... 295,
+                                step: 1
+                            ).accentColor(.green)
+                        }
+                    }
+                } footer: {
+                    Text(
+                        "Målvärdet justeras automatiskt utifrån den procentuella insulintillförseln du anger. \nBeräkningen utgår från oref0 algoritm för HBT 'Halvera basaldosen vid tillfälligt målvärde 160 mg/dl (8.9 mmol/L)'"
+                    )
+                    .font(.caption2)
+                }
+            } else {
+                Section(header: Text(header)) {
+                    HStack {
+                        Text("Target")
+                        Spacer()
+                        DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
+                        Text(state.units.rawValue).foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Duration")
+                        Spacer()
+                        DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
+                        Text("minutes").foregroundColor(.secondary)
+                    }
+                }
+            }
+            if state.viewPercantage {
+                Section {
+                    HStack {
+                        Text("Duration")
+                        Spacer()
+                        DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
+                        Text("minutes").foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
+
+        @ViewBuilder private func editPresetPopover() -> some View {
+            Form {
+                Section(header: Text("Ändra namn?")) {
+                    TextField("Namn", text: $state.newPresetName)
+                    Text("Nuvarande inställningar: \(displayString)")
+                        .foregroundColor(.secondary)
+                        .font(.caption)
+                }
+                settingsSection(header: "Nytt mål och varaktighet")
+                /* Section(header: Text("Ändra favorit")) {
+                     TextField("Name", text: $state.newPresetName)
+                     Text("Innan ändring: \(displayString)")
+                         .foregroundColor(.secondary)
+                         .font(.caption)
+                     HStack {
+                         Text("Target")
+                         Spacer()
+                         DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
+                         Text(state.units.rawValue)
+                     }
+                     HStack {
+                         Text("Duration")
+                         Spacer()
+                         DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
+                         Text("minutes")
+                     }
+                 } */
+                Section {
+                    Button("Save") {
+                        guard let selectedPreset = selectedPreset else { return }
+                        state.updatePreset(selectedPreset)
+                        isEditSheetPresented = false
+                    }
+                    .disabled(state.newPresetName.isEmpty)
+
+                    Button("Cancel") {
+                        resetFields()
+                        isEditSheetPresented = false
+                    }
+                }
+            }
+            .onAppear {
+                guard let selectedPreset = selectedPreset,
+                      let targetBottom = selectedPreset.targetBottom else { return }
+                let computedPercentage = state.computePercentage(target: targetBottom)
+                state.percentage = Double(truncating: computedPercentage as NSNumber)
+            }
+            .onDisappear {
+                if isEditSheetPresented == false {
+                    resetFields()
+                }
+            }
+        }
+
+        private func resetFields() {
+            state.newPresetName = ""
+            state.low = 0
+            state.duration = 0
+            state.percentage = 100 // Reset experimental slider if necessary
         }
 
         private func presetView(for preset: TempTarget) -> some View {
@@ -227,7 +321,7 @@ extension AddTempTarget {
                             .foregroundColor(.secondary)
                             .font(.caption)
 
-                        Text("for")
+                        Text("i")
                             .foregroundColor(.secondary)
                             .font(.caption)
 

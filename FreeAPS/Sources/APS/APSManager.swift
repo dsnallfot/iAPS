@@ -41,7 +41,9 @@ enum APSError: LocalizedError {
     case apsError(message: String)
     case deviceSyncError(message: String)
     case manualBasalTemp(message: String)
-    case activeBolusView
+    case activeBolusViewBolus
+    case activeBolusViewBasal
+    case activeBolusViewBasalandBolus
 
     var errorDescription: String? {
         switch self {
@@ -57,8 +59,12 @@ enum APSError: LocalizedError {
             return "Synk fel: \(message)"
         case let .manualBasalTemp(message):
             return "Manuell temp basal: \(message)"
-        case .activeBolusView:
-            return "Loop pausad. Manuell bolusregistrering pågår"
+        case .activeBolusViewBolus:
+            return "SMB pausad. Manuell bolusregistrering pågår"
+        case .activeBolusViewBasal:
+            return "Temp Basal > 0 pausad. Manuell bolusregistrering pågår"
+        case .activeBolusViewBasalandBolus:
+            return "Temp Basal > 0 och SMB pausad. Manuell bolusregistrering pågår"
         }
     }
 }
@@ -501,12 +507,6 @@ final class BaseAPSManager: APSManager, Injectable {
 
         guard let pump = pumpManager else { return }
 
-        guard !activeCarbsView(), rate == 0 else {
-            debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
-            processError(APSError.activeBolusView)
-            return
-        }
-
         // unable to do temp basal during manual temp basal 😁
         if isManualTempBasal {
             processError(APSError.manualBasalTemp(message: "Loop ej möjlig under manuell temp basal"))
@@ -570,9 +570,9 @@ final class BaseAPSManager: APSManager, Injectable {
                 return
             }
 
-            guard !activeCarbsView() else {
-                debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
-                processError(APSError.activeBolusView)
+            guard !activeBolusView() else {
+                debug(.apsManager, "SMB pausad. Manuell bolusregistrering pågår")
+                processError(APSError.activeBolusViewBolus)
                 return
             }
 
@@ -636,9 +636,9 @@ final class BaseAPSManager: APSManager, Injectable {
                 return
             }
 
-            guard !activeCarbsView() || rate == 0 else {
-                debug(.apsManager, "Loop pausad. Manuell bolusregistrering pågår")
-                processError(APSError.activeBolusView)
+            guard !activeBolusView() || (activeBolusView() && rate == 0) else {
+                debug(.apsManager, "Temp Basal > 0 pausad. Manuell bolusregistrering pågår")
+                processError(APSError.activeBolusViewBasal)
                 return
             }
 
@@ -779,8 +779,11 @@ final class BaseAPSManager: APSManager, Injectable {
                     .eraseToAnyPublisher()
             }
 
-            guard !self.activeCarbsView() || rate == 0 else {
-                return Fail(error: APSError.activeBolusView).eraseToAnyPublisher()
+            guard !self.activeBolusView() || (self.activeBolusView() && rate == 0) else {
+                if let units = suggested.units {
+                    return Fail(error: APSError.activeBolusViewBasalandBolus).eraseToAnyPublisher()
+                }
+                return Fail(error: APSError.activeBolusViewBasal).eraseToAnyPublisher()
             }
             return pump.enactTempBasal(unitsPerHour: Double(rate), for: TimeInterval(duration * 60)).map { _ in
                 let temp = TempBasal(duration: duration, rate: rate, temp: .absolute, timestamp: Date())
@@ -795,16 +798,17 @@ final class BaseAPSManager: APSManager, Injectable {
                 return Fail(error: error).eraseToAnyPublisher()
             }
 
-            guard !self.activeCarbsView() else {
-                return Fail(error: APSError.activeBolusView).eraseToAnyPublisher()
-            }
-
             guard let units = suggested.units else {
                 // It is OK, no bolus required
                 debug(.apsManager, "Ingen bolus krävs")
                 return Just(()).setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
+
+            guard !self.activeBolusView() else {
+                return Fail(error: APSError.activeBolusViewBolus).eraseToAnyPublisher()
+            }
+
             return pump.enactBolus(units: Double(units), automatic: true).map { _ in
                 self.bolusProgress.send(0)
                 self.bolusAmount.send(units)
@@ -1276,7 +1280,7 @@ final class BaseAPSManager: APSManager, Injectable {
         }
     }
 
-    private func activeCarbsView() -> Bool {
+    private func activeBolusView() -> Bool {
         let defaults = UserDefaults.standard
         return defaults.bool(forKey: IAPSconfig.inBolusView)
     }

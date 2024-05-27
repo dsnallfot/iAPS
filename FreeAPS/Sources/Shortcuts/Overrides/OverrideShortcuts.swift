@@ -167,22 +167,28 @@ enum OverrideIntentError: Error {
     }
 
     func fetchIDs(_ id: [OverrideEntity.ID]) -> [OverrideEntity] {
-        let presets = overrideStorage.fetchProfiles().filter { id.contains(UUID(uuidString: $0.id ?? "")!) }
-            .map { preset -> OverrideEntity in
-                let percentage = preset.percentage != 100 ? preset.percentage.formatted() : "100"
-                let targetRaw = settingsManager.settings
-                    .units == .mgdL ? Decimal(Double(preset.target ?? 0)) : Double(preset.target ?? 0)
-                    .asMmolL
-                let target = (preset.target != 0 || preset.target != 6) ?
-                    (glucoseFormatter.string(from: targetRaw as NSNumber) ?? "") : ""
-                let string = percentage != "" ? percentage + ", " + target : target
-
-                return OverrideEntity(
-                    id: UUID(uuidString: preset.id ?? "") ?? UUID(),
-                    name: preset.name ?? "",
-                    description: string
-                )
+        let presets = overrideStorage.fetchProfiles().compactMap { preset -> OverrideEntity? in
+            guard let presetIDString = preset.id, let presetID = UUID(uuidString: presetIDString) else {
+                return nil
             }
+
+            guard id.contains(presetID) else {
+                return nil
+            }
+
+            let percentage = preset.percentage != 100 ? preset.percentage.formatted() : "100"
+            let targetRaw: Decimal = settingsManager.settings
+                .units == .mgdL ? Decimal(Double(preset.target ?? 0)) : Double(preset.target ?? 0).asMmolL
+            let target: String = (preset.target != 0 || preset.target != 6) ?
+                (glucoseFormatter.string(from: targetRaw as NSNumber) ?? "") : ""
+            let string = percentage != "" ? percentage + ", " + target : target
+
+            return OverrideEntity(
+                id: presetID,
+                name: preset.name ?? "",
+                description: string
+            )
+        }
         return presets
     }
 
