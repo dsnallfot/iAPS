@@ -45,31 +45,31 @@ extension PodCommsError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .noPodPaired:
-            return LocalizedString("No pod paired", comment: "Error message shown when no pod is paired")
+            return LocalizedString("Ingen pod parkopplad", comment: "Error message shown when no pod is paired")
         case .invalidData:
             return nil
         case .noResponse:
-            return LocalizedString("No response from pod", comment: "Error message shown when no response from pod was received")
+            return LocalizedString("Inget svar från pod", comment: "Error message shown when no response from pod was received")
         case .emptyResponse:
-            return LocalizedString("Empty response from pod", comment: "Error message shown when empty response from pod was received")
+            return LocalizedString("Tomt svar från pod", comment: "Error message shown when empty response from pod was received")
         case .podAckedInsteadOfReturningResponse:
-            return LocalizedString("Pod sent ack instead of response", comment: "Error message shown when pod sends ack instead of response")
+            return LocalizedString("Pod sände ack istället för svar", comment: "Error message shown when pod sends ack instead of response")
         case .unexpectedResponse:
-            return LocalizedString("Unexpected response from pod", comment: "Error message shown when empty response from pod was received")
+            return LocalizedString("Oväntat svar från pod", comment: "Error message shown when empty response from pod was received")
         case .unknownResponseType:
             return nil
         case .invalidAddress(address: let address, expectedAddress: let expectedAddress):
             return String(format: LocalizedString("Invalid address 0x%x. Expected 0x%x", comment: "Error message for when unexpected address is received (1: received address) (2: expected address)"), address, expectedAddress)
         case .podNotConnected:
-            return LocalizedString("Pod not connected", comment: "Error message shown when the pod is not connected.")
+            return LocalizedString("Pod ej ansluten", comment: "Error message shown when the pod is not connected.")
         case .unfinalizedBolus:
-            return LocalizedString("Bolus in progress", comment: "Error message shown when operation could not be completed due to existing bolus in progress")
+            return LocalizedString("Pågående bolus", comment: "Error message shown when operation could not be completed due to existing bolus in progress")
         case .unfinalizedTempBasal:
-            return LocalizedString("Temp basal in progress", comment: "Error message shown when temp basal could not be set due to existing temp basal in progress")
+            return LocalizedString("Pågående basal", comment: "Error message shown when temp basal could not be set due to existing temp basal in progress")
         case .nonceResyncFailed:
             return nil
         case .podSuspended:
-            return LocalizedString("Pod is suspended", comment: "Error message action could not be performed because pod is suspended")
+            return LocalizedString("Pod är pausad", comment: "Error message action could not be performed because pod is suspended")
         case .podFault(let fault):
             let faultDescription = String(describing: fault.faultEventCode)
             return String(format: LocalizedString("Pod Fault: %1$@", comment: "Format string for pod fault code"), faultDescription)
