@@ -278,7 +278,7 @@ final class BaseAPSManager: APSManager, Injectable {
         isLooping.send(false)
 
         if let error = error {
-            let errorDescription = "Loop misslyckades med felorsak: \(error.localizedDescription)"
+            let errorDescription = "Loop slutfördes inte: \(error.localizedDescription)"
             warning(.apsManager, errorDescription)
 
             // Daniel: Added to upload loop failure reasons as a note to Nightscout
@@ -315,7 +315,7 @@ final class BaseAPSManager: APSManager, Injectable {
         let status = pump.status.pumpStatus
 
         guard !status.bolusing else {
-            return APSError.invalidPumpState(message: "Bolus pågår! \nVänta tills den är slutförd innan du försöker igen")
+            return APSError.invalidPumpState(message: "Pågående Bolus")
         }
 
         guard !status.suspended else {
