@@ -202,7 +202,6 @@ extension AddTempTarget {
                     Text(
                         "Målvärdet justeras automatiskt utifrån den procentuella insulintillförseln du anger. \nBeräkningen utgår från oref0 algoritm för HBT 'Halvera basaldosen vid tillfälligt målvärde 160 mg/dl (8.9 mmol/L)'"
                     )
-                    .font(.caption2)
                 }
             } else {
                 Section(header: Text(header)) {
@@ -260,7 +259,7 @@ extension AddTempTarget {
                      }
                  } */
                 Section {
-                    Button("Save") {
+                    Button("Spara ändringar") {
                         guard let selectedPreset = selectedPreset else { return }
                         state.updatePreset(selectedPreset)
                         isEditSheetPresented = false

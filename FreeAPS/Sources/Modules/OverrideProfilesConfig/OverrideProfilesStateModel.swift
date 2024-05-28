@@ -85,8 +85,8 @@ extension OverrideProfilesConfig {
             let percent = preset.percentage / 100
             let perpetual = preset.indefinite
             let durationString = perpetual ? "" : "\(formatter.string(from: duration as NSNumber)!)"
-            let scheduledSMBString = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "SMB Schemalagda" : ""
-            let smbString = (preset.smbIsOff && scheduledSMBString == "") ? "SMB Inaktiverade" : ""
+            let scheduledSMBString = (preset.smbIsOff && preset.smbIsAlwaysOff) ? "SMB" + " Schema" : ""
+            let smbString = (preset.smbIsOff && scheduledSMBString == "") ? "SMB" + " Av!" : ""
             let targetString = target != 0 ? "\(glucoseFormatter.string(from: target as NSNumber)!)" : ""
             let maxMinutesSMB = (preset.smbMinutes as Decimal?) != nil ? (preset.smbMinutes ?? 0) as Decimal : 0
             let maxMinutesUAM = (preset.uamMinutes as Decimal?) != nil ? (preset.uamMinutes ?? 0) as Decimal : 0

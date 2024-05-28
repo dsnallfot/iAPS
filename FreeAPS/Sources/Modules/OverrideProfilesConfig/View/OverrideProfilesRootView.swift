@@ -51,7 +51,7 @@ extension OverrideProfilesConfig {
 
         var presetPopover: some View {
             Form {
-                nameSection(header: "Ange ett namn")
+                nameSection(header: "Namn på Override")
                 settingsSection(header: "Inställningar som sparas")
                 Section {
                     Button("Save") {
@@ -74,7 +74,7 @@ extension OverrideProfilesConfig {
                 // settingsSection(header: "Nya inställningar att spara")
                 settingsConfig(header: "Ändra inställningar")
                 Section {
-                    Button("Save") {
+                    Button("Spara ändringar") {
                         guard let selectedPreset = selectedPreset else { return }
                         state.updatePreset(selectedPreset)
                         isEditSheetPresented = false
@@ -100,7 +100,7 @@ extension OverrideProfilesConfig {
 
         @ViewBuilder private func nameSection(header: String) -> some View {
             Section {
-                TextField("Override preset name", text: $state.profileName)
+                TextField("Ange ett namn", text: $state.profileName)
             } header: {
                 Text(header)
             }
@@ -300,7 +300,7 @@ extension OverrideProfilesConfig {
                     }
                     header: { Text("Aktivera sparad override") }
                     footer: { VStack(alignment: .leading) {
-                        Text("Svep vänster för att redigera eller radera sparad override.")
+                        Text("Svep vänster för att redigera eller radera.")
                     }
                     }
                 }
@@ -427,31 +427,32 @@ extension OverrideProfilesConfig {
                                 // .foregroundColor(.secondary)
                             }
                         }
-                        HStack(spacing: 5) {
+                        HStack(spacing: 0) {
                             Text(data.percent.formatted(.percent.grouping(.never).rounded().precision(.fractionLength(0))))
                             if data.targetString != "" {
-                                Text(data.targetString)
+                                Text(" • " + data.targetString)
                                 Text(data.targetString != "" ? state.units.rawValue : "")
                             }
                             if data
                                 .durationString !=
-                                "" { Text(data.durationString + (data.perpetual ? "" : "min")) }
-                            if data
-                                .smbString !=
-                                ""
-                            { Text(data.smbString).foregroundColor(.secondary).font(.caption)
-                            }
-                            if data.scheduledSMBString != "" { Text(data.scheduledSMBString) }
+                                "" { Text(" • " + data.durationString + (data.perpetual ? "" : "m")) }
+                            Text(" • " + data.isfAndCRString)
                             if preset.advancedSettings {
-                                Text(
-                                    data.maxMinutesSMB == 0 ? "" : data.maxMinutesSMB
-                                        .formatted() + " SMB"
-                                )
-                                Text(
-                                    data.maxMinutesUAM == 0 ? "" : data.maxMinutesUAM
-                                        .formatted() + " UAM"
-                                )
-                                Text(data.isfAndCRString)
+                                if data.scheduledSMBString != "" { Text("•" + data.scheduledSMBString) }
+                                if data
+                                    .smbString !=
+                                    ""
+                                { Text(" • " + data.smbString).foregroundColor(.secondary).font(.caption)
+                                } else {
+                                    Text(
+                                        data.maxMinutesSMB == 0 ? "" : " • " + "SMB " + data.maxMinutesSMB
+                                            .formatted() + "m"
+                                    )
+                                    Text(
+                                        data.maxMinutesUAM == 0 ? "" : " • " + "UAM " + data.maxMinutesUAM
+                                            .formatted() + "m"
+                                    )
+                                }
                             }
                             Spacer()
                         }
