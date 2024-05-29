@@ -199,8 +199,8 @@ extension DataTable {
                             state.deleteCarbs(treatmentToDelete)
                             alertTreatmentToDelete = nil // Reset the alert treatment
                         }
-                        // Append " 🖊️" to the note
-                        let updatedNote = selectedNote + " 🖊️"
+                        // Append "✩" to the note
+                        let updatedNote = "✩" + selectedNote
                         // Call the addCarbsEntry function from DataTable.StateModel
                         state.addCarbsEntry(
                             amount: selectedCarbAmount,
