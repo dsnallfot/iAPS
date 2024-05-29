@@ -20,6 +20,7 @@ extension DataTable {
         @State var pushed = false
         @State private var selectedCarbAmount: Decimal = 0.0 // New
         @State private var selectedDate = Date() // New
+        @State private var selectedNote: String = "" // New
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -165,6 +166,12 @@ extension DataTable {
                         Text("g")
                     }
                     HStack {
+                        Text("Anteckningar") // New
+                        Spacer()
+                        TextField("Enter note", text: $selectedNote)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
                         Text("Tid")
                         Spacer()
                         DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
@@ -178,8 +185,9 @@ extension DataTable {
                             state.deleteCarbs(treatmentToDelete)
                             alertTreatmentToDelete = nil // Reset the alert treatment
                         }
+                        let updatedNote = selectedNote + " ✏️"
                         // Call the addCarbsEntry function from DataTable.StateModel
-                        state.addCarbsEntry(amount: selectedCarbAmount, date: selectedDate)
+                        state.addCarbsEntry(amount: selectedCarbAmount, date: selectedDate, note: updatedNote) // Updated
                         isEditSheetPresented = false
                     }
 
@@ -192,10 +200,10 @@ extension DataTable {
             .onAppear {
                 if let treatmentToDelete = alertTreatmentToDelete {
                     selectedDate = treatmentToDelete.date // Set the initial date
+                    selectedNote = treatmentToDelete.note ?? "" // Set the initial note // New
                 }
             }
-            .onDisappear {}
-        }
+            .onDisappear {} }
 
         var addManualGlucoseView: some View {
             NavigationView {

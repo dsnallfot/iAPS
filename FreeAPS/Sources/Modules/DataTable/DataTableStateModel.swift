@@ -205,7 +205,7 @@ extension DataTable {
             }
         }
 
-        func addCarbsEntry(amount: Decimal, date: Date) {
+        func addCarbsEntry(amount: Decimal, date: Date, note: String) { // Updated
             let id = UUID().uuidString
 
             let carbsToStore = [CarbsEntry(
@@ -215,7 +215,7 @@ extension DataTable {
                 carbs: amount,
                 fat: 0,
                 protein: 0,
-                note: "",
+                note: note, // Updated
                 enteredBy: CarbsEntry.manual,
                 isFPU: false,
                 fpuID: UUID().uuidString
@@ -224,7 +224,6 @@ extension DataTable {
             provider.carbsStorage.storeCarbs(carbsToStore)
             setupTreatments() // Refresh the treatments list after adding carbs
         }
-        
 
         func addManualGlucose() {
             let glucose = units == .mmolL ? manualGlucose.asMgdL : manualGlucose
