@@ -21,6 +21,8 @@ extension DataTable {
         @State private var selectedCarbAmount: Decimal = 0.0 // New
         @State private var selectedDate = Date() // New
         @State private var selectedNote: String = "" // New
+        @State private var selectedFat: Decimal = 0.0 // New
+        @State private var selectedProtein: Decimal = 0.0 // New
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -166,16 +168,28 @@ extension DataTable {
                         Text("g")
                     }
                     HStack {
-                        Text("Anteckningar") // New
-                        Spacer()
-                        TextField("Enter note", text: $selectedNote)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
                         Text("Tid")
                         Spacer()
                         DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
                             .labelsHidden()
+                    }
+                    HStack {
+                        Text("Fett")
+                        Spacer()
+                        DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                        Text("g")
+                    }
+                    HStack {
+                        Text("Protein")
+                        Spacer()
+                        DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                        Text("g")
+                    }
+                    HStack {
+                        Text("Notes")
+                        TextField("Enter note", text: $selectedNote)
+                            .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
+                            .padding(.leading) // Optional: Adds padding to the leading side of the TextField
                     }
                 }
                 Section {
@@ -185,9 +199,16 @@ extension DataTable {
                             state.deleteCarbs(treatmentToDelete)
                             alertTreatmentToDelete = nil // Reset the alert treatment
                         }
-                        let updatedNote = selectedNote + " ✏️"
+                        // Append " 🖊️" to the note
+                        let updatedNote = selectedNote + " 🖊️"
                         // Call the addCarbsEntry function from DataTable.StateModel
-                        state.addCarbsEntry(amount: selectedCarbAmount, date: selectedDate, note: updatedNote) // Updated
+                        state.addCarbsEntry(
+                            amount: selectedCarbAmount,
+                            date: selectedDate,
+                            fat: selectedFat,
+                            protein: selectedProtein,
+                            note: updatedNote
+                        ) // Updated
                         isEditSheetPresented = false
                     }
 
@@ -200,10 +221,13 @@ extension DataTable {
             .onAppear {
                 if let treatmentToDelete = alertTreatmentToDelete {
                     selectedDate = treatmentToDelete.date // Set the initial date
-                    selectedNote = treatmentToDelete.note ?? "" // Set the initial note // New
+                    selectedNote = treatmentToDelete.note ?? "" // Set the initial note
+                    // selectedFat = treatmentToDelete.fat ?? 0.0 // Set the initial fat
+                    // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
                 }
             }
-            .onDisappear {} }
+            .onDisappear {}
+        }
 
         var addManualGlucoseView: some View {
             NavigationView {

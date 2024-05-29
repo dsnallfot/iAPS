@@ -205,7 +205,7 @@ extension DataTable {
             }
         }
 
-        func addCarbsEntry(amount: Decimal, date: Date, note: String) { // Updated
+        func addCarbsEntry(amount: Decimal, date: Date, fat: Decimal, protein: Decimal, note: String) { // Updated
             let id = UUID().uuidString
 
             let carbsToStore = [CarbsEntry(
@@ -213,8 +213,8 @@ extension DataTable {
                 createdAt: Date(),
                 actualDate: date,
                 carbs: amount,
-                fat: 0,
-                protein: 0,
+                fat: fat, // Updated
+                protein: protein, // Updated
                 note: note, // Updated
                 enteredBy: CarbsEntry.manual,
                 isFPU: false,
