@@ -168,28 +168,32 @@ extension DataTable {
                         Text("g")
                     }
                     HStack {
+                        Text("Fett")
+                            .foregroundColor(.brown)
+                        Spacer()
+                        DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                        Text("g")
+                            .foregroundColor(.brown)
+                    }
+                    HStack {
+                        Text("Protein")
+                            .foregroundColor(.brown)
+                        Spacer()
+                        DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                        Text("g")
+                            .foregroundColor(.brown)
+                    }
+                    HStack {
+                        Text("Notering")
+                        TextField("...", text: $selectedNote)
+                            .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
+                            .padding(.leading) // Optional: Adds padding to the leading side of the TextField
+                    }
+                    HStack {
                         Text("Tid")
                         Spacer()
                         DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
                             .labelsHidden()
-                    }
-                    HStack {
-                        Text("Fett")
-                        Spacer()
-                        DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
-                        Text("g")
-                    }
-                    HStack {
-                        Text("Protein")
-                        Spacer()
-                        DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
-                        Text("g")
-                    }
-                    HStack {
-                        Text("Notes")
-                        TextField("Enter note", text: $selectedNote)
-                            .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
-                            .padding(.leading) // Optional: Adds padding to the leading side of the TextField
                     }
                 }
                 Section {
