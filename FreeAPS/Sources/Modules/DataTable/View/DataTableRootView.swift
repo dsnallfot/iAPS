@@ -16,8 +16,19 @@ extension DataTable {
         @State private var showNonPumpInsulin: Bool = false
         @State private var showFutureEntries: Bool = false
         @State private var isAmountUnconfirmed: Bool = true
+        @State private var isEditSheetPresented: Bool = false
+        @State var pushed = false
+        @State private var selectedCarbAmount: Decimal = 0.0 // New
+        @State private var selectedDate = Date() // New
 
         @Environment(\.colorScheme) var colorScheme
+
+        private var formatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 1
+            return formatter
+        }
 
         private var glucoseFormatter: NumberFormatter {
             let formatter = NumberFormatter()
@@ -138,6 +149,52 @@ extension DataTable {
             .sheet(isPresented: $showNonPumpInsulin, onDismiss: { if isAmountUnconfirmed { state.nonPumpInsulinAmount = 0 } }) {
                 addNonPumpInsulinView
             }
+            .sheet(isPresented: $isEditSheetPresented) {
+                editPresetPopover
+                    .padding()
+            }
+        }
+
+        var editPresetPopover: some View {
+            Form {
+                Section(header: Text("Ändra måltid")) {
+                    HStack {
+                        Text("Kolhydrater")
+                        Spacer()
+                        DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
+                        Text("g")
+                    }
+                    HStack {
+                        Text("Tid")
+                        Spacer()
+                        DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                            .labelsHidden()
+                    }
+                }
+                Section {
+                    Button("Spara ändringar") {
+                        if let treatmentToDelete = alertTreatmentToDelete {
+                            // Delete the carb entry directly
+                            state.deleteCarbs(treatmentToDelete)
+                            alertTreatmentToDelete = nil // Reset the alert treatment
+                        }
+                        // Call the addCarbsEntry function from DataTable.StateModel
+                        state.addCarbsEntry(amount: selectedCarbAmount, date: selectedDate)
+                        isEditSheetPresented = false
+                    }
+
+                    Button("Cancel") {
+                        isEditSheetPresented = false
+                    }
+                    .tint(.red)
+                }
+            }
+            .onAppear {
+                if let treatmentToDelete = alertTreatmentToDelete {
+                    selectedDate = treatmentToDelete.date // Set the initial date
+                }
+            }
+            .onDisappear {}
         }
 
         var addManualGlucoseView: some View {
@@ -438,6 +495,18 @@ extension DataTable {
                         isRemoveHistoryItemAlertPresented = true
                     }
                 ).tint(.red)
+                if item.type == .carbs {
+                    Button(
+                        "Redigera",
+                        systemImage: "square.and.pencil",
+                        action: {
+                            isEditSheetPresented = true
+                            selectedCarbAmount = item.amount ?? 0.0
+                            alertTreatmentToDelete = item // Ensure the treatment is set for deletion
+                            print("Swipe for att ändra Kolhydrater")
+                        }
+                    ).tint(.blue)
+                }
             }
 
             .disabled(item.type == .tempBasal || item.type == .tempTarget || item.type == .resume || item.type == .suspend)
@@ -447,9 +516,6 @@ extension DataTable {
             ) {
                 Button("Avbryt", role: .cancel) {}
                 Button("Radera", role: .destructive) {
-                    // gracefully unwrap value here.
-                    // value cannot ever really be nil because it is an existing(!) table entry
-                    // but just to be sure.
                     guard let treatmentToDelete = alertTreatmentToDelete else {
                         print("Cannot gracefully unwrap alertTreatmentToDelete!")
                         return

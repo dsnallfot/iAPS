@@ -21,6 +21,7 @@ extension DataTable {
         @Published var maxBolus: Decimal = 0
         @Published var nonPumpInsulinAmount: Decimal = 0
         @Published var nonPumpInsulinDate = Date()
+        @Published var placeholder: Decimal = 5
 
         var units: GlucoseUnits = .mmolL
 
@@ -203,6 +204,27 @@ extension DataTable {
                 provider.deleteManualGlucose(date: glucose.glucose.dateString)
             }
         }
+
+        func addCarbsEntry(amount: Decimal, date: Date) {
+            let id = UUID().uuidString
+
+            let carbsToStore = [CarbsEntry(
+                id: id,
+                createdAt: Date(),
+                actualDate: date,
+                carbs: amount,
+                fat: 0,
+                protein: 0,
+                note: "",
+                enteredBy: CarbsEntry.manual,
+                isFPU: false,
+                fpuID: UUID().uuidString
+            )]
+
+            provider.carbsStorage.storeCarbs(carbsToStore)
+            setupTreatments() // Refresh the treatments list after adding carbs
+        }
+        
 
         func addManualGlucose() {
             let glucose = units == .mmolL ? manualGlucose.asMgdL : manualGlucose
