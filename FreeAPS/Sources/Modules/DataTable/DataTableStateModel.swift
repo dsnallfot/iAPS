@@ -228,8 +228,12 @@ extension DataTable {
         }
 
         func fetchConnectedFpus(forDate date: Date) -> [Treatment] {
-            // Find the first .fpus entry that is 60 minutes after the given date
-            let fpuEntries = treatments.filter { $0.type == .fpus && $0.date == date.addingTimeInterval(60 * 60) }
+            // Retrieve the delay from settings (in minutes)
+            let delay = settings.settings.delay
+
+            // Convert delay from minutes to seconds and find the first .fpus entry that is 'delay' minutes after the given date (delay: default 60 minutes)
+            let fpuEntries = treatments
+                .filter { $0.type == .fpus && $0.date == date.addingTimeInterval(TimeInterval(delay * 60)) }
 
             guard let firstFpuEntry = fpuEntries.first else {
                 return []
