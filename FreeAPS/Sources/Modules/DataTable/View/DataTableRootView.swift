@@ -190,120 +190,120 @@ extension DataTable {
         }
 
         var editPresetPopover: some View {
-            Form {
-                Section(header: Text("Ändra måltid"), footer: VStack(alignment: .leading) {
-                    if smbCount > 0 && isFatProteinEnabled {
-                        Text(
-                            "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
-                        )
-                    }
-                }) {
-                    HStack {
-                        Text("Kolhydrater")
-                        Spacer()
-                        DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
-                        Text("g")
-                    }
-
-                    HStack {
-                        Text(toggleText)
-                            .foregroundColor(.brown)
-                        Spacer()
-                        Toggle("", isOn: $isFatProteinEnabled)
-                            .labelsHidden()
-                            .toggleStyle(CheckboxToggleStyle())
-                            .foregroundColor(.brown)
-                    }
-
-                    if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
-                        HStack {
-                            Text("Fett")
-                                .foregroundColor(.brown)
-                            Spacer()
-                            DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
-                            Text("g")
-                                .foregroundColor(.brown)
-                        }
-                        HStack {
-                            Text("Protein")
-                                .foregroundColor(.brown)
-                            Spacer()
-                            DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
-                            Text("g")
-                                .foregroundColor(.brown)
-                        }
-                    }
-
-                    HStack {
-                        Text("Notering")
-                        TextField("...", text: $selectedNote)
-                            .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
-                            .padding(.leading) // Optional: Adds padding to the leading side of the TextField
-                    }
-                    HStack {
-                        Text("Tid")
-                        Spacer()
-                        DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                    }
-                }
-                Section {
-                    if exceedsMaxCarbs {
-                        HStack {
-                            Image(systemName: "x.circle.fill")
-                                .foregroundColor(.red)
-                            Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
-                                .foregroundColor(.secondary)
-                        }
-                    } else {
-                        Button("Spara ändringar") {
-                            if let treatmentToDelete = alertTreatmentToDelete {
-                                // Delete the carb entry directly
-                                state.deleteCarbs(treatmentToDelete)
-                                alertTreatmentToDelete = nil // Reset the alert treatment
-                            }
-                            // Append "✩" to the note
-                            let updatedNote = "✩" + selectedNote
-                            // Call the addCarbsEntry function from DataTable.StateModel
-                            state.addCarbsEntry(
-                                amount: selectedCarbAmount,
-                                date: selectedDate,
-                                fat: selectedFat,
-                                protein: selectedProtein,
-                                note: updatedNote
+            NavigationView {
+                Form {
+                    Section(header: Text("Ändra måltid"), footer: VStack(alignment: .leading) {
+                        if smbCount > 0 && isFatProteinEnabled {
+                            Text(
+                                "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
                             )
-                            // If the toggle is on, delete the connected fpus silently
-                            if isFatProteinEnabled {
-                                state.deleteFpus(connectedFpus)
+                        }
+                    }) {
+                        HStack {
+                            Text("Kolhydrater")
+                            Spacer()
+                            DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
+                            Text("g")
+                        }
+
+                        HStack {
+                            Text(toggleText)
+                                .foregroundColor(.brown)
+                            Spacer()
+                            Toggle("", isOn: $isFatProteinEnabled)
+                                .labelsHidden()
+                                .toggleStyle(CheckboxToggleStyle())
+                                .foregroundColor(.brown)
+                        }
+
+                        if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
+                            HStack {
+                                Text("Fett")
+                                    .foregroundColor(.brown)
+                                Spacer()
+                                DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                                Text("g")
+                                    .foregroundColor(.brown)
                             }
-                            isEditSheetPresented = false
+                            HStack {
+                                Text("Protein")
+                                    .foregroundColor(.brown)
+                                Spacer()
+                                DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                                Text("g")
+                                    .foregroundColor(.brown)
+                            }
+                        }
+
+                        HStack {
+                            Text("Notering")
+                            TextField("...", text: $selectedNote)
+                                .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
+                                .padding(.leading) // Optional: Adds padding to the leading side of the TextField
+                        }
+                        HStack {
+                            Text("Tid")
+                            Spacer()
+                            DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
                         }
                     }
-
-                    Button("Cancel") {
-                        isEditSheetPresented = false
+                    Section {
+                        if exceedsMaxCarbs {
+                            HStack {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                                Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
+                                    .foregroundColor(.secondary)
+                            }
+                        } else {
+                            Button("Spara ändringar") {
+                                if let treatmentToDelete = alertTreatmentToDelete {
+                                    // Delete the carb entry directly
+                                    state.deleteCarbs(treatmentToDelete)
+                                    alertTreatmentToDelete = nil // Reset the alert treatment
+                                }
+                                // Append "✩" to the note
+                                let updatedNote = "✩" + selectedNote
+                                // Call the addCarbsEntry function from DataTable.StateModel
+                                state.addCarbsEntry(
+                                    amount: selectedCarbAmount,
+                                    date: selectedDate,
+                                    fat: selectedFat,
+                                    protein: selectedProtein,
+                                    note: updatedNote
+                                )
+                                // If the toggle is on, delete the connected fpus silently
+                                if isFatProteinEnabled {
+                                    state.deleteFpus(connectedFpus)
+                                }
+                                isEditSheetPresented = false
+                            }
+                        }
                     }
-                    .tint(.red)
                 }
-            }
-            .onAppear {
-                if let treatmentToDelete = alertTreatmentToDelete {
-                    selectedDate = treatmentToDelete.date // Set the initial date
-                    selectedNote = treatmentToDelete.note ?? "" // Set the initial note
-                    // selectedFat = treatmentToDelete.fat ?? 0.0 // Set the initial fat
-                    // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
-                    connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
-                    smbCount = connectedFpus.count
-                    smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
+                .onAppear {
+                    if let treatmentToDelete = alertTreatmentToDelete {
+                        selectedDate = treatmentToDelete.date // Set the initial date
+                        selectedNote = treatmentToDelete.note ?? "" // Set the initial note
+                        // selectedFat = treatmentToDelete.fat ?? 0.0 // Set the initial fat
+                        // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
+                        connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
+                        smbCount = connectedFpus.count
+                        smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
+                    }
                 }
-            }
-            .onDisappear {
-                // Clear the fat and protein fields and reset the toggle
-                selectedFat = 0.0
-                selectedProtein = 0.0
-                isFatProteinEnabled = false
-                smbCount = 0
-                smbGrams = 0.0
+                .onDisappear {
+                    // Clear the fat and protein fields and reset the toggle
+                    selectedFat = 0.0
+                    selectedProtein = 0.0
+                    isFatProteinEnabled = false
+                    smbCount = 0
+                    smbGrams = 0.0
+                }
+                .navigationTitle("Ändra måltid")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: Button("Cancel", action: { isEditSheetPresented = false }))
             }
         }
 
