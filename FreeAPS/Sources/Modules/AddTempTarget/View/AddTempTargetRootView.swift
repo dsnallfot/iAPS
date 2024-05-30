@@ -117,19 +117,45 @@ extension AddTempTarget {
                 }
             }
             .popover(isPresented: $isPromptPresented) {
-                Form {
-                    Section(header: Text("Ange namn på favorit")) {
-                        TextField("Name", text: $state.newPresetName)
-                    }
-                    Section {
-                        Button {
-                            state.save()
-                            isPromptPresented = false
+                NavigationView {
+                    Form {
+                        Section(header: Text("Ange namn på favorit")) {
+                            TextField("Name", text: $state.newPresetName)
                         }
-                        label: { Text("Save") }
-                        Button { isPromptPresented = false }
-                        label: { Text("Cancel") }
+                        Section {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    state.save()
+                                    isPromptPresented = false
+                                }
+                                label: { Text("Save")
+                                    .fontWeight(.semibold)
+                                    .font(.title3)
+                                }
+                                Spacer()
+                            }
+                            .listRowBackground(
+                                AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                            )
+                            .tint(.white)
+                        }
                     }
+                    .navigationTitle("Spara favorit")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarItems(trailing: Button("Cancel", action: {
+                        isPromptPresented = false
+                    }))
                 }
             }
             .sheet(isPresented: $isEditSheetPresented) {
@@ -232,56 +258,64 @@ extension AddTempTarget {
         }
 
         @ViewBuilder private func editPresetPopover() -> some View {
-            Form {
-                Section(header: Text("Ändra namn?")) {
-                    TextField("Namn", text: $state.newPresetName)
-                    Text("Nuvarande inställningar: \(displayString)")
-                        .foregroundColor(.secondary)
-                        .font(.caption)
-                }
-                settingsSection(header: "Nytt mål och varaktighet")
-                /* Section(header: Text("Ändra favorit")) {
-                     TextField("Name", text: $state.newPresetName)
-                     Text("Innan ändring: \(displayString)")
-                         .foregroundColor(.secondary)
-                         .font(.caption)
-                     HStack {
-                         Text("Target")
-                         Spacer()
-                         DecimalTextField("0", value: $state.low, formatter: formatter, cleanInput: true)
-                         Text(state.units.rawValue)
-                     }
-                     HStack {
-                         Text("Duration")
-                         Spacer()
-                         DecimalTextField("0", value: $state.duration, formatter: formatter, cleanInput: true)
-                         Text("minutes")
-                     }
-                 } */
-                Section {
-                    Button("Spara ändringar") {
-                        guard let selectedPreset = selectedPreset else { return }
-                        state.updatePreset(selectedPreset)
-                        isEditSheetPresented = false
+            NavigationView {
+                Form {
+                    Section(header: Text("Nytt namn")) {
+                        TextField("Namn", text: $state.newPresetName)
+                        Text("Nuvarande inställningar: \(displayString)")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
                     }
-                    .disabled(state.newPresetName.isEmpty)
-
-                    Button("Cancel") {
+                    settingsSection(header: "Nytt mål och varaktighet")
+                    Section {
+                        HStack {
+                            Spacer()
+                            Button {
+                                guard let selectedPreset = selectedPreset else { return }
+                                state.updatePreset(selectedPreset)
+                                isEditSheetPresented = false
+                            }
+                            label: {
+                                Text("Spara ändringar")
+                                    .fontWeight(.semibold)
+                                    .font(.title3)
+                            }
+                            Spacer()
+                        }
+                        .disabled(state.newPresetName.isEmpty)
+                        .listRowBackground(
+                            AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ))
+                        )
+                        .tint(.white)
+                    }
+                }
+                .onAppear {
+                    guard let selectedPreset = selectedPreset,
+                          let targetBottom = selectedPreset.targetBottom else { return }
+                    let computedPercentage = state.computePercentage(target: targetBottom)
+                    state.percentage = Double(truncating: computedPercentage as NSNumber)
+                }
+                .onDisappear {
+                    if isEditSheetPresented == false {
                         resetFields()
-                        isEditSheetPresented = false
                     }
                 }
-            }
-            .onAppear {
-                guard let selectedPreset = selectedPreset,
-                      let targetBottom = selectedPreset.targetBottom else { return }
-                let computedPercentage = state.computePercentage(target: targetBottom)
-                state.percentage = Double(truncating: computedPercentage as NSNumber)
-            }
-            .onDisappear {
-                if isEditSheetPresented == false {
+                .navigationTitle("Ändra favorit")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: Button("Cancel", action: {
                     resetFields()
-                }
+                    isEditSheetPresented = false
+                }))
             }
         }
 

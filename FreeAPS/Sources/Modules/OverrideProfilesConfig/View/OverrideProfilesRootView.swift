@@ -50,51 +50,102 @@ extension OverrideProfilesConfig {
         }
 
         var presetPopover: some View {
-            Form {
-                nameSection(header: "Namn på Override")
-                settingsSection(header: "Inställningar som sparas")
-                Section {
-                    Button("Save") {
-                        state.savePreset()
-                        isSheetPresented = false
-                    }
-                    .disabled(state.profileName.isEmpty || fetchedProfiles.contains(where: { $0.name == state.profileName }))
+            NavigationView {
+                Form {
+                    nameSection(header: "Namn på Override")
+                    settingsSection(header: "Inställningar som sparas")
+                    Section {
+                        HStack {
+                            Spacer()
+                            Button {
+                                state.savePreset()
+                                isSheetPresented = false
+                            }
+                            label: {
+                                Text("Save")
+                                    .fontWeight(.semibold)
+                                    .font(.title3)
+                            }
+                            Spacer()
+                        }
 
-                    Button("Cancel") {
-                        isSheetPresented = false
+                        .disabled(state.profileName.isEmpty || fetchedProfiles.contains(where: { $0.name == state.profileName }))
+                        .listRowBackground(
+                            state.profileName.isEmpty || fetchedProfiles.contains(where: { $0.name == state.profileName })
+                                ? AnyView(Color(.systemGray4))
+                                : AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                        )
+                        .tint(.white)
                     }
-                    .tint(.red)
                 }
+                .navigationTitle("Spara Override")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: Button("Cancel", action: { isSheetPresented = false }))
             }
         }
 
         var editPresetPopover: some View {
-            Form {
-                nameSection(header: "Ändra namn?")
-                // settingsSection(header: "Nya inställningar att spara")
-                settingsConfig(header: "Ändra inställningar")
-                Section {
-                    Button("Spara ändringar") {
-                        guard let selectedPreset = selectedPreset else { return }
-                        state.updatePreset(selectedPreset)
-                        isEditSheetPresented = false
+            NavigationView {
+                Form {
+                    nameSection(header: "Nytt namn")
+                    // settingsSection(header: "Nya inställningar att spara")
+                    settingsConfig(header: "Nya inställningar")
+                    Section {
+                        HStack {
+                            Spacer()
+                            Button {
+                                guard let selectedPreset = selectedPreset else { return }
+                                state.updatePreset(selectedPreset)
+                                isEditSheetPresented = false
+                            }
+                            label: {
+                                Text("Spara ändringar")
+                                    .fontWeight(.semibold)
+                                    .font(.title3)
+                            }
+                            Spacer()
+                        }
+                        .disabled(!hasChanges())
+                        .listRowBackground(
+                            !hasChanges()
+                                ? AnyView(Color(.systemGray4))
+                                : AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                        )
+                        .tint(.white)
                     }
-                    .disabled(!hasChanges())
-
-                    Button("Cancel") {
-                        isEditSheetPresented = false
+                }
+                .onAppear {
+                    if let preset = selectedPreset {
+                        originalPreset = preset
+                        state.populateSettings(from: preset)
                     }
-                    .tint(.red)
                 }
-            }
-            .onAppear {
-                if let preset = selectedPreset {
-                    originalPreset = preset
-                    state.populateSettings(from: preset)
+                .onDisappear {
+                    state.savedSettings()
                 }
-            }
-            .onDisappear {
-                state.savedSettings()
+                .navigationTitle("Ändra Override")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: Button("Cancel", action: { isEditSheetPresented = false }))
             }
         }
 
