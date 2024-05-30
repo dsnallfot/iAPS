@@ -24,6 +24,7 @@ extension DataTable {
         @State private var selectedFat: Decimal = 0.0 // New
         @State private var selectedProtein: Decimal = 0.0 // New
         @State private var isFatProteinEnabled: Bool = false // Add a state variable for the toggle
+        @State private var connectedFpus: [Treatment] = [] // Add a state variable to store the connected fpus
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -174,7 +175,16 @@ extension DataTable {
                         Text("g")
                     }
 
-                    Toggle("Ändra fett och protein?", isOn: $isFatProteinEnabled) // Add the toggle
+                    Toggle("Ändra fett och protein?", isOn: $isFatProteinEnabled)
+                        .onChange(of: isFatProteinEnabled) { newValue in
+                            if newValue {
+                                // Fetch connected .fpus entries when the toggle is turned on
+                                connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
+                            } else {
+                                // Clear the connected fpus when the toggle is turned off
+                                connectedFpus = []
+                            }
+                        }
 
                     if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
                         HStack {
@@ -224,7 +234,11 @@ extension DataTable {
                             fat: selectedFat,
                             protein: selectedProtein,
                             note: updatedNote
-                        ) // Updated
+                        )
+                        // If the toggle is on, delete the connected fpus silently
+                        if isFatProteinEnabled {
+                            state.deleteFpus(connectedFpus)
+                        }
                         isEditSheetPresented = false
                     }
 
@@ -242,7 +256,12 @@ extension DataTable {
                     // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
                 }
             }
-            .onDisappear {}
+            .onDisappear {
+                // Clear the fat and protein fields and reset the toggle
+                selectedFat = 0.0
+                selectedProtein = 0.0
+                isFatProteinEnabled = false
+            }
         }
 
         var addManualGlucoseView: some View {

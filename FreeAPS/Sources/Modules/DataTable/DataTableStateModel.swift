@@ -238,6 +238,13 @@ extension DataTable {
             return connectedFpus
         }
 
+        func deleteFpus(_ fpus: [Treatment]) {
+            for fpu in fpus {
+                provider.deleteCarbs(fpu)
+            }
+            setupTreatments() // Refresh the treatments list after deletion
+        }
+
         func addManualGlucose() {
             let glucose = units == .mmolL ? manualGlucose.asMgdL : manualGlucose
             let id = UUID().uuidString
