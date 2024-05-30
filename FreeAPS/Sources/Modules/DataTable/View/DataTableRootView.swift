@@ -23,6 +23,7 @@ extension DataTable {
         @State private var selectedNote: String = "" // New
         @State private var selectedFat: Decimal = 0.0 // New
         @State private var selectedProtein: Decimal = 0.0 // New
+        @State private var isFatProteinEnabled: Bool = false // Add a state variable for the toggle
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -160,29 +161,40 @@ extension DataTable {
 
         var editPresetPopover: some View {
             Form {
-                Section(header: Text("Ändra måltid")) {
+                Section(
+                    header: Text("Ändra måltid"),
+                    footer: Text(
+                        "Om du väljer att ändra fett och protein raderas tidigare registrerad fett och protein för den aktuella måltiden"
+                    )
+                ) {
                     HStack {
                         Text("Kolhydrater")
                         Spacer()
                         DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
                         Text("g")
                     }
-                    HStack {
-                        Text("Fett")
-                            .foregroundColor(.brown)
-                        Spacer()
-                        DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
-                        Text("g")
-                            .foregroundColor(.brown)
+
+                    Toggle("Ändra fett och protein?", isOn: $isFatProteinEnabled) // Add the toggle
+
+                    if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
+                        HStack {
+                            Text("Fett")
+                                .foregroundColor(.brown)
+                            Spacer()
+                            DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                            Text("g")
+                                .foregroundColor(.brown)
+                        }
+                        HStack {
+                            Text("Protein")
+                                .foregroundColor(.brown)
+                            Spacer()
+                            DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                            Text("g")
+                                .foregroundColor(.brown)
+                        }
                     }
-                    HStack {
-                        Text("Protein")
-                            .foregroundColor(.brown)
-                        Spacer()
-                        DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
-                        Text("g")
-                            .foregroundColor(.brown)
-                    }
+
                     HStack {
                         Text("Notering")
                         TextField("...", text: $selectedNote)
@@ -484,8 +496,7 @@ extension DataTable {
         @ViewBuilder private func treatmentView(_ item: Treatment) -> some View {
             HStack {
                 if item.isSMB ?? false { Image(systemName: "bolt.circle.fill").foregroundColor(item.color) }
-                else { Image(systemName: "circle.fill").foregroundColor(item.color)
-                }
+                else { Image(systemName: "circle.fill").foregroundColor(item.color) }
 
                 Text((item.isSMB ?? false) ? "SMB" : item.type.name)
                 Text(item.amountText).foregroundColor(.secondary)
@@ -540,11 +551,14 @@ extension DataTable {
                             selectedCarbAmount = item.amount ?? 0.0
                             alertTreatmentToDelete = item // Ensure the treatment is set for deletion
                             print("Swipe for att ändra Kolhydrater")
+
+                            // Fetch connected .fpus entries
+                            let connectedFpus = state.fetchConnectedFpus(forDate: item.date)
+                            print("Connected .fpus entries: \(connectedFpus)")
                         }
                     ).tint(.blue)
                 }
             }
-
             .disabled(item.type == .tempBasal || item.type == .tempTarget || item.type == .resume || item.type == .suspend)
             .alert(
                 Text(alertTitle),

@@ -225,6 +225,19 @@ extension DataTable {
             setupTreatments() // Refresh the treatments list after adding carbs
         }
 
+        func fetchConnectedFpus(forDate date: Date) -> [Treatment] {
+            // Find the first .fpus entry that is 60 minutes after the given date
+            let fpuEntries = treatments.filter { $0.type == .fpus && $0.date == date.addingTimeInterval(60 * 60) }
+
+            guard let firstFpuEntry = fpuEntries.first else {
+                return []
+            }
+
+            // Find all .fpus entries with the same fpuID
+            let connectedFpus = treatments.filter { $0.type == .fpus && $0.fpuID == firstFpuEntry.fpuID }
+            return connectedFpus
+        }
+
         func addManualGlucose() {
             let glucose = units == .mmolL ? manualGlucose.asMgdL : manualGlucose
             let id = UUID().uuidString
