@@ -25,6 +25,8 @@ extension DataTable {
         @State private var selectedProtein: Decimal = 0.0 // New
         @State private var isFatProteinEnabled: Bool = false // Add a state variable for the toggle
         @State private var connectedFpus: [Treatment] = [] // Add a state variable to store the connected fpus
+        @State private var smbCount: Int = 0 // Add a state variable for the count of .fpus entries
+        @State private var smbGrams: Decimal = 0.0 // Add a state variable for the total grams of .fpus entries
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -78,6 +80,29 @@ extension DataTable {
             formatter.numberStyle = .decimal
             formatter.maximumFractionDigits = 2
             return formatter
+        }
+
+        // Computed property to check if any value exceeds maxCarbs
+        private var exceedsMaxCarbs: Bool {
+            selectedCarbAmount > state.maxCarbs || selectedFat > state.maxCarbs || selectedProtein > state.maxCarbs
+        }
+
+        // Helper function to format maxCarbs
+        private func formattedMaxCarbs() -> String {
+            let numberFormatter = NumberFormatter()
+            numberFormatter.maximumFractionDigits = 1
+            numberFormatter.minimumFractionDigits = 1
+            numberFormatter.numberStyle = .decimal
+            return numberFormatter.string(from: state.maxCarbs as NSDecimalNumber) ?? "0.0"
+        }
+
+        // Helper function to format smbGrams
+        private func formattedSmbGrams() -> String {
+            let numberFormatter = NumberFormatter()
+            numberFormatter.maximumFractionDigits = 1
+            numberFormatter.minimumFractionDigits = 1
+            numberFormatter.numberStyle = .decimal
+            return numberFormatter.string(from: smbGrams as NSDecimalNumber) ?? "0.0"
         }
 
         var body: some View {
@@ -160,14 +185,19 @@ extension DataTable {
             }
         }
 
+        var toggleText: String {
+            smbCount > 0 ? "Ändra fett och protein?" : "Lägg till fett och protein?"
+        }
+
         var editPresetPopover: some View {
             Form {
-                Section(
-                    header: Text("Ändra måltid"),
-                    footer: Text(
-                        "Om du väljer att ändra fett och protein raderas tidigare registrerad fett och protein för den aktuella måltiden"
-                    )
-                ) {
+                Section(header: Text("Ändra måltid"), footer: VStack(alignment: .leading) {
+                    if smbCount > 0 {
+                        Text(
+                            "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
+                        )
+                    }
+                }) {
                     HStack {
                         Text("Kolhydrater")
                         Spacer()
@@ -175,14 +205,19 @@ extension DataTable {
                         Text("g")
                     }
 
-                    Toggle("Ändra fett och protein?", isOn: $isFatProteinEnabled)
+                    Toggle(toggleText, isOn: $isFatProteinEnabled)
+                        .foregroundColor(.secondary)
                         .onChange(of: isFatProteinEnabled) { newValue in
                             if newValue {
                                 // Fetch connected .fpus entries when the toggle is turned on
                                 connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
+                                smbCount = connectedFpus.count
+                                smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                             } else {
-                                // Clear the connected fpus when the toggle is turned off
+                                // Clear the connected fpus and reset the count and grams when the toggle is turned off
                                 connectedFpus = []
+                                smbCount = 0
+                                smbGrams = 0.0
                             }
                         }
 
@@ -219,27 +254,36 @@ extension DataTable {
                     }
                 }
                 Section {
-                    Button("Spara ändringar") {
-                        if let treatmentToDelete = alertTreatmentToDelete {
-                            // Delete the carb entry directly
-                            state.deleteCarbs(treatmentToDelete)
-                            alertTreatmentToDelete = nil // Reset the alert treatment
+                    if exceedsMaxCarbs {
+                        HStack {
+                            Image(systemName: "x.circle.fill")
+                                .foregroundColor(.red)
+                            Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
+                                .foregroundColor(.secondary)
                         }
-                        // Append "✩" to the note
-                        let updatedNote = "✩" + selectedNote
-                        // Call the addCarbsEntry function from DataTable.StateModel
-                        state.addCarbsEntry(
-                            amount: selectedCarbAmount,
-                            date: selectedDate,
-                            fat: selectedFat,
-                            protein: selectedProtein,
-                            note: updatedNote
-                        )
-                        // If the toggle is on, delete the connected fpus silently
-                        if isFatProteinEnabled {
-                            state.deleteFpus(connectedFpus)
+                    } else {
+                        Button("Spara ändringar") {
+                            if let treatmentToDelete = alertTreatmentToDelete {
+                                // Delete the carb entry directly
+                                state.deleteCarbs(treatmentToDelete)
+                                alertTreatmentToDelete = nil // Reset the alert treatment
+                            }
+                            // Append "✩" to the note
+                            let updatedNote = "✩" + selectedNote
+                            // Call the addCarbsEntry function from DataTable.StateModel
+                            state.addCarbsEntry(
+                                amount: selectedCarbAmount,
+                                date: selectedDate,
+                                fat: selectedFat,
+                                protein: selectedProtein,
+                                note: updatedNote
+                            )
+                            // If the toggle is on, delete the connected fpus silently
+                            if isFatProteinEnabled {
+                                state.deleteFpus(connectedFpus)
+                            }
+                            isEditSheetPresented = false
                         }
-                        isEditSheetPresented = false
                     }
 
                     Button("Cancel") {
@@ -261,6 +305,8 @@ extension DataTable {
                 selectedFat = 0.0
                 selectedProtein = 0.0
                 isFatProteinEnabled = false
+                smbCount = 0
+                smbGrams = 0.0
             }
         }
 
@@ -573,7 +619,9 @@ extension DataTable {
 
                             // Fetch connected .fpus entries
                             let connectedFpus = state.fetchConnectedFpus(forDate: item.date)
+                            let fpuAmounts = connectedFpus.map { $0.amount ?? 0.0 }
                             print("Connected .fpus entries: \(connectedFpus)")
+                            print("Amounts of connected .fpus entries: \(fpuAmounts)")
                         }
                     ).tint(.blue)
                 }

@@ -9,6 +9,7 @@ extension DataTable {
         @Injected() var healthKitManager: HealthKitManager!
         @Injected() var pumpHistoryStorage: PumpHistoryStorage!
         @Injected() var apsManager: APSManager!
+        @Injected() var settings: SettingsManager!
 
         let coredataContext = CoreDataStack.shared.persistentContainer.viewContext
 
@@ -21,7 +22,7 @@ extension DataTable {
         @Published var maxBolus: Decimal = 0
         @Published var nonPumpInsulinAmount: Decimal = 0
         @Published var nonPumpInsulinDate = Date()
-        @Published var placeholder: Decimal = 5
+        @Published var maxCarbs: Decimal = 0
 
         var units: GlucoseUnits = .mmolL
 
@@ -35,6 +36,7 @@ extension DataTable {
             broadcaster.register(CarbsObserver.self, observer: self)
             broadcaster.register(GlucoseObserver.self, observer: self)
             maxBolus = provider.pumpSettings().maxBolus
+            maxCarbs = settings.settings.maxCarbs
         }
 
         private let processQueue =
