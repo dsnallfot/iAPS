@@ -192,7 +192,7 @@ extension DataTable {
         var editPresetPopover: some View {
             NavigationView {
                 Form {
-                    Section(header: Text("Ändra måltid"), footer: VStack(alignment: .leading) {
+                    Section(footer: VStack(alignment: .leading) {
                         if smbCount > 0 && isFatProteinEnabled {
                             Text(
                                 "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
@@ -251,36 +251,58 @@ extension DataTable {
                     Section {
                         if exceedsMaxCarbs {
                             HStack {
+                                Spacer()
                                 Image(systemName: "x.circle.fill")
                                     .foregroundColor(.red)
                                 Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
                                     .foregroundColor(.secondary)
+                                Spacer()
                             }
                         } else {
-                            Button("Spara ändringar") {
-                                if let treatmentToDelete = alertTreatmentToDelete {
-                                    // Delete the carb entry directly
-                                    state.deleteCarbs(treatmentToDelete)
-                                    alertTreatmentToDelete = nil // Reset the alert treatment
+                            HStack {
+                                Spacer()
+                                Button("Spara ändringar") {
+                                    if let treatmentToDelete = alertTreatmentToDelete {
+                                        // Delete the carb entry directly
+                                        state.deleteCarbs(treatmentToDelete)
+                                        alertTreatmentToDelete = nil // Reset the alert treatment
+                                    }
+                                    // Append "✩" to the note
+                                    let updatedNote = "✩" + selectedNote
+                                    // Call the addCarbsEntry function from DataTable.StateModel
+                                    state.addCarbsEntry(
+                                        amount: selectedCarbAmount,
+                                        date: selectedDate,
+                                        fat: selectedFat,
+                                        protein: selectedProtein,
+                                        note: updatedNote
+                                    )
+                                    // If the toggle is on, delete the connected fpus silently
+                                    if isFatProteinEnabled {
+                                        state.deleteFpus(connectedFpus)
+                                    }
+                                    isEditSheetPresented = false
                                 }
-                                // Append "✩" to the note
-                                let updatedNote = "✩" + selectedNote
-                                // Call the addCarbsEntry function from DataTable.StateModel
-                                state.addCarbsEntry(
-                                    amount: selectedCarbAmount,
-                                    date: selectedDate,
-                                    fat: selectedFat,
-                                    protein: selectedProtein,
-                                    note: updatedNote
-                                )
-                                // If the toggle is on, delete the connected fpus silently
-                                if isFatProteinEnabled {
-                                    state.deleteFpus(connectedFpus)
-                                }
-                                isEditSheetPresented = false
+                                Spacer()
                             }
+                            .listRowBackground(
+                                AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                            )
+                            .tint(.white)
                         }
                     }
+                    .fontWeight(.semibold)
+                    .font(.title3)
                 }
                 .onAppear {
                     if let treatmentToDelete = alertTreatmentToDelete {
@@ -612,13 +634,10 @@ extension DataTable {
                             isEditSheetPresented = true
                             selectedCarbAmount = item.amount ?? 0.0
                             alertTreatmentToDelete = item // Ensure the treatment is set for deletion
-                            print("Swipe for att ändra Kolhydrater")
 
                             // Fetch connected .fpus entries
                             let connectedFpus = state.fetchConnectedFpus(forDate: item.date)
                             let fpuAmounts = connectedFpus.map { $0.amount ?? 0.0 }
-                            // print("Connected .fpus entries: \(connectedFpus)")
-                            print("Amounts of connected .fpus entries: \(fpuAmounts)")
                         }
                     ).tint(.blue)
                 }
