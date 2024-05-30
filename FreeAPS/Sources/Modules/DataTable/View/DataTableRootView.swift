@@ -192,7 +192,7 @@ extension DataTable {
         var editPresetPopover: some View {
             Form {
                 Section(header: Text("Ändra måltid"), footer: VStack(alignment: .leading) {
-                    if smbCount > 0 {
+                    if smbCount > 0 && isFatProteinEnabled {
                         Text(
                             "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
                         )
@@ -205,21 +205,15 @@ extension DataTable {
                         Text("g")
                     }
 
-                    Toggle(toggleText, isOn: $isFatProteinEnabled)
-                        .foregroundColor(.secondary)
-                        .onChange(of: isFatProteinEnabled) { newValue in
-                            if newValue {
-                                // Fetch connected .fpus entries when the toggle is turned on
-                                connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
-                                smbCount = connectedFpus.count
-                                smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
-                            } else {
-                                // Clear the connected fpus and reset the count and grams when the toggle is turned off
-                                connectedFpus = []
-                                smbCount = 0
-                                smbGrams = 0.0
-                            }
-                        }
+                    HStack {
+                        Text(toggleText)
+                            .foregroundColor(.brown)
+                        Spacer()
+                        Toggle("", isOn: $isFatProteinEnabled)
+                            .labelsHidden()
+                            .toggleStyle(CheckboxToggleStyle())
+                            .foregroundColor(.brown)
+                    }
 
                     if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
                         HStack {
@@ -298,6 +292,9 @@ extension DataTable {
                     selectedNote = treatmentToDelete.note ?? "" // Set the initial note
                     // selectedFat = treatmentToDelete.fat ?? 0.0 // Set the initial fat
                     // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
+                    connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
+                    smbCount = connectedFpus.count
+                    smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                 }
             }
             .onDisappear {
@@ -620,7 +617,7 @@ extension DataTable {
                             // Fetch connected .fpus entries
                             let connectedFpus = state.fetchConnectedFpus(forDate: item.date)
                             let fpuAmounts = connectedFpus.map { $0.amount ?? 0.0 }
-                            print("Connected .fpus entries: \(connectedFpus)")
+                            // print("Connected .fpus entries: \(connectedFpus)")
                             print("Amounts of connected .fpus entries: \(fpuAmounts)")
                         }
                     ).tint(.blue)
