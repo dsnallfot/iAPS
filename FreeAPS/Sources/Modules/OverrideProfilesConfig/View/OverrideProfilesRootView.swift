@@ -445,7 +445,6 @@ extension OverrideProfilesConfig {
             .navigationBarItems(trailing: Button("Close", action: state.hideModal))
             .sheet(isPresented: $isEditSheetPresented) {
                 editPresetPopover
-                    .padding()
             }
             .alert(isPresented: $showDeleteAlert) {
                 Alert(

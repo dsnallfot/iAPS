@@ -160,7 +160,6 @@ extension AddTempTarget {
             }
             .sheet(isPresented: $isEditSheetPresented) {
                 editPresetPopover()
-                    .padding()
             }
             .onAppear {
                 configureView()

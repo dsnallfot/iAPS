@@ -7,26 +7,26 @@ extension DataTable {
         let resolver: Resolver
         @StateObject var state = StateModel()
 
-        @State private var isRemoveHistoryItemAlertPresented: Bool = false // Ny
-        @State private var alertTitle: String = "" // Ny
-        @State private var alertMessage: String = "" // Ny
-        @State private var alertTreatmentToDelete: Treatment? // Ny
-        @State private var alertGlucoseToDelete: Glucose? // Ny
+        @State private var isRemoveHistoryItemAlertPresented: Bool = false
+        @State private var alertTitle: String = ""
+        @State private var alertMessage: String = ""
+        @State private var alertTreatmentToDelete: Treatment?
+        @State private var alertGlucoseToDelete: Glucose?
         @State private var showManualGlucose: Bool = false
         @State private var showNonPumpInsulin: Bool = false
         @State private var showFutureEntries: Bool = false
         @State private var isAmountUnconfirmed: Bool = true
         @State private var isEditSheetPresented: Bool = false
         @State var pushed = false
-        @State private var selectedCarbAmount: Decimal = 0.0 // New
-        @State private var selectedDate = Date() // New
-        @State private var selectedNote: String = "" // New
-        @State private var selectedFat: Decimal = 0.0 // New
-        @State private var selectedProtein: Decimal = 0.0 // New
-        @State private var isFatProteinEnabled: Bool = false // Add a state variable for the toggle
-        @State private var connectedFpus: [Treatment] = [] // Add a state variable to store the connected fpus
-        @State private var smbCount: Int = 0 // Add a state variable for the count of .fpus entries
-        @State private var smbGrams: Decimal = 0.0 // Add a state variable for the total grams of .fpus entries
+        @State private var selectedCarbAmount: Decimal = 0.0
+        @State private var selectedDate = Date()
+        @State private var selectedNote: String = ""
+        @State private var selectedFat: Decimal = 0.0
+        @State private var selectedProtein: Decimal = 0.0
+        @State private var isFatProteinEnabled: Bool = false
+        @State private var connectedFpus: [Treatment] = []
+        @State private var smbCount: Int = 0
+        @State private var smbGrams: Decimal = 0.0
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -118,12 +118,13 @@ extension DataTable {
 
                 historyContentView
             }
-            .onAppear(perform: configureView)
+            .onAppear {
+                configureView()
+            }
             .onDisappear {
                 state.apsManager
-                    .determineBasalSync() // Daniel: Added to force update of COB/IOB etc in homeview/chart when leaving datatable view
+                    .determineBasalSync()
             }
-
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -181,7 +182,6 @@ extension DataTable {
             }
             .sheet(isPresented: $isEditSheetPresented) {
                 editPresetPopover
-                    .padding()
             }
         }
 
@@ -191,132 +191,128 @@ extension DataTable {
 
         var editPresetPopover: some View {
             NavigationView {
-                Form {
-                    Section(footer: VStack(alignment: .leading) {
-                        if smbCount > 0 && isFatProteinEnabled {
-                            Text(
-                                "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
-                            )
-                        }
-                    }) {
-                        HStack {
-                            Text("Kolhydrater")
-                            Spacer()
-                            DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
-                            Text("g")
-                        }
-
-                        HStack {
-                            Text(toggleText)
-                                .foregroundColor(.brown)
-                            Spacer()
-                            Toggle("", isOn: $isFatProteinEnabled)
-                                .labelsHidden()
-                                .toggleStyle(CheckboxToggleStyle())
-                                .foregroundColor(.brown)
-                        }
-
-                        if isFatProteinEnabled { // Conditionally display the Fett and Protein fields
+                VStack {
+                    Form {
+                        Section(footer: VStack(alignment: .leading) {
+                            if smbCount > 0 && isFatProteinEnabled {
+                                Text(
+                                    "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
+                                )
+                            }
+                        }) {
                             HStack {
-                                Text("Fett")
-                                    .foregroundColor(.brown)
+                                Text("Kolhydrater")
                                 Spacer()
-                                DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                                DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
                                 Text("g")
-                                    .foregroundColor(.brown)
                             }
-                            HStack {
-                                Text("Protein")
-                                    .foregroundColor(.brown)
-                                Spacer()
-                                DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
-                                Text("g")
-                                    .foregroundColor(.brown)
-                            }
-                        }
 
-                        HStack {
-                            Text("Notering")
-                            TextField("...", text: $selectedNote)
-                                .multilineTextAlignment(.trailing) // Aligns the text within the TextField to the trailing edge
-                                .padding(.leading) // Optional: Adds padding to the leading side of the TextField
-                        }
-                        HStack {
-                            Text("Tid")
-                            Spacer()
-                            DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
-                                .labelsHidden()
-                        }
-                    }
-                    Section {
-                        if exceedsMaxCarbs {
                             HStack {
+                                Text(toggleText)
+                                    .foregroundColor(.brown)
                                 Spacer()
-                                Image(systemName: "x.circle.fill")
-                                    .foregroundColor(.red)
-                                Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
-                                    .foregroundColor(.secondary)
-                                Spacer()
+                                Toggle("", isOn: $isFatProteinEnabled)
+                                    .labelsHidden()
+                                    .toggleStyle(CheckboxToggleStyle())
+                                    .foregroundColor(.brown)
                             }
-                        } else {
-                            HStack {
-                                Spacer()
-                                Button("Spara ändringar") {
-                                    if let treatmentToDelete = alertTreatmentToDelete {
-                                        // Delete the carb entry directly
-                                        state.deleteCarbs(treatmentToDelete)
-                                        alertTreatmentToDelete = nil // Reset the alert treatment
-                                    }
-                                    // Append "✩" to the note
-                                    let updatedNote = "✩" + selectedNote
-                                    // Call the addCarbsEntry function from DataTable.StateModel
-                                    state.addCarbsEntry(
-                                        amount: selectedCarbAmount,
-                                        date: selectedDate,
-                                        fat: selectedFat,
-                                        protein: selectedProtein,
-                                        note: updatedNote
-                                    )
-                                    // If the toggle is on, delete the connected fpus silently
-                                    if isFatProteinEnabled {
-                                        state.deleteFpus(connectedFpus)
-                                    }
-                                    isEditSheetPresented = false
+
+                            if isFatProteinEnabled {
+                                HStack {
+                                    Text("Fett")
+                                        .foregroundColor(.brown)
+                                    Spacer()
+                                    DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                                    Text("g")
+                                        .foregroundColor(.brown)
                                 }
-                                Spacer()
+                                HStack {
+                                    Text("Protein")
+                                        .foregroundColor(.brown)
+                                    Spacer()
+                                    DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                                    Text("g")
+                                        .foregroundColor(.brown)
+                                }
                             }
-                            .listRowBackground(
-                                AnyView(LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
-                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
-                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
-                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
-                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                                    ]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ))
-                            )
-                            .tint(.white)
+
+                            HStack {
+                                Text("Notering")
+                                TextField("...", text: $selectedNote)
+                                    .multilineTextAlignment(.trailing)
+                                    .padding(.leading)
+                            }
+                            HStack {
+                                Text("Tid")
+                                Spacer()
+                                DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            }
                         }
+                        Section {
+                            if exceedsMaxCarbs {
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "x.circle.fill")
+                                        .foregroundColor(.red)
+                                    Text("Inställd maxgräns: \(formattedMaxCarbs()) g")
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
+                            } else {
+                                HStack {
+                                    Spacer()
+                                    Button("Spara ändringar") {
+                                        if let treatmentToDelete = alertTreatmentToDelete {
+                                            state.deleteCarbs(treatmentToDelete)
+                                            alertTreatmentToDelete = nil
+                                        }
+                                        let updatedNote = "✩" + selectedNote
+                                        state.addCarbsEntry(
+                                            amount: selectedCarbAmount,
+                                            date: selectedDate,
+                                            fat: selectedFat,
+                                            protein: selectedProtein,
+                                            note: updatedNote
+                                        )
+                                        if isFatProteinEnabled {
+                                            state.deleteFpus(connectedFpus)
+                                        }
+                                        isEditSheetPresented = false
+                                    }
+                                    Spacer()
+                                }
+                                .listRowBackground(
+                                    AnyView(LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                        ]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ))
+                                )
+                                .tint(.white)
+                            }
+                        }
+                        .fontWeight(.semibold)
+                        .font(.title3)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .fontWeight(.semibold)
-                    .font(.title3)
                 }
                 .onAppear {
                     if let treatmentToDelete = alertTreatmentToDelete {
-                        selectedDate = treatmentToDelete.date // Set the initial date
-                        selectedNote = treatmentToDelete.note ?? "" // Set the initial note
-                        // selectedFat = treatmentToDelete.fat ?? 0.0 // Set the initial fat
-                        // selectedProtein = treatmentToDelete.protein ?? 0.0 // Set the initial protein
+                        selectedDate = treatmentToDelete.date
+                        selectedNote = treatmentToDelete.note ?? ""
                         connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
                         smbCount = connectedFpus.count
                         smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                     }
                 }
                 .onDisappear {
-                    // Clear the fat and protein fields and reset the toggle
                     selectedFat = 0.0
                     selectedProtein = 0.0
                     isFatProteinEnabled = false
@@ -352,7 +348,7 @@ extension DataTable {
                             DatePicker(
                                 "Date",
                                 selection: $state.manualGlucoseDate,
-                                in: ...Date() // Disable selecting future dates
+                                in: ...Date()
                             )
                         }
 
@@ -394,7 +390,6 @@ extension DataTable {
                     }
                 }
                 .onAppear {
-                    // Set the manualGlucoseDate to the current date and time
                     state.manualGlucoseDate = Date()
                     configureView()
                 }
@@ -429,7 +424,7 @@ extension DataTable {
                             DatePicker(
                                 "Date",
                                 selection: $state.nonPumpInsulinDate,
-                                in: ...Date() // Disable selecting future dates
+                                in: ...Date()
                             )
                         }
 
@@ -482,7 +477,6 @@ extension DataTable {
                     }
                 }
                 .onAppear {
-                    // Set the nonPumpInsulinDate to the current date and time
                     state.nonPumpInsulinDate = Date()
                     configureView()
                 }
@@ -523,7 +517,6 @@ extension DataTable {
                         })
                             .buttonStyle(.borderless)
                     }
-                    // .listRowBackground(Color(.tertiarySystemFill))
                 }
 
                 if !state.treatments.isEmpty {
@@ -552,8 +545,6 @@ extension DataTable {
                     ForEach(state.basals) { item in
                         basalView(item)
                     }
-                    // .listRowBackground(Color(.tertiarySystemBackground))
-
                 } else {
                     HStack {
                         Text("Ingen data")
@@ -568,7 +559,6 @@ extension DataTable {
                     ForEach(state.glucose) { item in
                         glucoseView(item, isManual: item.glucose)
                     }
-                    // .listRowBackground(Color(.tertiarySystemBackground))
                 } else {
                     HStack {
                         Text("Ingen data")
@@ -613,13 +603,10 @@ extension DataTable {
                             alertTitle = "Radera Fett & Protein?"
                             alertMessage = "All registrerad fett och protein i måltiden kommer att raderas."
                         } else {
-                            // item is insulin treatment; item.type == .bolus
                             alertTitle = "Radera insulin?"
                             if item.isSMB ?? false {
-                                // If it's an SMB, add SMB first and then the rest
                                 alertMessage = item.amountText + " • SMB • " + dateFormatter.string(from: item.date)
                             } else {
-                                // If it's not an SMB, add the rest as before
                                 alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
                             }
                         }
@@ -633,11 +620,13 @@ extension DataTable {
                         action: {
                             isEditSheetPresented = true
                             selectedCarbAmount = item.amount ?? 0.0
-                            alertTreatmentToDelete = item // Ensure the treatment is set for deletion
-
+                            alertTreatmentToDelete = item
+                            selectedDate = item.date
+                            selectedNote = item.note ?? ""
                             // Fetch connected .fpus entries
-                            let connectedFpus = state.fetchConnectedFpus(forDate: item.date)
-                            let fpuAmounts = connectedFpus.map { $0.amount ?? 0.0 }
+                            connectedFpus = state.fetchConnectedFpus(forDate: item.date)
+                            smbCount = connectedFpus.count
+                            smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                         }
                     ).tint(.blue)
                 }
