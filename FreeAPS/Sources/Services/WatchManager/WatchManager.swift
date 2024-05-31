@@ -427,9 +427,11 @@ extension BaseWatchManager: WCSessionDelegate {
                     actualDate: nil,
                     carbs: Decimal(carbs),
                     fat: Decimal(fat),
-                    protein: Decimal(protein), note: nil,
+                    protein: Decimal(protein),
+                    note: message["note"] as? String, // Handling the note
                     enteredBy: CarbsEntry.manual,
-                    isFPU: false, fpuID: UUID().uuidString
+                    isFPU: false,
+                    fpuID: UUID().uuidString
                 )]
             )
 

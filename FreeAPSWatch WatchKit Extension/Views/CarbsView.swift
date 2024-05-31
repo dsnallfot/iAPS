@@ -201,15 +201,16 @@ import SwiftUI
                 let amountFat = Int(numberFormatter.string(from: fatAmount as NSNumber)!) ?? Int(fatAmount.rounded())
                 let amountProtein = Int(numberFormatter.string(from: proteinAmount as NSNumber)!) ??
                     Int(proteinAmount.rounded())
-                state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein)
+                let note = "⌚️" // Hard-coded notes
+                state.addMeal(amountCarbs, fat: amountFat, protein: amountProtein, note: note)
             }
-            label: { Text("Save")
-                .frame(width: 100, height: 30)
+            label: {
+                Text("Save")
+                    .frame(width: 100, height: 30)
             }
             .font(.title3.weight(.semibold))
             .foregroundColor(carbAmount > 0 || fatAmount > 0 || proteinAmount > 0 ? .blue : .secondary)
             .disabled(carbAmount <= 0 && fatAmount <= 0 && proteinAmount <= 0)
-
             .navigationTitle("Reg Måltid")
         }
     }

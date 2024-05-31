@@ -231,9 +231,17 @@ extension DataTable {
             // Retrieve the delay from settings (in minutes)
             let delay = settings.settings.delay
 
-            // Convert delay from minutes to seconds and find the first .fpus entry that is 'delay' minutes after the given date (delay: default 60 minutes)
-            let fpuEntries = treatments
-                .filter { $0.type == .fpus && $0.date == date.addingTimeInterval(TimeInterval(delay * 60)) }
+            // Convert delay from minutes to seconds
+            let delayInSeconds = TimeInterval(delay * 60)
+            let startTime = date.addingTimeInterval(delayInSeconds)
+            let endTime = startTime.addingTimeInterval(1)
+
+            // Filter .fpus entries that match the time range from delay to delay + 1 second
+            let fpuEntries = treatments.filter { treatment in
+                treatment.type == .fpus &&
+                    treatment.date >= startTime &&
+                    treatment.date <= endTime
+            }
 
             guard let firstFpuEntry = fpuEntries.first else {
                 return []
