@@ -334,13 +334,13 @@ extension Bolus {
         func notActive() {
             let defaults = UserDefaults.standard
             defaults.set(false, forKey: IAPSconfig.inBolusView)
-            print("Active: NO") // For testing
+            print("SMB Pausad pågående måltid: Nej") // For testing
         }
 
         func viewActive() {
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: IAPSconfig.inBolusView)
-            print("Active: YES") // For testing
+            print("SMB Pausad pågående måltid: Ja") // For testing
         }
     }
 }

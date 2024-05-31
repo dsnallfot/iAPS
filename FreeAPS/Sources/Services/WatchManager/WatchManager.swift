@@ -420,6 +420,14 @@ extension BaseWatchManager: WCSessionDelegate {
            let protein = message["protein"] as? Double,
            carbs > 0 || fat > 0 || protein > 0
         {
+            // Run viewActive function
+            viewActive()
+
+            // Schedule notActive to run after 60 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                self.notActive()
+            }
+
             carbsStorage.storeCarbs(
                 [CarbsEntry(
                     id: UUID().uuidString,
@@ -486,7 +494,7 @@ extension BaseWatchManager: WCSessionDelegate {
                         nightscout.editOverride(nsString, duration, activeOverride.date ?? Date())
                     }
                 }
-                // Activate the new override and uplad the new ovderride to NS. Some duplicate code now.
+                // Activate the new override and upload the new override to NS. Some duplicate code now.
                 storage.overrideFromPreset(preset)
                 nightscout.uploadOverride(
                     preset.name ?? "",
@@ -518,6 +526,18 @@ extension BaseWatchManager: WCSessionDelegate {
         }
 
         replyHandler(["confirmation": false])
+    }
+
+    func notActive() {
+        let defaults = UserDefaults.standard
+        defaults.set(false, forKey: IAPSconfig.inBolusView)
+        print("SMB Pausad pågående måltid: Nej") // For testing
+    }
+
+    func viewActive() {
+        let defaults = UserDefaults.standard
+        defaults.set(true, forKey: IAPSconfig.inBolusView)
+        print("SMB Pausad pågående måltid: Ja") // For testing
     }
 
     func session(_: WCSession, didReceiveMessageData _: Data) {}
