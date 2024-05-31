@@ -51,7 +51,7 @@ extension DataTable {
             processQueue.async {
                 let units = self.settingsManager.settings.units
 
-                var date = Date.now
+                // var date = Date.now
 
                 let carbs = self.provider.carbs()
                     .filter { !($0.isFPU ?? false) }
@@ -224,7 +224,7 @@ extension DataTable {
             )]
 
             provider.carbsStorage.storeCarbs(carbsToStore)
-            setupTreatments() // Refresh the treatments list after adding carbs
+            // setupTreatments() // Refresh the treatments list after adding carbs (disabled since the setupTreatment func already is called by CarbsDidUpdate observer)
         }
 
         func fetchConnectedFpus(forDate date: Date) -> [Treatment] {
@@ -256,7 +256,7 @@ extension DataTable {
             for fpu in fpus {
                 provider.deleteCarbs(fpu)
             }
-            setupTreatments() // Refresh the treatments list after deletion
+            // setupTreatments() // Refresh the treatments list after deletion (disabled since the setupTreatment func already is called by CarbsDidUpdate observer)
         }
 
         func addManualGlucose() {
