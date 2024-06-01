@@ -124,6 +124,7 @@ extension DataTable {
             .onDisappear {
                 state.apsManager
                     .determineBasalSync()
+                state.uploadEditedCarbs()
             }
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)

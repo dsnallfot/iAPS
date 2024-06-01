@@ -31,6 +31,10 @@ extension DataTable {
             carbsStorage.recent()
         }
 
+        func uploadEditedCarbs() {
+            nightscoutManager.uploadCarbs()
+        }
+
         func deleteCarbs(_ treatement: Treatment) {
             nightscoutManager.deleteCarbs(treatement, complexMeal: false)
             healthkitManager.deleteCarbs(syncID: treatement.id, fpuID: treatement.fpuID ?? treatement.id)

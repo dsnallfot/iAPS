@@ -26,6 +26,7 @@ protocol NightscoutManager: GlucoseSource {
     func deleteAllNSoverrrides()
     func deleteOverride()
     func editOverride(_ profile: String, _ duration_: Double, _ date: Date)
+    func uploadCarbs()
     var cgmURL: URL? { get }
 }
 
@@ -1085,7 +1086,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
         uploadTreatments(pumpHistoryStorage.nightscoutTretmentsNotUploaded(), fileToSave: OpenAPS.Nightscout.uploadedPumphistory)
     }
 
-    private func uploadCarbs() {
+    /* private */ func uploadCarbs() {
+        print("NS uploadCarbs kördes")
         uploadTreatments(carbsStorage.nightscoutTretmentsNotUploaded(), fileToSave: OpenAPS.Nightscout.uploadedCarbs)
     }
 

@@ -167,6 +167,10 @@ extension DataTable {
             }
         }
 
+        func uploadEditedCarbs() {
+            provider.uploadEditedCarbs()
+        }
+
         func deleteCarbs(_ treatment: Treatment) {
             provider.deleteCarbs(treatment)
         }
