@@ -64,7 +64,7 @@ extension AddTempTarget {
                     Section(header: Text("Aktivera favorit")) {
                         ForEach(state.presets) { preset in
                             presetView(for: preset)
-                                .swipeActions {
+                                .swipeActions(edge: .trailing) {
                                     Button(role: .none, action: {
                                         removeAlert = Alert(
                                             title: Text("Are you sure?"),
@@ -79,6 +79,8 @@ extension AddTempTarget {
                                     }) {
                                         Label("Ta bort", systemImage: "trash")
                                     }.tint(.red)
+                                }
+                                .swipeActions(edge: .leading) {
                                     Button {
                                         selectedPreset = preset
                                         state.newPresetName = preset.displayName

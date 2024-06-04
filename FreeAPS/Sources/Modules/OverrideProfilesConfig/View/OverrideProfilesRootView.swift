@@ -330,7 +330,7 @@ extension OverrideProfilesConfig {
                         ForEach(fetchedProfiles.indices, id: \.self) { index in
                             let preset = fetchedProfiles[index]
                             profilesView(for: preset)
-                                .swipeActions {
+                                .swipeActions(edge: .trailing) {
                                     Button(role: .none) {
                                         indexToDelete = index
                                         profileNameToDelete = preset.name ?? "this profile"
@@ -338,7 +338,8 @@ extension OverrideProfilesConfig {
                                     } label: {
                                         Label("Ta bort", systemImage: "trash")
                                     }.tint(.red)
-
+                                }
+                                .swipeActions(edge: .leading) {
                                     Button {
                                         selectedPreset = preset
                                         state.profileName = preset.name ?? ""
@@ -352,8 +353,7 @@ extension OverrideProfilesConfig {
                     header: { Text("Aktivera sparad override") }
                     footer: { VStack(alignment: .leading) {
                         Text("Svep vänster för att redigera eller radera.")
-                    }
-                    }
+                    }}
                 }
                 settingsConfig(header: "Ställ in Override")
 
@@ -363,11 +363,9 @@ extension OverrideProfilesConfig {
                             showAlert.toggle()
                             alertString = "\(state.percentage.formatted(.number)) %, " +
                                 (
-                                    state.duration > 0 || !state
-                                        ._indefinite ?
+                                    state.duration > 0 || !state._indefinite ?
                                         (
-                                            state
-                                                .duration
+                                            state.duration
                                                 .formatted(.number.grouping(.never).rounded().precision(.fractionLength(0))) +
                                                 " min."
                                         ) :
@@ -376,26 +374,21 @@ extension OverrideProfilesConfig {
                                 (
                                     (state.target == 0 || !state.override_target) ? "" :
                                         (" Target: " + state.target.formatted() + " " + state.units.rawValue + ".")
-                                )
-                                +
+                                ) +
                                 (
-                                    state
-                                        .smbIsOff ?
+                                    state.smbIsOff ?
                                         NSLocalizedString(
                                             " SMBs are disabled either by schedule or during the entire duration.",
                                             comment: ""
                                         ) : ""
-                                )
-                                +
-                                "\n\n"
-                                +
+                                ) +
+                                "\n\n" +
                                 NSLocalizedString(
                                     "Starting this override will change your Profiles and/or your Target Glucose used for looping during the entire selected duration. Tapping ”Start Profile” will start your new profile or edit your current active profile.",
                                     comment: ""
                                 )
                         }
                         .disabled(unChanged())
-
                         .buttonStyle(BorderlessButtonStyle())
                         .font(.callout)
                         .controlSize(.mini)
@@ -426,12 +419,10 @@ extension OverrideProfilesConfig {
                             .controlSize(.mini)
                             .disabled(unChanged())
                     }
-
                     .sheet(isPresented: $isSheetPresented) {
                         presetPopover
                     }
                 }
-                // header: { Text("Ställ in Override") }
                 footer: {
                     Text(
                         "Your profile basal insulin will be adjusted with the override percentage and your profile ISF and CR will be inversly adjusted with the percentage."

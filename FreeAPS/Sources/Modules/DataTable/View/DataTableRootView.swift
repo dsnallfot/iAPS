@@ -590,7 +590,7 @@ extension DataTable {
                 Text(dateFormatter.string(from: item.date))
                     .moveDisabled(true)
             }
-            .swipeActions {
+            .swipeActions(edge: .trailing) {
                 Button(
                     "Radera",
                     systemImage: "trash.fill",
@@ -614,6 +614,8 @@ extension DataTable {
                         isRemoveHistoryItemAlertPresented = true
                     }
                 ).tint(.red)
+            }
+            .swipeActions(edge: .leading) {
                 if item.type == .carbs {
                     Button(
                         "Redigera",
