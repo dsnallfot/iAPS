@@ -505,7 +505,7 @@ extension DataTable {
                         Button(action: { showFutureEntries.toggle() }, label: {
                             Text("")
                             Spacer()
-                            Text(showFutureEntries ? "Dölj framtida" : "Visa framtida")
+                            Text(showFutureEntries ? "Dölj kommande" : "Visa kommande")
                                 .foregroundColor(colorScheme == .dark ? .accentColor : .accentColor)
                                 .font(.footnote)
                             Image(
@@ -591,29 +591,31 @@ extension DataTable {
                     .moveDisabled(true)
             }
             .swipeActions(edge: .trailing) {
-                Button(
-                    "Radera",
-                    systemImage: "trash.fill",
-                    role: .none,
-                    action: {
-                        alertTreatmentToDelete = item
-                        if item.type == .carbs {
-                            alertTitle = "Radera kolhydrater?"
-                            alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
-                        } else if item.type == .fpus {
-                            alertTitle = "Radera Fett & Protein?"
-                            alertMessage = "All registrerad fett och protein i måltiden kommer att raderas."
-                        } else {
-                            alertTitle = "Radera insulin?"
-                            if item.isSMB ?? false {
-                                alertMessage = item.amountText + " • SMB • " + dateFormatter.string(from: item.date)
-                            } else {
+                if item.type == .bolus || item.type == .carbs || item.type == .fpus {
+                    Button(
+                        "Radera",
+                        systemImage: "trash.fill",
+                        role: .none,
+                        action: {
+                            alertTreatmentToDelete = item
+                            if item.type == .carbs {
+                                alertTitle = "Radera kolhydrater?"
                                 alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
+                            } else if item.type == .fpus {
+                                alertTitle = "Radera Fett & Protein?"
+                                alertMessage = "All registrerad fett och protein i måltiden kommer att raderas."
+                            } else {
+                                alertTitle = "Radera insulin?"
+                                if item.isSMB ?? false {
+                                    alertMessage = item.amountText + " • SMB • " + dateFormatter.string(from: item.date)
+                                } else {
+                                    alertMessage = item.amountText + " • " + dateFormatter.string(from: item.date)
+                                }
                             }
+                            isRemoveHistoryItemAlertPresented = true
                         }
-                        isRemoveHistoryItemAlertPresented = true
-                    }
-                ).tint(.red)
+                    ).tint(.red)
+                }
             }
             .swipeActions(edge: .leading) {
                 if item.type == .carbs {
@@ -634,7 +636,7 @@ extension DataTable {
                     ).tint(.blue)
                 }
             }
-            .disabled(item.type == .tempBasal || item.type == .tempTarget || item.type == .resume || item.type == .suspend)
+            // .disabled(item.type == .tempBasal || item.type == .tempTarget || item.type == .resume || item.type == .suspend)
             .alert(
                 Text(alertTitle),
                 isPresented: $isRemoveHistoryItemAlertPresented
