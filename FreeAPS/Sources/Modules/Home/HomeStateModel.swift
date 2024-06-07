@@ -223,7 +223,7 @@ extension Home {
         func notActive() {
             let defaults = UserDefaults.standard
             defaults.set(false, forKey: IAPSconfig.inBolusView)
-            print("Active: NO") // For testing
+            print("SMB Pausad pågående måltid: Nej") // For testing
         }
 
         func runLoop() {

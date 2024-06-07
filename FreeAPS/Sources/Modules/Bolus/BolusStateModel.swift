@@ -79,6 +79,19 @@ extension Bolus {
         @Published var note: String = ""
         @Published var viewDetails: Bool = false
 
+        @Published var closedLoop: Bool = false
+        @Published var loopDate: Date = .distantFuture
+        @Published var now = Date.now
+
+        let loopReminder: CGFloat = 5 // 20
+
+        private var loopFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 0
+            return formatter
+        }
+
         override func subscribe() {
             setupInsulinRequired()
             broadcaster.register(SuggestionObserver.self, observer: self)
@@ -98,6 +111,8 @@ extension Bolus {
             sweetMealFactor = settings.settings.sweetMealFactor
             advancedCalc = settings.settings.advancedCalc
             maxCarbs = settings.settings.maxCarbs
+            closedLoop = settings.settings.closedLoop
+            loopDate = apsManager.lastLoopDate
 
             if waitForSuggestionInitial {
                 apsManager.determineBasal()
@@ -110,6 +125,7 @@ extension Bolus {
                             self.insulinRecommended = 0
                         }
                     }.store(in: &lifetime)
+                loopDate = apsManager.lastLoopDate
             }
         }
 
@@ -342,6 +358,15 @@ extension Bolus {
             defaults.set(true, forKey: IAPSconfig.inBolusView)
             print("SMB Pausad pågående måltid: Ja") // For testing
         }
+
+        func lastLoop() -> String? {
+            guard closedLoop else { return nil }
+            guard abs(now.timeIntervalSinceNow / 60) > loopReminder else { return nil }
+            let minAgo = abs(loopDate.timeIntervalSinceNow / 60)
+
+            let stringAgo = loopFormatter.string(from: minAgo as NSNumber) ?? ""
+            return "Senaste loop \(stringAgo) minuter sedan. Slutför eller avbryt denna bolusregistrering för att aktivera loop igen"
+        }
     }
 }
 
@@ -351,5 +376,12 @@ extension Bolus.StateModel: SuggestionObserver {
             self.waitForSuggestion = false
         }
         setupInsulinRequired()
+        loopDate = apsManager.lastLoopDate
+
+        if abs(now.timeIntervalSinceNow / 60) > loopReminder * 3 {
+            hideModal()
+            notActive()
+            debug(.apsManager, "Force Closing Bolus View", printToConsole: true)
+        }
     }
 }

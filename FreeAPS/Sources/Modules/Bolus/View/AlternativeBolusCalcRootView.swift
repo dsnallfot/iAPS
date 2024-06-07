@@ -187,6 +187,13 @@ extension Bolus {
                         )
                         .tint(.white)
                     }
+                    footer: {
+                        if (-1 * state.loopDate.timeIntervalSinceNow / 60) > state.loopReminder, let string = state.lastLoop() {
+                            Text(NSLocalizedString(string, comment: "Bolus View footer"))
+                                .padding(.top, 20).multilineTextAlignment(.center)
+                                .foregroundStyle(.orange)
+                        }
+                    }
                 }
                 if state.amount <= 0 {
                     Section {
@@ -195,6 +202,13 @@ extension Bolus {
                             state.showModal(for: nil)
                         }
                         label: { Text("Continue without bolus") }.frame(maxWidth: .infinity, alignment: .center).font(.title3)
+                    }
+                    footer: {
+                        if (-1 * state.loopDate.timeIntervalSinceNow / 60) > state.loopReminder, let string = state.lastLoop() {
+                            Text(NSLocalizedString(string, comment: "Bolus View footer"))
+                                .padding(.top, 20).multilineTextAlignment(.center)
+                                .foregroundStyle(.orange)
+                        }
                     }
                 }
             }
