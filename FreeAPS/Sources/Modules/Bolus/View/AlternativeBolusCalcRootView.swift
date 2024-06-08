@@ -1600,14 +1600,6 @@ extension Bolus {
                 let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus).replacingOccurrences(of: ".", with: ",")
 
                 VStack {
-                    if (-1 * state.loopDate.timeIntervalSinceNow / 60) > state.loopReminder, let string = state.lastLoop() {
-                        Divider()
-                            .frame(height: 1)
-                            .background(Color.secondary)
-                        Text(NSLocalizedString(string, comment: "Bolus View footer"))
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.orange)
-                    }
                     if state.insulinCalculated > roundedOrefInsulinRec && state
                         .insulinCalculated > 0 && roundedOrefInsulinRec > 0 && !state.useSuperBolus
                     {
@@ -1626,6 +1618,14 @@ extension Bolus {
                     .frame(height: 1)
                     .background(Color.secondary)
                 VStack {
+                    if (-1 * state.loopDate.timeIntervalSinceNow / 60) > state.loopReminder, let string = state.lastLoop() {
+                        Text(NSLocalizedString(string, comment: "Bolus View footer"))
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.orange)
+                        Divider()
+                            .frame(height: 1)
+                            .background(Color.secondary)
+                    }
                     if state.error, state.insulinCalculated > 0 {
                         VStack {
                             HStack {
