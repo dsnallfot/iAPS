@@ -8,7 +8,7 @@ extension Bolus {
         let waitForSuggestion: Bool
         let fetch: Bool
         @StateObject var state: StateModel
-        @State private var showInfo = false
+        // @State private var showInfo = false
         @State private var exceededMaxBolus = false
         @State private var exceededMaxBolus3 = false
         @State private var keepForNextWiew: Bool = false
@@ -102,7 +102,7 @@ extension Bolus {
                         .contentShape(Rectangle())
                         .onTapGesture {
                             if state.insulinCalculated <= 0 || roundedOrefInsulinRec <= 0 {
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                                 state.insulinCalculated = state.calculateInsulin()
                             } else if state.error && state.insulinCalculated > 0 {
                                 displayError = true
@@ -325,7 +325,7 @@ extension Bolus {
                     state.delete(deleteTwice: false, meal: meal)
                 }
             }
-            .sheet(isPresented: $showInfo) {
+            .sheet(isPresented: $state.showInfo) {
                 bolusInfoAlternativeCalculator
             }
         }
@@ -402,7 +402,7 @@ extension Bolus {
                             leading:
                             HStack {
                                 Button(action: {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }) {
                                     Image(systemName: "chevron.left")
                                         .scaleEffect(0.61)
@@ -557,12 +557,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Vänta med superbolus?")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -580,12 +580,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Ingen bolus rekommenderas")
                                 .foregroundColor(.loopRed)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
                             Text(
@@ -598,12 +598,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Vänta med att ge bolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -621,12 +621,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Vänta med superbolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -644,12 +644,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Vänta med att ge bolus?")
                                 .foregroundColor(.orange)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -667,12 +667,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.cyan)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Superbolusdos")
                                 .foregroundColor(.cyan)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -690,12 +690,12 @@ extension Bolus {
                             Image(systemName: "questionmark.circle.fill")
                                 .foregroundColor(.green)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Text("Förslag bolusdos")
                                 .foregroundColor(.green)
                                 .onTapGesture {
-                                    showInfo.toggle()
+                                    state.showInfo.toggle()
                                 }
                             Spacer()
 
@@ -1297,7 +1297,7 @@ extension Bolus {
                                 .foregroundColor(.purple)
                             Button(action: {
                                 state.amount = roundedOrefInsulinRec
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(roundedOrefInsulinRec.formatted())
@@ -1333,7 +1333,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Button(action: {
                                 state.amount = 0
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text("0")
@@ -1369,7 +1369,7 @@ extension Bolus {
                                 .foregroundColor(.insulin)
                             Button(action: {
                                 state.amount = roundedOrefInsulinRec
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(roundedOrefInsulinRec.formatted())
@@ -1410,7 +1410,7 @@ extension Bolus {
                                 .foregroundColor(.purple)
                             Button(action: {
                                 state.amount = Decimal(roundedResult)
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(roundedResult.formatted())
@@ -1446,7 +1446,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Button(action: {
                                 state.amount = 0
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text("0")
@@ -1482,7 +1482,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Button(action: {
                                 state.amount = state.insulinCalculated
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(state.insulinCalculated.formatted())
@@ -1518,7 +1518,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Button(action: {
                                 state.amount = state.insulinCalculated
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(state.insulinCalculated.formatted())
@@ -1554,7 +1554,7 @@ extension Bolus {
                                 .foregroundColor(.secondary)
                             Button(action: {
                                 state.amount = Decimal(roundedResult)
-                                showInfo.toggle()
+                                state.showInfo.toggle()
                             }) {
                                 HStack {
                                     Text(roundedResult.formatted())
@@ -1600,6 +1600,14 @@ extension Bolus {
                 let formattedOrefAmountBolus = String(format: "%.2f", orefamountbolus).replacingOccurrences(of: ".", with: ",")
 
                 VStack {
+                    if (-1 * state.loopDate.timeIntervalSinceNow / 60) > state.loopReminder, let string = state.lastLoop() {
+                        Divider()
+                            .frame(height: 1)
+                            .background(Color.secondary)
+                        Text(NSLocalizedString(string, comment: "Bolus View footer"))
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.orange)
+                    }
                     if state.insulinCalculated > roundedOrefInsulinRec && state
                         .insulinCalculated > 0 && roundedOrefInsulinRec > 0 && !state.useSuperBolus
                     {

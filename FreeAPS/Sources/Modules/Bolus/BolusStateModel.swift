@@ -83,6 +83,8 @@ extension Bolus {
         @Published var loopDate: Date = .distantFuture
         @Published var now = Date.now
 
+        @Published var showInfo = false
+
         let loopReminder: CGFloat = 5 // 20
 
         private var loopFormatter: NumberFormatter {
@@ -379,6 +381,7 @@ extension Bolus.StateModel: SuggestionObserver {
         loopDate = apsManager.lastLoopDate
 
         if abs(now.timeIntervalSinceNow / 60) > loopReminder * 3 {
+            showInfo = false
             hideModal()
             notActive()
             debug(.apsManager, "Force Closing Bolus View", printToConsole: true)
