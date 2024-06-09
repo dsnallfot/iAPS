@@ -25,8 +25,8 @@ extension DataTable {
         @State private var selectedProtein: Decimal = 0.0
         @State private var isFatProteinEnabled: Bool = false
         @State private var connectedFpus: [Treatment] = []
-        @State private var smbCount: Int = 0
-        @State private var smbGrams: Decimal = 0.0
+        // @State private var smbCount: Int = 0
+        // @State private var smbGrams: Decimal = 0.0
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -96,14 +96,14 @@ extension DataTable {
             return numberFormatter.string(from: state.maxCarbs as NSDecimalNumber) ?? "0.0"
         }
 
-        // Helper function to format smbGrams
-        private func formattedSmbGrams() -> String {
-            let numberFormatter = NumberFormatter()
-            numberFormatter.maximumFractionDigits = 1
-            numberFormatter.minimumFractionDigits = 1
-            numberFormatter.numberStyle = .decimal
-            return numberFormatter.string(from: smbGrams as NSDecimalNumber) ?? "0.0"
-        }
+        /* // Helper function to format smbGrams
+         private func formattedSmbGrams() -> String {
+             let numberFormatter = NumberFormatter()
+             numberFormatter.maximumFractionDigits = 1
+             numberFormatter.minimumFractionDigits = 1
+             numberFormatter.numberStyle = .decimal
+             return numberFormatter.string(from: smbGrams as NSDecimalNumber) ?? "0.0"
+         } */
 
         var body: some View {
             VStack {
@@ -186,55 +186,36 @@ extension DataTable {
             }
         }
 
-        var toggleText: String {
-            smbCount > 0 ? "Ändra fett och protein?" : "Lägg till fett och protein?"
-        }
+        /* var toggleText: String {
+             smbCount > 0 ? "Ändra fett och protein?" : "Lägg till fett och protein?"
+         } */
 
         var editPresetPopover: some View {
             NavigationView {
                 VStack {
                     Form {
-                        Section(footer: VStack(alignment: .leading) {
-                            if smbCount > 0 && isFatProteinEnabled {
-                                Text(
-                                    "När du klickar på 'Spara ändringar' nedan ersätts tidigare registrerad mängd fett och protein för den aktuella måltiden med den ny mängd du anger \n\nDetta innebär att \(smbCount) st fett/protein-värden motsvarande \(formattedSmbGrams()) g kolhydrater, ersätts med nya värden som räknas fram utifrån den angivna mängden fett och protein i måltiden"
-                                )
-                            }
-                        }) {
+                        Section {
                             HStack {
                                 Text("Kolhydrater")
                                 Spacer()
                                 DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
                                 Text("g")
                             }
-
                             HStack {
-                                Text(toggleText)
+                                Text("Fett")
                                     .foregroundColor(.brown)
                                 Spacer()
-                                Toggle("", isOn: $isFatProteinEnabled)
-                                    .labelsHidden()
-                                    .toggleStyle(CheckboxToggleStyle())
+                                DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                                Text("g")
                                     .foregroundColor(.brown)
                             }
-
-                            if isFatProteinEnabled {
-                                HStack {
-                                    Text("Fett")
-                                        .foregroundColor(.brown)
-                                    Spacer()
-                                    DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
-                                    Text("g")
-                                        .foregroundColor(.brown)
-                                }
-                                HStack {
-                                    Text("Protein")
-                                        .foregroundColor(.brown)
-                                    Spacer()
-                                    DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
-                                    Text("g")
-                                        .foregroundColor(.brown)
-                                }
+                            HStack {
+                                Text("Protein")
+                                    .foregroundColor(.brown)
+                                Spacer()
+                                DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                                Text("g")
+                                    .foregroundColor(.brown)
                             }
 
                             HStack {
@@ -276,9 +257,7 @@ extension DataTable {
                                             protein: selectedProtein,
                                             note: updatedNote
                                         )
-                                        if isFatProteinEnabled {
-                                            state.deleteFpus(connectedFpus)
-                                        }
+                                        state.deleteFpus(connectedFpus)
                                         isEditSheetPresented = false
                                     }
                                     Spacer()
@@ -308,17 +287,19 @@ extension DataTable {
                     if let treatmentToDelete = alertTreatmentToDelete {
                         selectedDate = treatmentToDelete.date
                         selectedNote = treatmentToDelete.note ?? ""
+                        selectedFat = treatmentToDelete.fat ?? 0.0
+                        selectedProtein = treatmentToDelete.protein ?? 0.0
                         connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
-                        smbCount = connectedFpus.count
-                        smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
+                        // smbCount = connectedFpus.count
+                        // smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                     }
                 }
                 .onDisappear {
                     selectedFat = 0.0
                     selectedProtein = 0.0
                     isFatProteinEnabled = false
-                    smbCount = 0
-                    smbGrams = 0.0
+                    // smbCount = 0
+                    // smbGrams = 0.0
                 }
                 .navigationTitle("Ändra måltid")
                 .navigationBarTitleDisplayMode(.inline)
@@ -630,8 +611,8 @@ extension DataTable {
                             selectedNote = item.note ?? ""
                             // Fetch connected .fpus entries
                             connectedFpus = state.fetchConnectedFpus(forDate: item.date)
-                            smbCount = connectedFpus.count
-                            smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
+                            // smbCount = connectedFpus.count
+                            // smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                         }
                     ).tint(.blue)
                 }

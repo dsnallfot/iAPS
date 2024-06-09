@@ -69,6 +69,8 @@ enum DataTable {
         let isFPU: Bool?
         let fpuID: String?
         let note: String?
+        let fat: Decimal?
+        let protein: Decimal?
         let isSMB: Bool?
         let isNonPump: Bool?
 
@@ -98,6 +100,8 @@ enum DataTable {
             isFPU: Bool? = nil,
             fpuID: String? = nil,
             note: String? = nil,
+            fat: Decimal? = nil,
+            protein: Decimal? = nil,
             isSMB: Bool? = nil,
             isNonPump: Bool? = nil
         ) {
@@ -112,6 +116,8 @@ enum DataTable {
             self.isFPU = isFPU
             self.fpuID = fpuID
             self.note = note
+            self.fat = fat
+            self.protein = protein
             self.isSMB = isSMB
             self.isNonPump = isNonPump
         }

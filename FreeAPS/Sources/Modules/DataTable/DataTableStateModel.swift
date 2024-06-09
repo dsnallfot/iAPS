@@ -64,7 +64,9 @@ extension DataTable {
                                 amount: $0.carbs,
                                 id: id,
                                 fpuID: $0.fpuID,
-                                note: $0.note
+                                note: $0.note,
+                                fat: $0.fat ?? 0.0,
+                                protein: $0.protein ?? 0.0
                             )
                         } else {
                             return Treatment(
