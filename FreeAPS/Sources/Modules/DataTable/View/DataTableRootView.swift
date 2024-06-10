@@ -198,14 +198,24 @@ extension DataTable {
                             HStack {
                                 Text("Kolhydrater")
                                 Spacer()
-                                DecimalTextField("0", value: $selectedCarbAmount, formatter: formatter, cleanInput: true)
+                                DecimalTextField(
+                                    "0",
+                                    value: $selectedCarbAmount.onChange { state.hasChanges = true },
+                                    formatter: formatter,
+                                    cleanInput: true
+                                )
                                 Text("g")
                             }
                             HStack {
                                 Text("Fett")
                                     .foregroundColor(.brown)
                                 Spacer()
-                                DecimalTextField("0", value: $selectedFat, formatter: formatter, cleanInput: true)
+                                DecimalTextField(
+                                    "0",
+                                    value: $selectedFat.onChange { state.hasChanges = true },
+                                    formatter: formatter,
+                                    cleanInput: true
+                                )
                                 Text("g")
                                     .foregroundColor(.brown)
                             }
@@ -213,22 +223,31 @@ extension DataTable {
                                 Text("Protein")
                                     .foregroundColor(.brown)
                                 Spacer()
-                                DecimalTextField("0", value: $selectedProtein, formatter: formatter, cleanInput: true)
+                                DecimalTextField(
+                                    "0",
+                                    value: $selectedProtein.onChange { state.hasChanges = true },
+                                    formatter: formatter,
+                                    cleanInput: true
+                                )
                                 Text("g")
                                     .foregroundColor(.brown)
                             }
 
                             HStack {
                                 Text("Notering")
-                                TextField("...", text: $selectedNote)
+                                TextField("...", text: $selectedNote.onChange { state.hasChanges = true })
                                     .multilineTextAlignment(.trailing)
                                     .padding(.leading)
                             }
                             HStack {
                                 Text("Tid")
                                 Spacer()
-                                DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
-                                    .labelsHidden()
+                                DatePicker(
+                                    "",
+                                    selection: $selectedDate.onChange { state.hasChanges = true },
+                                    displayedComponents: .hourAndMinute
+                                )
+                                .labelsHidden()
                             }
                         }
                         Section {
@@ -244,7 +263,7 @@ extension DataTable {
                             } else {
                                 HStack {
                                     Spacer()
-                                    Button("Spara ändringar") {
+                                    Button(state.hasChanges ? "Spara ändringar" : "Inga ändringar") {
                                         if let treatmentToDelete = alertTreatmentToDelete {
                                             state.deleteCarbs(treatmentToDelete)
                                             alertTreatmentToDelete = nil
@@ -259,28 +278,31 @@ extension DataTable {
                                         )
                                         state.deleteFpus(connectedFpus)
                                         isEditSheetPresented = false
+                                        state.hasChanges = false
                                     }
+                                    .disabled(!state.hasChanges)
                                     Spacer()
                                 }
-                                .listRowBackground(
-                                    AnyView(LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
-                                            Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
-                                            Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
-                                            Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
-                                            Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                                        ]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    ))
-                                )
-                                .tint(.white)
                             }
                         }
+                        .listRowBackground(
+                            !state.hasChanges
+                                ? AnyView(Color(.systemGray4))
+                                : AnyView(LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                    ]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                        )
+                        .tint(.white)
                         .fontWeight(.semibold)
                         .font(.title3)
-                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
                 .onAppear {
@@ -290,16 +312,13 @@ extension DataTable {
                         selectedFat = treatmentToDelete.fat ?? 0.0
                         selectedProtein = treatmentToDelete.protein ?? 0.0
                         connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
-                        // smbCount = connectedFpus.count
-                        // smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
+                        state.hasChanges = false
                     }
                 }
                 .onDisappear {
                     selectedFat = 0.0
                     selectedProtein = 0.0
                     isFatProteinEnabled = false
-                    // smbCount = 0
-                    // smbGrams = 0.0
                 }
                 .navigationTitle("Ändra måltid")
                 .navigationBarTitleDisplayMode(.inline)

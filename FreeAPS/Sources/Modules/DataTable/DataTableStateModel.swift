@@ -23,6 +23,7 @@ extension DataTable {
         @Published var nonPumpInsulinAmount: Decimal = 0
         @Published var nonPumpInsulinDate = Date()
         @Published var maxCarbs: Decimal = 0
+        @Published var hasChanges: Bool = false
 
         var units: GlucoseUnits = .mmolL
 
@@ -356,5 +357,17 @@ extension DataTable.StateModel:
 
     func glucoseDidUpdate(_: [BloodGlucose]) {
         setupGlucose()
+    }
+}
+
+extension Binding {
+    func onChange(_ handler: @escaping () -> Void) -> Binding<Value> {
+        Binding(
+            get: { self.wrappedValue },
+            set: { newValue in
+                self.wrappedValue = newValue
+                handler()
+            }
+        )
     }
 }

@@ -109,7 +109,7 @@ extension OverrideProfilesConfig {
                                 isEditSheetPresented = false
                             }
                             label: {
-                                Text("Spara ändringar")
+                                Text(hasChanges() ? "Spara ändringar" : "Inga ändringar")
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }

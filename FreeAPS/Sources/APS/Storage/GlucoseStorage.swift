@@ -171,7 +171,7 @@ final class BaseGlucoseStorage: GlucoseStorage, Injectable {
         guard let events = storage.retrieve(OpenAPS.Monitor.glucose, as: [BloodGlucose].self),
               let recent = events.first
         else {
-            //return Date().addingTimeInterval(-1.days.timeInterval)
+            // return Date().addingTimeInterval(-1.days.timeInterval)
             // Test to just sync -12h instead of -24 to reduce data uploads every loop
             return Date().addingTimeInterval(-12.hours.timeInterval)
         }
