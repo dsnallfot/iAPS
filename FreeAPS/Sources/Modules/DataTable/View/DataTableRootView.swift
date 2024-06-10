@@ -256,6 +256,7 @@ extension DataTable {
                                         .foregroundColor(.secondary)
                                     Spacer()
                                 }
+
                             } else {
                                 HStack {
                                     Spacer()
@@ -276,13 +277,13 @@ extension DataTable {
                                         isEditSheetPresented = false
                                         state.hasChanges = false
                                     }
-                                    .disabled(!hasChanges)
+                                    .disabled(!hasChanges || exceedsMaxCarbs)
                                     Spacer()
                                 }
                             }
                         }
                         .listRowBackground(
-                            hasChanges ? AnyView(LinearGradient(
+                            !hasChanges || exceedsMaxCarbs ? AnyView(Color(UIColor.systemGray4)) : AnyView(LinearGradient(
                                 gradient: Gradient(colors: [
                                     Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
                                     Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
@@ -292,7 +293,7 @@ extension DataTable {
                                 ]),
                                 startPoint: .leading,
                                 endPoint: .trailing
-                            )) : AnyView(Color(UIColor.systemGray4))
+                            ))
                         )
                         .tint(.white)
                         .fontWeight(.semibold)
