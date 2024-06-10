@@ -25,8 +25,12 @@ extension DataTable {
         @State private var selectedProtein: Decimal = 0.0
         @State private var isFatProteinEnabled: Bool = false
         @State private var connectedFpus: [Treatment] = []
-        // @State private var smbCount: Int = 0
-        // @State private var smbGrams: Decimal = 0.0
+
+        @State private var initialSelectedCarbAmount: Decimal = 0.0
+        @State private var initialSelectedDate = Date()
+        @State private var initialSelectedNote: String = ""
+        @State private var initialSelectedFat: Decimal = 0.0
+        @State private var initialSelectedProtein: Decimal = 0.0
 
         @Environment(\.colorScheme) var colorScheme
 
@@ -96,14 +100,10 @@ extension DataTable {
             return numberFormatter.string(from: state.maxCarbs as NSDecimalNumber) ?? "0.0"
         }
 
-        /* // Helper function to format smbGrams
-         private func formattedSmbGrams() -> String {
-             let numberFormatter = NumberFormatter()
-             numberFormatter.maximumFractionDigits = 1
-             numberFormatter.minimumFractionDigits = 1
-             numberFormatter.numberStyle = .decimal
-             return numberFormatter.string(from: smbGrams as NSDecimalNumber) ?? "0.0"
-         } */
+        private var hasChanges: Bool {
+            selectedCarbAmount != initialSelectedCarbAmount || selectedDate != initialSelectedDate || selectedNote !=
+                initialSelectedNote || selectedFat != initialSelectedFat || selectedProtein != initialSelectedProtein
+        }
 
         var body: some View {
             VStack {
@@ -186,10 +186,6 @@ extension DataTable {
             }
         }
 
-        /* var toggleText: String {
-             smbCount > 0 ? "Ändra fett och protein?" : "Lägg till fett och protein?"
-         } */
-
         var editPresetPopover: some View {
             NavigationView {
                 VStack {
@@ -263,7 +259,7 @@ extension DataTable {
                             } else {
                                 HStack {
                                     Spacer()
-                                    Button(state.hasChanges ? "Spara ändringar" : "Inga ändringar") {
+                                    Button(hasChanges ? "Spara ändringar" : "Inga ändringar") {
                                         if let treatmentToDelete = alertTreatmentToDelete {
                                             state.deleteCarbs(treatmentToDelete)
                                             alertTreatmentToDelete = nil
@@ -280,25 +276,23 @@ extension DataTable {
                                         isEditSheetPresented = false
                                         state.hasChanges = false
                                     }
-                                    .disabled(!state.hasChanges)
+                                    .disabled(!hasChanges)
                                     Spacer()
                                 }
                             }
                         }
                         .listRowBackground(
-                            !state.hasChanges
-                                ? AnyView(Color(.systemGray4))
-                                : AnyView(LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
-                                        Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
-                                        Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
-                                        Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
-                                        Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
-                                    ]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ))
+                            hasChanges ? AnyView(LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
+                                    Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
+                                    Color(red: 0.4862745098, green: 0.5450980392, blue: 0.9529411765),
+                                    Color(red: 0.3411764706, green: 0.6666666667, blue: 0.9254901961),
+                                    Color(red: 0.262745098, green: 0.7333333333, blue: 0.9137254902)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )) : AnyView(Color(UIColor.systemGray4))
                         )
                         .tint(.white)
                         .fontWeight(.semibold)
@@ -307,10 +301,21 @@ extension DataTable {
                 }
                 .onAppear {
                     if let treatmentToDelete = alertTreatmentToDelete {
+                        selectedCarbAmount = treatmentToDelete.amount ?? 0.0
+                        initialSelectedCarbAmount = selectedCarbAmount
+
                         selectedDate = treatmentToDelete.date
+                        initialSelectedDate = selectedDate
+
                         selectedNote = treatmentToDelete.note ?? ""
+                        initialSelectedNote = selectedNote
+
                         selectedFat = treatmentToDelete.fat ?? 0.0
+                        initialSelectedFat = selectedFat
+
                         selectedProtein = treatmentToDelete.protein ?? 0.0
+                        initialSelectedProtein = selectedProtein
+
                         connectedFpus = state.fetchConnectedFpus(forDate: selectedDate)
                         state.hasChanges = false
                     }
@@ -630,8 +635,6 @@ extension DataTable {
                             selectedNote = item.note ?? ""
                             // Fetch connected .fpus entries
                             connectedFpus = state.fetchConnectedFpus(forDate: item.date)
-                            // smbCount = connectedFpus.count
-                            // smbGrams = connectedFpus.reduce(0) { $0 + ($1.amount ?? 0.0) }
                         }
                     ).tint(.blue)
                 }

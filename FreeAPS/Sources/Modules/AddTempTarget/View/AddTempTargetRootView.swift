@@ -19,6 +19,24 @@ extension AddTempTarget {
             sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)]
         ) var isEnabledArray: FetchedResults<TempTargetsSlider>
 
+        @State private var originalPresetName: String = ""
+        @State private var originalSettings: [String: Decimal] = [:]
+        @State private var originalPercentage: Double = 100
+
+        private var hasChanges: Bool {
+            guard let originalLow = originalSettings["low"],
+                  let originalDuration = originalSettings["duration"]
+            else {
+                return false
+            }
+            return state.newPresetName != originalPresetName || state.low != originalLow || state
+                .duration != originalDuration || state.percentage != originalPercentage
+        }
+
+        private var buttonTitle: String {
+            hasChanges ? "Spara ändringar" : "Inga ändringar"
+        }
+
         private var formatter: NumberFormatter {
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
@@ -29,10 +47,8 @@ extension AddTempTarget {
         private var displayString: String {
             guard let preset = selectedPreset else { return "" }
             var low = preset.targetBottom
-            var high = preset.targetBottom // change to only use targetBottom instead of targetTop
             if state.units == .mmolL {
                 low = low?.asMmolL
-                high = high?.asMmolL
             }
 
             let formattedLow = low.flatMap { formatter.string(from: $0 as NSNumber) } ?? ""
@@ -277,15 +293,15 @@ extension AddTempTarget {
                                 isEditSheetPresented = false
                             }
                             label: {
-                                Text("Spara ändringar")
+                                Text(buttonTitle)
                                     .fontWeight(.semibold)
                                     .font(.title3)
                             }
                             Spacer()
                         }
-                        .disabled(state.newPresetName.isEmpty)
+                        .disabled(!hasChanges)
                         .listRowBackground(
-                            AnyView(LinearGradient(
+                            hasChanges ? AnyView(LinearGradient(
                                 gradient: Gradient(colors: [
                                     Color(red: 0.7215686275, green: 0.3411764706, blue: 1),
                                     Color(red: 0.6235294118, green: 0.4235294118, blue: 0.9803921569),
@@ -295,9 +311,9 @@ extension AddTempTarget {
                                 ]),
                                 startPoint: .leading,
                                 endPoint: .trailing
-                            ))
+                            )) : AnyView(Color(UIColor.systemGray4))
                         )
-                        .tint(.white)
+                        .tint(hasChanges ? .white : .gray)
                     }
                 }
                 .onAppear {
@@ -305,9 +321,12 @@ extension AddTempTarget {
                           let targetBottom = selectedPreset.targetBottom else { return }
                     let computedPercentage = state.computePercentage(target: targetBottom)
                     state.percentage = Double(truncating: computedPercentage as NSNumber)
+                    originalPresetName = state.newPresetName
+                    originalSettings = ["low": state.low, "duration": state.duration]
+                    originalPercentage = state.percentage
                 }
                 .onDisappear {
-                    if isEditSheetPresented == false {
+                    if !isEditSheetPresented {
                         resetFields()
                     }
                 }
@@ -329,12 +348,9 @@ extension AddTempTarget {
 
         private func presetView(for preset: TempTarget) -> some View {
             var low = preset.targetBottom
-            var high = preset.targetBottom // change to only use targetBottom instead of targetTop
             if state.units == .mmolL {
                 low = low?.asMmolL
-                high = high?.asMmolL
             }
-            // Refactored to avoid force unwrapping
 
             return HStack {
                 VStack {
