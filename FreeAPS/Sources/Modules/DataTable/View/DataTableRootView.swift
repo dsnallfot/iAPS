@@ -100,9 +100,20 @@ extension DataTable {
             return numberFormatter.string(from: state.maxCarbs as NSDecimalNumber) ?? "0.0"
         }
 
+        // Helper function to normalize date by removing milliseconds
+        private func normalizeDate(_ date: Date) -> Date {
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+            return calendar.date(from: components) ?? date
+        }
+
+        // Updated hasChanges property to compare normalized dates
         private var hasChanges: Bool {
-            selectedCarbAmount != initialSelectedCarbAmount || selectedDate != initialSelectedDate || selectedNote !=
-                initialSelectedNote || selectedFat != initialSelectedFat || selectedProtein != initialSelectedProtein
+            selectedCarbAmount != initialSelectedCarbAmount ||
+                normalizeDate(selectedDate) != normalizeDate(initialSelectedDate) ||
+                selectedNote != initialSelectedNote ||
+                selectedFat != initialSelectedFat ||
+                selectedProtein != initialSelectedProtein
         }
 
         var body: some View {
@@ -190,62 +201,69 @@ extension DataTable {
             NavigationView {
                 VStack {
                     Form {
-                        Section {
-                            HStack {
-                                Text("Kolhydrater")
-                                Spacer()
-                                DecimalTextField(
-                                    "0",
-                                    value: $selectedCarbAmount.onChange { state.hasChanges = true },
-                                    formatter: formatter,
-                                    cleanInput: true
-                                )
-                                Text("g")
-                            }
-                            HStack {
-                                Text("Fett")
-                                    .foregroundColor(.brown)
-                                Spacer()
-                                DecimalTextField(
-                                    "0",
-                                    value: $selectedFat.onChange { state.hasChanges = true },
-                                    formatter: formatter,
-                                    cleanInput: true
-                                )
-                                Text("g")
-                                    .foregroundColor(.brown)
-                            }
-                            HStack {
-                                Text("Protein")
-                                    .foregroundColor(.brown)
-                                Spacer()
-                                DecimalTextField(
-                                    "0",
-                                    value: $selectedProtein.onChange { state.hasChanges = true },
-                                    formatter: formatter,
-                                    cleanInput: true
-                                )
-                                Text("g")
-                                    .foregroundColor(.brown)
-                            }
-
-                            HStack {
-                                Text("Notering")
-                                TextField("...", text: $selectedNote.onChange { state.hasChanges = true })
-                                    .multilineTextAlignment(.trailing)
-                                    .padding(.leading)
-                            }
-                            HStack {
-                                Text("Tid")
-                                Spacer()
-                                DatePicker(
-                                    "",
-                                    selection: $selectedDate.onChange { state.hasChanges = true },
-                                    displayedComponents: .hourAndMinute
-                                )
-                                .labelsHidden()
-                            }
+                        // Section {
+                        HStack {
+                            Text("Kolhydrater")
+                            Spacer()
+                            DecimalTextField(
+                                "0",
+                                value: $selectedCarbAmount.onChange { state.hasChanges = true },
+                                formatter: formatter,
+                                cleanInput: true
+                            )
+                            Text("g")
                         }
+                        HStack {
+                            Text("Fett")
+                                .foregroundColor(.brown)
+                            Spacer()
+                            DecimalTextField(
+                                "0",
+                                value: $selectedFat.onChange { state.hasChanges = true },
+                                formatter: formatter,
+                                cleanInput: true
+                            )
+                            Text("g")
+                                .foregroundColor(.brown)
+                        }
+                        HStack {
+                            Text("Protein")
+                                .foregroundColor(.brown)
+                            Spacer()
+                            DecimalTextField(
+                                "0",
+                                value: $selectedProtein.onChange { state.hasChanges = true },
+                                formatter: formatter,
+                                cleanInput: true
+                            )
+                            Text("g")
+                                .foregroundColor(.brown)
+                        }
+
+                        HStack {
+                            Text("Notering")
+                            TextField("...", text: $selectedNote.onChange { state.hasChanges = true })
+                                .multilineTextAlignment(.trailing)
+                                .padding(.leading)
+                        }
+                        HStack {
+                            Text("Tid")
+                            Spacer()
+                            Button {
+                                selectedDate = selectedDate.addingTimeInterval(-15.minutes.timeInterval) }
+                            label: { Image(systemName: "minus") }.tint(.blue).buttonStyle(.borderless)
+                            DatePicker(
+                                "",
+                                selection: $selectedDate.onChange { state.hasChanges = true },
+                                displayedComponents: .hourAndMinute
+                            )
+                            .labelsHidden()
+                            Button {
+                                selectedDate = selectedDate.addingTimeInterval(15.minutes.timeInterval)
+                            }
+                            label: { Image(systemName: "plus") }.tint(.blue).buttonStyle(.borderless)
+                        }
+                        // }
                         Section {
                             if exceedsMaxCarbs {
                                 HStack {
@@ -541,6 +559,7 @@ extension DataTable {
                 } else {
                     HStack {
                         Text("Ingen data")
+                            .foregroundColor(.secondary)
                     }
                 }
             }
@@ -555,6 +574,7 @@ extension DataTable {
                 } else {
                     HStack {
                         Text("Ingen data")
+                            .foregroundColor(.secondary)
                     }
                 }
             }
@@ -569,6 +589,7 @@ extension DataTable {
                 } else {
                     HStack {
                         Text("Ingen data")
+                            .foregroundColor(.secondary)
                     }
                 }
             }
