@@ -298,9 +298,10 @@ extension Home {
         // Added to require passcode/faceID before entering settings
         func secureShowSettings() {
             unlockmanager.unlock()
+                .receive(on: DispatchQueue.main) // Ensure values are received on the main thread
                 .sink { _ in } receiveValue: { [weak self] _ in
                     guard let self = self else { return }
-                    showModal(for: .settings)
+                    self.showModal(for: .settings)
                 }
                 .store(in: &lifetime)
         }
@@ -308,9 +309,10 @@ extension Home {
         // Added to require passcode/faceID before entering settings
         func securePumpSettings() {
             unlockmanager.unlock()
+                .receive(on: DispatchQueue.main) // Ensure values are received on the main thread
                 .sink { _ in } receiveValue: { [weak self] _ in
                     guard let self = self else { return }
-                    setupPump = true
+                    self.setupPump = true
                 }
                 .store(in: &lifetime)
         }
