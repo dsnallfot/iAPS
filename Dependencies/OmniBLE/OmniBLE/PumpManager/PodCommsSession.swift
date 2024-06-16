@@ -45,35 +45,38 @@ extension PodCommsError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .noPodPaired:
-            return LocalizedString("Ingen pod parkopplad", comment: "Error message shown when no pod is paired")
+            return LocalizedString("No pod paired", comment: "Error message shown when no pod is paired")
         case .invalidData:
             return nil
         case .noResponse:
-            return LocalizedString("Inget svar från pod", comment: "Error message shown when no response from pod was received")
+            return LocalizedString("No response from pod", comment: "Error message shown when no response from pod was received")
         case .emptyResponse:
-            return LocalizedString("Tomt svar från pod", comment: "Error message shown when empty response from pod was received")
+            return LocalizedString("Empty response from pod", comment: "Error message shown when empty response from pod was received")
         case .podAckedInsteadOfReturningResponse:
-            return LocalizedString("Pod sände ack istället för svar", comment: "Error message shown when pod sends ack instead of response")
+            return LocalizedString("Pod sent ack instead of response", comment: "Error message shown when pod sends ack instead of response")
         case .unexpectedResponse:
-            return LocalizedString("Oväntat svar från pod", comment: "Error message shown when empty response from pod was received")
+            return LocalizedString("Unexpected response from pod", comment: "Error message shown when empty response from pod was received")
         case .unknownResponseType:
             return nil
         case .invalidAddress(address: let address, expectedAddress: let expectedAddress):
             return String(format: LocalizedString("Invalid address 0x%x. Expected 0x%x", comment: "Error message for when unexpected address is received (1: received address) (2: expected address)"), address, expectedAddress)
         case .podNotConnected:
-            return LocalizedString("Pod ej ansluten", comment: "Error message shown when the pod is not connected.")
+            return LocalizedString("Pod not connected", comment: "Error message shown when the pod is not connected.")
         case .unfinalizedBolus:
-            return LocalizedString("Pågående bolus", comment: "Error message shown when operation could not be completed due to existing bolus in progress")
+            return LocalizedString("Bolus in progress", comment: "Error message shown when operation could not be completed due to existing bolus in progress")
         case .unfinalizedTempBasal:
-            return LocalizedString("Pågående basal", comment: "Error message shown when temp basal could not be set due to existing temp basal in progress")
+            return LocalizedString("Temp basal in progress", comment: "Error message shown when temp basal could not be set due to existing temp basal in progress")
         case .nonceResyncFailed:
             return nil
         case .podSuspended:
-            return LocalizedString("Pod är pausad", comment: "Error message action could not be performed because pod is suspended")
+            return LocalizedString("Pod is suspended", comment: "Error message action could not be performed because pod is suspended")
         case .podFault(let fault):
             let faultDescription = String(describing: fault.faultEventCode)
             return String(format: LocalizedString("Pod Fault: %1$@", comment: "Format string for pod fault code"), faultDescription)
         case .commsError(let error):
+            if isVerboseBluetoothCommsError(error) {
+                return LocalizedString("Possible Bluetooth issue", comment: "Error description for possible bluetooth issue")
+            }
             return error.localizedDescription
         case .unacknowledgedMessage(_, let error):
             return error.localizedDescription
@@ -136,7 +139,10 @@ extension PodCommsError: LocalizedError {
             return LocalizedString("Resume delivery", comment: "Recovery suggestion when pod is suspended")
         case .podFault:
             return nil
-        case .commsError:
+        case .commsError(let error):
+            if isVerboseBluetoothCommsError(error) {
+                return LocalizedString("Try adjusting pod position or toggle Bluetooth off and then on in iPhone Settings.", comment: "Recovery suggestion for possible bluetooth issue")
+            }
             return nil
         case .unacknowledgedMessage:
             return nil
@@ -172,6 +178,28 @@ extension PodCommsError: LocalizedError {
         default:
             return false
         }
+    }
+
+    public func isVerboseBluetoothCommsError(_ error: Error) -> Bool {
+        if let peripheralManagerError = error as? PeripheralManagerError {
+            switch peripheralManagerError {
+            case .cbPeripheralError:
+                print("### Verbose Bluetooth comms error: \(peripheralManagerError.localizedDescription)")
+                return true
+            default:
+                break
+            }
+        }
+        if let podProtocolError = error as? PodProtocolError {
+            switch podProtocolError {
+            case .invalidLTKKey, .pairingException, .messageIOException, .couldNotParseMessageException:
+                print("### Verbose Bluetooth comms error: \(podProtocolError.localizedDescription)")
+                return true
+            default:
+                break
+            }
+        }
+        return false
     }
 }
 
@@ -247,7 +275,9 @@ public class PodCommsSession {
     ///     - PodCommsError.unexpectedResponse
     ///     - PodCommsError.rejectedMessage
     ///     - PodCommsError.nonceResyncFailed
-    ///     - MessageError
+    ///     - PodCommsError.commsError.MessageError
+    ///     - PodCommsError.commsError.PeripheralManagerError
+    ///     - PodCommsError.commsError.PodProtocolError
     func send<T: MessageBlock>(_ messageBlocks: [MessageBlock], beepBlock: MessageBlock? = nil, expectFollowOnMessage: Bool = false) throws -> T {
         
         var triesRemaining = 2  // Retries only happen for nonce resync
@@ -772,7 +802,9 @@ public class PodCommsSession {
                     let _: StatusResponse = try send([CancelDeliveryCommand(nonce: podState.currentNonce, deliveryType: .all, beepType: .noBeepCancel)])
                 }
             }
+            podState.unacknowledgedCommand = PendingCommand.program(.basalProgram(schedule: schedule), transport.messageNumber, currentDate)
             var status: StatusResponse = try send([basalScheduleCommand, basalExtraCommand])
+            podState.unacknowledgedCommand = nil
             let now = currentDate
             podState.suspendState = .resumed(now)
             podState.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain, insulinType: podState.insulinType)
@@ -783,12 +815,12 @@ public class PodCommsSession {
             }
             podState.updateFromStatusResponse(status, at: currentDate)
             return status
-        } catch PodCommsError.nonceResyncFailed {
-            throw PodCommsError.nonceResyncFailed
-        } catch PodCommsError.rejectedMessage(let errorCode) {
-            throw PodCommsError.rejectedMessage(errorCode: errorCode)
+        } catch PodCommsError.unacknowledgedMessage(let seq, let error) {
+            podState.unacknowledgedCommand = podState.unacknowledgedCommand?.commsFinished
+            log.error("Unacknowledged resume: command seq = %d, error = %{public}@", seq, String(describing: error))
+            throw error
         } catch let error {
-            podState.unfinalizedResume = UnfinalizedDose(resumeStartTime: currentDate, scheduledCertainty: .uncertain, insulinType: podState.insulinType)
+            podState.unacknowledgedCommand = nil
             throw error
         }
     }
