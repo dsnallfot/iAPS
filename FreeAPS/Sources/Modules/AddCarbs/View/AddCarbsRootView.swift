@@ -308,9 +308,18 @@ extension AddCarbs {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button {
-                    showInfo.toggle()
-                }
-                label: {
+                    // showInfo.toggle()
+                    UIApplication.shared.open(
+                        URL(
+                            string: "carbcounter://"
+                        )!,
+                        options: [:],
+                        completionHandler: nil
+                    )
+                    /* if let url = URL(string: "carbcounter://"), UIApplication.shared.canOpenURL(url) {
+                         UIApplication.shared.open(url)
+                     }*/
+                } label: {
                     Image(systemName: "list.bullet.circle")
                         .scaleEffect(0.61)
                         .font(Font.title.weight(.regular))
@@ -318,8 +327,10 @@ extension AddCarbs {
                     Text("Räkna KH")
                         .offset(x: -22, y: 0)
                 },
-                trailing: Button { state.hideModal() }
-                label: { Text("Cancel") }
+                trailing: Button {
+                    state.hideModal()
+                } label: {
+                    Text("Cancel") }
             )
         }
 
